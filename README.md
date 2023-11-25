@@ -1,4 +1,4 @@
-# FNF Window Engine
+# FNF Wonder Engine
 A complete Recode of FNF/Psych Engine, built for mods.
 
 Credits:
