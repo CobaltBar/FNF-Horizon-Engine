@@ -1,4 +1,4 @@
-package;
+package objects;
 
 import flixel.FlxG;
 import flixel.FlxState;
@@ -37,13 +37,13 @@ class MusicState extends FlxUIState
 
 	public static function switchState(state:FlxState, skipTransition:Bool = false)
 	{
-		// FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = skipTransition;
+		FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = skipTransition;
 		FlxG.switchState(state);
 	}
 
 	private function setupTransitions():Void
 	{
-		// transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 1, new FlxPoint(0, -1));
-		// transOut = FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xff000000, 1, new FlxPoint(0, 1));
+		transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 0.5, new FlxPoint(0, -1));
+		transOut = FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xff000000, 0.5, new FlxPoint(0, 1));
 	}
 }

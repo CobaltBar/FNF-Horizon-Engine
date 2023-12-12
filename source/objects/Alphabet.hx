@@ -1,10 +1,8 @@
-package;
-
-import flixel.group.FlxSpriteGroup;
+package objects;
 
 class Alphabet
 {
-	public static function generateText(x:Float, y:Float, text:String, bold:Bool, alignment:Alignment, ?yOffset:Float):FlxSpriteGroup
+	public static function generateText(x:Float, y:Float, text:String, bold:Bool, alignment:Alignment, ?scale:Float, ?yOffset:Float):FlxSpriteGroup
 	{
 		var group:FlxSpriteGroup = new FlxSpriteGroup();
 		var chars:Array<String> = text.split("");
@@ -12,10 +10,12 @@ class Alphabet
 		for (i in 0...chars.length)
 		{
 			var animName:String = chars[i];
-			var spr = Util.createSparrowSprite(x, y - (yOffset == null ? 0 : yOffset), "assets/images/alphabet");
+			var spr = Util.createSparrowSprite(x, y - (yOffset ?? 0), "assets/images/alphabet");
+			spr.scale.set(spr.scale.x * (scale ?? 1), spr.scale.y * (scale ?? 1));
+			spr.centerOrigin();
 			if (animName == " ")
 			{
-				letterWidth += 35;
+				letterWidth += 35 * (scale ?? 1);
 				continue;
 			}
 			else if (animName == "&")

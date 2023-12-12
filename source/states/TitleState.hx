@@ -1,14 +1,5 @@
 package states;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
-import flixel.tweens.FlxEase;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import sys.io.File;
 import tjson.TJSON;
 
@@ -194,7 +185,7 @@ class TitleState extends MusicState
 
 	private function createIntroText(text:String, yOff:Float):Void
 	{
-		var texts:FlxSpriteGroup = Alphabet.generateText(FlxG.width / 2, FlxG.height / 2, text, true, Center, yOff);
+		var texts:FlxSpriteGroup = Alphabet.generateText(FlxG.width / 2, FlxG.height / 2, text, true, Center, 1.4, yOff);
 		introTexts.push(texts);
 		add(texts);
 	}
