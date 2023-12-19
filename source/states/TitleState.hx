@@ -1,5 +1,6 @@
 package states;
 
+import modding.ModManager;
 import sys.io.File;
 import tjson.TJSON;
 
@@ -30,6 +31,11 @@ class TitleState extends MusicState
 	public override function create():Void
 	{
 		Settings.load();
+		ModManager.loadMods();
+		if (ModManager.chooseModState)
+			MusicState.switchState(new ChooseModState(), true);
+		FlxG.sound.playMusic("assets/songs/menuSong.ogg", 0);
+		FlxG.sound.music.pause();
 		loadTitleData();
 		generateObjects();
 
@@ -52,13 +58,16 @@ class TitleState extends MusicState
 		if (logo.visible)
 			logo.animation.play("Bop", true);
 
+		if (curBeat == 1)
+		{
+			FlxG.sound.music.resume();
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+		}
+
 		if (!skippedIntro)
 		{
 			switch (curBeat)
 			{
-				case 1:
-					FlxG.sound.playMusic("assets/songs/Gettin Freaky.ogg", 0);
-					FlxG.sound.music.fadeIn(4, 0, 0.7);
 				case 2:
 					createIntroText("Wonder Engine by", 100);
 				case 4:

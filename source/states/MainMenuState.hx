@@ -88,15 +88,15 @@ class MainMenuState extends MusicState
 						case 6:
 							MusicState.switchState(new OptionsState());
 					}
-					for (i in 0...menuOptions.length)
-					{
-						if (i != curSelection)
-							FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {
-								ease: FlxEase.quadOut,
-								type: ONESHOT,
-							});
-					}
 				});
+				for (i in 0...menuOptions.length)
+				{
+					if (i != curSelection)
+						FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {
+							ease: FlxEase.quadOut,
+							type: ONESHOT,
+						}); // TODO kill sprite
+				}
 			}
 		}
 		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")))

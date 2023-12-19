@@ -1,11 +1,7 @@
 package objects;
 
-import flixel.FlxCamera;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
+import flixel.system.FlxSound;
 
 class Util
 {
@@ -50,7 +46,7 @@ class Util
 		return new FlxText(x, y, 0, text, size).setFormat(font, size, color, alignment);
 	}
 
-	public static inline function browserLoad(site:String) // yoinked from PsychEngine's CoolUtil
+	public static inline function browserLoad(site:String):Void // yoinked from PsychEngine's CoolUtil
 	{
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
