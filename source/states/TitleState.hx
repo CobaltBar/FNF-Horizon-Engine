@@ -194,7 +194,7 @@ class TitleState extends MusicState
 
 	private function createIntroText(text:String, yOff:Float):Void
 	{
-		var texts:FlxSpriteGroup = Alphabet.generateText(FlxG.width / 2, FlxG.height / 2, text, true, Center, 1.4, yOff);
+		var texts:FlxSpriteGroup = Alphabet.generateText(FlxG.width / 2, FlxG.height / 2, text, true, Center, 1.4, 0, yOff);
 		introTexts.push(texts);
 		add(texts);
 	}

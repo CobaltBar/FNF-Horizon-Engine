@@ -23,6 +23,8 @@ class MainMenuState extends MusicState
 
 	var otherCam:FlxCamera;
 
+	var transitioningOut:Bool = false;
+
 	public override function create():Void
 	{
 		TitleState.comingBack = true;
@@ -56,46 +58,50 @@ class MainMenuState extends MusicState
 			changeSelection(-1);
 		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")))
 		{
-			FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
-			if (curSelection == 5)
+			if (!transitioningOut)
 			{
-				Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
-			}
-			else
-			{
-				if (Settings.data.flashing)
-					FlxFlicker.flicker(menuBGFlash, 1.1, 0.15, false);
+				FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
+				if (curSelection == 5)
+				{
+					Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
+				}
+				else
+				{
+					if (Settings.data.flashing)
+						FlxFlicker.flicker(menuBGFlash, 1.1, 0.15, false);
 
-				menuOptionsCam.follow(menuOptions[curSelection], LOCKON, 0.12);
-				FlxTween.tween(menuOptionsCam, {zoom: 1.2}, 1, {
-					ease: FlxEase.quadOut,
-					type: ONESHOT,
-				});
-				FlxFlicker.flicker(menuOptions[curSelection], 1.2, 0.06, false, false, (flicker:FlxFlicker) ->
-				{
-					switch (curSelection)
+					menuOptionsCam.follow(menuOptions[curSelection], LOCKON, 0.12);
+					transitioningOut = true;
+					FlxTween.tween(menuOptionsCam, {zoom: 1.2}, 1, {
+						ease: FlxEase.quadOut,
+						type: ONESHOT,
+					});
+					FlxFlicker.flicker(menuOptions[curSelection], 1.2, 0.06, false, false, (flicker:FlxFlicker) ->
 					{
-						case 0:
-							MusicState.switchState(new StoryMenuState());
-						case 1:
-							MusicState.switchState(new FreeplayState());
-						case 2:
-							MusicState.switchState(new ModsMenuState());
-						case 3:
-							MusicState.switchState(new AwardsState());
-						case 4:
-							MusicState.switchState(new CreditsState());
-						case 6:
-							MusicState.switchState(new OptionsState());
+						switch (curSelection)
+						{
+							case 0:
+								MusicState.switchState(new StoryMenuState());
+							case 1:
+								MusicState.switchState(new FreeplayState());
+							case 2:
+								MusicState.switchState(new ModsMenuState());
+							case 3:
+								MusicState.switchState(new AwardsState());
+							case 4:
+								MusicState.switchState(new CreditsState());
+							case 6:
+								MusicState.switchState(new OptionsState());
+						}
+					});
+					for (i in 0...menuOptions.length)
+					{
+						if (i != curSelection)
+							FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {
+								ease: FlxEase.quadOut,
+								type: ONESHOT,
+							}); // TODO kill sprite
 					}
-				});
-				for (i in 0...menuOptions.length)
-				{
-					if (i != curSelection)
-						FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {
-							ease: FlxEase.quadOut,
-							type: ONESHOT,
-						}); // TODO kill sprite
 				}
 			}
 		}
