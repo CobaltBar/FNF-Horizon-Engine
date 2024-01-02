@@ -6,10 +6,10 @@ import tjson.TJSON;
 
 typedef TitleData =
 {
-	bpm:Int,
+	bpm:Float,
 	gfPosition:Array<Int>,
 	logoPosition:Array<Int>,
-	enterPosition:Array<Int>
+	startPosition:Array<Int>
 }
 
 class TitleState extends MusicState
@@ -24,18 +24,22 @@ class TitleState extends MusicState
 	public static var comingBack:Bool = false;
 
 	var titleTimer:Float = 0;
-	var introTexts:Array<FlxSpriteGroup> = new Array<FlxSpriteGroup>();
-	var introImages:Array<FlxSprite> = new Array<FlxSprite>();
-	var goofyTexts:Array<String> = new Array<String>();
+	var introTexts:Array<FlxSpriteGroup>;
+	var introImages:Array<FlxSprite>;
+	var goofyTexts:Array<String>;
 
 	public override function create():Void
 	{
 		Settings.load();
-		ModManager.loadMods();
+		if (!ModManager.loaded)
+			ModManager.loadMods();
 		if (ModManager.chooseModState)
 			MusicState.switchState(new ChooseModState(), true);
 		FlxG.sound.playMusic("assets/songs/menuSong.ogg", 0);
 		FlxG.sound.music.pause();
+		introTexts = new Array<FlxSpriteGroup>();
+		introImages = new Array<FlxSprite>();
+		goofyTexts = new Array<String>();
 		loadTitleData();
 		generateObjects();
 
@@ -183,7 +187,7 @@ class TitleState extends MusicState
 		logo.visible = false;
 		add(logo);
 
-		titleEnter = Util.createSparrowSprite(titleData.enterPosition[0], titleData.enterPosition[1], "assets/images/title/titleEnter");
+		titleEnter = Util.createSparrowSprite(titleData.startPosition[0], titleData.startPosition[1], "assets/images/title/titleEnter");
 		Util.scale(titleEnter, 1.3);
 		titleEnter.animation.addByPrefix("Pressed", "ENTER PRESSED", 24, true);
 		titleEnter.animation.addByPrefix("Idle", "ENTER IDLE", 24, true);

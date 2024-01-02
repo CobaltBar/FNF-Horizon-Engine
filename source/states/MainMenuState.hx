@@ -12,14 +12,14 @@ class MainMenuState extends MusicState
 
 	var menuBGFollow:FlxObject;
 
-	var menuOptions:Array<FlxSprite> = new Array<FlxSprite>();
+	var menuOptions:Array<FlxSprite>;
 	var menuOptionsCam:FlxCamera;
 
 	var menuOptionsFollow:FlxObject;
 
-	var curSelection:Int = 0;
+	var curSelected:Int = 0;
 
-	var versionTexts:Array<FlxText> = new Array<FlxText>();
+	var versionTexts:Array<FlxText>;
 
 	var otherCam:FlxCamera;
 
@@ -31,6 +31,9 @@ class MainMenuState extends MusicState
 		menuBGCam = Util.createCamera(true);
 		menuOptionsCam = Util.createCamera(true);
 		otherCam = Util.createCamera(true);
+
+		menuOptions = new Array<FlxSprite>();
+		versionTexts = new Array<FlxText>();
 
 		createFollowPoints();
 
@@ -61,7 +64,7 @@ class MainMenuState extends MusicState
 			if (!transitioningOut)
 			{
 				FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
-				if (curSelection == 5)
+				if (curSelected == 5)
 				{
 					Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
 				}
@@ -70,15 +73,15 @@ class MainMenuState extends MusicState
 					if (Settings.data.flashing)
 						FlxFlicker.flicker(menuBGFlash, 1.1, 0.15, false);
 
-					menuOptionsCam.follow(menuOptions[curSelection], LOCKON, 0.12);
+					menuOptionsCam.follow(menuOptions[curSelected], LOCKON, 0.12);
 					transitioningOut = true;
 					FlxTween.tween(menuOptionsCam, {zoom: 1.2}, 1, {
 						ease: FlxEase.quadOut,
 						type: ONESHOT,
 					});
-					FlxFlicker.flicker(menuOptions[curSelection], 1.2, 0.06, false, false, (flicker:FlxFlicker) ->
+					FlxFlicker.flicker(menuOptions[curSelected], 1.2, 0.06, false, false, (flicker:FlxFlicker) ->
 					{
-						switch (curSelection)
+						switch (curSelected)
 						{
 							case 0:
 								MusicState.switchState(new StoryMenuState());
@@ -96,11 +99,15 @@ class MainMenuState extends MusicState
 					});
 					for (i in 0...menuOptions.length)
 					{
-						if (i != curSelection)
+						if (i != curSelected)
 							FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {
 								ease: FlxEase.quadOut,
 								type: ONESHOT,
-							}); // TODO kill sprite
+								onComplete: tween ->
+								{
+									menuOptions[i].destroy();
+								}
+							});
 					}
 				}
 			}
@@ -193,24 +200,24 @@ class MainMenuState extends MusicState
 	private function changeSelection(add:Int)
 	{
 		FlxG.sound.play("assets/sounds/Scroll.ogg", 0.7);
-		menuOptions[curSelection].x -= menuOptions[curSelection].width / 2;
-		menuOptions[curSelection].animation.play("idle");
-		menuOptions[curSelection].x += menuOptions[curSelection].width / 2;
+		menuOptions[curSelected].x -= menuOptions[curSelected].width / 2;
+		menuOptions[curSelected].animation.play("idle");
+		menuOptions[curSelected].x += menuOptions[curSelected].width / 2;
 
-		curSelection += add;
+		curSelected += add;
 
-		if (curSelection < 0)
-			curSelection = menuOptions.length - 1;
-		if (curSelection >= menuOptions.length)
-			curSelection = 0;
+		if (curSelected < 0)
+			curSelected = menuOptions.length - 1;
+		if (curSelected >= menuOptions.length)
+			curSelected = 0;
 
-		menuOptions[curSelection].x -= menuOptions[curSelection].width / 2;
-		menuOptions[curSelection].animation.play("selected");
-		menuOptions[curSelection].x += menuOptions[curSelection].width / 2;
+		menuOptions[curSelected].x -= menuOptions[curSelected].width / 2;
+		menuOptions[curSelected].animation.play("selected");
+		menuOptions[curSelected].x += menuOptions[curSelected].width / 2;
 		reoffsetMenuOptions();
 
-		menuOptionsFollow.y = menuOptions[curSelection].y / 2 + 450;
-		menuBGFollow.y = menuOptions[curSelection].y / 9 + 480;
+		menuOptionsFollow.y = menuOptions[curSelected].y / 2 + 450;
+		menuBGFollow.y = menuOptions[curSelected].y / 9 + 480;
 	}
 
 	private function reoffsetMenuOptions()

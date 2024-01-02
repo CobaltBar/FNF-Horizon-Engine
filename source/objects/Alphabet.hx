@@ -2,7 +2,7 @@ package objects;
 
 class Alphabet
 {
-	public static function generateText(x:Float, y:Float, text:String, bold:Bool, alignment:Alignment, ?scale:Float, ?xOffset:Float,
+	public static function generateText(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, ?scale:Float, ?xOffset:Float,
 			?yOffset:Float):FlxSpriteGroup
 	{
 		var group:FlxSpriteGroup = new FlxSpriteGroup();
@@ -12,7 +12,8 @@ class Alphabet
 		{
 			var animName:String = chars[i];
 			var spr = Util.createSparrowSprite(x + (xOffset ?? 0), y - (yOffset ?? 0), "assets/images/alphabet");
-			spr.scale.set(spr.scale.x * (scale ?? 1), spr.scale.y * (scale ?? 1));
+			spr.scale.set(scale ?? 1, scale ?? 1);
+			spr.updateHitbox();
 			spr.centerOrigin();
 			if (animName == " ")
 			{
@@ -64,10 +65,10 @@ class Alphabet
 		}
 		switch (alignment)
 		{
-			case Left:
-			case Center:
+			case LEFT:
+			case CENTER:
 				group.x -= group.width / 2;
-			case Right:
+			case RIGHT:
 				group.x -= group.width;
 		}
 		return group;
@@ -81,6 +82,7 @@ class Alphabet
 		var letterWidth:Float = 0;
 
 		var icon = Util.createSprite(x + (xOffset ?? 0), y - (yOffset ?? 0), iconPath);
+		// icon.scale.set(scale ?? 1, scale ?? 1);
 		icon.y -= icon.height / 1.5;
 		letterWidth += icon.width / 1.25;
 		group.add(icon);

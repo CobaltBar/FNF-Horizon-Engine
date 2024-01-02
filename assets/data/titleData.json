@@ -1,6 +1,6 @@
 {
-    "bpm": "102",
+    "bpm": 102,
     "gfPosition": [1000, 250],
     "logoPosition": [20, 10],
-    "enterPosition": [560, 900]
+    "startPosition": [560, 900]
 }

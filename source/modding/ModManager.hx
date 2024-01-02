@@ -12,7 +12,8 @@ class ModManager
 	public static var mods:Array<Mod> = new Array<Mod>();
 	public static var standaloneMods:Array<Mod> = new Array<Mod>();
 	public static var chooseModState:Bool = false;
-	public static var theChosenMod:Mod;
+	public static var theChosenMod:Mod = null;
+	public static var loaded = false;
 
 	final folders:Array<String> = [
 		"achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs",
@@ -52,8 +53,9 @@ class ModManager
 				mod.standalone = true;
 				chooseModState = true;
 			}
-			// new FlxAsyncLoop(100, function() {}).start();
 		}
+
+		loaded = true;
 	}
 
 	public static function replaceAssets():Void

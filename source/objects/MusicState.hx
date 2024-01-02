@@ -10,9 +10,9 @@ import flixel.util.FlxTimer;
 
 class MusicState extends FlxUIState
 {
-	var curStep:Int = 0;
-	var curBeat:Int = 0;
-	var bpm:Int = 100;
+	var curStep:Int = 0; // Std.Int(Seconds / ((60 / bpm)/4) for calculating it based on time
+	var curBeat:Int = 0; // Std.Int(Seconds / 60 / bpm) for calculating it based on time
+	var bpm:Float = 100;
 
 	static var stepTimer:FlxTimer;
 
@@ -25,7 +25,7 @@ class MusicState extends FlxUIState
 
 	public function onStep(timer:FlxTimer):Void
 	{
-		if (curStep % 4 == 0)
+		if (curStep % 4 == 0 && curStep > 0)
 			onBeat(timer);
 		curStep++;
 	}
