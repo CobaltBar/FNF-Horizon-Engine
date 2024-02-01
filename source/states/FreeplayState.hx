@@ -1,3 +1,3 @@
 package states;
 
-class FreeplayState extends MusicState {}
+class FreeplayState extends MusicMenuState {}

@@ -1,3 +1,3 @@
 package states;
 
-class CreditsState extends MusicState {}
+class CreditsState extends MusicMenuState {}

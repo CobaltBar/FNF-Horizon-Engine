@@ -1,6 +1,7 @@
 package states;
 
-import modding.ModManager;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.tweens.misc.VarTween;
 import sys.io.File;
 import tjson.TJSON;
 
@@ -17,93 +18,29 @@ class TitleState extends MusicState
 	var gf:FlxSprite;
 	var titleEnter:FlxSprite;
 	var logo:FlxSprite;
-	var titleData:TitleData;
 	var skippedIntro:Bool = false;
-	var enterMainMenu:Bool = false;
-
-	public static var comingBack:Bool = false;
-
 	var titleTimer:Float = 0;
-	var introTexts:Array<FlxSpriteGroup>;
-	var introImages:Array<FlxSprite>;
-	var goofyTexts:Array<String>;
+	var introTexts:Array<Alphabet> = [];
+	var introImages:Array<FlxSprite> = [];
+	var goofyTexts:Array<String> = [];
+
+	public static var titleData:TitleData;
+
+	static var comingBack:Bool = false;
 
 	public override function create():Void
 	{
 		Settings.load();
-		if (!ModManager.loaded)
-			ModManager.loadMods();
-		if (ModManager.chooseModState)
-			MusicState.switchState(new ChooseModState(), true);
-		FlxG.sound.playMusic("assets/songs/menuSong.ogg", 0);
-		FlxG.sound.music.pause();
-		introTexts = new Array<FlxSpriteGroup>();
-		introImages = new Array<FlxSprite>();
-		goofyTexts = new Array<String>();
+		if (!comingBack && FlxG.sound.music == null)
+		{
+			FlxG.sound.playMusic(Path.sound("menuSong", "songs"), 0);
+			FlxG.sound.music.pause();
+		}
 		loadTitleData();
 		generateObjects();
-
 		if (comingBack)
 			skipIntro();
-
 		super.create();
-	}
-
-	public override function onBeat(timer:FlxTimer):Void
-	{
-		if (gf.visible)
-		{
-			if (curBeat % 2 == 0)
-				gf.animation.play("danceLeft");
-			else
-				gf.animation.play("danceRight");
-		}
-
-		if (logo.visible)
-			logo.animation.play("Bop", true);
-
-		if (curBeat == 1)
-		{
-			FlxG.sound.music.resume();
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		}
-
-		if (!skippedIntro)
-		{
-			switch (curBeat)
-			{
-				case 2:
-					createIntroText("Wonder Engine by", 100);
-				case 4:
-					createIntroText("Cobalt Bar", -50);
-				case 5:
-					clearIntroTexts();
-				case 6:
-					createIntroText("Not Associated with", 200);
-				case 8:
-					createIntroText("Newgrounds", 100);
-					createIntroImage("assets/images/title/newgrounds_logo.png", 0);
-				case 9:
-					clearIntroTexts();
-					clearIntroImages();
-				case 10:
-					createIntroText(goofyTexts[0], 50);
-				case 12:
-					createIntroText(goofyTexts[1], -50);
-				case 13:
-					clearIntroTexts();
-				case 14:
-					createIntroText("Friday", 100);
-				case 15:
-					createIntroText("Night", 0);
-				case 16:
-					createIntroText("Funkin'", -100);
-				case 17:
-					skipIntro();
-			}
-		}
-
-		super.onBeat(timer);
 	}
 
 	public override function update(elapsed:Float):Void
@@ -114,16 +51,46 @@ class TitleState extends MusicState
 			{
 				skipIntro();
 			}
-			else if (!enterMainMenu)
+			else if (!transitioningOut)
 			{
-				enterMainMenu = true;
+				transitioningOut = true;
 				titleEnter.color = 0xffffffff;
 				titleEnter.alpha = 1;
 				titleEnter.animation.play("Pressed");
-				FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
-				new FlxTimer().start(1, function(tmr:FlxTimer):Void
+				FlxG.sound.play(Path.sound("Confirm.ogg"), 0.7);
+				FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
+				if (!FlxG.sound.music.playing)
 				{
-					MusicState.switchState(new MainMenuState(), false);
+					FlxG.sound.music.resume();
+					FlxG.sound.music.fadeIn(4, 0, 0.7);
+				}
+				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+				});
+				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+				});
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * 0.5, y: (FlxG.height - logo.height) * 0.5}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+				});
+				new FlxTimer().start(0.4, (tmr:FlxTimer) ->
+				{
+					FlxTween.tween(logo, {alpha: 0}, 1, {
+						type: ONESHOT,
+						ease: FlxEase.expoOut,
+					});
+				});
+				FlxTween.tween(logo.scale, {x: 2, y: 2}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+				});
+				new FlxTimer().start(1, (tmr:FlxTimer) ->
+				{
+					comingBack = true;
+					MusicState.switchState(new MainMenuState(), false, true);
 				});
 			}
 		}
@@ -138,7 +105,7 @@ class TitleState extends MusicState
 
 		timer = FlxEase.quadInOut(timer);
 
-		if (titleEnter.visible && !enterMainMenu)
+		if (titleEnter.visible && !transitioningOut)
 		{
 			titleEnter.color = FlxColor.interpolate(0xFF33FFFF, 0xFF3333CC, timer);
 			titleEnter.alpha = FlxMath.lerp(1, 0.64, timer);
@@ -147,26 +114,141 @@ class TitleState extends MusicState
 		super.update(elapsed);
 	}
 
+	public override function onBeat():Void
+	{
+		if (gf.visible)
+		{
+			if (curBeat % 2 == 0)
+				gf.animation.play("danceLeft");
+			else
+				gf.animation.play("danceRight");
+		}
+
+		if (logo.visible)
+			logo.animation.play("bop", true);
+
+		if (!skippedIntro)
+		{
+			switch (curBeat)
+			{
+				case 0:
+					FlxG.sound.music.resume();
+					FlxG.sound.music.fadeIn(4, 0, 0.7);
+				case 1:
+					createIntroText("Wonder Engine by", -50);
+				case 3:
+					tweenLastIntroText(1, 150);
+					createIntroText("Cobalt Bar", -50);
+				case 4:
+					clearIntroTexts();
+				case 5:
+					createIntroText("Not Associated with", 100);
+				case 7:
+					tweenLastIntroText(1, 150);
+					createIntroText("Newgrounds", 100);
+					createIntroImage(Path.image("newgrounds_logo.png"), 0);
+				case 8:
+					clearIntroTexts();
+					clearIntroImages();
+				case 9:
+					createIntroText(goofyTexts[0], 50);
+				case 11:
+					tweenLastIntroText(1, 50);
+					createIntroText(goofyTexts[1], -50);
+				case 12:
+					clearIntroTexts();
+				case 13:
+					shouldBop = false;
+					targetZoom = 1.2;
+					createIntroText("Friday", -100);
+				case 14:
+					targetZoom = 1.3;
+					tweenLastIntroText(1, 100);
+					createIntroText("Night", -100);
+				case 15:
+					targetZoom = 1.4;
+					tweenLastIntroText(1, 100);
+					tweenLastIntroText(2, 100);
+					createIntroText("Funkin'", -100);
+				case 16:
+					skipIntro();
+			}
+		}
+
+		super.onBeat();
+	}
+
 	private function skipIntro():Void
 	{
-		skippedIntro = true;
+		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
+		targetZoom = 1;
 		clearIntroTexts();
-		gf.visible = true;
-		logo.visible = true;
-		titleEnter.visible = true;
-		FlxG.camera.flash(0xffffffff, 1);
+		clearIntroImages();
+		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 		if (curBeat % 2 == 0)
 			gf.animation.play("danceLeft");
 		else
 			gf.animation.play("danceRight");
-		logo.animation.play("Bop", true);
+		logo.animation.play("bop", true);
+	}
+
+	private function createIntroText(text:String, yOff:Float):Alphabet
+	{
+		var oldX = FlxG.width * 2 * (introTexts.length % 2 == 0 ? -1 : 1);
+		var alphabet:Alphabet = new Alphabet(oldX, FlxG.height * 0.5, text, true, CENTER, 1.4, 0, yOff);
+		introTexts.push(alphabet);
+		add(alphabet);
+		FlxTween.tween(alphabet, {x: alphabet.x - oldX + FlxG.width * 0.5}, 0.5, {
+			type: ONESHOT,
+			ease: FlxEase.expoOut,
+		});
+		return alphabet;
+	}
+
+	private function createIntroImage(path:String, yOff:Float):FlxSprite
+	{
+		var img:FlxSprite = Util.createGraphicSprite(FlxG.width * 0.5, FlxG.height * 2, path, 1.4);
+		img.screenCenter(X);
+		introImages.push(img);
+		add(img);
+		FlxTween.tween(img, {y: FlxG.height * 0.5 + yOff}, 0.5, {
+			type: ONESHOT,
+			ease: FlxEase.expoOut
+		});
+		return img;
+	}
+
+	private function clearIntroTexts():Void
+	{
+		for (obj in introTexts)
+		{
+			obj.destroy();
+		}
+		introTexts = [];
+	}
+
+	private function clearIntroImages():Void
+	{
+		for (obj in introImages)
+		{
+			obj.destroy();
+		}
+		introImages = [];
+	}
+
+	private function tweenLastIntroText(howFarBack:Int = 1, yOff:Float):Void
+	{
+		FlxTween.tween(introTexts[introTexts.length - howFarBack], {y: introTexts[introTexts.length - howFarBack].y - yOff}, 0.5, {
+			type: ONESHOT,
+			ease: FlxEase.expoOut,
+		});
 	}
 
 	private function loadTitleData():Void
 	{
-		titleData = TJSON.parse(File.getContent("assets/data/titleData.json"));
+		titleData = TJSON.parse(Path.txt("titleData.json"));
 		bpm = titleData.bpm;
-		var goofyTextList = File.getContent("assets/data/introTexts.txt").split('\n');
+		var goofyTextList = Path.txt("introTexts.txt").split('\n');
 		var num = FlxG.random.int(0, goofyTextList.length - 1);
 		goofyTexts.push(goofyTextList[num].split('--')[0]);
 		goofyTexts.push(goofyTextList[num].split('--')[1]);
@@ -174,59 +256,22 @@ class TitleState extends MusicState
 
 	private function generateObjects():Void
 	{
-		gf = Util.createSparrowSprite(titleData.gfPosition[0], titleData.gfPosition[1], "assets/images/title/gfDanceTitle");
-		Util.scale(gf, 1.35);
+		gf = Util.createSparrowSprite(titleData.gfPosition[0], titleData.gfPosition[1], "gfDanceTitle", 1.35);
 		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 		gf.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
 		gf.visible = false;
 		add(gf);
 
-		logo = Util.createSparrowSprite(titleData.logoPosition[0], titleData.logoPosition[1], "assets/images/title/logoBumpin");
-		Util.scale(logo, 1.4);
-		logo.animation.addByPrefix("Bop", "logo bumpin", 24, false);
+		logo = Util.createSparrowSprite(titleData.logoPosition[0], titleData.logoPosition[1], "logoBumpin", 1.4);
+		logo.animation.addByPrefix("bop", "logo bumpin", 24, false);
 		logo.visible = false;
 		add(logo);
 
-		titleEnter = Util.createSparrowSprite(titleData.startPosition[0], titleData.startPosition[1], "assets/images/title/titleEnter");
-		Util.scale(titleEnter, 1.3);
+		titleEnter = Util.createSparrowSprite(titleData.startPosition[0], titleData.startPosition[1], "titleEnter", 1.3);
 		titleEnter.animation.addByPrefix("Pressed", "ENTER PRESSED", 24, true);
-		titleEnter.animation.addByPrefix("Idle", "ENTER IDLE", 24, true);
-		titleEnter.animation.play("Idle");
+		titleEnter.animation.addByPrefix("idle", "ENTER IDLE", 24, true);
+		titleEnter.animation.play("idle");
 		titleEnter.visible = false;
 		add(titleEnter);
-	}
-
-	private function createIntroText(text:String, yOff:Float):Void
-	{
-		var texts:FlxSpriteGroup = Alphabet.generateText(FlxG.width / 2, FlxG.height / 2, text, true, Center, 1.4, 0, yOff);
-		introTexts.push(texts);
-		add(texts);
-	}
-
-	private function createIntroImage(path:String, yOff:Float):Void
-	{
-		var img:FlxSprite = Util.createSprite(FlxG.width / 2, FlxG.height / 2 + yOff, path);
-		Util.scale(img, 1.4, 1.4);
-		img.screenCenter(X);
-		introImages.push(img);
-		add(img);
-	}
-
-	private function clearIntroTexts():Void
-	{
-		for (i in 0...introTexts.length)
-		{
-			introTexts[introTexts.length - 1].destroy();
-			introTexts.pop();
-		}
-	}
-
-	private function clearIntroImages():Void
-	{
-		for (i in 0...introImages.length)
-		{
-			introImages[introImages.length - 1].destroy();
-			introImages.pop();
-		}
 	}
 }

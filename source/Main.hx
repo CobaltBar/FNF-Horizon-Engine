@@ -2,38 +2,35 @@ package;
 
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
-import haxe.CallStack.StackItem;
 import haxe.CallStack;
 import lime.app.Application;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.UncaughtErrorEvent;
-import states.TitleState;
 
 class Main extends Sprite
 {
 	public function new()
 	{
 		super();
-		FlxTransitionableState.skipNextTransIn = true;
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
-		{ // based off of the PsychEngine crash handler by sqirra-sng
-			var callstack:Array<StackItem> = CallStack.exceptionStack(true);
-			var errorMessage = "";
 
-			for (item in callstack)
-			{
+		FlxTransitionableState.skipNextTransIn = true;
+		addChild(new FlxGame(0, 0, TitleState, 60, 60, true));
+		addChild(new EngineInfo(10, 10, 0xFFFFFF));
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
+		{
+			var cs:Array<StackItem> = CallStack.exceptionStack(true);
+			var err = "";
+
+			for (item in cs)
 				switch (item)
 				{
 					case FilePos(s, file, line, column):
-						errorMessage += file + " (line " + line + ")\n";
+						err += '$s File: $file Line: $line Column: $column\n';
 					default: trace(item);
 				}
-			}
-
-			trace(errorMessage);
-			Application.current.window.alert(errorMessage, "Error!");
+			Util.error('$err\n${e.error}');
+			MusicState.switchState(new ErrorState());
 		});
-		addChild(new FlxGame(0, 0, TitleState));
 	}
 }

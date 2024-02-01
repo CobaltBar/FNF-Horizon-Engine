@@ -5,5 +5,4 @@ Credits:
 - Cobalt Bar (Creator)
 
 Special Thanks:
-- Psych Engine (Assets and Code)
-- [Rareblin](https://www.youtube.com/@Rareblin) ([Test Remix](https://youtu.be/JySSZFCgMuk))
+- Psych Engine (Assets and some Code)
