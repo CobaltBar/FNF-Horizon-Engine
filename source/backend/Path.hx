@@ -5,6 +5,7 @@ import haxe.io.Path as HaxePath;
 import sys.FileSystem;
 import sys.io.File;
 
+// TODO Rewrite this entire class.
 class Path
 {
 	public static inline function font(name:String, ?folder:String, searchSubdirectories:Bool = true, searchTwoLayers:Bool = true):String
