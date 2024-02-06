@@ -117,13 +117,13 @@ class MainMenuState extends MusicMenuState
 
 	public function createVersionTexts():Void
 	{
-		var wonderEngineText = Util.createText(5, FlxG.height - 65, "Wonder Engine v" + Application.current.meta.get("version"), 28, Path.font("vcr.ttf"),
+		var wonderEngineText = Util.createText(5, FlxG.height - 65, "Wonder Engine v" + Application.current.meta.get("version"), 28, Path.font("vcr"),
 			0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		wonderEngineText.cameras = [otherCam];
 		add(wonderEngineText);
 
-		var fnfVersion = Util.createText(5, FlxG.height - 35, "Friday Night Funkin' v0.2.8", 28, Path.font("vcr.ttf"), 0xFFFFFFFF, LEFT)
+		var fnfVersion = Util.createText(5, FlxG.height - 35, "Friday Night Funkin' v0.2.8", 28, Path.font("vcr"), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		fnfVersion.cameras = [otherCam];
 		add(fnfVersion);

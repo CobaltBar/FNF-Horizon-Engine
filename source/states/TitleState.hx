@@ -2,8 +2,8 @@ package states;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.misc.VarTween;
+import modding.ModManager;
 import sys.io.File;
-import tjson.TJSON;
 
 typedef TitleData =
 {
@@ -30,7 +30,6 @@ class TitleState extends MusicState
 
 	public override function create():Void
 	{
-		Settings.load();
 		if (!comingBack && FlxG.sound.music == null)
 		{
 			FlxG.sound.playMusic(Path.sound("menuSong", "songs"), 0);
@@ -146,7 +145,7 @@ class TitleState extends MusicState
 				case 7:
 					tweenLastIntroText(1, 150);
 					createIntroText("Newgrounds", 100);
-					createIntroImage(Path.image("newgrounds_logo.png"), 0);
+					createIntroImage(Path.image("newgrounds_logo"), 0);
 				case 8:
 					clearIntroTexts();
 					clearIntroImages();
@@ -246,9 +245,9 @@ class TitleState extends MusicState
 
 	private function loadTitleData():Void
 	{
-		titleData = TJSON.parse(Path.txt("titleData.json"));
+		titleData = Path.json("titleData");
 		bpm = titleData.bpm;
-		var goofyTextList = Path.txt("introTexts.txt").split('\n');
+		var goofyTextList = Path.txt("introTexts").split('\n');
 		var num = FlxG.random.int(0, goofyTextList.length - 1);
 		goofyTexts.push(goofyTextList[num].split('--')[0]);
 		goofyTexts.push(goofyTextList[num].split('--')[1]);

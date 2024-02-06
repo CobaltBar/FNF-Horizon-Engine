@@ -28,13 +28,11 @@
 
 	<!--___________________________Wonder Engine Settings_________________________-->
 	<haxedef name="MOD_SUPPORT" />
-	<haxedef name="OFFICIAL_BUILD" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export" />
 	<source path="source" />
-	<source path="buildincrement" if="OFFICIAL_BUILD" />
 	<assets path="assets" />
 	<assets path="mods" embed="false" />
 

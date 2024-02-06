@@ -11,7 +11,7 @@ class MusicState extends FlxTransitionableState
 
 	var bpm:Float = 100;
 
-	static var curTime:Float = 0;
+	var curTime:Float = 0;
 
 	var timeScale:Float = 1;
 	var transitioningOut:Bool = false;
@@ -67,7 +67,7 @@ class MusicState extends FlxTransitionableState
 	}
 
 	public function onStep():Void
-		if (curStep % 4 == 0 && curStep > 0)
+		if (curStep % 4 == 0)
 			onBeat();
 
 	public function onBeat():Void

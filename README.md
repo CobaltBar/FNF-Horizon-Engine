@@ -1,8 +1,16 @@
 # FNF Wonder Engine
-A complete Recode of FNF/Psych Engine, built for mods.
 
-Credits:
-- Cobalt Bar (Creator)
+FNF Wonder Engine is a recode of Friday Night Funkin', built for mods.
 
-Special Thanks:
-- Psych Engine (Assets and some Code)
+## Features:
+
+-   Recharted songs
+-   Extremely powerful API.
+
+## Credits:
+
+-   Cobalt Bar (Creator)
+
+## Special Thanks:
+
+-   Psych Engine (Assets and some code)

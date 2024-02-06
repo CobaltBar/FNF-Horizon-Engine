@@ -12,8 +12,13 @@ class Alphabet extends FlxSpriteGroup
 		{
 			var animName:String = chars[i];
 			var char:FlxSprite = Util.createSparrowSprite(x + offsetX, y - offsetY, "alphabet", scale, antiAliasing);
-			if (animName == "\r" || animName == "\n")
+			if (animName == "\r")
 				continue;
+			else if (animName == "\n")
+			{
+				y += 80;
+				continue;
+			}
 			else if (animName == " ")
 			{
 				letterWidth += 35 * scale;

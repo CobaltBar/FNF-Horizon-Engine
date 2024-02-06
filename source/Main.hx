@@ -3,7 +3,6 @@ package;
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
-import lime.app.Application;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.UncaughtErrorEvent;
@@ -15,7 +14,7 @@ class Main extends Sprite
 		super();
 
 		FlxTransitionableState.skipNextTransIn = true;
-		addChild(new FlxGame(0, 0, TitleState, 60, 60, true));
+		addChild(new FlxGame(0, 0, InitState, 60, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFF));
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
 		{
@@ -30,7 +29,6 @@ class Main extends Sprite
 					default: trace(item);
 				}
 			Util.error('$err\n${e.error}');
-			MusicState.switchState(new ErrorState());
 		});
 	}
 }

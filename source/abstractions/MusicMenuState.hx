@@ -31,19 +31,19 @@ class MusicMenuState extends MusicState
 
 	public override function update(elapsed:Float):Void
 	{
-		if (FlxG.sound.music.volume < 0.8 && FlxG.sound.music != null)
+		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.8)
 			FlxG.sound.music.volume += 0.5 * elapsed;
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1], Settings.data.keybinds.get("ui")[5]]))
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1], Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
 			changeSelection(1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2], Settings.data.keybinds.get("ui")[6]]))
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2], Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
 			changeSelection(-1);
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")))
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
 			exitState();
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")))
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
 			returnState();
 
 		super.update(elapsed);
@@ -56,11 +56,13 @@ class MusicMenuState extends MusicState
 
 	public function exitState():Void
 	{
+		transitioningOut = true;
 		FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
 	}
 
 	public function returnState():Void
 	{
+		transitioningOut = true;
 		FlxG.sound.play("assets/sounds/Cancel.ogg", 0.7);
 	}
 }

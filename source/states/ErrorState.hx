@@ -2,13 +2,22 @@ package states;
 
 class ErrorState extends MusicState
 {
-	public static var errorText:String;
+	var errorText:String;
 
 	var errorTitle:FlxText;
 	var errorInfo:FlxText;
 
+	public function new(errorText:String)
+	{
+		super();
+		this.errorText = errorText;
+	}
+
 	public override function create()
 	{
+		FlxG.sound.music.resume();
+		FlxG.sound.music.volume = 1;
+		bpm = TitleState.titleData.bpm;
 		errorTitle = Util.createText(FlxG.width / 2, -100, "ERROR", 96, "assets/fonts/vcr.ttf", 0xFFFF0000, CENTER);
 		errorTitle.x -= errorTitle.width / 2;
 		add(errorTitle);
