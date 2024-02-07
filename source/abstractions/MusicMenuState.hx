@@ -49,9 +49,10 @@ class MusicMenuState extends MusicState
 		super.update(elapsed);
 	}
 
-	public function changeSelection(change:Int, set:Bool = false):Void
+	public function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
-		FlxG.sound.play("assets/sounds/Scroll.ogg", 0.7);
+		if (sound)
+			FlxG.sound.play("assets/sounds/Scroll.ogg", 0.7);
 	}
 
 	public function exitState():Void

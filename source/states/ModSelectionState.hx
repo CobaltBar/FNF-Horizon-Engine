@@ -15,8 +15,9 @@ class ModSelectionState extends MusicMenuState
 		bpm = 0;
 		setupMenu();
 		createMenuBackdrop();
-		createMenuOptions(ModManager.discoveredMods);
+		ModManager.discoveredMods.length == 0 ? MusicState.switchState(new TitleState(), true, true) : createMenuOptions(ModManager.discoveredMods);
 		var i:Int = 0;
+
 		new FlxTimer().start(0.1, (t:FlxTimer) ->
 		{
 			var trueX:Float = menuOptions[i].x;
@@ -28,6 +29,9 @@ class ModSelectionState extends MusicMenuState
 			});
 			i++;
 		}, menuOptions.length);
+
+		changeSelection(0, false);
+
 		super.create();
 	}
 
@@ -46,6 +50,7 @@ class ModSelectionState extends MusicMenuState
 		{
 			var option = new Alphabet(FlxG.width / 2, 400 + (i * 100), mods[i].name, true, CENTER, 1.2);
 			option.cameras = [optionsCam];
+			option.alpha = 0.6;
 			option.visible = false;
 			add(option);
 			menuOptions.push(option);
@@ -53,6 +58,7 @@ class ModSelectionState extends MusicMenuState
 
 		var option = new Alphabet(FlxG.width / 2, 400 + (menuOptions.length * 100), "Global Mods Only", true, CENTER, 1.2);
 		option.cameras = [optionsCam];
+		option.alpha = 0.6;
 		option.visible = false;
 		add(option);
 		menuOptions.push(option);
@@ -61,7 +67,7 @@ class ModSelectionState extends MusicMenuState
 	public function createMenuBackdrop():Void
 	{
 		backdrop = new FlxBackdrop(Path.image("menuBGDesat"));
-		backdrop.scale.set(1.4, 1.4);
+		backdrop.scale.set(1.6, 1.6);
 		backdrop.velocity.set(50, 0);
 		backdrop.screenCenter();
 		backdrop.cameras = [menuCam];

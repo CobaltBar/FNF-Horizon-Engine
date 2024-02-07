@@ -34,7 +34,6 @@ class MusicState extends FlxTransitionableState
 
 		camerasToBop.push(FlxG.camera);
 
-		curStep = curBeat = 0;
 		beatsMS = ((60 / bpm) * 1000);
 		stepsMS = beatsMS * 0.25;
 
@@ -67,7 +66,7 @@ class MusicState extends FlxTransitionableState
 	}
 
 	public function onStep():Void
-		if (curStep % 4 == 0)
+		if (curStep % 4 == 0 && curStep > 0)
 			onBeat();
 
 	public function onBeat():Void

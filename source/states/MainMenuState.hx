@@ -28,12 +28,12 @@ class MainMenuState extends MusicMenuState
 			i++;
 		}, menuOptions.length);
 
-		changeSelection(0);
+		changeSelection(0, false);
 
 		super.create();
 	}
 
-	public override function changeSelection(change:Int, set:Bool = false)
+	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
 		super.changeSelection(change, set);
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
@@ -75,6 +75,10 @@ class MainMenuState extends MusicMenuState
 			optionsCam.follow(menuOptions[curSelected], LOCKON, 0.12);
 			transitioningOut = true;
 			FlxTween.tween(optionsCam, {zoom: 1.2}, 1, {
+				ease: FlxEase.expoOut,
+				type: ONESHOT,
+			});
+			FlxTween.tween(menuCam, {zoom: 0.9}, 1, {
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
 			});
