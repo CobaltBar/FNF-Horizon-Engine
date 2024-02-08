@@ -8,8 +8,9 @@ class InitState extends MusicState
 	{
 		Settings.load();
 		ModManager.loadMods();
+		z
 
-		MusicState.switchState(new ModSelectionState(), true);
+		// MusicState.switchState(new ModSelectionState(), true);
 
 		super.create();
 	}

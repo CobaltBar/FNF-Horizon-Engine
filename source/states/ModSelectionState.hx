@@ -9,13 +9,16 @@ class ModSelectionState extends MusicMenuState
 {
 	var backdrop:FlxBackdrop;
 	var hue:Float = 0;
+	var categoryOptions:Array<FlxSprite> = [];
 
 	public override function create():Void
 	{
 		bpm = 0;
+		if (ModManager.discoveredMods.length == 0)
+			MusicState.switchState(new TitleState(), true, true);
 		setupMenu();
 		createMenuBackdrop();
-		ModManager.discoveredMods.length == 0 ? MusicState.switchState(new TitleState(), true, true) : createMenuOptions(ModManager.discoveredMods);
+		createMenuOptions(ModManager.discoveredMods);
 		var i:Int = 0;
 
 		new FlxTimer().start(0.1, (t:FlxTimer) ->
@@ -41,7 +44,7 @@ class ModSelectionState extends MusicMenuState
 
 		hue += elapsed * 15;
 		hue %= 359;
-		backdrop.color = FlxColor.fromHSB(hue, 1, 1);
+		backdrop.color = FlxColor.fromHSB(hue, 1, 0.7);
 	}
 
 	public function createMenuOptions(mods:Array<Mod>):Void
