@@ -61,7 +61,11 @@ class Util
 	}
 
 	public static function error(error:String)
-		MusicState.switchState(new ErrorState(error));
+	{
+		trace(error);
+		ErrorState.errorText = error;
+		MusicState.switchState(new ErrorState());
+	}
 
 	private static function sprCreate(x, y, scale:Float = 1, ?antiAliasing:Bool):FlxSprite
 	{

@@ -35,17 +35,11 @@ class MainMenuState extends MusicMenuState
 
 	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
-		super.changeSelection(change, set);
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
 		menuOptions[curSelected].animation.play("idle");
 		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
 
-		set ? curSelected = change : curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuOptions.length - 1;
-		if (curSelected >= menuOptions.length)
-			curSelected = 0;
+		super.changeSelection(change, sound, set);
 
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
 		menuOptions[curSelected].animation.play("selected");
@@ -66,6 +60,7 @@ class MainMenuState extends MusicMenuState
 	public override function exitState()
 	{
 		super.exitState();
+		transitioningOut = false;
 		if (curSelected == 5)
 			Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
 		else

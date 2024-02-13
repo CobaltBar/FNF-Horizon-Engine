@@ -32,7 +32,7 @@ class TitleState extends MusicState
 	{
 		if (!comingBack && FlxG.sound.music == null)
 		{
-			FlxG.sound.playMusic(Path.sound("menuSong", "songs"), 0);
+			FlxG.sound.playMusic(Path.sound("menuSong"), 0);
 			FlxG.sound.music.pause();
 		}
 		loadTitleData();
@@ -161,11 +161,11 @@ class TitleState extends MusicState
 					targetZoom = 1.2;
 					createIntroText("Friday", -100);
 				case 14:
-					targetZoom = 1.3;
+					targetZoom = 1.35;
 					tweenLastIntroText(1, 100);
 					createIntroText("Night", -100);
 				case 15:
-					targetZoom = 1.4;
+					targetZoom = 1.5;
 					tweenLastIntroText(1, 100);
 					tweenLastIntroText(2, 100);
 					createIntroText("Funkin'", -100);

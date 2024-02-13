@@ -3,6 +3,8 @@ package modding;
 import haxe.io.Path as Path;
 import modding.Mod.ModJsonData;
 import sys.FileSystem;
+import sys.io.File;
+import tjson.TJSON;
 
 class ModManager
 {
@@ -22,7 +24,7 @@ class ModManager
 				continue;
 			if (FileSystem.exists(Path.combine(["mods", modDir, "mod.json"])))
 			{
-				var json:ModJsonData = Path.json("", Path.combine(["mods", modDir, "mod.json"]));
+				var json:ModJsonData = TJSON.parse(File.getContent(Path.combine(["mods", modDir, "mod.json"])));
 				discoveredMods.push(new Mod(json.name, json.description, json.version, json.color, json.globalMod, json.rpcChange,
 					Path.combine(["mods", modDir]),
 					FileSystem.exists(Path.combine(["mods", modDir, "mod.png"])) ? Path.combine(["mods", modDir, "mod.png"]) : Path.image("unknownMod")));

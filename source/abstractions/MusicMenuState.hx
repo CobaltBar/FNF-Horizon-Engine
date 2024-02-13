@@ -52,18 +52,25 @@ class MusicMenuState extends MusicState
 	public function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
 		if (sound)
-			FlxG.sound.play("assets/sounds/Scroll.ogg", 0.7);
+			FlxG.sound.play(Path.sound("Scroll"), 0.7);
+
+		set ? curSelected = change : curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = menuOptions.length - 1;
+		if (curSelected >= menuOptions.length)
+			curSelected = 0;
 	}
 
 	public function exitState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play("assets/sounds/Confirm.ogg", 0.7);
+		FlxG.sound.play(Path.sound("Confirm"), 0.7);
 	}
 
 	public function returnState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play("assets/sounds/Cancel.ogg", 0.7);
+		FlxG.sound.play(Path.sound("Cancel"), 0.7);
 	}
 }

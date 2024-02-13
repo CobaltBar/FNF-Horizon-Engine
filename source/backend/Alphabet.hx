@@ -5,13 +5,13 @@ class Alphabet extends FlxSpriteGroup
 	public function new(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0,
 			?antiAliasing:Bool, seperation:Float = 0, ?icon:String, ?winningIcon:Bool)
 	{
-		super(0, 0);
+		super(x + offsetX, y - offsetY);
 		var chars:Array<String> = text.split("");
 		var letterWidth:Float = 0;
 		for (i in 0...chars.length)
 		{
 			var animName:String = chars[i];
-			var char:FlxSprite = Util.createSparrowSprite(x + offsetX, y - offsetY, "alphabet", scale, antiAliasing);
+			var char:FlxSprite = Util.createSparrowSprite(0, 0, "alphabet", scale, antiAliasing);
 			if (animName == "\r")
 				continue;
 			else if (animName == "\n")
@@ -33,6 +33,8 @@ class Alphabet extends FlxSpriteGroup
 				animName = "apostrophe";
 				char.y -= char.height / 2;
 			}
+			else if (animName == "-")
+				char.y -= char.height / 4;
 			else if (animName == "\\")
 				animName = "back slash";
 			else if (animName == "!")
@@ -73,14 +75,14 @@ class Alphabet extends FlxSpriteGroup
 			char.animation.play("idle");
 			char.updateHitbox();
 			char.centerOffsets();
-			char.x = x + letterWidth + offsetX + seperation;
+			char.x = letterWidth;
 			char.y -= char.height;
 			letterWidth += char.width;
 			add(char);
 		}
 		if (icon != null)
 		{
-			var icon = Util.createIcon(x + letterWidth + offsetX, y - offsetY, icon, winningIcon, scale, antiAliasing);
+			var icon = Util.createIcon(letterWidth, 0, icon, winningIcon, scale, antiAliasing);
 			add(icon);
 		}
 		switch (alignment)

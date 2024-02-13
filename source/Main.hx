@@ -5,6 +5,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import openfl.Lib;
 import openfl.display.Sprite;
+import openfl.events.ErrorEvent;
 import openfl.events.UncaughtErrorEvent;
 
 class Main extends Sprite
