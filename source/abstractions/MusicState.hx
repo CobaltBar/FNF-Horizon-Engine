@@ -27,8 +27,11 @@ class MusicState extends FlxTransitionableState
 	var shouldZoom:Bool = true;
 	var targetZoom:Float = 1;
 
+	public static var errorText:String = "";
+
 	public override function create():Void
 	{
+		errorText = "";
 		transitionFromPoint = new FlxPoint(-1, 0);
 		transitionToPoint = new FlxPoint(1, 0);
 
@@ -40,6 +43,8 @@ class MusicState extends FlxTransitionableState
 		transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 0.5, transitionFromPoint);
 		transOut = FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xff000000, 0.5, transitionToPoint);
 		super.create();
+		if (errorText.length > 0)
+			MusicState.switchState(new ErrorState());
 	}
 
 	public override function update(elapsed:Float)

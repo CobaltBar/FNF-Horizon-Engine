@@ -2,8 +2,6 @@ package states;
 
 class ErrorState extends MusicState
 {
-	public static var errorText:String;
-
 	var errorTitle:FlxText;
 	var errorInfo:FlxText;
 
@@ -22,7 +20,7 @@ class ErrorState extends MusicState
 			type: ONESHOT,
 			ease: FlxEase.expoOut
 		});
-		errorInfo = Util.createText(FlxG.width / 2, -100, errorText, 36, "assets/fonts/vcr.ttf", 0xFFFF0000, CENTER);
+		errorInfo = Util.createText(FlxG.width / 2, -100, MusicState.errorText, 36, "assets/fonts/vcr.ttf", 0xFFFF0000, CENTER);
 		errorInfo.x -= errorInfo.width / 2;
 		add(errorInfo);
 		FlxTween.tween(errorInfo, {y: 500}, 1, {

@@ -8,7 +8,7 @@ class InitState extends MusicState
 	{
 		Settings.load();
 		ModManager.loadMods();
-		Path.reloadAssets();
+		Path.loadAssets();
 
 		MusicState.switchState(new TitleState(), true);
 

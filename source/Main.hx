@@ -3,6 +3,7 @@ package;
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
+import lime.app.Application;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.ErrorEvent;
@@ -27,9 +28,10 @@ class Main extends Sprite
 				{
 					case FilePos(s, file, line, column):
 						err += '$s File: $file Line: $line Column: $column\n';
-					default: trace(item);
+					default: Sys.println(item);
 				}
-			Util.error('$err\n${e.error}');
+			Application.current.window.alert(err, "Crash!");
+			Sys.exit(1);
 		});
 	}
 }
