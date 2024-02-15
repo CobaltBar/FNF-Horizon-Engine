@@ -20,6 +20,8 @@ class Path
 				{
 					if (FileSystem.isDirectory(combine(["assets", asset, asset2])))
 					{
+						if (asset2 == "songs")
+							continue;
 						for (asset3 in FileSystem.readDirectory(combine(["assets", asset, asset2])))
 							if (FileSystem.isDirectory(combine(["assets", asset, asset2, asset3])))
 							{
@@ -37,26 +39,22 @@ class Path
 				}
 			else
 				assets.set(asset, combine(["assets", asset]));
-
-		// Replace Assets
-		for (mod in FileSystem.readDirectory("mods"))
-		{
-			if (!FileSystem.isDirectory(combine(["mods", mod])) || mod == "Mod Template")
-				continue;
-			for (modAsset in FileSystem.readDirectory(combine(["mods", mod])))
-			{
-				if (FileSystem.isDirectory(combine(["mods", mod, modAsset])))
-				{
-					for (modAsset2 in FileSystem.readDirectory(combine(["mods", mod, modAsset]))) {}
-				}
-				else
-				{
-					if (assets.exists(modAsset))
-						assets.set(modAsset, combine(["mods", mod, modAsset]));
-				}
-			}
-		}
 	}
+
+	public static function reloadEnabledMods():Void
+		for (mod in ModManager.enabledMods)
+			for (folder in FileSystem.readDirectory(mod.path))
+				if (FileSystem.isDirectory(combine([mod.path, folder])))
+					if (folder == "images" || folder == "characters" || folder == "charts" || folder == "sounds" || folder == "videos")
+						for (file in FileSystem.readDirectory(combine([mod.path, folder])))
+							if (FileSystem.isDirectory(combine([mod.path, folder, file])))
+							{
+								for (asset in FileSystem.readDirectory(combine([mod.path, folder, file])))
+									if (!FileSystem.isDirectory(combine([mod.path, folder, file, asset])))
+										assets.set(asset, combine([mod.path, folder, file, asset]));
+							}
+							else
+								assets.set(file, combine([mod.path, folder, file]));
 
 	public static inline function image(name:String):String
 	{

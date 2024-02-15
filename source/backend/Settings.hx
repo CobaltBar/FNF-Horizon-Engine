@@ -2,6 +2,7 @@ package backend;
 
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
+import modding.Mod;
 
 class SaveVars
 {
@@ -26,6 +27,7 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
+	public var mods:Map<Mod, Int> = [];
 
 	public function new() {};
 }
