@@ -1,15 +1,15 @@
 package states;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
 
 class MainMenuState extends MusicMenuState
 {
-	var bgFlash:FlxSprite;
+	var bgFlash:FlxBackdrop;
 
 	public override function create():Void
 	{
-		bpm = TitleState.titleData.bpm;
 		setupMenu();
 		createMenuBG();
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
@@ -69,6 +69,7 @@ class MainMenuState extends MusicMenuState
 				FlxFlicker.flicker(bgFlash, 1.1, 0.15, false);
 			optionsCam.follow(menuOptions[curSelected], LOCKON, 0.12);
 			transitioningOut = true;
+
 			FlxTween.tween(optionsCam, {zoom: 1.2}, 1, {
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
@@ -77,7 +78,7 @@ class MainMenuState extends MusicMenuState
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
 			});
-			FlxFlicker.flicker(menuOptions[curSelected], 1.2, 0.06, false, false, (flicker:FlxFlicker) ->
+			FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false, (flicker:FlxFlicker) ->
 			{
 				switch (curSelected)
 				{
@@ -154,13 +155,11 @@ class MainMenuState extends MusicMenuState
 
 	public function createMenuBG():Void
 	{
-		bg = Util.createGraphicSprite(0, 0, Path.image("menuBG"), 1.7);
-		bg.screenCenter();
+		bg = Util.createBackdrop(Path.image("menuBG"), 1.7);
 		bg.cameras = [menuCam];
 		add(bg);
 
-		bgFlash = Util.createGraphicSprite(0, 0, Path.image("menuBGMagenta"), 1.7);
-		bgFlash.screenCenter();
+		bgFlash = Util.createBackdrop(Path.image("menuBGMagenta"), 1.7);
 		bgFlash.cameras = [menuCam];
 		bgFlash.visible = false;
 		add(bgFlash);

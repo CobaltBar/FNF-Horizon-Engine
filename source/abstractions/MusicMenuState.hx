@@ -1,6 +1,8 @@
 package abstractions;
 
 import flixel.FlxObject;
+import flixel.addons.display.FlxBackdrop;
+import flixel.util.typeLimit.OneOfTwo;
 
 class MusicMenuState extends MusicState
 {
@@ -18,9 +20,10 @@ class MusicMenuState extends MusicState
 
 	public function setupMenu():Void
 	{
-		menuCam = Util.createCamera(true);
-		optionsCam = Util.createCamera(true);
-		otherCam = Util.createCamera(true);
+		bpm = TitleState.titleData.bpm ?? 0;
+		menuCam = Util.createCamera(false, true);
+		optionsCam = Util.createCamera(false, true);
+		otherCam = Util.createCamera(true, true);
 		menuFollow = new FlxObject(FlxG.width / 2, FlxG.height / 2);
 		optionsFollow = new FlxObject(FlxG.width / 2, FlxG.height / 2);
 		menuCam.follow(menuFollow, LOCKON, 0.1);

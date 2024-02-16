@@ -10,7 +10,7 @@ FNF Wonder Engine is a recode of Friday Night Funkin', built for mods.
 ## Credits:
 
 -   Cobalt Bar (Creator)
--   Gamadoge (Path.hx help)
+-   Betopia (Note sprite stuff)
 
 ## Special Thanks:
 

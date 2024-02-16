@@ -1,9 +1,20 @@
 package backend;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.frames.FlxAtlasFrames;
 
 class Util
 {
+	public static function createBackdrop(path:String, scale:Float = 1, ?antiAliasing:Bool):FlxBackdrop
+	{
+		var bg:FlxBackdrop = new FlxBackdrop(path);
+		bg.scale.set(scale, scale);
+		bg.updateHitbox();
+		bg.centerOffsets(true);
+		bg.screenCenter();
+		return bg;
+	}
+
 	public static function createSparrowSprite(x:Float, y:Float, path:String, scale:Float = 1, ?antiAliasing:Bool):FlxSprite
 	{
 		var spr:FlxSprite = sprCreate(x, y, scale, antiAliasing);
@@ -31,10 +42,10 @@ class Util
 		return spr;
 	}
 
-	public static function createCamera(?transparent:Bool):FlxCamera
+	public static function createCamera(main:Bool, ?transparent:Bool):FlxCamera
 	{
 		var cam:FlxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
-		FlxG.cameras.add(cam);
+		FlxG.cameras.add(cam, main);
 		cam.bgColor = (transparent ? 0x00000000 : 0xFF000000) ?? 0xFF000000;
 		return cam;
 	}

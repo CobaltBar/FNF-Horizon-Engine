@@ -11,7 +11,7 @@ class MusicState extends FlxTransitionableState
 
 	var bpm:Float = 100;
 
-	var curTime:Float = 0;
+	static var curTime:Float = 0;
 
 	var timeScale:Float = 1;
 	var transitioningOut:Bool = false;
