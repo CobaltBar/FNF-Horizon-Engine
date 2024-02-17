@@ -133,6 +133,7 @@ class TitleState extends MusicState
 				case 0:
 					FlxG.sound.music.resume();
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
+					MusicState.curTime = FlxG.sound.music.time;
 				case 1:
 					createIntroText("Wonder Engine by", -50);
 				case 3:

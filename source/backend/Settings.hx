@@ -27,7 +27,8 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
-	public var mods:Map<Mod, Int> = [];
+	public var savedMods:Map<Mod, ModSaveData> = [];
+	public var fullscreen:Bool = false;
 
 	public function new() {};
 }
@@ -53,6 +54,8 @@ class Settings
 		for (key in Reflect.fields(data))
 			if (Reflect.hasField(FlxG.save.data, key))
 				Reflect.setField(data, key, Reflect.field(FlxG.save.data, key));
+
+		FlxG.fullscreen = data.fullscreen;
 
 		FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
 		if (FlxG.save.data.volume != null)

@@ -34,8 +34,11 @@ class ModManager
 					FileSystem.exists(Path.combine(["mods", modDir, "mod.png"])) ? Path.combine(["mods", modDir, "mod.png"]) : Path.image("unknownMod")));
 		}
 
-		for (i in 0...discoveredMods.length)
-			discoveredMods[i].ID = Settings.data.mods.get(discoveredMods[i]) ?? i;
+		for (mod in discoveredMods)
+		{
+			if (Settings.data.savedMods.exists(mod))
+				enabledMods.push(mod);
+		}
 	}
 
 	public static function reloadMods():Void

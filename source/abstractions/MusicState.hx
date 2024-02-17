@@ -13,7 +13,6 @@ class MusicState extends FlxTransitionableState
 
 	static var curTime:Float = 0;
 
-	var timeScale:Float = 1;
 	var transitioningOut:Bool = false;
 
 	var beatsMS:Float = 0;
@@ -49,7 +48,7 @@ class MusicState extends FlxTransitionableState
 
 	public override function update(elapsed:Float)
 	{
-		curTime += elapsed * 1000 * timeScale;
+		curTime += elapsed * 1000.0;
 		updateCurStep();
 		if (shouldZoom)
 			for (cam in camerasToBop)
