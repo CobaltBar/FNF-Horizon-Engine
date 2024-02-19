@@ -21,6 +21,8 @@ class MusicState extends FlxTransitionableState
 	var transitionFromPoint:FlxPoint;
 	var transitionToPoint:FlxPoint;
 
+	var resyncToGlobalMusic:Bool = true;
+
 	var camerasToBop:Array<FlxCamera> = [];
 	var shouldBop:Bool = true;
 	var shouldZoom:Bool = true;
@@ -48,7 +50,7 @@ class MusicState extends FlxTransitionableState
 
 	public override function update(elapsed:Float)
 	{
-		curTime += elapsed * 1000.0;
+		curTime += elapsed * 1000;
 		updateCurStep();
 		if (shouldZoom)
 			for (cam in camerasToBop)
@@ -75,6 +77,8 @@ class MusicState extends FlxTransitionableState
 
 	public function onBeat():Void
 	{
+		if (Math.abs(FlxG.sound.music.time - curTime) >= Settings.data.resyncThreshold && resyncToGlobalMusic && FlxG.sound.music != null)
+			curTime = FlxG.sound.music.time;
 		if (!transitioningOut && shouldBop)
 			for (cam in camerasToBop)
 			{
@@ -89,6 +93,6 @@ class MusicState extends FlxTransitionableState
 	{
 		FlxTransitionableState.skipNextTransIn = skipTransitionIn;
 		FlxTransitionableState.skipNextTransOut = skipTransitionOut;
-		FlxG.switchState(state);
+		FlxG.switchState(() -> state);
 	}
 }

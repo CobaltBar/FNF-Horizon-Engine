@@ -29,6 +29,7 @@ class SaveVars
 	];
 	public var savedMods:Map<Mod, ModSaveData> = [];
 	public var fullscreen:Bool = false;
+	public var resyncThreshold:Int = 30;
 
 	public function new() {};
 }

@@ -33,7 +33,6 @@ class TitleState extends MusicState
 		if (!comingBack && FlxG.sound.music == null)
 		{
 			FlxG.sound.playMusic(Path.sound("menuSong"), 0);
-			FlxG.sound.music.pause();
 		}
 		loadTitleData();
 		generateObjects();
@@ -131,9 +130,8 @@ class TitleState extends MusicState
 			switch (curBeat)
 			{
 				case 0:
-					FlxG.sound.music.resume();
+					FlxG.sound.music.time = MusicState.curTime = 0;
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-					MusicState.curTime = FlxG.sound.music.time;
 				case 1:
 					createIntroText("Wonder Engine by", -50);
 				case 3:
