@@ -30,6 +30,7 @@ class Main extends Sprite
 						err += '$s File: $file Line: $line Column: $column\n';
 					default: Sys.println(item);
 				}
+			Sys.println('ERROR:\n$err');
 			Application.current.window.alert(err, "Crash!");
 			Sys.exit(1);
 		});

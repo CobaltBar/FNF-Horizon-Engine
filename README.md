@@ -1,6 +1,6 @@
 # FNF Wonder Engine
 
-FNF Wonder Engine is a recode of Friday Night Funkin', built for mods.
+FNF Wonder Engine is a recode of Friday Night Funkin', built for mods and made for fun.
 
 ## Features:
 
@@ -14,4 +14,4 @@ FNF Wonder Engine is a recode of Friday Night Funkin', built for mods.
 
 ## Special Thanks:
 
--   Psych Engine (Assets and some code)
+-   Psych Engine (Assets, most introtexts, and some code)
