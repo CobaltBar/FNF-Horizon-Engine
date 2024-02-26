@@ -1,5 +1,7 @@
 package states;
 
+import haxe.Exception;
+
 class ErrorState extends MusicState
 {
 	var errorTitle:FlxText;
@@ -12,7 +14,7 @@ class ErrorState extends MusicState
 			FlxG.sound.music.resume();
 			FlxG.sound.music.volume = 1;
 		}
-		bpm = TitleState.titleData.bpm ?? 0;
+
 		errorTitle = Util.createText(FlxG.width / 2, -100, "ERROR", 96, "assets/fonts/vcr.ttf", 0xFFFF0000, CENTER);
 		errorTitle.x -= errorTitle.width / 2;
 		add(errorTitle);
@@ -39,5 +41,12 @@ class ErrorState extends MusicState
 			MusicState.switchState(new TitleState());
 		}
 		super.update(elapsed);
+	}
+
+	public static function error(?err:Exception, description:String, errorState:Bool = false):Void
+	{
+		MusicState.errorText += '$description\n' + err == null ? '' : err.details();
+		if (errorState)
+			MusicState.switchState(new ErrorState());
 	}
 }

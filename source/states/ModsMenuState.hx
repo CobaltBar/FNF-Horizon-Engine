@@ -32,12 +32,27 @@ class ModsMenuState extends MusicMenuState
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]) && !transitioningOut)
-			changeSection();
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]) && !transitioningOut)
+		if (FlxG.keys.anyJustPressed([
+			Settings.data.keybinds.get("ui")[0],
+			Settings.data.keybinds.get("ui")[4],
+			Settings.data.keybinds.get("ui")[3],
+			Settings.data.keybinds.get("ui")[7]
+		]) && !transitioningOut)
 			changeSection();
 
-		for (i in 0...menuOptions)
+		for (i in 0...menuOptions.length)
+		{
+			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y, menuOptions[i].width, menuOptions[i].height);
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
+			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i) * 100, elapsed * 5);
+		}
+		for (i in 0...enabledOptions.length)
+		{
+			enabledOptions[i].clipRect = FlxRect.weak(0, enabledOptions[i].y < 150 ? -enabledOptions[i].height + 10 : 0, enabledOptions[i].width,
+				enabledOptions[i].height);
+			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
+			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i) * 100, elapsed * 5);
+		}
 	}
 
 	public override function returnState()
@@ -104,8 +119,8 @@ class ModsMenuState extends MusicMenuState
 			}
 			var option = new Alphabet(FlxG.width - 50 - allModBG.width / 2, 250 + (i * 100), allMods[i].name, true, CENTER, 1.2);
 			option.cameras = [optionsCam];
-			// option.clipRect = new FlxRect(0, 0, FlxG.width, FlxG.height);
-			// option.clipRect = option.clipRect;
+			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
+			option.clipRect = option.clipRect;
 			option.alpha = 0.6;
 			add(option);
 			menuOptions.push(option);
@@ -115,6 +130,8 @@ class ModsMenuState extends MusicMenuState
 		{
 			var option = new Alphabet(50 + enabledModBG.width / 2, 250 + (i * 100), enabledMods[i].name, true, CENTER, 1.2);
 			option.cameras = [optionsCam];
+			option.clipRect = new FlxRect(0, -option.height - 10, option.width, option.height);
+			option.clipRect = option.clipRect;
 			option.alpha = 0.6;
 			add(option);
 			enabledOptions.push(option);

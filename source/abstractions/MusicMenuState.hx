@@ -20,7 +20,6 @@ class MusicMenuState extends MusicState
 
 	public function setupMenu():Void
 	{
-		bpm = TitleState.titleData.bpm ?? 0;
 		menuCam = Util.createCamera(false, true);
 		optionsCam = Util.createCamera(false, true);
 		otherCam = Util.createCamera(true, true);
