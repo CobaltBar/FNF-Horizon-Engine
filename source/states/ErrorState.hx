@@ -28,6 +28,7 @@ class ErrorState extends MusicState
 			type: ONESHOT,
 			ease: FlxEase.expoOut
 		});
+		trace(MusicState.errorText);
 
 		super.create();
 	}
@@ -51,7 +52,7 @@ class ErrorState extends MusicState
 
 	public static function error(?err:Exception, description:String, errorState:Bool = false):Void
 	{
-		MusicState.errorText += '$description\n' + err == null ? '' : err.details();
+		MusicState.errorText += '$description\n' + err == null ? '' : err.details() + '\n';
 		if (errorState)
 		{
 			MusicState.erroring = true;

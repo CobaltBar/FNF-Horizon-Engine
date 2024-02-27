@@ -4,6 +4,7 @@ import flixel.math.FlxRect;
 import modding.Mod;
 import modding.ModManager;
 
+// todo fix this shit
 class ModsMenuState extends MusicMenuState
 {
 	var enabledModBG:FlxSprite;
@@ -40,18 +41,21 @@ class ModsMenuState extends MusicMenuState
 		]) && !transitioningOut)
 			changeSection();
 
-		// TODO FIX THE DAMN BOTTOM CLIP (maybe with a key to change the val :3)
 		for (i in 0...menuOptions.length)
 		{
+			if (menuOptions[i] == null)
+				continue;
 			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) / 2, elapsed * 5);
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i) * 100, elapsed * 5);
 			menuOptions[i].clipRect = FlxRect.weak(0,
 				Math.floor(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10),
-				menuOptions[i].width, Math.floor(menuOptions[i].y > 789 ? menuOptions[i].height - (menuOptions[i].y - 789) : menuOptions[i].height));
+				menuOptions[i].width, Math.floor(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
 			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
 		for (i in 0...enabledOptions.length)
 		{
+			if (enabledOptions[i] == null)
+				continue;
 			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) / 2, elapsed * 5);
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i) * 100, elapsed * 5);
 			enabledOptions[i].clipRect = FlxRect.weak(0,
@@ -74,7 +78,8 @@ class ModsMenuState extends MusicMenuState
 		{
 			if (enabledOptions.length <= 0)
 				return;
-			enabledOptions[curEnabled].alpha = 0.6;
+			if (enabledOptions[curEnabled] != null)
+				enabledOptions[curEnabled].alpha = 0.6;
 			if (sound)
 				FlxG.sound.play(Path.sound("Scroll"), 0.7);
 
@@ -84,13 +89,16 @@ class ModsMenuState extends MusicMenuState
 				curEnabled = enabledOptions.length - 1;
 			if (curEnabled >= enabledOptions.length)
 				curEnabled = 0;
-			enabledOptions[curEnabled].alpha = 1;
+			if (enabledOptions[curEnabled] != null)
+				enabledOptions[curEnabled].alpha = 1;
 		}
 		else
 		{
-			menuOptions[curSelected].alpha = 0.6;
+			if (menuOptions[curSelected] != null)
+				menuOptions[curSelected].alpha = 0.6;
 			super.changeSelection(change, sound, set);
-			menuOptions[curSelected].alpha = 1;
+			if (menuOptions[curSelected] != null)
+				menuOptions[curSelected].alpha = 1;
 		}
 	}
 
@@ -103,11 +111,19 @@ class ModsMenuState extends MusicMenuState
 
 		if (enableSelected)
 		{
+			if (menuOptions[curSelected] != null)
+				menuOptions[curSelected].alpha = 0.6;
+			if (enabledOptions[curEnabled] != null)
+				enabledOptions[curEnabled].alpha = 1;
 			enabledModsText.alpha = 1;
 			allModsText.alpha = 0.6;
 		}
 		else
 		{
+			if (menuOptions[curSelected] != null)
+				menuOptions[curSelected].alpha = 1;
+			if (enabledOptions[curEnabled] != null)
+				enabledOptions[curEnabled].alpha = 0.6;
 			enabledModsText.alpha = 0.6;
 			allModsText.alpha = 1;
 		}
@@ -118,10 +134,19 @@ class ModsMenuState extends MusicMenuState
 		if (!enableSelected)
 		{
 			enabledOptions.push(menuOptions[curSelected]);
+			if (enabledOptions[enabledOptions.length - 1] != null)
+				enabledOptions[enabledOptions.length - 1].alpha = 0.6;
 			menuOptions.remove(menuOptions[curSelected]);
 			changeSelection(0, false);
 		}
-		else {}
+		else
+		{
+			menuOptions.push(enabledOptions[curEnabled]);
+			if (menuOptions[menuOptions.length - 1] != null)
+				menuOptions[menuOptions.length - 1].alpha = 0.6;
+			enabledOptions.remove(enabledOptions[curEnabled]);
+			changeSelection(0, false);
+		}
 	}
 
 	public function createModOptions(allMods:Array<Mod>, enabledMods:Array<Mod>):Void
