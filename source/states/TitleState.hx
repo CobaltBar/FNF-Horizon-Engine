@@ -130,41 +130,41 @@ class TitleState extends MusicState
 				case 0:
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
 					createIntroText("Wonder Engine by", -50);
-				case 2: // 3
+				case 2:
 					tweenLastIntroText(1, 150);
 					createIntroText("Cobalt Bar", -50);
-				case 3: // 4
+				case 3:
 					clearIntroTexts();
-				case 4: // 5
+				case 4:
 					createIntroText("Not Associated with", 100);
-				case 6: // 7
+				case 6:
 					tweenLastIntroText(1, 150);
 					createIntroText("Newgrounds", 100);
 					createIntroImage(Path.image("newgrounds_logo"), 0);
-				case 7: // 8
+				case 7:
 					clearIntroTexts();
 					clearIntroImages();
-				case 8: // 9
+				case 8:
 					createIntroText(goofyTexts[0], 50);
-				case 10: // 11
+				case 10:
 					tweenLastIntroText(1, 50);
 					createIntroText(goofyTexts[1], -50);
-				case 11: // 12
+				case 11:
 					clearIntroTexts();
-				case 12: // 13
+				case 12:
 					shouldBop = false;
 					targetZoom = 1.2;
 					createIntroText("Friday", -100);
-				case 13: // 14
+				case 13:
 					targetZoom = 1.35;
 					tweenLastIntroText(1, 100);
 					createIntroText("Night", -100);
-				case 14: // 15
+				case 14:
 					targetZoom = 1.5;
 					tweenLastIntroText(1, 100);
 					tweenLastIntroText(2, 100);
 					createIntroText("Funkin'", -100);
-				case 15: // 16
+				case 15:
 					skipIntro();
 			}
 		}

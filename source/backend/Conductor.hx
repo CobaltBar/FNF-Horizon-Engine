@@ -4,7 +4,7 @@ import flixel.sound.FlxSound;
 
 class Conductor
 {
-	public static var bpm(default, set):Float = 102;
+	public static var bpm(default, set):Float = 100;
 	public static var crochet:Float = 0;
 	public static var stepCrochet:Float = 0;
 	public static var song:FlxSound;

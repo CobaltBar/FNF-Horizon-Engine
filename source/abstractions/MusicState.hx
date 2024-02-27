@@ -20,6 +20,7 @@ class MusicState extends FlxTransitionableState
 	var shouldZoom:Bool = true;
 	var targetZoom:Float = 1;
 
+	public static var erroring:Bool = false;
 	public static var errorText:String = "";
 
 	public override function create():Void
@@ -32,8 +33,11 @@ class MusicState extends FlxTransitionableState
 		camerasToBop.push(FlxG.camera);
 
 		super.create();
-		if (errorText.length > 0)
+		if (errorText.length > 0 && !erroring)
+		{
+			erroring = true;
 			MusicState.switchState(new ErrorState());
+		}
 	}
 
 	public override function update(elapsed:Float):Void
@@ -64,7 +68,7 @@ class MusicState extends FlxTransitionableState
 				onStep();
 			}
 		}
-		else
+		else if (FlxG.sound.music != null)
 			Conductor.song = FlxG.sound.music;
 	}
 

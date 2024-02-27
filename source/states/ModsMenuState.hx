@@ -40,18 +40,25 @@ class ModsMenuState extends MusicMenuState
 		]) && !transitioningOut)
 			changeSection();
 
+		// TODO FIX THE DAMN BOTTOM CLIP (maybe with a key to change the val :3)
 		for (i in 0...menuOptions.length)
 		{
-			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y, menuOptions[i].width, menuOptions[i].height);
-			menuOptions[i].clipRect = menuOptions[i].clipRect;
+			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) / 2, elapsed * 5);
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i) * 100, elapsed * 5);
+			menuOptions[i].clipRect = FlxRect.weak(0,
+				Math.floor(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10),
+				menuOptions[i].width, Math.floor(menuOptions[i].y > 789 ? menuOptions[i].height - (menuOptions[i].y - 789) : menuOptions[i].height));
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
 		for (i in 0...enabledOptions.length)
 		{
-			enabledOptions[i].clipRect = FlxRect.weak(0, enabledOptions[i].y < 150 ? -enabledOptions[i].height + 10 : 0, enabledOptions[i].width,
-				enabledOptions[i].height);
-			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) / 2, elapsed * 5);
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i) * 100, elapsed * 5);
+			enabledOptions[i].clipRect = FlxRect.weak(0,
+				Math.floor(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
+				enabledOptions[i].width,
+				Math.floor(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
+			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
 		}
 	}
 
@@ -106,7 +113,16 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 
-	public override function exitState() {}
+	public override function exitState()
+	{
+		if (!enableSelected)
+		{
+			enabledOptions.push(menuOptions[curSelected]);
+			menuOptions.remove(menuOptions[curSelected]);
+			changeSelection(0, false);
+		}
+		else {}
+	}
 
 	public function createModOptions(allMods:Array<Mod>, enabledMods:Array<Mod>):Void
 	{
@@ -130,7 +146,7 @@ class ModsMenuState extends MusicMenuState
 		{
 			var option = new Alphabet(50 + enabledModBG.width / 2, 250 + (i * 100), enabledMods[i].name, true, CENTER, 1.2);
 			option.cameras = [optionsCam];
-			option.clipRect = new FlxRect(0, -option.height - 10, option.width, option.height);
+			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
 			option.clipRect = option.clipRect;
 			option.alpha = 0.6;
 			add(option);
