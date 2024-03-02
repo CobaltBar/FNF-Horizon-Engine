@@ -73,9 +73,7 @@ class MusicState extends FlxTransitionableState
 	}
 
 	public function onStep():Void
-	{
 		curStep++;
-	}
 
 	public function onBeat():Void
 	{

@@ -34,9 +34,3 @@ typedef ModJsonData =
 	public var globalMod:Bool;
 	public var rpcChange:String;
 }
-
-typedef ModSaveData =
-{
-	public var mod:Mod;
-	public var ID:Int;
-}

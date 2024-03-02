@@ -115,7 +115,7 @@ class MainMenuState extends MusicMenuState
 		MusicState.switchState(new TitleState());
 	}
 
-	public function createVersionTexts():Void
+	public inline function createVersionTexts():Void
 	{
 		var wonderEngineText = Util.createText(5, FlxG.height - 65, "Wonder Engine v" + Application.current.meta.get("version"), 28, Path.font("vcr"),
 			0xFFFFFFFF, LEFT)
@@ -153,7 +153,7 @@ class MainMenuState extends MusicMenuState
 		}
 	}
 
-	public function createMenuBG():Void
+	public inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image("menuBG"), 1.7);
 		bg.cameras = [menuCam];

@@ -4,7 +4,6 @@ import flixel.math.FlxRect;
 import modding.Mod;
 import modding.ModManager;
 
-// todo fix this shit
 class ModsMenuState extends MusicMenuState
 {
 	var enabledModBG:FlxSprite;
@@ -12,25 +11,23 @@ class ModsMenuState extends MusicMenuState
 	var modDescBG:FlxSprite;
 	var allModsText:Alphabet;
 	var enabledModsText:Alphabet;
-
+	var modOption:Map<Alphabet, Mod> = [];
 	var curEnabled:Int = 0;
 	var enabledOptions:Array<FlxSprite> = [];
-	var enableSelected:Bool = false;
+	var enabled:Bool = false;
 
-	public override function create()
+	public override function create():Void
 	{
 		setupMenu();
 		createMenuBG();
 		createModUI();
 		shouldBop = false;
-		createModOptions(ModManager.discoveredMods, ModManager.enabledMods);
+		createModOptions(ModManager.allMods, ModManager.enabledMods);
 		changeSelection(0, false);
-		changeSection(false);
-		changeSection(false);
 		super.create();
 	}
 
-	public override function update(elapsed:Float)
+	public override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
 		if (FlxG.keys.anyJustPressed([
@@ -40,7 +37,6 @@ class ModsMenuState extends MusicMenuState
 			Settings.data.keybinds.get("ui")[7]
 		]) && !transitioningOut)
 			changeSection();
-
 		for (i in 0...menuOptions.length)
 		{
 			if (menuOptions[i] == null)
@@ -48,8 +44,8 @@ class ModsMenuState extends MusicMenuState
 			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) / 2, elapsed * 5);
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i) * 100, elapsed * 5);
 			menuOptions[i].clipRect = FlxRect.weak(0,
-				Math.floor(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10),
-				menuOptions[i].width, Math.floor(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
+				Std.int(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10), menuOptions[i].width,
+				Std.int(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
 			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
 		for (i in 0...enabledOptions.length)
@@ -59,46 +55,53 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) / 2, elapsed * 5);
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i) * 100, elapsed * 5);
 			enabledOptions[i].clipRect = FlxRect.weak(0,
-				Math.floor(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
+				Std.int(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
 				enabledOptions[i].width,
-				Math.floor(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
+				Std.int(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
 			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
 		}
 	}
 
-	public override function returnState()
+	public override function returnState():Void
 	{
+		for (val in modOption)
+			ModManager.enabledMods.push(val);
+		haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
+		{
+			if (a.ID < b.ID)
+				return -1;
+			else if (a.ID > b.ID)
+				return 1;
+			else
+				return 0;
+		});
 		super.returnState();
 		MusicState.switchState(new MainMenuState());
 	}
 
-	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false)
+	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
-		if (enableSelected)
+		if (enabled)
 		{
-			if (enabledOptions.length <= 0)
+			if (enabledOptions.length <= 0 || enabledOptions[curEnabled] == null)
 				return;
-			if (enabledOptions[curEnabled] != null)
-				enabledOptions[curEnabled].alpha = 0.6;
+			enabledOptions[curEnabled].alpha = 0.6;
 			if (sound)
 				FlxG.sound.play(Path.sound("Scroll"), 0.7);
-
 			set ? curEnabled = change : curEnabled += change;
-
 			if (curEnabled < 0)
 				curEnabled = enabledOptions.length - 1;
 			if (curEnabled >= enabledOptions.length)
 				curEnabled = 0;
-			if (enabledOptions[curEnabled] != null)
-				enabledOptions[curEnabled].alpha = 1;
+			enabledOptions[curEnabled].alpha = 1;
 		}
 		else
 		{
-			if (menuOptions[curSelected] != null)
-				menuOptions[curSelected].alpha = 0.6;
+			if (menuOptions.length <= 0 || menuOptions[curSelected] == null)
+				return;
+			menuOptions[curSelected].alpha = 0.6;
 			super.changeSelection(change, sound, set);
-			if (menuOptions[curSelected] != null)
-				menuOptions[curSelected].alpha = 1;
+			menuOptions[curSelected].alpha = 1;
 		}
 	}
 
@@ -106,10 +109,9 @@ class ModsMenuState extends MusicMenuState
 	{
 		if (sound)
 			FlxG.sound.play(Path.sound("Scroll"), 0.7);
+		enabled = !enabled;
 
-		enableSelected = !enableSelected;
-
-		if (enableSelected)
+		if (enabled)
 		{
 			if (menuOptions[curSelected] != null)
 				menuOptions[curSelected].alpha = 0.6;
@@ -129,22 +131,24 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 
-	public override function exitState()
+	public override function exitState():Void
 	{
-		if (!enableSelected)
+		if (enabled)
 		{
-			enabledOptions.push(menuOptions[curSelected]);
-			if (enabledOptions[enabledOptions.length - 1] != null)
-				enabledOptions[enabledOptions.length - 1].alpha = 0.6;
-			menuOptions.remove(menuOptions[curSelected]);
+			if (enabledOptions[curEnabled] == null)
+				return;
+			enabledOptions[curEnabled].alpha = 0.6;
+			menuOptions.push(enabledOptions[curEnabled]);
+			enabledOptions.remove(enabledOptions[curEnabled]);
 			changeSelection(0, false);
 		}
 		else
 		{
-			menuOptions.push(enabledOptions[curEnabled]);
-			if (menuOptions[menuOptions.length - 1] != null)
-				menuOptions[menuOptions.length - 1].alpha = 0.6;
-			enabledOptions.remove(enabledOptions[curEnabled]);
+			if (menuOptions[curSelected] == null)
+				return;
+			menuOptions[curSelected].alpha = 0.6;
+			enabledOptions.push(menuOptions[curSelected]);
+			menuOptions.remove(menuOptions[curSelected]);
 			changeSelection(0, false);
 		}
 	}
@@ -153,12 +157,8 @@ class ModsMenuState extends MusicMenuState
 	{
 		for (i in 0...allMods.length)
 		{
-			if (enabledMods.contains(allMods[i]))
-			{
-				allMods.remove(allMods[i]);
-				continue;
-			}
-			var option = new Alphabet(FlxG.width - 50 - allModBG.width / 2, 250 + (i * 100), allMods[i].name, true, CENTER, 1.2);
+			var option = new Alphabet(FlxG.width - 50 - allModBG.width / 2, 250 + (i * 1000), allMods[i].name, true, CENTER, 1.2);
+			modOption.set(option, allMods[i]);
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
 			option.clipRect = option.clipRect;
@@ -170,6 +170,7 @@ class ModsMenuState extends MusicMenuState
 		for (i in 0...enabledMods.length)
 		{
 			var option = new Alphabet(50 + enabledModBG.width / 2, 250 + (i * 100), enabledMods[i].name, true, CENTER, 1.2);
+			modOption.set(option, enabledMods[i]);
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
 			option.clipRect = option.clipRect;
@@ -179,14 +180,14 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 
-	public function createMenuBG():Void
+	public inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image("menuBGDesat"), 1.7);
 		bg.cameras = [menuCam];
 		add(bg);
 	}
 
-	public function createModUI():Void
+	public inline function createModUI():Void
 	{
 		enabledModBG = Util.makeSprite(50, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
 		enabledModBG.cameras = [menuCam];

@@ -27,7 +27,7 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
-	public var savedMods:Map<Mod, ModSaveData> = [];
+	public var savedMods:Map<Mod, Int> = [];
 	public var fullscreen:Bool = false;
 	public var resyncThreshold:Int = 30;
 

@@ -42,6 +42,8 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-ui" />
 	<haxelib name="tjson" />
+	<haxelib name="haxeui-core" />
+	<haxelib name="haxeui-flixel" />
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
@@ -88,5 +90,6 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<assets path="art/icon.png" rename="icon.png" if="linux"/>
 	<icon path="art/icon.png" />
 </project>

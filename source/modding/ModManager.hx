@@ -14,6 +14,7 @@ class ModManager
 	];
 
 	public static var discoveredMods:Array<Mod> = [];
+	public static var allMods:Array<Mod> = []; // discoveredMods - enabledMods
 	public static var enabledMods:Array<Mod> = [];
 
 	public static function loadMods():Void
@@ -34,11 +35,14 @@ class ModManager
 					FileSystem.exists(Path.combine(["mods", modDir, "mod.png"])) ? Path.combine(["mods", modDir, "mod.png"]) : Path.image("unknownMod")));
 		}
 
+		allMods = discoveredMods;
+
 		for (mod in discoveredMods)
-		{
 			if (Settings.data.savedMods.exists(mod))
+			{
 				enabledMods.push(mod);
-		}
+				allMods.remove(mod);
+			}
 	}
 
 	public static function reloadMods():Void
