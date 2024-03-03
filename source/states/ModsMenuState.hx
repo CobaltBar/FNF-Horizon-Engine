@@ -2,6 +2,7 @@ package states;
 
 import flixel.math.FlxRect;
 import haxe.ui.components.Button;
+import haxe.ui.containers.HBox;
 import haxe.ui.containers.menus.Menu;
 import modding.Mod;
 import modding.ModManager;
@@ -14,14 +15,13 @@ class ModsMenuState extends MusicMenuState
 		shouldBop = false;
 		createMenuBG();
 
-		var hbox = new Menu();
-		hbox.cameras = [optionsCam];
+		var hbox = new HBox();
 		hbox.screenCenter();
+		hbox.cameras = [menuCam];
 		var button = new Button();
 
 		button.text = "hi chat";
 		button.fontSize = 24;
-		button.cameras = [optionsCam];
 		hbox.addComponent(button);
 		add(hbox);
 		super.create();

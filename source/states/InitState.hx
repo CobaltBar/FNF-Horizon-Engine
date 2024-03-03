@@ -1,6 +1,7 @@
 package states;
 
 import haxe.ui.Toolkit;
+import haxe.ui.backend.flixel.CursorHelper;
 import modding.ModManager;
 
 class InitState extends MusicState
@@ -9,6 +10,7 @@ class InitState extends MusicState
 	{
 		Toolkit.init();
 		Toolkit.theme = 'dark';
+		CursorHelper.useCustomCursors = false;
 		Settings.load();
 		ModManager.loadMods();
 		Path.loadAssets();
