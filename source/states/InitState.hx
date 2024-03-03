@@ -8,6 +8,7 @@ class InitState extends MusicState
 	public override function create()
 	{
 		Toolkit.init();
+		Toolkit.theme = 'dark';
 		Settings.load();
 		ModManager.loadMods();
 		Path.loadAssets();
