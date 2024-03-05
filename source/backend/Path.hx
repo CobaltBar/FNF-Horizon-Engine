@@ -1,7 +1,6 @@
 package backend;
 
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.sound.FlxSound;
 import haxe.io.Path as HaxePath;
 import modding.ModManager;
 import sys.FileSystem;
@@ -59,7 +58,7 @@ class Path
 	public static inline function image(name:String):String
 	{
 		if (!assets.exists(HaxePath.withExtension(name, "png")))
-			MusicState.errorText += 'Image ${HaxePath.withExtension(name, "png")} not found.\n';
+			ErrorState.error(null, 'Image ${HaxePath.withExtension(name, "png")} not found.\n');
 		return assets.get(HaxePath.withExtension(name, "png"));
 	}
 
@@ -71,7 +70,7 @@ class Path
 			return assets.get(HaxePath.withExtension(name, "mp3"));
 		else
 		{
-			MusicState.errorText += 'Sound $name not found.\n';
+			ErrorState.error(null, 'Sound $name not found.\n');
 			return null;
 		}
 	}
@@ -79,7 +78,7 @@ class Path
 	public static inline function json(name:String):Dynamic
 	{
 		if (!assets.exists(HaxePath.withExtension(name, "json")))
-			MusicState.errorText += 'Image ${HaxePath.withExtension(name, "json")} not found.\n';
+			ErrorState.error(null, 'Image ${HaxePath.withExtension(name, "json")} not found.\n');
 		return TJSON.parse(File.getContent(assets.get(HaxePath.withExtension(name, "json"))));
 	}
 
@@ -91,11 +90,11 @@ class Path
 		if (assets.exists(HaxePath.withExtension(name, "png")))
 			png = assets.get(HaxePath.withExtension(name, "png"));
 		else
-			MusicState.errorText += 'Sparrow $name not found (PNG)';
+			ErrorState.error(null, 'Sparrow $name not found (PNG)');
 		if (assets.exists(HaxePath.withExtension(name, "xml")))
 			xml = assets.get(HaxePath.withExtension(name, "xml"));
 		else
-			MusicState.errorText += 'Sparrow $name not found (XML)';
+			ErrorState.error(null, 'Sparrow $name not found (XML)');
 
 		return FlxAtlasFrames.fromSparrow(png, xml);
 	}
@@ -108,7 +107,7 @@ class Path
 			return assets.get(HaxePath.withExtension(name, "otf"));
 		else
 		{
-			MusicState.errorText += 'Font $name not found.\n';
+			ErrorState.error(null, 'Font $name not found.\n');
 			return null;
 		}
 	}
@@ -116,7 +115,7 @@ class Path
 	public static inline function txt(name:String):String
 	{
 		if (!assets.exists(HaxePath.withExtension(name, "txt")))
-			MusicState.errorText += 'Image ${HaxePath.withExtension(name, "txt")} not found.\n';
+			ErrorState.error(null, 'Image ${HaxePath.withExtension(name, "txt")} not found.\n');
 		return File.getContent(assets.get(HaxePath.withExtension(name, "txt")));
 	}
 

@@ -1,6 +1,5 @@
 package modding;
 
-import haxe.io.Path as Path;
 import modding.Mod.ModJsonData;
 import sys.FileSystem;
 import sys.io.File;

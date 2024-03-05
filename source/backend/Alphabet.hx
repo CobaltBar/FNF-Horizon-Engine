@@ -81,10 +81,7 @@ class Alphabet extends FlxSpriteGroup
 			add(char);
 		}
 		if (icon != null)
-		{
-			var icon = Util.createIcon(letterWidth, 0, icon, winningIcon, scale, antiAliasing);
-			add(icon);
-		}
+			add(Util.createGraphicSprite(letterWidth, 0, icon));
 		switch (alignment)
 		{
 			case LEFT:
