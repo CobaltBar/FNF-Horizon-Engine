@@ -18,6 +18,8 @@ class MusicMenuState extends MusicState
 
 	var bg:FlxSprite;
 
+	var handleInput:Bool = true;
+
 	public function setupMenu():Void
 	{
 		menuCam = Util.createCamera(false, true);
@@ -36,16 +38,20 @@ class MusicMenuState extends MusicState
 		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.8)
 			FlxG.sound.music.volume += 0.5 * elapsed;
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1], Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1], Settings.data.keybinds.get("ui")[5]])
+			&& !transitioningOut
+			&& handleInput)
 			changeSelection(1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2], Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2], Settings.data.keybinds.get("ui")[6]])
+			&& !transitioningOut
+			&& handleInput)
 			changeSelection(-1);
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut && handleInput)
 			exitState();
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut && handleInput)
 			returnState();
 
 		super.update(elapsed);

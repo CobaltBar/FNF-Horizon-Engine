@@ -119,6 +119,13 @@ class Path
 		return File.getContent(assets.get(HaxePath.withExtension(name, "txt")));
 	}
 
+	private static function addAssetIfExisting(name, path):Void
+		if (assets.exists(name))
+		{
+			ErrorState.error(null, 'Asset $name already exists!\nSetting to ${name + '-1'}');
+			assets.set(name, combine([HaxePath.withoutExtension(path), '-1', HaxePath.extension(path)]));
+		}
+
 	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
 }

@@ -22,9 +22,9 @@ class ErrorState extends MusicState
 			type: ONESHOT,
 			ease: FlxEase.expoOut
 		});
-		errorInfo = Util.createText(100, -100, MusicState.errorText, 32, Path.font("vcr"), 0xFFFF0000, LEFT);
+		errorInfo = Util.createText(100, -100, MusicState.errorText, 24, Path.font("vcr"), 0xFFFF0000, LEFT);
 		add(errorInfo);
-		FlxTween.tween(errorInfo, {y: 500}, 1, {
+		FlxTween.tween(errorInfo, {y: 300}, 1, {
 			type: ONESHOT,
 			ease: FlxEase.expoOut
 		});

@@ -2,6 +2,7 @@ package backend;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.frames.FlxAtlasFrames;
+import haxe.ui.components.Label;
 
 class Util
 {

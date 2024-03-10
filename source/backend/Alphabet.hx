@@ -3,7 +3,7 @@ package backend;
 class Alphabet extends FlxSpriteGroup
 {
 	public function new(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0,
-			?antiAliasing:Bool, seperation:Float = 0, ?icon:String, ?winningIcon:Bool)
+			?antiAliasing:Bool, seperation:Float = 0)
 	{
 		super(x + offsetX, y - offsetY);
 		var chars:Array<String> = text.split("");
@@ -80,12 +80,9 @@ class Alphabet extends FlxSpriteGroup
 			letterWidth += char.width;
 			add(char);
 		}
-		if (icon != null)
-			add(Util.createGraphicSprite(letterWidth, 0, icon));
 		switch (alignment)
 		{
-			case LEFT:
-			case JUSTIFY:
+			case LEFT | JUSTIFY:
 			case CENTER:
 				this.x -= this.width / 2;
 			case RIGHT:
