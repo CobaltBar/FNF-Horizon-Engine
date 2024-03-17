@@ -4,5 +4,6 @@
     "version": "1.0",
     "color": [0, 0, 0],
     "globalMod": false,
-    "rpcChange": ""
+    "rpcChange": "",
+    "modSysVer": 1
 }

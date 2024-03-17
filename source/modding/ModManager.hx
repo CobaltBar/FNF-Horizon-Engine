@@ -12,42 +12,41 @@ class ModManager
 		"sounds", "stages", "videos", "weeks"
 	];
 
-	public static var discoveredMods:Array<Mod> = [];
-	public static var allMods:Array<Mod> = []; // discoveredMods - enabledMods
+	static var discoveredMods:Array<Mod> = [];
+	public static var disabledMods:Array<Mod> = [];
 	public static var enabledMods:Array<Mod> = [];
 
 	public static function loadMods():Void
 	{
-		for (modDir in FileSystem.readDirectory("mods"))
-		{
-			if (!FileSystem.isDirectory(Path.combine(["mods", modDir])) || modDir == "Mod Template")
-				continue;
-			if (FileSystem.exists(Path.combine(["mods", modDir, "mod.json"])))
+		var i:Int = 0;
+		for (mod in FileSystem.readDirectory('mods'))
+			if (FileSystem.isDirectory(Path.combine(['mods', mod])))
 			{
-				var json:ModJsonData = TJSON.parse(File.getContent(Path.combine(["mods", modDir, "mod.json"])));
-				discoveredMods.push(new Mod(json.name, json.description, json.version, json.color, json.globalMod, json.rpcChange,
-					Path.combine(["mods", modDir]),
-					FileSystem.exists(Path.combine(["mods", modDir, "mod.png"])) ? Path.combine(["mods", modDir, "mod.png"]) : Path.image("unknownMod")));
+				if (mod == "Mod Template")
+					continue;
+				var json:ModJsonData = null;
+				if (FileSystem.exists(Path.combine(['mods', mod, 'mod.json'])))
+					json = TJSON.parse(File.getContent(Path.combine(['mods', mod, 'mod.json'])));
+				discoveredMods.push(new Mod(json.name ?? mod, json.description ?? "N/A", json.version ?? "1.0", json.color ?? [255, 255, 255],
+					json.rpcChange ?? "", json.modSysVer ?? InitState.modSysVer, Path.combine(['mods', mod]),
+					FileSystem.exists(Path.combine(['mods', mod, 'mod.png'])) ? Path.combine(['mods', mod, 'mod.png']) : Path.image("unknownMod"), i));
+				i++;
 			}
-			else
-				discoveredMods.push(new Mod(modDir, "Unknown", "1.0", [255, 255, 255], true, "", Path.combine(["mods", modDir]),
-					FileSystem.exists(Path.combine(["mods", modDir, "mod.png"])) ? Path.combine(["mods", modDir, "mod.png"]) : Path.image("unknownMod")));
-		}
 
-		allMods = discoveredMods;
-
-		for (mod in discoveredMods)
-			if (Settings.data.savedMods.exists(mod))
-			{
-				enabledMods.push(mod);
-				allMods.remove(mod);
-			}
+		disabledMods = discoveredMods;
+		for (mod in disabledMods)
+			for (saved in Settings.data.savedMods)
+				if (Mod.isEqual(mod, saved))
+				{
+					enabledMods.push(mod);
+					disabledMods.remove(mod);
+				}
 	}
 
-	public static function reloadMods():Void
+	@:keep
+	public static inline function reloadMods():Void
 	{
-		discoveredMods = [];
-		enabledMods = [];
+		discoveredMods = enabledMods = disabledMods = [];
 		loadMods();
 	}
 }

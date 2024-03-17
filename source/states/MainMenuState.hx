@@ -153,7 +153,7 @@ class MainMenuState extends MusicMenuState
 		}
 	}
 
-	public function createMenuBG():Void
+	public inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image("menuBG"), 1.7);
 		bg.cameras = [menuCam];

@@ -60,7 +60,7 @@ class TitleState extends MusicState
 				titleEnter.color = 0xffffffff;
 				titleEnter.alpha = 1;
 				titleEnter.animation.play("Pressed");
-				FlxG.sound.play(Path.sound("Confirm.ogg"), 0.7);
+				FlxG.sound.play(Path.sound("Confirm"), 0.7);
 				FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 				if (!FlxG.sound.music.playing)
 				{

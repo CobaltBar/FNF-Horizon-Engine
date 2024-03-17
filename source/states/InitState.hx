@@ -6,18 +6,19 @@ import modding.ModManager;
 
 class InitState extends MusicState
 {
+	public static final modSysVer:Int = 1;
+
 	public override function create()
 	{
+		Settings.load();
 		Toolkit.init();
 		Toolkit.theme = 'dark';
 		CursorHelper.useCustomCursors = false;
-		Settings.load();
 		ModManager.loadMods();
 		Path.loadAssets();
 		Path.reloadEnabledMods();
 
-		MusicState.switchState(new TitleState(), true);
-
 		super.create();
+		MusicState.switchState(new TitleState(), true);
 	}
 }

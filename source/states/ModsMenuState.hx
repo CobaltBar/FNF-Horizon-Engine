@@ -8,9 +8,11 @@ class ModsMenuState extends MusicMenuState
 {
 	var enabledModBG:FlxSprite;
 	var allModBG:FlxSprite;
-	var modDescBG:FlxSprite;
 	var allModsText:Alphabet;
 	var enabledModsText:Alphabet;
+	var modIcon:FlxSprite;
+	var modDesc:FlxText;
+
 	var curEnabled:Int = 0;
 	var enabledOptions:Array<ModAlphabet> = [];
 	var enabled:Bool = false;
@@ -21,7 +23,7 @@ class ModsMenuState extends MusicMenuState
 		createMenuBG();
 		createModUI();
 		shouldBop = handleInput = false;
-		createModOptions(ModManager.allMods, ModManager.enabledMods);
+		createModOptions(ModManager.disabledMods, ModManager.enabledMods);
 		changeSelection(0, false);
 		super.create();
 	}
@@ -144,19 +146,17 @@ class ModsMenuState extends MusicMenuState
 		{
 			enabledOptions[i].mod.ID = i;
 			ModManager.enabledMods.push(enabledOptions[i].mod);
-			trace('${enabledOptions[i].mod.name}: ${enabledOptions[i].mod.ID}');
 		}
 
 		haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
 		{
-			if (a.ID < b.ID)
-				return -1;
-			else if (a.ID > b.ID)
-				return 1;
-			else
-				return 0;
+			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
 		});
-		super.returnState();
+		// Settings.data.savedMods.clear();
+		for (mod in ModManager.enabledMods)
+			// Settings.data.savedMods.set(mod, mod.ID);
+			super.returnState();
+		Settings.save();
 		MusicState.switchState(new MainMenuState());
 	}
 
@@ -176,6 +176,9 @@ class ModsMenuState extends MusicMenuState
 			if (curEnabled >= enabledOptions.length)
 				curEnabled = 0;
 			enabledOptions[curEnabled].alpha = 1;
+
+			modDesc.text = enabledOptions[curEnabled].mod.description;
+			modIcon.loadGraphic(enabledOptions[curEnabled].mod.icon);
 		}
 		else
 		{
@@ -185,6 +188,8 @@ class ModsMenuState extends MusicMenuState
 				menuOptions[curSelected].alpha = .6;
 			super.changeSelection(change, sound, set);
 			menuOptions[curSelected].alpha = 1;
+
+			modDesc.text = cast(menuOptions[curSelected], ModAlphabet).mod.description;
 		}
 	}
 
@@ -241,7 +246,7 @@ class ModsMenuState extends MusicMenuState
 		{
 			if (enabledMods.contains(allMods[i]))
 				continue;
-			var option = new ModAlphabet(FlxG.width - 50 - allModBG.width / 2, 250 + ((i - 1) * 100), allMods[i].name, true, CENTER, 1.2);
+			var option = new ModAlphabet(FlxG.width - 50 - allModBG.width / 2, 250 + ((i + 1) * 100), allMods[i].name, true, CENTER, 1.2);
 			option.mod = allMods[i];
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
@@ -253,7 +258,7 @@ class ModsMenuState extends MusicMenuState
 
 		for (i in 0...enabledMods.length)
 		{
-			var option = new ModAlphabet(50 + enabledModBG.width / 2, 250 + (i * 100), enabledMods[i].name, true, CENTER, 1.2);
+			var option = new ModAlphabet(50 + enabledModBG.width / 2, 250 + ((i + 1) * 100), enabledMods[i].name, true, CENTER, 1.2);
 			option.mod = enabledMods[i];
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
@@ -264,36 +269,36 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 
-	public function createMenuBG():Void
+	public inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image("menuBGDesat"), 1.7);
 		bg.cameras = [menuCam];
 		add(bg);
 	}
 
-	public function createModUI():Void
+	public inline function createModUI():Void
 	{
 		enabledModBG = Util.makeSprite(50, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
 		enabledModBG.cameras = [menuCam];
 		add(enabledModBG);
 
-		allModBG = Util.makeSprite(50, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
+		allModBG = Util.makeSprite(0, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
 		allModBG.cameras = [menuCam];
 		allModBG.x = FlxG.width - 50 - allModBG.width;
 		add(allModBG);
 
-		modDescBG = Util.makeSprite(50, 50, Std.int(FlxG.width - (100 + 790 + 50)), 180, 0xBB000000);
-		modDescBG.cameras = [menuCam];
-		modDescBG.y = FlxG.height - 50 - modDescBG.height;
-		add(modDescBG);
+		var modInfoBG = Util.makeSprite(50, 0, Std.int(FlxG.width - (100 + 790 + 50)), 180, 0xBB000000);
+		modInfoBG.cameras = [menuCam];
+		modInfoBG.y = FlxG.height - 50 - modInfoBG.height;
+		add(modInfoBG);
 
-		var controlsDescBG:FlxSprite = Util.makeSprite(50, 50, 790, 180, 0xBB000000);
+		var controlsDescBG:FlxSprite = Util.makeSprite(0, 0, 790, 180, 0xBB000000);
 		controlsDescBG.cameras = [menuCam];
 		controlsDescBG.x = FlxG.width - 50 - controlsDescBG.width;
-		controlsDescBG.y = FlxG.height - 50 - modDescBG.height;
+		controlsDescBG.y = FlxG.height - 50 - modInfoBG.height;
 		add(controlsDescBG);
 
-		var controlsDescText:FlxSprite = Util.createText(FlxG.width - 50 - controlsDescBG.width, FlxG.height - 50 - modDescBG.height,
+		var controlsDescText:FlxSprite = Util.createText(FlxG.width - 50 - controlsDescBG.width, FlxG.height - 50 - modInfoBG.height,
 			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
 			36, Path.font("vcr"), 0xFFFFFFFF, LEFT);
 		controlsDescText.cameras = [menuCam];
@@ -303,9 +308,21 @@ class ModsMenuState extends MusicMenuState
 		enabledModsText.cameras = [menuCam];
 		enabledModsText.alpha = .6;
 		add(enabledModsText);
+
 		allModsText = new Alphabet(FlxG.width - 50 - (allModBG.width / 2), 150, "All Mods", true, CENTER);
 		allModsText.cameras = [menuCam];
 		add(allModsText);
+
+		modIcon = Util.createGraphicSprite(70, 0, Path.image("unknownMod"), 1.2);
+		modIcon.y = FlxG.height - 50 - modIcon.height;
+		modIcon.cameras = [menuCam];
+		add(modIcon);
+
+		modDesc = Util.createText(0, 0, "", 36, Path.font("vcr"), 0xFFFFFFFF, LEFT);
+		modDesc.x = 60 + modIcon.width;
+		modDesc.y = FlxG.height - 40 - modInfoBG.height;
+		modDesc.cameras = [menuCam];
+		add(modDesc);
 	}
 }
 

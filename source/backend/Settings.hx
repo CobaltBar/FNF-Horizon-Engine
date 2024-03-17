@@ -27,9 +27,8 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
-	public var savedMods:Map<Mod, Int> = [];
+	public var savedMods:Array<Mod> = [];
 	public var fullscreen:Bool = false;
-	public var resyncThreshold:Int = 30;
 
 	public function new() {};
 }
@@ -40,10 +39,9 @@ class Settings
 
 	public static function save()
 	{
+		data.fullscreen = FlxG.fullscreen;
 		for (setting in Reflect.fields(data))
-		{
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(data, setting));
-		}
 		FlxG.save.flush();
 	}
 

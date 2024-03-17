@@ -2,6 +2,9 @@ package backend;
 
 class Alphabet extends FlxSpriteGroup
 {
+	var daX:Float = 0;
+	var alignment:FlxTextAlign;
+
 	public function new(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0,
 			?antiAliasing:Bool, seperation:Float = 0)
 	{
@@ -79,7 +82,22 @@ class Alphabet extends FlxSpriteGroup
 			char.y -= char.height;
 			letterWidth += char.width;
 			add(char);
+
+			daX = x;
+			this.alignment = alignment;
+			updateAlignment();
 		}
+	}
+
+	public override function set_x(Value:Float):Float
+	{
+		daX = Value;
+		return super.set_x(Value);
+	}
+
+	public function updateAlignment():Void
+	{
+		this.x = daX;
 		switch (alignment)
 		{
 			case LEFT | JUSTIFY:

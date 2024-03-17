@@ -51,15 +51,6 @@ class Util
 		return cam;
 	}
 
-	public static function createIcon(x:Float, y:Float, path:String, winning:Bool = false, scale:Float = 1, ?antiAliasing:Bool):FlxSprite
-	{
-		var icon:FlxSprite = sprCreate(x, y, scale, antiAliasing);
-		icon.loadGraphic(path, false, cast 450 / (winning ? 3 : 2), 150); // what is haxe yapping about, none of this is a float
-		icon.updateHitbox();
-		icon.centerOffsets(true);
-		return icon;
-	}
-
 	public static function createText(x:Float, y:Float, text:String, size:Int, font:String, color:FlxColor, alignment:FlxTextAlign):FlxText
 		return new FlxText(x, y, 0, text, size).setFormat(font, size, color, alignment);
 
