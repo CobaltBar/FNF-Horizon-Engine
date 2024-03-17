@@ -1,8 +1,11 @@
 package states;
 
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
 import modding.Mod;
 import modding.ModManager;
+import openfl.display.BitmapData;
+import sys.FileSystem;
 
 class ModsMenuState extends MusicMenuState
 {
@@ -152,10 +155,8 @@ class ModsMenuState extends MusicMenuState
 		{
 			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
 		});
-		// Settings.data.savedMods.clear();
-		for (mod in ModManager.enabledMods)
-			// Settings.data.savedMods.set(mod, mod.ID);
-			super.returnState();
+		Settings.data.savedMods = ModManager.enabledMods;
+		super.returnState();
 		Settings.save();
 		MusicState.switchState(new MainMenuState());
 	}
@@ -178,7 +179,7 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[curEnabled].alpha = 1;
 
 			modDesc.text = enabledOptions[curEnabled].mod.description;
-			modIcon.loadGraphic(enabledOptions[curEnabled].mod.icon);
+			modIcon.loadGraphic(enabledOptions[curEnabled].iconGraphic);
 		}
 		else
 		{
@@ -190,6 +191,7 @@ class ModsMenuState extends MusicMenuState
 			menuOptions[curSelected].alpha = 1;
 
 			modDesc.text = cast(menuOptions[curSelected], ModAlphabet).mod.description;
+			modIcon.loadGraphic(cast(menuOptions[curSelected], ModAlphabet).iconGraphic);
 		}
 	}
 
@@ -248,6 +250,7 @@ class ModsMenuState extends MusicMenuState
 				continue;
 			var option = new ModAlphabet(FlxG.width - 50 - allModBG.width / 2, 250 + ((i + 1) * 100), allMods[i].name, true, CENTER, 1.2);
 			option.mod = allMods[i];
+			option.iconGraphic = BitmapData.fromFile(allMods[i].icon);
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
 			option.clipRect = option.clipRect;
@@ -260,6 +263,7 @@ class ModsMenuState extends MusicMenuState
 		{
 			var option = new ModAlphabet(50 + enabledModBG.width / 2, 250 + ((i + 1) * 100), enabledMods[i].name, true, CENTER, 1.2);
 			option.mod = enabledMods[i];
+			option.iconGraphic = BitmapData.fromFile(enabledMods[i].icon);
 			option.cameras = [optionsCam];
 			option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
 			option.clipRect = option.clipRect;

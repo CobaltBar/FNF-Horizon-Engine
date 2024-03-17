@@ -13,7 +13,7 @@ class ModManager
 	];
 
 	static var discoveredMods:Array<Mod> = [];
-	public static var disabledMods:Array<Mod> = [];
+	public static var allMods:Array<Mod> = [];
 	public static var enabledMods:Array<Mod> = [];
 
 	public static function loadMods():Void
@@ -33,20 +33,22 @@ class ModManager
 				i++;
 			}
 
-		disabledMods = discoveredMods;
-		for (mod in disabledMods)
+		allMods = discoveredMods;
+		for (mod in allMods)
 			for (saved in Settings.data.savedMods)
 				if (Mod.isEqual(mod, saved))
 				{
 					enabledMods.push(mod);
-					disabledMods.remove(mod);
+					allMods.remove(mod);
 				}
 	}
 
 	@:keep
 	public static inline function reloadMods():Void
 	{
-		discoveredMods = enabledMods = disabledMods = [];
+		discoveredMods = [];
+		enabledMods = [];
+		allMods = [];
 		loadMods();
 	}
 }

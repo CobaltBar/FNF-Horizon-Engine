@@ -80,7 +80,6 @@ class Path
 		return null;
 	}
 
-	@:keep
 	public static function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
 	{
 		if (mod != null)

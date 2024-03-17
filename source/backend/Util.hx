@@ -2,7 +2,7 @@ package backend;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.frames.FlxAtlasFrames;
-import haxe.ui.components.Label;
+import openfl.display.BitmapData;
 
 class Util
 {
@@ -54,6 +54,7 @@ class Util
 	public static function createText(x:Float, y:Float, text:String, size:Int, font:String, color:FlxColor, alignment:FlxTextAlign):FlxText
 		return new FlxText(x, y, 0, text, size).setFormat(font, size, color, alignment);
 
+	@:keep
 	public static inline function browserLoad(site:String):Void // yoinked from PsychEngine's CoolUtil
 	{
 		#if linux
