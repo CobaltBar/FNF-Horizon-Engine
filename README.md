@@ -2,11 +2,6 @@
 
 FNF Wonder Engine is a recode of Friday Night Funkin', built for mods and made for fun.
 
-## Features:
-
--   Recharted songs
--   Extremely powerful API.
-
 ## Credits:
 
 -   Cobalt Bar (Creator)
