@@ -9,6 +9,9 @@ class Mod
 	public var rpcChange:String;
 	public var modSysVer:Int;
 
+	public var exclusive:Bool = false;
+	public var enabled:Bool = false;
+
 	public var path:String;
 	public var icon:String;
 	public var ID:Int;
@@ -25,13 +28,6 @@ class Mod
 		this.path = path;
 		this.icon = icon;
 		this.ID = ID;
-	}
-
-	@:op(A == B)
-	public function aisB(a:Mod, b:Mod):Bool
-	{
-		trace('guh');
-		return true;
 	}
 
 	// :3
