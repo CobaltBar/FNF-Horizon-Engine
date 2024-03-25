@@ -27,6 +27,13 @@ class Mod
 		this.ID = ID;
 	}
 
+	@:op(A == B)
+	public function aisB(a:Mod, b:Mod):Bool
+	{
+		trace('guh');
+		return true;
+	}
+
 	// :3
 	public static function isEqual(a:Mod, b:Mod):Bool
 		return a.name == b.name && a.description == b.description && a.version == b.version && a.color == b.color && a.rpcChange == b.rpcChange

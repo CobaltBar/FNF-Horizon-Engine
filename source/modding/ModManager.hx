@@ -1,5 +1,6 @@
 package modding;
 
+import flixel.addons.util.FlxAsyncLoop;
 import modding.Mod.ModJsonData;
 import sys.FileSystem;
 import sys.io.File;
@@ -7,11 +8,7 @@ import tjson.TJSON;
 
 class ModManager
 {
-	final folders:Array<String> = [
-		"achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs",
-		"sounds", "stages", "videos", "weeks"
-	];
-
+	// final folders:Array<String> = [ "achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs", "sounds", "stages", "videos", "weeks"];
 	static var discoveredMods:Array<Mod> = [];
 	public static var allMods:Array<Mod> = [];
 	public static var enabledMods:Array<Mod> = [];
@@ -34,17 +31,19 @@ class ModManager
 			}
 
 		allMods = discoveredMods;
-		for (mod in allMods)
-			for (saved in Settings.data.savedMods)
-				if (Mod.isEqual(mod, saved))
-				{
-					enabledMods.push(mod);
-					allMods.remove(mod);
-				}
+		enabledMods = Settings.data.savedMods;
+
+		// superpowers04 is gonna kill me for this
+		// if you know any other way to compare both sides is Mod.isEqual, PR it
+		for (amod in allMods)
+			for (bmod in enabledMods)
+				if (amod == bmod)
+					allMods.remove(amod);
+				else
+					enabledMods.remove(bmod);
 	}
 
-	@:keep
-	public static inline function reloadMods():Void
+	public static function reloadMods():Void
 	{
 		discoveredMods = [];
 		enabledMods = [];

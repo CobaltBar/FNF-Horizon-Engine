@@ -39,6 +39,8 @@ class Settings
 
 	public static function save()
 	{
+		if (data == null)
+			data = new SaveVars();
 		data.fullscreen = FlxG.fullscreen;
 		for (setting in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(data, setting));

@@ -44,6 +44,7 @@ class ErrorState extends MusicState
 			Conductor.song = null;
 			FlxG.sound.music.destroy();
 			FlxG.sound.music = null;
+			FlxG.resetGame();
 			MusicState.switchState(new TitleState());
 		}
 		super.update(elapsed);

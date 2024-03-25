@@ -26,12 +26,10 @@
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
 
-	<!--___________________________Wonder Engine Settings_________________________-->
-	<haxedef name="MOD_SUPPORT" />
-
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<source path="source" />
 	<assets path="assets" />
 	<assets path="mods" />
@@ -90,6 +88,5 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<assets path="art/icon.png" rename="icon.png" if="linux"/>
 	<icon path="art/icon.png" />
 </project>

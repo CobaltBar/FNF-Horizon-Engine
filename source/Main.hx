@@ -31,7 +31,7 @@ class Main extends Sprite
 				{
 					case FilePos(s, file, line, column):
 						err += '$file: Line: $line\n';
-					default: Sys.println(item);
+					default: trace(item);
 				}
 			ErrorState.error(null, "Uncaught Error", true);
 		});

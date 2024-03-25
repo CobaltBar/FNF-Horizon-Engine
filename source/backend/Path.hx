@@ -1,9 +1,12 @@
 package backend;
 
+import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.io.Path as HaxePath;
 import modding.Mod;
 import modding.ModManager;
+import openfl.display.BitmapData;
+import openfl.system.System;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
@@ -13,104 +16,65 @@ class Path
 	static var assets:Map<String, String> = [];
 	static var modAssets:Map<Mod, Map<String, String>> = [];
 
-	@:keep
-	public static inline function image(key:String, ?mod:Mod):String
+	public static function cacheBitmap(path:String):FlxGraphic
 	{
-		if (mod != null && modAssets[mod].exists('$key.png'))
-			return modAssets[mod].get('$key.png');
-		if (assets.exists('$key.png'))
-			return assets.get('$key.png');
-
-		ErrorState.error(null, 'Image $key not found.');
+		if (FileSystem.exists(path))
+		{
+			var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path), false, path);
+			newGraphic.destroyOnNoUse = false;
+			return newGraphic;
+		}
+		else
+			ErrorState.error(null, 'Couldn\'t cache bitmap $path.');
 		return null;
 	}
+
+	@:keep
+	public static inline function find(key:String, extension:String, error:Bool = false, ?description:String, ?mod:Mod):String
+	{
+		if (mod != null && modAssets[mod].exists('$key.$extension'))
+			return modAssets[mod].get('$key.$extension');
+		if (assets.exists('$key.$extension'))
+			return assets.get('$key.$extension');
+
+		ErrorState.error(null, description == null ? extension.toUpperCase() : description + '$key not found.', error);
+		return null;
+	}
+
+	@:keep
+	public static inline function image(key:String, ?mod:Mod):String
+		return find(key, 'png', false, 'Image', mod);
 
 	@:keep
 	public static inline function sound(key:String, ?mod:Mod):String
-	{
-		if (mod != null && modAssets[mod].exists('$key.ogg'))
-			return modAssets[mod].get('$key.ogg');
-		if (assets.exists('$key.ogg'))
-			return assets.get('$key.ogg');
-		ErrorState.error(null, 'Sound $key not found.');
-		return null;
-	}
+		return find(key, 'ogg', false, 'Sound', mod);
 
 	@:keep
 	public static inline function font(key:String, ?mod:Mod):String
-	{
-		if (mod != null && modAssets[mod].exists('$key.ttf'))
-			return modAssets[mod].get('$key.ttf');
-		if (assets.exists('$key.ttf'))
-			return assets.get('$key.ttf');
-		ErrorState.error(null, 'Font $key not found.');
-		return null;
-	}
+		if (find(key, 'ttf', false, 'Font (TTF)', mod) != null)
+			return find(key, 'ttf', false, 'Font (TTF)', mod);
+		else
+			return find(key, 'otf', false, 'Font (OTF)', mod);
 
 	@:keep
 	public static inline function json(key:String, ?mod:Mod):Dynamic
-	{
-		if (mod != null && modAssets[mod].exists('$key.json'))
-			return TJSON.parse(File.getContent(modAssets[mod].get('$key.json')));
-		if (assets.exists('$key.json'))
-			return TJSON.parse(File.getContent(assets.get('$key.json')));
-		ErrorState.error(null, 'JSON $key not found.');
-		return null;
-	}
+		return TJSON.parse(File.getContent(find(key, 'json', true, null, mod)));
 
 	@:keep
 	public static inline function xml(key:String, ?mod:Mod):String
-	{
-		if (mod != null && modAssets[mod].exists('$key.xml'))
-			return modAssets[mod].get('$key.xml');
-		if (assets.exists('$key.xml'))
-			return assets.get('$key.xml');
-		ErrorState.error(null, 'XML $key not found.');
-		return null;
-	}
+		return find(key, 'xml', true, mod);
 
 	@:keep
 	public static inline function txt(key:String, ?mod:Mod):String
-	{
-		if (mod != null && modAssets[mod].exists('$key.txt'))
-			return File.getContent(modAssets[mod].get('$key.txt'));
-		if (assets.exists('$key.txt'))
-			return File.getContent(assets.get('$key.txt'));
-		ErrorState.error(null, 'TXT $key not found.');
-		return null;
-	}
+		return File.getContent(find(key, 'txt', true, mod));
 
 	public static function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
-	{
-		if (mod != null)
-		{
-			if (modAssets[mod].exists('$key.png') && modAssets[mod].exists('$key.xml'))
-				return FlxAtlasFrames.fromSparrow(modAssets[mod].get('$key.png'), modAssets[mod].get('$key.xml'));
-			else
-			{
-				if (!modAssets[mod].exists('$key.png'))
-					ErrorState.error(null, 'MOD SPARROW PNG $key not found.');
-				if (!modAssets[mod].exists('$key.xml'))
-					ErrorState.error(null, 'MOD SPARROW XML $key not found.');
-			}
-		}
-
-		if (assets.exists('$key.png') && assets.exists('$key.xml'))
-			return FlxAtlasFrames.fromSparrow(assets.get('$key.png'), assets.get('$key.xml'));
-		else
-		{
-			if (!assets.exists('$key.png'))
-				ErrorState.error(null, 'SPARROW PNG $key not found.');
-			if (!assets.exists('$key.xml'))
-				ErrorState.error(null, 'SPARROW XML $key not found.');
-		}
-
-		return null;
-	}
+		return FlxAtlasFrames.fromSparrow(image(key, mod), xml(key, mod));
 
 	public static function loadAssets():Void
 	{
 		assets.clear();
+		assets = [];
 		for (asset in FileSystem.readDirectory('assets'))
 			if (FileSystem.isDirectory(combine(['assets', asset])))
 			{
@@ -134,13 +98,14 @@ class Path
 				addAsset(asset, combine(['assets', asset]));
 	}
 
-	// Only I knew how this function worked
-	// Now nobody knows.
 	public static function reloadEnabledMods():Void
 	{
 		modAssets.clear();
+		modAssets = [];
 		for (mod in ModManager.enabledMods)
 			for (asset in FileSystem.readDirectory(mod.path))
+			{
+				modAssets.set(mod, []);
 				if (FileSystem.isDirectory(combine([mod.path, asset]))
 					&& asset != "custom_events"
 					&& asset != "custom_notetypes"
@@ -158,6 +123,7 @@ class Path
 								continue;
 							}
 						}
+			}
 	}
 
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void
