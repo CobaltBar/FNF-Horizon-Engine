@@ -29,11 +29,6 @@ class Mod
 		this.icon = icon;
 		this.ID = ID;
 	}
-
-	// :3
-	public static function isEqual(a:Mod, b:Mod):Bool
-		return a.name == b.name && a.description == b.description && a.version == b.version && a.color == b.color && a.rpcChange == b.rpcChange
-			&& a.modSysVer == b.modSysVer && a.path == b.path && a.icon == b.icon && a.ID == b.ID;
 }
 
 typedef ModJsonData =

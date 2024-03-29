@@ -5,6 +5,8 @@ class Alphabet extends FlxSpriteGroup
 	var daX:Float = 0;
 	var alignment:FlxTextAlign;
 
+	public var option:Dynamic;
+
 	public function new(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0,
 			?antiAliasing:Bool, seperation:Float = 0)
 	{

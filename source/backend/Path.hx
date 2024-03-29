@@ -25,7 +25,7 @@ class Path
 			return newGraphic;
 		}
 		else
-			ErrorState.error(null, 'Couldn\'t cache bitmap $path.');
+			ErrorState.error(null, 'Couldn\'t cache bitmap $path.', true);
 		return null;
 	}
 

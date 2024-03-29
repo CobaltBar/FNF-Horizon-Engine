@@ -27,7 +27,7 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
-	public var savedMods:Array<Mod> = [];
+	public var savedMods:Map<String, Mod> = [];
 	public var fullscreen:Bool = false;
 
 	public function new() {};
