@@ -9,7 +9,7 @@ class Mod
 	public var rpcChange:String;
 	public var modSysVer:Int;
 
-	public var exclusive:Bool = false;
+	public var staticMod:Bool = false;
 	public var enabled:Bool = false;
 
 	public var path:String;

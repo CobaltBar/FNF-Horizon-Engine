@@ -32,8 +32,8 @@ class ModManager
 						if (!FileSystem.isDirectory(Path.combine(['mods', mod, 'menu_scripts', script])))
 							if (haxe.io.Path.extension(Path.combine(['mods', mod, 'menu_scripts', script])) == 'lua'
 								|| haxe.io.Path.extension(Path.combine(['mods', mod, 'menu_scripts', script])) == 'hx'
-								&& !modData.exclusive)
-								modData.exclusive = true;
+								&& !modData.staticMod)
+								modData.staticMod = true;
 				discoveredMods.set(mod, modData);
 				i++;
 			}

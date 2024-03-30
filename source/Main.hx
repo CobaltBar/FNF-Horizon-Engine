@@ -4,10 +4,8 @@ import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import haxe.Exception;
-import lime.app.Application;
 import openfl.Lib;
 import openfl.display.Sprite;
-import openfl.events.ErrorEvent;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
 

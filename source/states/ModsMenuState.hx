@@ -7,13 +7,13 @@ import modding.ModManager;
 class ModsMenuState extends MusicMenuState
 {
 	var curEnabled:Int = 0;
-	var curExclusive:Int = 0;
+	var curstatic:Int = 0;
 
 	var enabledOptions:Array<Alphabet> = [];
-	var exclusiveOptions:Array<Alphabet> = [];
+	var staticOptions:Array<Alphabet> = [];
 
 	var enabledTitle:FlxSprite;
-	var exclusiveTitle:FlxSprite;
+	var staticTitle:FlxSprite;
 	var allModsTitle:FlxSprite;
 
 	var modIcon:FlxSprite;
@@ -27,7 +27,7 @@ class ModsMenuState extends MusicMenuState
 		createMenuBG();
 		createModUI();
 		shouldBop = handleInput = false;
-		// createModOptions();
+		createModOptions();
 		// changeSelection(0, false);
 		super.create();
 	}
@@ -57,11 +57,11 @@ class ModsMenuState extends MusicMenuState
 		allModsBG.cameras = [menuCam];
 		add(allModsBG);
 
-		var exclusiveModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
-		exclusiveModsBG.screenCenter(X);
-		exclusiveModsBG.x -= exclusiveModsBG.width + 25;
-		exclusiveModsBG.cameras = [menuCam];
-		add(exclusiveModsBG);
+		var staticModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
+		staticModsBG.screenCenter(X);
+		staticModsBG.x -= staticModsBG.width + 25;
+		staticModsBG.cameras = [menuCam];
+		add(staticModsBG);
 
 		var enabledModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
 		enabledModsBG.screenCenter(X);
@@ -69,14 +69,51 @@ class ModsMenuState extends MusicMenuState
 		enabledModsBG.cameras = [menuCam];
 		add(enabledModsBG);
 
-		var descriptionBG = Util.makeSprite(25, FlxG.height - 225, Std.int(FlxG.width - 475), 200, 0xBB000000);
+		var descriptionBG = Util.makeSprite(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xBB000000);
 		descriptionBG.cameras = [menuCam];
 		add(descriptionBG);
 
-		var controlsBG = Util.makeSprite(0, FlxG.height - 225, 400, 200, 0xBB000000);
-		controlsBG.x = descriptionBG.width + 50;
+		var controlsBG = Util.makeSprite(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xBB000000);
 		controlsBG.cameras = [menuCam];
 		add(controlsBG);
+
+		var controlsText:FlxSprite = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
+			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
+			24, Path.font("vcr"), 0xFFFFFFFF, LEFT);
+		controlsText.cameras = [menuCam];
+		add(controlsText);
+
+		allModsTitle = new Alphabet(0, 25, "All Mods", true, CENTER, 0.8);
+		allModsTitle.screenCenter(X);
+		allModsTitle.y += allModsTitle.height;
+		allModsTitle.alpha = 0.6;
+		allModsTitle.cameras = [menuCam];
+		add(allModsTitle);
+
+		staticTitle = new Alphabet(0, 25, "Static Mods", true, CENTER, 0.8);
+		staticTitle.screenCenter(X);
+		staticTitle.x -= staticModsBG.width + 25;
+		staticTitle.y += staticTitle.height;
+		staticTitle.alpha = 0.6;
+		staticTitle.cameras = [menuCam];
+		add(staticTitle);
+
+		enabledTitle = new Alphabet(0, 25, "Enabled Mods", true, CENTER, 0.8);
+		enabledTitle.screenCenter(X);
+		enabledTitle.x += enabledModsBG.width + 25;
+		enabledTitle.y += enabledTitle.height;
+		enabledTitle.alpha = 0.6;
+		enabledTitle.cameras = [menuCam];
+		add(enabledTitle);
+	}
+
+	public inline function createModOptions():Void
+	{
+		for (key => value in @:privateAccess ModManager.discoveredMods)
+		{
+			if (ModManager.enabledMods.exists(key))
+				trace('OH FUCK $key $value');
+		}
 	}
 	/*
 
@@ -310,52 +347,5 @@ class ModsMenuState extends MusicMenuState
 			}
 		}
 
-		public inline function createModUI():Void
-		{
-			enabledModBG = Util.makeSprite(50, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
-			enabledModBG.cameras = [menuCam];
-			add(enabledModBG);
-
-			allModBG = Util.makeSprite(0, 50, Std.int(FlxG.width / 2 - 80), Std.int(FlxG.height - 320), 0xBB000000);
-			allModBG.cameras = [menuCam];
-			allModBG.x = FlxG.width - 50 - allModBG.width;
-			add(allModBG);
-
-			var modInfoBG = Util.makeSprite(50, 0, Std.int(FlxG.width - (100 + 790 + 50)), 180, 0xBB000000);
-			modInfoBG.cameras = [menuCam];
-			modInfoBG.y = FlxG.height - 50 - modInfoBG.height;
-			add(modInfoBG);
-
-			var controlsDescBG:FlxSprite = Util.makeSprite(0, 0, 790, 180, 0xBB000000);
-			controlsDescBG.cameras = [menuCam];
-			controlsDescBG.x = FlxG.width - 50 - controlsDescBG.width;
-			controlsDescBG.y = FlxG.height - 50 - modInfoBG.height;
-			add(controlsDescBG);
-
-			var controlsDescText:FlxSprite = Util.createText(FlxG.width - 50 - controlsDescBG.width, FlxG.height - 50 - modInfoBG.height,
-				'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
-				36, Path.font("vcr"), 0xFFFFFFFF, LEFT);
-			controlsDescText.cameras = [menuCam];
-			add(controlsDescText);
-
-			enabledModsText = new Alphabet(50 + (enabledModBG.width / 2), 150, "Enabled Mods", true, CENTER);
-			enabledModsText.cameras = [menuCam];
-			enabledModsText.alpha = .6;
-			add(enabledModsText);
-
-			allModsText = new Alphabet(FlxG.width - 50 - (allModBG.width / 2), 150, "All Mods", true, CENTER);
-			allModsText.cameras = [menuCam];
-			add(allModsText);
-
-			modIcon = Util.createGraphicSprite(70, 0, Path.image("unknownMod"), 1.2);
-			modIcon.y = FlxG.height - 50 - modIcon.height;
-			modIcon.cameras = [menuCam];
-			add(modIcon);
-
-			modDesc = Util.createText(0, 0, "", 36, Path.font("vcr"), 0xFFFFFFFF, LEFT);
-			modDesc.x = 60 + modIcon.width;
-			modDesc.y = FlxG.height - 40 - modInfoBG.height;
-			modDesc.cameras = [menuCam];
-			add(modDesc);
-	}*/
+	 */
 }
