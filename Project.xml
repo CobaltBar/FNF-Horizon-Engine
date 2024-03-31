@@ -88,5 +88,6 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	<assets path="art/icon.png" rename="icon.png" if="linux"/>
 	<icon path="art/icon.png" />
 </project>

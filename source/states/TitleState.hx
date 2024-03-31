@@ -38,7 +38,7 @@ class TitleState extends MusicState
 			FlxG.sound.music.onComplete = () ->
 			{
 				curBeat = curStep = 0;
-				curDecBeat = curDecStep = 0;
+				curDecBeat = 0;
 			}
 		}
 		if (comingBack)
@@ -61,7 +61,6 @@ class TitleState extends MusicState
 				titleEnter.alpha = 1;
 				titleEnter.animation.play("Pressed");
 				FlxG.sound.play(Path.sound("Confirm"), 0.7);
-				FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 				if (!FlxG.sound.music.playing)
 				{
 					FlxG.sound.music.resume();
@@ -79,7 +78,7 @@ class TitleState extends MusicState
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				new FlxTimer().start(0.4, (tmr:FlxTimer) ->
+				new FlxTimer().start(0.3, (tmr:FlxTimer) ->
 				{
 					FlxTween.tween(logo, {alpha: 0}, 1, {
 						type: ONESHOT,
@@ -231,9 +230,7 @@ class TitleState extends MusicState
 	private function clearIntroImages():Void
 	{
 		for (obj in introImages)
-		{
 			obj.destroy();
-		}
 		introImages = [];
 	}
 

@@ -4,8 +4,10 @@ import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import haxe.Exception;
+import lime.graphics.Image;
 import openfl.Lib;
 import openfl.display.Sprite;
+import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
 
@@ -18,6 +20,7 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 		addChild(new FlxModdedGame(0, 0, InitState, 60, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFF));
+		#if linux Lib.current.stage.window.setIcon(Image.fromFile("icon.png")); #end
 
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
 		{
@@ -34,9 +37,8 @@ class Main extends Sprite
 			ErrorState.error(null, "Uncaught Error", true);
 		});
 	}
-}
+} // Referenced from Super Engine lmao
 
-// Referenced from Super Engine lmao
 class FlxModdedGame extends FlxGame
 {
 	override function create(_:Event)

@@ -17,6 +17,7 @@ class InitState extends MusicState
 		ModManager.loadMods();
 		Path.loadAssets();
 		Path.reloadEnabledMods();
+		FlxG.plugins.addPlugin(new Conductor());
 
 		super.create();
 		MusicState.switchState(new TitleState(), true);

@@ -36,6 +36,18 @@ class ModsMenuState extends MusicMenuState
 	{
 		super.update(elapsed);
 
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
+			exitState();
+
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
+			returnState();
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]) && !transitioningOut)
+			return; // changeSection(-1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]) && !transitioningOut)
+			return; // changeSection(1);
+
 		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
 			changeSelection(1);
 
@@ -73,11 +85,21 @@ class ModsMenuState extends MusicMenuState
 		descriptionBG.cameras = [menuCam];
 		add(descriptionBG);
 
+		modIcon = Util.createGraphicSprite(55, FlxG.height - 205, Path.image("unknownMod"), 1.2);
+		modIcon.cameras = [menuCam];
+		add(modIcon);
+
+		modDesc = Util.createText(modIcon.width + 65, FlxG.height - 205, "N/A", 36, Path.font("vcr"), 0xFFFFFFFF, LEFT);
+		modDesc.fieldWidth = 1100;
+		modDesc.fieldHeight = 175;
+		modDesc.cameras = [menuCam];
+		add(modDesc);
+
 		var controlsBG = Util.makeSprite(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xBB000000);
 		controlsBG.cameras = [menuCam];
 		add(controlsBG);
 
-		var controlsText:FlxSprite = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
+		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
 			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
 			24, Path.font("vcr"), 0xFFFFFFFF, LEFT);
 		controlsText.cameras = [menuCam];
@@ -185,23 +207,9 @@ class ModsMenuState extends MusicMenuState
 				changeSelection(0, false);
 			}
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
-				exitState();
-
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
-				returnState();
-
-			if (FlxG.keys.anyJustPressed([
-				Settings.data.keybinds.get("ui")[0],
-				Settings.data.keybinds.get("ui")[4],
-				Settings.data.keybinds.get("ui")[3],
-				Settings.data.keybinds.get("ui")[7]
-			]) && !transitioningOut)
-				changeSection();
-
 			for (i in 0...menuOptions.length)
 			{
-				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) / 2, elapsed * 5);
+				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) * 0.5, elapsed * 5);
 				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i - 1) * 100, elapsed * 5);
 				menuOptions[i].clipRect = FlxRect.weak(0,
 					Std.int(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10), menuOptions[i].width,
@@ -210,7 +218,7 @@ class ModsMenuState extends MusicMenuState
 			}
 			for (i in 0...enabledOptions.length)
 			{
-				enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) / 2, elapsed * 5);
+				enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) * 0.5, elapsed * 5);
 				enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i - 1) * 100, elapsed * 5);
 				enabledOptions[i].clipRect = FlxRect.weak(0,
 					Std.int(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
@@ -324,7 +332,7 @@ class ModsMenuState extends MusicMenuState
 			{
 				if (enabledMods.contains(allMods[i]))
 					continue;
-				var option = new ModAlphabet(FlxG.width - 50 - allModBG.width / 2, 250 + ((i + 1) * 100), allMods[i].name, true, CENTER, 1.2);
+				var option = new ModAlphabet(FlxG.width - 50 - allModBG.width * 0.5, 250 + ((i + 1) * 100), allMods[i].name, true, CENTER, 1.2);
 				option.mod = allMods[i];
 				option.cameras = [optionsCam];
 				option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);
@@ -336,7 +344,7 @@ class ModsMenuState extends MusicMenuState
 
 			for (i in 0...enabledMods.length)
 			{
-				var option = new ModAlphabet(50 + enabledModBG.width / 2, 250 + ((i + 1) * 100), enabledMods[i].name, true, CENTER, 1.2);
+				var option = new ModAlphabet(50 + enabledModBG.width * 0.5, 250 + ((i + 1) * 100), enabledMods[i].name, true, CENTER, 1.2);
 				option.mod = enabledMods[i];
 				option.cameras = [optionsCam];
 				option.clipRect = FlxRect.weak(0, -option.height - 10, option.width, option.height);

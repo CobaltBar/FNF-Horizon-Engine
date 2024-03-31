@@ -6,10 +6,9 @@ import flixel.addons.transition.TransitionData;
 
 class MusicState extends FlxTransitionableState
 {
-	var curBeat:Int = 0;
 	var curStep:Int = 0;
+	var curBeat:Int = 0;
 	var curDecBeat:Float = 0;
-	var curDecStep:Float = 0;
 
 	var transitioningOut:Bool = false;
 	var transitionFromPoint:FlxPoint;
@@ -42,7 +41,10 @@ class MusicState extends FlxTransitionableState
 
 	public override function update(elapsed:Float):Void
 	{
-		updateConductor();
+		if (curBeat != Conductor.curBeat && curStep > 0)
+			onBeat();
+		if (curStep != Conductor.curStep)
+			onStep();
 		if (shouldZoom)
 			for (cam in camerasToBop)
 			{
@@ -53,30 +55,12 @@ class MusicState extends FlxTransitionableState
 		super.update(elapsed);
 	}
 
-	private function updateConductor():Void
-	{
-		if (Conductor.song != null)
-		{
-			if (Conductor.song.time > curDecBeat + Conductor.crochet)
-			{
-				curDecBeat += Conductor.crochet;
-				onBeat();
-			}
-			if (Conductor.song.time > curDecStep + Conductor.stepCrochet)
-			{
-				curDecStep += Conductor.stepCrochet;
-				onStep();
-			}
-		}
-		else if (FlxG.sound.music != null)
-			Conductor.song = FlxG.sound.music;
-	}
-
 	public function onStep():Void
-		curStep++;
+		curStep = Conductor.curStep;
 
 	public function onBeat():Void
 	{
+		curBeat = Conductor.curBeat;
 		if (!transitioningOut && shouldBop)
 			for (cam in camerasToBop)
 			{
@@ -84,7 +68,6 @@ class MusicState extends FlxTransitionableState
 					continue;
 				cam.zoom = 1.05;
 			}
-		curBeat++;
 	}
 
 	public static function switchState(state:FlxState, skipTransitionIn:Bool = false, skipTransitionOut:Bool = false):Void
