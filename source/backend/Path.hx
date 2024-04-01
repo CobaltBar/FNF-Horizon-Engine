@@ -103,17 +103,17 @@ class Path
 		modAssets.clear();
 		modAssets = [];
 		for (mod in ModManager.enabledMods)
-			for (asset in FileSystem.readDirectory(mod.path))
+			for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
 			{
 				modAssets.set(mod, []);
-				if (FileSystem.isDirectory(combine([mod.path, asset]))
+				if (FileSystem.isDirectory(combine(['mods', mod.path, asset]))
 					&& asset != "custom_events"
 					&& asset != "custom_notetypes"
 					&& asset != "menu_scripts"
 					&& asset != "scripts"
 					&& asset != "stages")
-					for (asset2 in FileSystem.readDirectory(combine([mod.path, asset])))
-						if (!FileSystem.isDirectory(combine([mod.path, asset, asset2])))
+					for (asset2 in FileSystem.readDirectory(combine(['mods', mod.path, asset])))
+						if (!FileSystem.isDirectory(combine(['mods', mod.path, asset, asset2])))
 							addAsset(asset2, combine(['assets', asset, asset2]), mod);
 						else
 						{

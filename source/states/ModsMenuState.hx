@@ -64,24 +64,24 @@ class ModsMenuState extends MusicMenuState
 
 	public inline function createModUI():Void
 	{
-		var allModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
+		var allModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
 		allModsBG.screenCenter(X);
 		allModsBG.cameras = [menuCam];
 		add(allModsBG);
 
-		var staticModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
+		var staticModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
 		staticModsBG.screenCenter(X);
 		staticModsBG.x -= staticModsBG.width + 25;
 		staticModsBG.cameras = [menuCam];
 		add(staticModsBG);
 
-		var enabledModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xBB000000);
+		var enabledModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
 		enabledModsBG.screenCenter(X);
 		enabledModsBG.x += enabledModsBG.width + 25;
 		enabledModsBG.cameras = [menuCam];
 		add(enabledModsBG);
 
-		var descriptionBG = Util.makeSprite(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xBB000000);
+		var descriptionBG = Util.makeSprite(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xCC000000);
 		descriptionBG.cameras = [menuCam];
 		add(descriptionBG);
 
@@ -95,7 +95,7 @@ class ModsMenuState extends MusicMenuState
 		modDesc.cameras = [menuCam];
 		add(modDesc);
 
-		var controlsBG = Util.makeSprite(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xBB000000);
+		var controlsBG = Util.makeSprite(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xCC000000);
 		controlsBG.cameras = [menuCam];
 		add(controlsBG);
 
@@ -131,10 +131,32 @@ class ModsMenuState extends MusicMenuState
 
 	public inline function createModOptions():Void
 	{
-		for (key => value in @:privateAccess ModManager.discoveredMods)
+		var i:Int = 0;
+		for (mod in @:privateAccess ModManager.discoveredMods)
 		{
-			if (ModManager.enabledMods.exists(key))
-				trace('OH FUCK $key $value');
+			if (ModManager.enabledMods.exists(mod.path))
+				continue;
+			var option = new Alphabet(0, 130 + (50 * i), mod.name, true, CENTER, 0.7);
+			option.screenCenter(X);
+			option.alpha = 0.6;
+			option.cameras = [menuCam];
+			option.option = mod;
+			add(option);
+			i++;
+		}
+
+		i = 0;
+		var theWidth = Std.int(FlxG.width / 3 - 100 / 3);
+		for (mod in ModManager.enabledMods)
+		{
+			var option = new Alphabet(0, 130 + (50 * i), mod.name, true, CENTER, 0.7);
+			option.screenCenter(X);
+			option.x += theWidth + 25;
+			option.alpha = 0.6;
+			option.cameras = [menuCam];
+			option.option = mod;
+			add(option);
+			i++;
 		}
 	}
 	/*

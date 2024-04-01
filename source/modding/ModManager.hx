@@ -24,7 +24,7 @@ class ModManager
 				if (FileSystem.exists(Path.combine(['mods', mod, 'mod.json'])))
 					json = TJSON.parse(File.getContent(Path.combine(['mods', mod, 'mod.json'])));
 				modData = new Mod(json.name ?? mod, json.description ?? "N/A", json.version ?? "1.0", json.color ?? [255, 255, 255], json.rpcChange ?? "",
-					json.modSysVer ?? InitState.modSysVer, Path.combine(['mods', mod]),
+					json.modSysVer ?? InitState.modSysVer, mod,
 					FileSystem.exists(Path.combine(['mods', mod, 'mod.png'])) ? Path.combine(['mods', mod, 'mod.png']) : Path.image("unknownMod"), i);
 				if (FileSystem.exists(Path.combine(['mods', mod, 'menu_scripts']))
 					&& FileSystem.isDirectory(Path.combine(['mods', mod, 'menu_scripts'])))
@@ -38,9 +38,12 @@ class ModManager
 				i++;
 			}
 
-		for (mod in discoveredMods.keys())
-			if (Settings.data.savedMods.exists(mod))
-				enabledMods.set(mod, Settings.data.savedMods.get(mod));
+		for (key => mod in discoveredMods)
+			if (Settings.data.savedMods.exists(key))
+			{
+				discoveredMods[key].enabled = true;
+				enabledMods.set(key, Settings.data.savedMods[key]);
+			}
 	}
 
 	public static function reloadMods():Void
