@@ -24,6 +24,7 @@ class MusicState extends FlxTransitionableState
 
 	public override function create():Void
 	{
+		Path.clearStoredMemory();
 		transitionFromPoint = new FlxPoint(-1, 0);
 		transitionToPoint = new FlxPoint(1, 0);
 		transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 0.5, transitionFromPoint);
@@ -32,6 +33,7 @@ class MusicState extends FlxTransitionableState
 		camerasToBop.push(FlxG.camera);
 
 		super.create();
+		Path.clearUnusedMemory();
 		if (errorText.length > 0 && !erroring)
 		{
 			erroring = true;
