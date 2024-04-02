@@ -30,6 +30,7 @@ class TitleState extends MusicState
 
 	public override function create():Void
 	{
+		Path.clearStoredMemory();
 		loadTitleData();
 		generateObjects();
 		if (!comingBack && FlxG.sound.music == null)

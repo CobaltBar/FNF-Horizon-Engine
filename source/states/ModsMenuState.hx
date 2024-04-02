@@ -23,6 +23,7 @@ class ModsMenuState extends MusicMenuState
 
 	public override function create():Void
 	{
+		Path.clearStoredMemory();
 		setupMenu();
 		createMenuBG();
 		createModUI();

@@ -10,6 +10,7 @@ class MainMenuState extends MusicMenuState
 
 	public override function create():Void
 	{
+		Path.clearStoredMemory();
 		setupMenu();
 		createMenuBG();
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);

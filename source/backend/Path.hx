@@ -24,7 +24,6 @@ class Path
 	static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	static var currentTrackedSounds:Map<String, Sound> = [];
 
-	// TODO double check usage and implementation
 	public static function clearUnusedMemory():Void
 	{
 		for (key in currentTrackedAssets.keys())
@@ -46,7 +45,6 @@ class Path
 		System.gc();
 	}
 
-	// TODO fix
 	public static function clearStoredMemory():Void
 	{
 		for (key in @:privateAccess FlxG.bitmap._cache.keys())
