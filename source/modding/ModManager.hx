@@ -8,7 +8,7 @@ import tjson.TJSON;
 class ModManager
 {
 	// final folders:Array<String> = [ "achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs", "sounds", "stages", "videos", "weeks"];
-	static var discoveredMods:Map<String, Mod> = [];
+	public static var allMods:Map<String, Mod> = [];
 	public static var enabledMods:Map<String, Mod> = [];
 
 	public static function loadMods():Void
@@ -34,21 +34,21 @@ class ModManager
 								|| haxe.io.Path.extension(Path.combine(['mods', mod, 'menu_scripts', script])) == 'hx'
 								&& !modData.staticMod)
 								modData.staticMod = true;
-				discoveredMods.set(mod, modData);
+				allMods.set(mod, modData);
 				i++;
 			}
 
-		for (key => mod in discoveredMods)
+		for (key => mod in allMods)
 			if (Settings.data.savedMods.exists(key))
 			{
-				discoveredMods[key].enabled = true;
+				allMods[key].enabled = true;
 				enabledMods.set(key, Settings.data.savedMods[key]);
 			}
 	}
 
 	public static function reloadMods():Void
 	{
-		discoveredMods.clear();
+		allMods.clear();
 		enabledMods.clear();
 		loadMods();
 	}

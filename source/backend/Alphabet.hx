@@ -104,4 +104,11 @@ class Alphabet extends FlxSpriteGroup
 				this.x -= this.width;
 		}
 	}
+
+	public override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0,
+			greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
+	{
+		for (member in members)
+			member.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
+	}
 }
