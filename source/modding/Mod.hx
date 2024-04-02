@@ -1,5 +1,7 @@
 package modding;
 
+import flixel.system.FlxAssets.FlxGraphicAsset;
+
 class Mod
 {
 	public var name:String;
@@ -13,10 +15,11 @@ class Mod
 	public var enabled:Bool = false;
 
 	public var path:String;
-	public var icon:String;
+	public var icon:FlxGraphicAsset;
 	public var ID:Int;
 
-	public function new(name:String, description:String, version:String, color:Array<Int>, rpcChange:String, modSysVer:Int, path:String, icon:String, ID:Int)
+	public function new(name:String, description:String, version:String, color:Array<Int>, rpcChange:String, modSysVer:Int, path:String, icon:FlxGraphicAsset,
+			ID:Int)
 	{
 		this.name = name;
 		this.description = description;

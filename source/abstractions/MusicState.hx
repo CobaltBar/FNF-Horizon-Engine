@@ -24,7 +24,6 @@ class MusicState extends FlxTransitionableState
 
 	public override function create():Void
 	{
-		Path.clearStoredMemory();
 		transitionFromPoint = new FlxPoint(-1, 0);
 		transitionToPoint = new FlxPoint(1, 0);
 		transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 0.5, transitionFromPoint);

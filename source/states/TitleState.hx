@@ -205,7 +205,7 @@ class TitleState extends MusicState
 		return alphabet;
 	}
 
-	private function createIntroImage(path:String, yOff:Float):FlxSprite
+	private function createIntroImage(path:flixel.system.FlxAssets.FlxGraphicAsset, yOff:Float):FlxSprite
 	{
 		var img:FlxSprite = Util.createGraphicSprite(FlxG.width * 0.5, FlxG.height * 2, path, 1.4);
 		img.screenCenter(X);
