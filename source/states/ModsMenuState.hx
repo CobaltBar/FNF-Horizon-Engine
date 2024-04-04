@@ -20,6 +20,7 @@ class ModsMenuState extends MusicMenuState
 	var modDesc:FlxText;
 
 	var curSection:Int = 1;
+	var theWidth = Std.int(FlxG.width / 3 - 100 / 3);
 
 	public override function create():Void
 	{
@@ -29,6 +30,7 @@ class ModsMenuState extends MusicMenuState
 		createModUI();
 		shouldBop = handleInput = false;
 		createModOptions();
+		changeSection(0, false);
 		changeSelection(0, false);
 		super.create();
 	}
@@ -54,21 +56,46 @@ class ModsMenuState extends MusicMenuState
 
 		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
 			changeSelection(-1);
+
+		for (i in 0...staticOptions.length)
+		{
+			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
+
+		for (i in 0...menuOptions.length)
+		{
+			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * 0.5, FlxMath.bound(elapsed * 5, 0, 1));
+			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
+
+		for (i in 0...enabledOptions.length)
+		{
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * 0.5 + theWidth, FlxMath.bound(elapsed * 5, 0, 1));
+			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
 	}
 
 	public override function exitState():Void
 	{
-		FlxG.sound.play(Path.sound("Confirm"), 0.7);
 		switch (curSection)
 		{
 			case 0:
+				if (staticOptions.length <= 0)
+					return;
 				staticOptions[curStatic].alpha = 1;
+				staticOptions[curStatic].option.enabled = !staticOptions[curStatic].option.enabled;
 			case 1:
+				if (menuOptions.length <= 0)
+					return;
 				menuOptions[curSelected].alpha = .6;
+				cast(menuOptions[curSelected], Alphabet).option.enabled = true;
 				enabledOptions.push(cast menuOptions[curSelected]);
 				menuOptions.remove(menuOptions[curSelected]);
 				changeSelection(0, false);
 			case 2:
+				if (enabledOptions.length <= 0)
+					return;
+				enabledOptions[curEnabled].option.enabled = false;
 				enabledOptions[curEnabled].alpha = .6;
 				menuOptions.push(enabledOptions[curEnabled]);
 				enabledOptions.remove(enabledOptions[curEnabled]);
@@ -76,9 +103,55 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 
-	public override function returnState():Void {}
+	public override function returnState():Void
+	{
+		ModManager.enabledMods = [];
 
-	public function changeSection(change:Int, sound:Bool = true, set:Bool = false):Void {}
+		for (i in 0...enabledOptions.length)
+		{
+			enabledOptions[i].option.ID = i;
+			ModManager.enabledMods.push(enabledOptions[i].option);
+		}
+
+		haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
+		{
+			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
+		});
+
+		for (mod in ModManager.enabledMods)
+			Settings.data.savedMods.set(mod.path, mod);
+
+		super.returnState();
+		Settings.save();
+		MusicState.switchState(new MainMenuState());
+	}
+
+	public function changeSection(change:Int, sound:Bool = true, set:Bool = false):Void
+	{
+		if (sound)
+			FlxG.sound.play(Path.sound("Scroll"), 0.7);
+
+		set ? curSection = change : curSection += change;
+
+		if (curSection < 0)
+			curSection = 2;
+		if (curSection > 2)
+			curSection = 0;
+
+		switch (curSection)
+		{
+			case 0:
+				staticTitle.alpha = 1;
+				allModsTitle.alpha = enabledTitle.alpha = 0.6;
+
+			case 1:
+				allModsTitle.alpha = 1;
+				staticTitle.alpha = enabledTitle.alpha = 0.6;
+			case 2:
+				enabledTitle.alpha = 1;
+				allModsTitle.alpha = staticTitle.alpha = 0.6;
+		}
+	}
 
 	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void {}
 
@@ -132,14 +205,14 @@ class ModsMenuState extends MusicMenuState
 		controlsText.cameras = [menuCam];
 		add(controlsText);
 
-		allModsTitle = new Alphabet(0, 25, "All Mods", true, CENTER, 0.8);
+		allModsTitle = new Alphabet(0, 25, "All Mods", true, CENTER, 0.9);
 		allModsTitle.screenCenter(X);
 		allModsTitle.y += allModsTitle.height;
 		allModsTitle.alpha = 0.6;
 		allModsTitle.cameras = [menuCam];
 		add(allModsTitle);
 
-		staticTitle = new Alphabet(0, 25, "Static Mods", true, CENTER, 0.8);
+		staticTitle = new Alphabet(0, 25, "Static Mods", true, CENTER, 0.9);
 		staticTitle.screenCenter(X);
 		staticTitle.x -= staticModsBG.width + 25;
 		staticTitle.y += staticTitle.height;
@@ -147,7 +220,7 @@ class ModsMenuState extends MusicMenuState
 		staticTitle.cameras = [menuCam];
 		add(staticTitle);
 
-		enabledTitle = new Alphabet(0, 25, "Enabled Mods", true, CENTER, 0.8);
+		enabledTitle = new Alphabet(0, 25, "Enabled Mods", true, CENTER, 0.9);
 		enabledTitle.screenCenter(X);
 		enabledTitle.x += enabledModsBG.width + 25;
 		enabledTitle.y += enabledTitle.height;
@@ -159,10 +232,9 @@ class ModsMenuState extends MusicMenuState
 	public inline function createModOptions():Void
 	{
 		var i:Int = 0;
-		var theWidth = Std.int(FlxG.width / 3 - 100 / 3);
 		for (mod in ModManager.allMods)
 		{
-			if (ModManager.enabledMods.exists(mod.path))
+			if (mod.enabled)
 				continue;
 			var option = new Alphabet(0, 200 + (50 * i), mod.name, false, CENTER, 0.7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
@@ -275,25 +347,6 @@ class ModsMenuState extends MusicMenuState
 					Std.int(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
 				enabledOptions[i].clipRect = enabledOptions[i].clipRect;
 			}
-		}
-
-		public override function returnState():Void
-		{
-			ModManager.enabledMods = [];
-				for (i in 0...enabledOptions.length)
-				{
-					enabledOptions[i].mod.ID = i;
-					ModManager.enabledMods.push(enabledOptions[i].mod);
-				}
-
-				haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
-				{
-					return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
-				});
-				Settings.data.savedMods = ModManager.enabledMods;
-				super.returnState();
-				Settings.save();
-				MusicState.switchState(new MainMenuState());
 		}
 
 		public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void

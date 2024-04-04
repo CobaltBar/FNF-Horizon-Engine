@@ -9,7 +9,7 @@ class ModManager
 {
 	// final folders:Array<String> = [ "achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs", "sounds", "stages", "videos", "weeks"];
 	public static var allMods:Map<String, Mod> = [];
-	public static var enabledMods:Map<String, Mod> = [];
+	public static var enabledMods:Array<Mod> = [];
 
 	public static function loadMods():Void
 	{
@@ -42,14 +42,14 @@ class ModManager
 			if (Settings.data.savedMods.exists(key))
 			{
 				allMods[key].enabled = true;
-				enabledMods.set(key, Settings.data.savedMods[key]);
+				enabledMods.push(Settings.data.savedMods[key]);
 			}
 	}
 
 	public static function reloadMods():Void
 	{
 		allMods.clear();
-		enabledMods.clear();
+		enabledMods = [];
 		loadMods();
 	}
 }
