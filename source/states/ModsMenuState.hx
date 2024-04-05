@@ -257,12 +257,12 @@ class ModsMenuState extends MusicMenuState
 				option.x += theWidth + 25;
 				enabledOptions.insert(mod.ID, option);
 			}
-			else if (mod.staticMod)
+			if (mod.staticMod)
 			{
 				option.x -= theWidth + 25;
 				staticOptions.insert(mod.ID, option);
 			}
-			else
+			if (!mod.staticMod && !mod.enabled)
 				menuOptions.insert(mod.ID, option);
 			add(option);
 		}
