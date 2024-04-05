@@ -70,7 +70,8 @@ class ModsMenuState extends MusicMenuState
 
 		for (i in 0...enabledOptions.length)
 		{
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * 0.5 + theWidth, FlxMath.bound(elapsed * 5, 0, 1));
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * 0.5 + theWidth + 25,
+				FlxMath.bound(elapsed * 5, 0, 1));
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 	}
@@ -245,7 +246,7 @@ class ModsMenuState extends MusicMenuState
 	{
 		for (mod in ModManager.allMods)
 		{
-			var option = new Alphabet(0, 200 + (50 * mod.ID), mod.name, false, CENTER, 0.7);
+			var option = new Alphabet(0, 200, mod.name, false, CENTER, 0.7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.screenCenter(X);
 			option.alpha = 0.6;
