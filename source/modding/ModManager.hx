@@ -22,10 +22,15 @@ class ModManager
 				var json:ModJsonData = null;
 				var modData:Mod;
 				if (FileSystem.exists(Path.combine(['mods', mod, 'mod.json'])))
+				{
 					json = TJSON.parse(File.getContent(Path.combine(['mods', mod, 'mod.json'])));
-				modData = new Mod(json.name ?? mod, json.description ?? "N/A", json.version ?? "1.0", json.color ?? [255, 255, 255], json.rpcChange ?? "",
-					json.modSysVer ?? InitState.modSysVer, mod,
-					FileSystem.exists(Path.combine(['mods', mod, 'mod.png'])) ? Path.combine(['mods', mod, 'mod.png']) : Path.image("unknownMod"), i);
+					modData = new Mod(json.name ?? mod, json.description ?? "N/A", json.version ?? "1.0", json.color ?? [255, 255, 255], json.rpcChange ?? "",
+						json.modSysVer ?? InitState.modSysVer, mod,
+						FileSystem.exists(Path.combine(['mods', mod, 'mod.png'])) ? Path.combine(['mods', mod, 'mod.png']) : Path.image("unknownMod"), i);
+				}
+				else
+					modData = new Mod(mod, "N/A", "1.0", [255, 255, 255], "", InitState.modSysVer, mod,
+						FileSystem.exists(Path.combine(['mods', mod, 'mod.png'])) ? Path.combine(['mods', mod, 'mod.png']) : Path.image("unknownMod"), i);
 				if (FileSystem.exists(Path.combine(['mods', mod, 'menu_scripts']))
 					&& FileSystem.isDirectory(Path.combine(['mods', mod, 'menu_scripts'])))
 					for (script in FileSystem.readDirectory(Path.combine(['mods', mod, 'menu_scripts'])))
@@ -38,11 +43,11 @@ class ModManager
 				i++;
 			}
 
-		for (key => mod in allMods)
+		for (key in allMods.keys())
 			if (Settings.data.savedMods.exists(key))
 			{
 				allMods[key].enabled = true;
-				enabledMods.push(Settings.data.savedMods[key]);
+				enabledMods.push(allMods[key]);
 			}
 	}
 

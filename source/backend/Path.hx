@@ -70,11 +70,9 @@ class Path
 		for (key in cache.font.keys())
 			cache.font.remove(key);
 		localTrackedAssets = [];
-
-		Assets.cache.clear("songs");
 	}
 
-	public static function cacheBitmap(key:String, ?mod:Mod):FlxGraphic
+	public static function cacheBitmap(key:String, ?mod:Mod):FlxGraphicAsset
 	{
 		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(find(key, 'png', true, true, 'Bitmap Cache - Image', mod)), false, key);
 		graphic.persist = true;
@@ -171,7 +169,10 @@ class Path
 	{
 		modAssets.clear();
 		modAssets = [];
-		for (mod in ModManager.enabledMods)
+		for (mod in ModManager.allMods)
+		{
+			if (!mod.enabled)
+				continue;
 			for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
 			{
 				modAssets.set(mod, []);
@@ -193,6 +194,7 @@ class Path
 							}
 						}
 			}
+		}
 	}
 
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void

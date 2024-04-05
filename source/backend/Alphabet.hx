@@ -2,6 +2,10 @@ package backend;
 
 class Alphabet extends FlxSpriteGroup
 {
+	static final letters:Array<String> = [
+		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+	];
+
 	var daX:Float = 0;
 	var alignment:FlxTextAlign;
 
@@ -26,7 +30,7 @@ class Alphabet extends FlxSpriteGroup
 			}
 			else if (animName == "&")
 				animName = "ampersand";
-			else if (animName == ".")
+			else if (animName == "")
 				animName = "bullet";
 			else if (animName == "'")
 			{
@@ -64,9 +68,9 @@ class Alphabet extends FlxSpriteGroup
 				char.y -= char.height / 2;
 			if (bold)
 				animName += " bold";
-			else if (animName.toLowerCase() != animName)
+			else if (animName.toLowerCase() != animName && letters.contains(chars[i].toLowerCase()))
 				animName += " uppercase";
-			else if (animName.toLowerCase() == animName)
+			else if (animName.toLowerCase() == animName && letters.contains(chars[i].toLowerCase()))
 				animName += " lowercase";
 			else
 				animName += " normal";

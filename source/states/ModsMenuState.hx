@@ -89,14 +89,16 @@ class ModsMenuState extends MusicMenuState
 					return;
 				menuOptions[curSelected].alpha = .6;
 				cast(menuOptions[curSelected], Alphabet).option.enabled = true;
+				cast(menuOptions[curSelected], Alphabet).option.ID = enabledOptions.length - 1;
 				enabledOptions.push(cast menuOptions[curSelected]);
 				menuOptions.remove(menuOptions[curSelected]);
 				changeSelection(0, false);
 			case 2:
 				if (enabledOptions.length <= 0)
 					return;
-				enabledOptions[curEnabled].option.enabled = false;
 				enabledOptions[curEnabled].alpha = .6;
+				enabledOptions[curSelected].option.enabled = false;
+				enabledOptions[curSelected].option.ID = menuOptions.length - 1;
 				menuOptions.push(enabledOptions[curEnabled]);
 				enabledOptions.remove(enabledOptions[curEnabled]);
 				changeSelection(0, false);
@@ -107,16 +109,26 @@ class ModsMenuState extends MusicMenuState
 	{
 		ModManager.enabledMods = [];
 
+		for (i in 0...menuOptions.length)
+			ModManager.allMods[cast(menuOptions[i], Alphabet).option.path].ID = i;
+
 		for (i in 0...enabledOptions.length)
 		{
-			enabledOptions[i].option.ID = i;
-			ModManager.enabledMods.push(enabledOptions[i].option);
+			enabledOptions[i].option.ID = i + 1;
+			ModManager.enabledMods.insert(i + 1, enabledOptions[i].option);
 		}
 
 		haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
 		{
 			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
 		});
+
+		for (staticMod in staticOptions)
+			if (staticMod.option.enabled)
+			{
+				staticMod.option.ID = 0;
+				ModManager.enabledMods.insert(0, staticMod.option);
+			}
 
 		for (mod in ModManager.enabledMods)
 			Settings.data.savedMods.set(mod.path, mod);
@@ -231,31 +243,27 @@ class ModsMenuState extends MusicMenuState
 
 	public inline function createModOptions():Void
 	{
-		var i:Int = 0;
 		for (mod in ModManager.allMods)
 		{
-			if (mod.enabled)
-				continue;
-			var option = new Alphabet(0, 200 + (50 * i), mod.name, false, CENTER, 0.7);
+			var option = new Alphabet(0, 200 + (50 * mod.ID), mod.name, false, CENTER, 0.7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.screenCenter(X);
 			option.alpha = 0.6;
-			option.cameras = [menuCam];
+			option.cameras = [optionsCam];
 			option.option = mod;
 			if (mod.enabled)
 			{
 				option.x += theWidth + 25;
-				enabledOptions.push(option);
+				enabledOptions.insert(mod.ID, option);
 			}
 			else if (mod.staticMod)
 			{
 				option.x -= theWidth + 25;
-				staticOptions.push(option);
+				staticOptions.insert(mod.ID, option);
 			}
 			else
-				menuOptions.push(option);
+				menuOptions.insert(mod.ID, option);
 			add(option);
-			i++;
 		}
 	}
 	/*
