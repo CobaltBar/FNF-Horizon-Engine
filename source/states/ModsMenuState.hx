@@ -39,24 +39,6 @@ class ModsMenuState extends MusicMenuState
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
-			exitState();
-
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
-			returnState();
-
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]) && !transitioningOut)
-			changeSection(-1);
-
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]) && !transitioningOut)
-			changeSection(1);
-
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
-			changeSelection(1);
-
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
-			changeSelection(-1);
-
 		for (i in 0...staticOptions.length)
 		{
 			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
@@ -64,16 +46,40 @@ class ModsMenuState extends MusicMenuState
 
 		for (i in 0...menuOptions.length)
 		{
-			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * 0.5, FlxMath.bound(elapsed * 5, 0, 1));
+			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5, FlxMath.bound(elapsed * 5, 0, 1));
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 
 		for (i in 0...enabledOptions.length)
 		{
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * 0.5 + theWidth + 25,
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + theWidth + 25,
 				FlxMath.bound(elapsed * 5, 0, 1));
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
+
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
+			exitState();
+
+		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
+			returnState();
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2]]) && !transitioningOut)
+			shiftSelection(1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1]]) && !transitioningOut)
+			shiftSelection(-1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]) && !transitioningOut)
+			changeSection(1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]) && !transitioningOut)
+			changeSection(-1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
+			changeSelection(1);
+
+		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
+			changeSelection(-1);
 	}
 
 	public override function exitState():Void
@@ -83,7 +89,7 @@ class ModsMenuState extends MusicMenuState
 			case 0:
 				if (staticOptions.length <= 0)
 					return;
-				staticOptions[curStatic].alpha = 1;
+				staticOptions[curStatic].alpha = .8;
 				staticOptions[curStatic].option.enabled = !staticOptions[curStatic].option.enabled;
 			case 1:
 				if (menuOptions.length <= 0)
@@ -139,10 +145,42 @@ class ModsMenuState extends MusicMenuState
 		MusicState.switchState(new MainMenuState());
 	}
 
+	public function shiftSelection(change:Int)
+	{
+		switch (curSection)
+		{
+			case 1:
+				var newCurSelected = curSelected - change;
+				if (newCurSelected < 0)
+					newCurSelected = menuOptions.length - 1;
+				if (newCurSelected >= menuOptions.length)
+					newCurSelected = 0;
+				var op1 = menuOptions[curSelected];
+				var op2 = menuOptions[newCurSelected];
+				op1.alpha = .6;
+				menuOptions[curSelected] = op2;
+				menuOptions[newCurSelected] = op1;
+				curSelected -= change;
+			case 2:
+				var newCurEnabled = curEnabled - change;
+				if (newCurEnabled < 0)
+					newCurEnabled = enabledOptions.length - 1;
+				if (newCurEnabled >= enabledOptions.length)
+					newCurEnabled = 0;
+				var op1 = enabledOptions[curEnabled];
+				op1.alpha = .6;
+				var op2 = enabledOptions[newCurEnabled];
+				enabledOptions[curEnabled] = op2;
+				enabledOptions[newCurEnabled] = op1;
+				curEnabled -= change;
+		}
+		changeSelection(0, false);
+	}
+
 	public function changeSection(change:Int, sound:Bool = true, set:Bool = false):Void
 	{
 		if (sound)
-			FlxG.sound.play(Path.sound("Scroll"), 0.7);
+			FlxG.sound.play(Path.sound("Scroll"), .7);
 
 		set ? curSection = change : curSection += change;
 
@@ -155,18 +193,68 @@ class ModsMenuState extends MusicMenuState
 		{
 			case 0:
 				staticTitle.alpha = 1;
-				allModsTitle.alpha = enabledTitle.alpha = 0.6;
-
+				allModsTitle.alpha = enabledTitle.alpha = .6;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
 			case 1:
 				allModsTitle.alpha = 1;
-				staticTitle.alpha = enabledTitle.alpha = 0.6;
+				staticTitle.alpha = enabledTitle.alpha = .6;
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
 			case 2:
 				enabledTitle.alpha = 1;
-				allModsTitle.alpha = staticTitle.alpha = 0.6;
+				allModsTitle.alpha = staticTitle.alpha = .6;
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
 		}
+		changeSelection(0, false);
 	}
 
-	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void {}
+	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
+	{
+		switch (curSection)
+		{
+			case 0:
+				if (staticOptions.length <= 0)
+					return;
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (sound)
+					FlxG.sound.play(Path.sound("Scroll"), .7);
+				set ? curStatic = change : curStatic += change;
+				if (curStatic < 0)
+					curStatic = staticOptions.length - 1;
+				if (curStatic >= staticOptions.length)
+					curStatic = 0;
+				staticOptions[curStatic].alpha = 1;
+			case 1:
+				if (menuOptions.length <= 0)
+					return;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
+				super.changeSelection(change, sound, set);
+				menuOptions[curSelected].alpha = 1;
+			case 2:
+				if (enabledOptions.length <= 0)
+					return;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
+				if (sound)
+					FlxG.sound.play(Path.sound("Scroll"), .7);
+				set ? curEnabled = change : curEnabled += change;
+				if (curEnabled < 0)
+					curEnabled = enabledOptions.length - 1;
+				if (curEnabled >= enabledOptions.length)
+					curEnabled = 0;
+				enabledOptions[curEnabled].alpha = 1;
+		}
+	}
 
 	public inline function createMenuBG():Void
 	{
@@ -218,26 +306,26 @@ class ModsMenuState extends MusicMenuState
 		controlsText.cameras = [menuCam];
 		add(controlsText);
 
-		allModsTitle = new Alphabet(0, 25, "All Mods", true, CENTER, 0.9);
+		allModsTitle = new Alphabet(0, 25, "All Mods", true, CENTER, .9);
 		allModsTitle.screenCenter(X);
 		allModsTitle.y += allModsTitle.height;
-		allModsTitle.alpha = 0.6;
+		allModsTitle.alpha = .6;
 		allModsTitle.cameras = [menuCam];
 		add(allModsTitle);
 
-		staticTitle = new Alphabet(0, 25, "Static Mods", true, CENTER, 0.9);
+		staticTitle = new Alphabet(0, 25, "Static Mods", true, CENTER, .9);
 		staticTitle.screenCenter(X);
 		staticTitle.x -= staticModsBG.width + 25;
 		staticTitle.y += staticTitle.height;
-		staticTitle.alpha = 0.6;
+		staticTitle.alpha = .6;
 		staticTitle.cameras = [menuCam];
 		add(staticTitle);
 
-		enabledTitle = new Alphabet(0, 25, "Enabled Mods", true, CENTER, 0.9);
+		enabledTitle = new Alphabet(0, 25, "Enabled Mods", true, CENTER, .9);
 		enabledTitle.screenCenter(X);
 		enabledTitle.x += enabledModsBG.width + 25;
 		enabledTitle.y += enabledTitle.height;
-		enabledTitle.alpha = 0.6;
+		enabledTitle.alpha = .6;
 		enabledTitle.cameras = [menuCam];
 		add(enabledTitle);
 	}
@@ -246,10 +334,12 @@ class ModsMenuState extends MusicMenuState
 	{
 		for (mod in ModManager.allMods)
 		{
-			var option = new Alphabet(0, 200, mod.name, false, CENTER, 0.7);
+			var option = new Alphabet(0, 200, mod.name, false, CENTER, .7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+			option.clipRect = option.clipRect;
 			option.screenCenter(X);
-			option.alpha = 0.6;
+			option.alpha = .6;
 			option.cameras = [optionsCam];
 			option.option = mod;
 			if (mod.enabled)
@@ -268,152 +358,24 @@ class ModsMenuState extends MusicMenuState
 		}
 	}
 	/*
-
-		public override function update(elapsed:Float):Void
+		for (i in ...menuOptions.length)
 		{
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2]]) && !transitioningOut)
-			{
-				if (enabled)
-				{
-					var option1 = enabledOptions[curEnabled];
-					var guh = curEnabled - 1;
-					if (guh < 0)
-						guh = enabledOptions.length - 1;
-					if (guh >= enabledOptions.length)
-						guh = 0;
-					var option2 = enabledOptions[guh];
-					enabledOptions[guh] = option1;
-					enabledOptions[curEnabled].alpha = .6;
-					enabledOptions[curEnabled] = option2;
-					curEnabled -= 1;
-				}
-				else
-				{
-					var option1 = menuOptions[curSelected];
-					var guh = curSelected - 1;
-					if (guh < 0)
-						guh = menuOptions.length - 1;
-					if (guh >= menuOptions.length)
-						guh = 0;
-					var option2 = menuOptions[guh];
-					menuOptions[guh] = option1;
-					menuOptions[curSelected].alpha = .6;
-					menuOptions[curSelected] = option2;
-					curSelected -= 1;
-				}
-				changeSelection(0, false);
-			}
-
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1]]) && !transitioningOut)
-			{
-				if (enabled)
-				{
-					var option1 = enabledOptions[curEnabled];
-					var guh = curEnabled + 1;
-					if (guh < 0)
-						guh = enabledOptions.length - 1;
-					if (guh >= enabledOptions.length)
-						guh = 0;
-					var option2 = enabledOptions[guh];
-					enabledOptions[guh] = option1;
-					enabledOptions[curEnabled].alpha = .6;
-					enabledOptions[curEnabled] = option2;
-					curEnabled += 1;
-				}
-				else
-				{
-					var option1 = menuOptions[curSelected];
-					var guh = curSelected + 1;
-					if (guh < 0)
-						guh = menuOptions.length - 1;
-					if (guh >= menuOptions.length)
-						guh = 0;
-					var option2 = menuOptions[guh];
-					menuOptions[guh] = option1;
-					menuOptions[curSelected].alpha = .6;
-					menuOptions[curSelected] = option2;
-					curSelected += 1;
-				}
-				changeSelection(0, false);
-			}
-
-			for (i in 0...menuOptions.length)
-			{
-				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) * 0.5, elapsed * 5);
-				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i - 1) * 100, elapsed * 5);
-				menuOptions[i].clipRect = FlxRect.weak(0,
-					Std.int(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10), menuOptions[i].width,
-					Std.int(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
-				menuOptions[i].clipRect = menuOptions[i].clipRect;
-			}
-			for (i in 0...enabledOptions.length)
-			{
-				enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) * 0.5, elapsed * 5);
-				enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i - 1) * 100, elapsed * 5);
-				enabledOptions[i].clipRect = FlxRect.weak(0,
-					Std.int(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
-					enabledOptions[i].width,
-					Std.int(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
-				enabledOptions[i].clipRect = enabledOptions[i].clipRect;
-			}
+			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) * .5, elapsed * 5);
+			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i - 1) * 100, elapsed * 5);
+			menuOptions[i].clipRect = FlxRect.weak(0,
+				Std.int(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10), menuOptions[i].width,
+				Std.int(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
-
-		public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
+		for (i in ...enabledOptions.length)
 		{
-			if (enabled)
-			{
-				if (enabledOptions.length <= 0)
-					return;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
-				if (sound)
-					FlxG.sound.play(Path.sound("Scroll"), 0.7);
-				set ? curEnabled = change : curEnabled += change;
-				if (curEnabled < 0)
-					curEnabled = enabledOptions.length - 1;
-				if (curEnabled >= enabledOptions.length)
-					curEnabled = 0;
-				enabledOptions[curEnabled].alpha = 1;
-
-				modDesc.text = enabledOptions[curEnabled].mod.description;
-			}
-			else
-			{
-				if (menuOptions.length <= 0)
-					return;
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
-				super.changeSelection(change, sound, set);
-				menuOptions[curSelected].alpha = 1;
-
-				modDesc.text = cast(menuOptions[curSelected], ModAlphabet).mod.description;
-			}
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) * .5, elapsed * 5);
+			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i - 1) * 100, elapsed * 5);
+			enabledOptions[i].clipRect = FlxRect.weak(0,
+				Std.int(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
+				enabledOptions[i].width,
+				Std.int(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
+			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
 		}
-
-		public function changeSection(sound:Bool = true):Void
-		{
-			if (sound)
-				FlxG.sound.play(Path.sound("Scroll"), 0.7);
-			enabled = !enabled;
-
-			if (enabled)
-			{
-				if (menuOptions.length > 0)
-					menuOptions[curSelected].alpha = .6;
-				if (enabledOptions.length > 0)
-					enabledOptions[curEnabled].alpha = 1;
-				enabledModsText.alpha = 1;
-				allModsText.alpha = .6;
-			}
-			else
-			{
-				if (enabledOptions.length > 0)
-					enabledOptions[curEnabled].alpha = .6;
-				if (menuOptions.length > 0)
-					menuOptions[curSelected].alpha = 1;
-				enabledModsText.alpha = .6;
-				allModsText.alpha = 1;
-			}
-		}
-	 */
+	}*/
 }
