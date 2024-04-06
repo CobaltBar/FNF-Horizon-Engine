@@ -1,8 +1,6 @@
 package abstractions;
 
 import flixel.FlxObject;
-import flixel.addons.display.FlxBackdrop;
-import flixel.util.typeLimit.OneOfTwo;
 
 class MusicMenuState extends MusicState
 {

@@ -66,15 +66,18 @@ class Path
 			}
 
 		// Thanks Sword
-		var cache:openfl.utils.AssetCache = cast openfl.utils.Assets.cache;
-		for (key in cache.font.keys())
-			cache.font.remove(key);
+		for (key in cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.keys())
+			cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.remove(key);
 		localTrackedAssets = [];
 	}
 
 	public static function cacheBitmap(key:String, ?mod:Mod):FlxGraphicAsset
 	{
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(find(key, 'png', true, true, 'Bitmap Cache - Image', mod)), false, key);
+		if (mod != null)
+			key = mod.icon;
+		else
+			key = find(key, 'png', true, true, 'BitmapCacheImage -  ', mod);
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(key), false, key);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
 		currentTrackedAssets.set(key, graphic);
@@ -182,17 +185,21 @@ class Path
 					&& asset != "menu_scripts"
 					&& asset != "scripts"
 					&& asset != "stages")
+				{
 					for (asset2 in FileSystem.readDirectory(combine(['mods', mod.path, asset])))
 						if (!FileSystem.isDirectory(combine(['mods', mod.path, asset, asset2])))
-							addAsset(asset2, combine(['assets', asset, asset2]), mod);
+							addAsset(asset2, combine(['mods', mod.path, asset, asset2]), mod);
 						else
 						{
 							if (asset == "songs")
 							{
-								addAsset('song-$asset2', combine(['assets', asset, asset2]), mod);
+								addAsset('song-$asset2', combine(['mods', mod.path, asset, asset2]), mod);
 								continue;
 							}
 						}
+				}
+				else
+					addAsset(asset, combine(['mods', mod.path, asset]));
 			}
 		}
 	}

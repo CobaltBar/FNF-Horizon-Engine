@@ -20,6 +20,6 @@ class InitState extends MusicState
 		FlxG.plugins.addPlugin(new Conductor());
 
 		super.create();
-		MusicState.switchState(new ModsMenuState(), true);
+		MusicState.switchState(new TitleState(), true);
 	}
 }

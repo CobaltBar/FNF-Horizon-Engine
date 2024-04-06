@@ -18,6 +18,7 @@ class ModsMenuState extends MusicMenuState
 
 	var modIcon:FlxSprite;
 	var modDesc:FlxText;
+	var targetColor:FlxColor;
 
 	var curSection:Int = 1;
 	var theWidth = Std.int(FlxG.width / 3 - 100 / 3);
@@ -28,6 +29,7 @@ class ModsMenuState extends MusicMenuState
 		setupMenu();
 		createMenuBG();
 		createModUI();
+		targetColor = FlxColor.WHITE;
 		shouldBop = handleInput = false;
 		createModOptions();
 		changeSection(0, false);
@@ -57,6 +59,8 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 
+		bg.color = FlxColor.interpolate(bg.color, targetColor);
+
 		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
 			exitState();
 
@@ -83,7 +87,6 @@ class ModsMenuState extends MusicMenuState
 	}
 
 	public override function exitState():Void
-	{
 		switch (curSection)
 		{
 			case 0:
@@ -110,7 +113,6 @@ class ModsMenuState extends MusicMenuState
 				enabledOptions.remove(enabledOptions[curEnabled]);
 				changeSelection(0, false);
 		}
-	}
 
 	public override function returnState():Void
 	{
@@ -217,7 +219,6 @@ class ModsMenuState extends MusicMenuState
 	}
 
 	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
-	{
 		switch (curSection)
 		{
 			case 0:
@@ -233,6 +234,11 @@ class ModsMenuState extends MusicMenuState
 				if (curStatic >= staticOptions.length)
 					curStatic = 0;
 				staticOptions[curStatic].alpha = 1;
+				modIcon.loadGraphic(staticOptions[curStatic].option.icon);
+				modDesc.text = staticOptions[curStatic].option.description;
+				targetColor.red = staticOptions[curStatic].option.color[0];
+				targetColor.green = staticOptions[curStatic].option.color[1];
+				targetColor.blue = staticOptions[curStatic].option.color[2];
 			case 1:
 				if (menuOptions.length <= 0)
 					return;
@@ -240,6 +246,11 @@ class ModsMenuState extends MusicMenuState
 					menuOptions[curSelected].alpha = .6;
 				super.changeSelection(change, sound, set);
 				menuOptions[curSelected].alpha = 1;
+				modIcon.loadGraphic(cast(menuOptions[curSelected], Alphabet).option.icon);
+				modDesc.text = cast(menuOptions[curSelected], Alphabet).option.description;
+				targetColor.red = cast(menuOptions[curSelected], Alphabet).option.color[0];
+				targetColor.green = cast(menuOptions[curSelected], Alphabet).option.color[1];
+				targetColor.blue = cast(menuOptions[curSelected], Alphabet).option.color[2];
 			case 2:
 				if (enabledOptions.length <= 0)
 					return;
@@ -253,8 +264,12 @@ class ModsMenuState extends MusicMenuState
 				if (curEnabled >= enabledOptions.length)
 					curEnabled = 0;
 				enabledOptions[curEnabled].alpha = 1;
+				modIcon.loadGraphic(enabledOptions[curEnabled].option.icon);
+				modDesc.text = enabledOptions[curEnabled].option.description;
+				targetColor.red = enabledOptions[curEnabled].option.color[0];
+				targetColor.green = enabledOptions[curEnabled].option.color[1];
+				targetColor.blue = enabledOptions[curEnabled].option.color[2];
 		}
-	}
 
 	public inline function createMenuBG():Void
 	{
@@ -302,7 +317,7 @@ class ModsMenuState extends MusicMenuState
 
 		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
 			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
-			24, Path.font("vcr"), 0xFFFFFFFF, CENTER);
+			24, Path.font("vcr"), 0xFFFFFFFF, LEFT);
 		controlsText.cameras = [menuCam];
 		add(controlsText);
 
@@ -331,7 +346,6 @@ class ModsMenuState extends MusicMenuState
 	}
 
 	public inline function createModOptions():Void
-	{
 		for (mod in ModManager.allMods)
 		{
 			var option = new Alphabet(0, 200, mod.name, false, CENTER, .7);
@@ -342,6 +356,7 @@ class ModsMenuState extends MusicMenuState
 			option.alpha = .6;
 			option.cameras = [optionsCam];
 			option.option = mod;
+			Path.cacheBitmap("mod", mod);
 			if (mod.enabled)
 			{
 				option.x += theWidth + 25;
@@ -356,26 +371,4 @@ class ModsMenuState extends MusicMenuState
 				menuOptions.insert(mod.ID, option);
 			add(option);
 		}
-	}
-	/*
-		for (i in ...menuOptions.length)
-		{
-			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, FlxG.width - 50 - (allModBG.width + menuOptions[i].width) * .5, elapsed * 5);
-			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 250 - (curSelected - i - 1) * 100, elapsed * 5);
-			menuOptions[i].clipRect = FlxRect.weak(0,
-				Std.int(menuOptions[i].y < 250 ? -menuOptions[i].height - 10 - (menuOptions[i].y - 250) : -menuOptions[i].height - 10), menuOptions[i].width,
-				Std.int(menuOptions[i].y > 800 ? menuOptions[i].height - (menuOptions[i].y - 800) : menuOptions[i].height));
-			menuOptions[i].clipRect = menuOptions[i].clipRect;
-		}
-		for (i in ...enabledOptions.length)
-		{
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, 50 + (enabledModBG.width - enabledOptions[i].width) * .5, elapsed * 5);
-			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 250 - (curEnabled - i - 1) * 100, elapsed * 5);
-			enabledOptions[i].clipRect = FlxRect.weak(0,
-				Std.int(enabledOptions[i].y < 250 ? -enabledOptions[i].height - 10 - (enabledOptions[i].y - 250) : -enabledOptions[i].height - 10),
-				enabledOptions[i].width,
-				Std.int(enabledOptions[i].y > 789 ? enabledOptions[i].height - (enabledOptions[i].y - 789) : enabledOptions[i].height));
-			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
-		}
-	}*/
 }

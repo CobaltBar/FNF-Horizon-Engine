@@ -134,7 +134,7 @@ class MainMenuState extends MusicMenuState
 	{
 		for (name in options)
 		{
-			var option = Util.createSparrowSprite(FlxG.width * 0.5, 0, name, 1.4);
+			var option = Util.createSparrowSprite(0, 0, name, 1.4);
 			option.animation.addByPrefix("selected", name + " white", 24, true);
 			option.animation.addByPrefix("idle", name + " basic", 24, true);
 			option.animation.play("idle");
