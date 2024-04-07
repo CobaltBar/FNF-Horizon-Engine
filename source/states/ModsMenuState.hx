@@ -106,8 +106,10 @@ class ModsMenuState extends MusicMenuState
 			case 0:
 				if (staticOptions.length <= 0)
 					return;
-				staticOptions[curStatic].alpha = staticOptions[curStatic].alpha == .8 ? .6 : .8;
+				if (theStaticOption != null)
+					theStaticOption.alpha = .6;
 				theStaticOption = staticOptions[curStatic];
+				theStaticOption.alpha = .8;
 			case 1:
 				if (menuOptions.length <= 0)
 					return;
