@@ -14,11 +14,11 @@ class InitState extends MusicState
 		Toolkit.init();
 		Toolkit.theme = 'dark';
 		CursorHelper.useCustomCursors = false;
-		ModManager.loadMods();
 		Path.loadAssets();
+		ModManager.loadMods();
 		Path.reloadEnabledMods();
-		FlxG.plugins.addPlugin(new Conductor());
 
+		FlxG.plugins.addPlugin(new Conductor());
 		super.create();
 		MusicState.switchState(new TitleState(), true);
 	}

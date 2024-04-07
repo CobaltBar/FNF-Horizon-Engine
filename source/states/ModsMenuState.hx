@@ -23,6 +23,8 @@ class ModsMenuState extends MusicMenuState
 	var curSection:Int = 1;
 	var theWidth = Std.int(FlxG.width / 3 - 100 / 3);
 
+	var theStaticOption:Alphabet;
+
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -59,7 +61,7 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 
-		bg.color = FlxColor.interpolate(bg.color, targetColor);
+		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
 
 		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
 			exitState();
@@ -92,8 +94,8 @@ class ModsMenuState extends MusicMenuState
 			case 0:
 				if (staticOptions.length <= 0)
 					return;
-				staticOptions[curStatic].alpha = .8;
-				staticOptions[curStatic].option.enabled = !staticOptions[curStatic].option.enabled;
+				staticOptions[curStatic].alpha = staticOptions[curStatic].alpha == .8 ? .6 : .8;
+				theStaticOption = staticOptions[curStatic].option;
 			case 1:
 				if (menuOptions.length <= 0)
 					return;
@@ -132,12 +134,9 @@ class ModsMenuState extends MusicMenuState
 			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
 		});
 
-		for (staticMod in staticOptions)
-			if (staticMod.option.enabled)
-			{
-				staticMod.option.ID = 0;
-				ModManager.enabledMods.insert(0, staticMod.option);
-			}
+		theStaticOption.option.ID = 0;
+		theStaticOption.option.enabled = true;
+		ModManager.enabledMods.insert(0, theStaticOption.option);
 
 		for (mod in ModManager.enabledMods)
 			Settings.data.savedMods.set(mod.path, mod);
@@ -233,7 +232,8 @@ class ModsMenuState extends MusicMenuState
 					curStatic = staticOptions.length - 1;
 				if (curStatic >= staticOptions.length)
 					curStatic = 0;
-				staticOptions[curStatic].alpha = 1;
+				if (staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = 1;
 				modIcon.loadGraphic(staticOptions[curStatic].option.icon);
 				modDesc.text = staticOptions[curStatic].option.description;
 				targetColor.red = staticOptions[curStatic].option.color[0];
@@ -356,7 +356,7 @@ class ModsMenuState extends MusicMenuState
 			option.alpha = .6;
 			option.cameras = [optionsCam];
 			option.option = mod;
-			Path.cacheBitmap("mod", mod);
+			Path.cacheBitmap(mod.icon, mod, true);
 			if (mod.enabled)
 			{
 				option.x += theWidth + 25;

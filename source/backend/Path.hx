@@ -71,13 +71,10 @@ class Path
 		localTrackedAssets = [];
 	}
 
-	public static function cacheBitmap(key:String, ?mod:Mod):FlxGraphicAsset
+	public static function cacheBitmap(key:String, ?mod:Mod, ?path:Bool = false):FlxGraphicAsset
 	{
-		if (mod != null)
-			key = mod.icon;
-		else
-			key = find(key, 'png', true, true, 'BitmapCacheImage -  ', mod);
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(key), false, key);
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : find(key, 'png', true, true, 'Bitmap Cache - Image', mod)), false,
+			key);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
 		currentTrackedAssets.set(key, graphic);
@@ -93,12 +90,12 @@ class Path
 		if (assets.exists('$key.$extension'))
 			return assets.get('$key.$extension');
 
-		ErrorState.error(null, description == null ? extension.toUpperCase() : description + '$key not found.', kill);
+		ErrorState.error(null, description == null ? extension.toUpperCase() : description + ' $key not found.', kill);
 		return null;
 	}
 
 	@:keep
-	public static inline function image(key:String, ?mod:Mod):FlxGraphic
+	public static inline function image(key:String, ?mod:Mod):FlxGraphicAsset
 	{
 		if (currentTrackedAssets.exists(key))
 		{
@@ -174,11 +171,10 @@ class Path
 		modAssets = [];
 		for (mod in ModManager.allMods)
 		{
+			modAssets.set(mod, []);
 			if (!mod.enabled)
 				continue;
 			for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
-			{
-				modAssets.set(mod, []);
 				if (FileSystem.isDirectory(combine(['mods', mod.path, asset]))
 					&& asset != "custom_events"
 					&& asset != "custom_notetypes"
@@ -200,7 +196,6 @@ class Path
 				}
 				else
 					addAsset(asset, combine(['mods', mod.path, asset]));
-			}
 		}
 	}
 
