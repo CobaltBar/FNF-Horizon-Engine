@@ -80,7 +80,7 @@ class Path
 		currentTrackedAssets.set(key, graphic);
 		localTrackedAssets.push(key);
 		return graphic;
-	} // Wonder Engine Time
+	} // Horizon Engine Time
 
 	@:keep
 	public static inline function find(key:String, extension:String, error:Bool = false, kill:Bool = false, ?description:String, ?mod:Mod):String

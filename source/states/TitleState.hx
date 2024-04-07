@@ -136,7 +136,7 @@ class TitleState extends MusicState
 			{
 				case 0:
 					FlxG.sound.music.fadeIn(4, 0, 0.7);
-					createIntroText("Wonder Engine by", -50);
+					createIntroText("Horizon Engine by", -50);
 				case 2:
 					tweenLastIntroText(1, 150);
 					createIntroText("Cobalt Bar", -50);
