@@ -1,7 +1,5 @@
 package modding;
 
-import flixel.system.FlxAssets.FlxGraphicAsset;
-
 class Mod
 {
 	public var name:String;

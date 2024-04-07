@@ -3,6 +3,7 @@ package states;
 import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
+import modding.ModManager;
 
 class MainMenuState extends MusicMenuState
 {
@@ -132,8 +133,13 @@ class MainMenuState extends MusicMenuState
 
 	public function createMenuOptions(options:Array<String>):Void
 	{
+		var allModsCount:Int = 0;
+		for (val in ModManager.allMods)
+			allModsCount++;
 		for (name in options)
 		{
+			if (allModsCount == 0 && name == 'mods')
+				continue;
 			var option = Util.createSparrowSprite(0, 0, name, 1.4);
 			option.animation.addByPrefix("selected", name + " white", 24, true);
 			option.animation.addByPrefix("idle", name + " basic", 24, true);
@@ -146,7 +152,7 @@ class MainMenuState extends MusicMenuState
 			menuOptions.push(option);
 		}
 		var offset:Float = 0;
-		for (i in 0...options.length)
+		for (i in 0...menuOptions.length)
 		{
 			menuOptions[i].x = (FlxG.width - menuOptions[i].width) * 0.5;
 			menuOptions[i].y = 100 + offset;
