@@ -1,6 +1,6 @@
 package modding;
 
-import modding.Mod.ModJsonData;
+import modding.JsonTypedefs.ModJsonData;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;

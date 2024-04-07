@@ -148,9 +148,12 @@ class ModsMenuState extends MusicMenuState
 			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
 		});
 
-		theStaticOption.option.ID = 0;
-		theStaticOption.option.enabled = true;
-		ModManager.enabledMods.insert(0, theStaticOption.option);
+		if (theStaticOption != null)
+		{
+			theStaticOption.option.ID = 0;
+			theStaticOption.option.enabled = true;
+			ModManager.enabledMods.insert(0, theStaticOption.option);
+		}
 
 		for (mod in ModManager.enabledMods)
 			Settings.data.savedMods.set(mod.path, mod);

@@ -1,17 +1,6 @@
 package states;
 
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.tweens.misc.VarTween;
-import modding.ModManager;
-import sys.io.File;
-
-typedef TitleData =
-{
-	bpm:Float,
-	gfPosition:Array<Int>,
-	logoPosition:Array<Int>,
-	startPosition:Array<Int>
-}
+import modding.JsonTypedefs.TitleJsonData;
 
 class TitleState extends MusicState
 {
@@ -24,7 +13,7 @@ class TitleState extends MusicState
 	var introImages:Array<FlxSprite> = [];
 	var goofyTexts:Array<String> = [];
 
-	public static var titleData:TitleData;
+	public static var titleData:TitleJsonData;
 
 	static var comingBack:Bool = false;
 

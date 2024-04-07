@@ -9,11 +9,15 @@ class MainMenuState extends MusicMenuState
 {
 	var bgFlash:FlxBackdrop;
 
+	var allModsCount:Int = 0;
+
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
 		setupMenu();
 		createMenuBG();
+		for (val in ModManager.allMods)
+			allModsCount++;
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
 		createVersionTexts();
 
@@ -63,7 +67,7 @@ class MainMenuState extends MusicMenuState
 	{
 		super.exitState();
 		transitioningOut = false;
-		if (curSelected == 5)
+		if (curSelected == (5 - (allModsCount == 0 ? 1 : 0)))
 			Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
 		else
 		{
@@ -82,21 +86,36 @@ class MainMenuState extends MusicMenuState
 			});
 			FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false, (flicker:FlxFlicker) ->
 			{
-				switch (curSelected)
-				{
-					case 0:
-						MusicState.switchState(new StoryMenuState());
-					case 1:
-						MusicState.switchState(new FreeplayState());
-					case 2:
-						MusicState.switchState(new ModsMenuState());
-					case 3:
-						MusicState.switchState(new AwardsState());
-					case 4:
-						MusicState.switchState(new CreditsState());
-					case 6:
-						MusicState.switchState(new OptionsState());
-				}
+				if (allModsCount == 0)
+					switch (curSelected)
+					{
+						case 0:
+							MusicState.switchState(new StoryMenuState());
+						case 1:
+							MusicState.switchState(new FreeplayState());
+						case 2:
+							MusicState.switchState(new AwardsState());
+						case 3:
+							MusicState.switchState(new CreditsState());
+						case 5:
+							MusicState.switchState(new OptionsState());
+					}
+				else
+					switch (curSelected)
+					{
+						case 0:
+							MusicState.switchState(new StoryMenuState());
+						case 1:
+							MusicState.switchState(new FreeplayState());
+						case 2:
+							MusicState.switchState(new ModsMenuState());
+						case 3:
+							MusicState.switchState(new AwardsState());
+						case 4:
+							MusicState.switchState(new CreditsState());
+						case 6:
+							MusicState.switchState(new OptionsState());
+					}
 			});
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
@@ -133,9 +152,6 @@ class MainMenuState extends MusicMenuState
 
 	public function createMenuOptions(options:Array<String>):Void
 	{
-		var allModsCount:Int = 0;
-		for (val in ModManager.allMods)
-			allModsCount++;
 		for (name in options)
 		{
 			if (allModsCount == 0 && name == 'mods')

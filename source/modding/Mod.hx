@@ -30,13 +30,3 @@ class Mod
 		this.ID = ID;
 	}
 }
-
-typedef ModJsonData =
-{
-	public var name:String;
-	public var description:String;
-	public var version:String;
-	public var color:Array<Int>;
-	public var rpcChange:String;
-	public var modSysVer:Int;
-}
