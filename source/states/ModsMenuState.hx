@@ -46,12 +46,19 @@ class ModsMenuState extends MusicMenuState
 		for (i in 0...staticOptions.length)
 		{
 			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
+			staticOptions[i].clipRect = FlxRect.weak(0,
+				staticOptions[i].y < 150 ? -staticOptions[i].height - (staticOptions[i].y - 150) : -staticOptions[i].height, staticOptions[i].width + 10,
+				staticOptions[i].y > 792 ? staticOptions[i].height * 2 - (staticOptions[i].y - 792) : staticOptions[i].height * 2);
+			staticOptions[i].clipRect = staticOptions[i].clipRect;
 		}
 
 		for (i in 0...menuOptions.length)
 		{
 			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5, FlxMath.bound(elapsed * 5, 0, 1));
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
+			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 150 ? -menuOptions[i].height - (menuOptions[i].y - 150) : -menuOptions[i].height,
+				menuOptions[i].width + 10, menuOptions[i].y > 792 ? menuOptions[i].height * 2 - (menuOptions[i].y - 792) : menuOptions[i].height * 2);
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
 
 		for (i in 0...enabledOptions.length)
@@ -59,6 +66,11 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + theWidth + 25,
 				FlxMath.bound(elapsed * 5, 0, 1));
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
+
+			enabledOptions[i].clipRect = FlxRect.weak(0,
+				enabledOptions[i].y < 150 ? -enabledOptions[i].height - (enabledOptions[i].y - 150) : -enabledOptions[i].height, enabledOptions[i].width + 10,
+				enabledOptions[i].y > 792 ? enabledOptions[i].height * 2 - (enabledOptions[i].y - 792) : enabledOptions[i].height * 2);
+			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
 		}
 
 		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
@@ -95,7 +107,7 @@ class ModsMenuState extends MusicMenuState
 				if (staticOptions.length <= 0)
 					return;
 				staticOptions[curStatic].alpha = staticOptions[curStatic].alpha == .8 ? .6 : .8;
-				theStaticOption = staticOptions[curStatic].option;
+				theStaticOption = staticOptions[curStatic];
 			case 1:
 				if (menuOptions.length <= 0)
 					return;
@@ -316,7 +328,7 @@ class ModsMenuState extends MusicMenuState
 		add(controlsBG);
 
 		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
-			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}',
+			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}\nSelect Mod:${Settings.data.keybinds.get("accept")[0].toString()}/${Settings.data.keybinds.get("accept")[0].toString()}\nReturn to Main Menu:${Settings.data.keybinds.get("back")[0].toString()}/${Settings.data.keybinds.get("back")[1].toString()}',
 			24, Path.font("vcr"), 0xFFFFFFFF, LEFT);
 		controlsText.cameras = [menuCam];
 		add(controlsText);

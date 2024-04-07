@@ -2,8 +2,7 @@
     "name": "Mod Template",
     "description": "Mod Template for Wonder Engine",
     "version": "1.0",
-    "color": [0, 0, 0],
-    "globalMod": false,
+    "color": [255, 255, 255],
     "rpcChange": "",
     "modSysVer": 1
 }
