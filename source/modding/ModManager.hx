@@ -19,6 +19,7 @@ class ModManager
 			{
 				if (mod == "Mod Template")
 					continue;
+
 				var json:ModJsonData = null;
 				var modData:Mod;
 				if (FileSystem.exists(Path.combine(['mods', mod, 'mod.json'])))
@@ -39,6 +40,12 @@ class ModManager
 								|| haxe.io.Path.extension(Path.combine(['mods', mod, 'menu_scripts', script])) == 'hx'
 								&& !modData.staticMod)
 								modData.staticMod = true;
+				if ((mod == "Tutorial") // || mod == "Week 1" || mod == "Week 2" || mod == "Week 3" || mod == "Week 4" || mod == "Week 5" || mod == "Week 6" || mod == "Week 7"
+					&& !Settings.data.savedMods.exists(mod))
+				{
+					modData.enabled = true;
+					enabledMods.push(modData);
+				}
 				allMods.set(mod, modData);
 				i++;
 			}

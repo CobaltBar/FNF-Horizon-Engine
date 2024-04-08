@@ -334,8 +334,8 @@ class ModsMenuState extends MusicMenuState
 		add(controlsBG);
 
 		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
-			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}\nSelect Mod:${Settings.data.keybinds.get("accept")[0].toString()}/${Settings.data.keybinds.get("accept")[0].toString()}\nReturn to Main Menu:${Settings.data.keybinds.get("back")[0].toString()}/${Settings.data.keybinds.get("back")[1].toString()}',
-			24, Path.font("vcr"), 0xFFFFFFFF, LEFT);
+			'Controls\nMove selection up/down: ${Settings.data.keybinds.get("ui")[6].toString()}/${Settings.data.keybinds.get("ui")[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get("ui")[2].toString()}/${Settings.data.keybinds.get("ui")[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get("accept")[0].toString()}/${Settings.data.keybinds.get("accept")[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get("back")[0].toString()}/${Settings.data.keybinds.get("back")[1].toString()}',
+			20, Path.font("vcr"), 0xFFFFFFFF, LEFT);
 		controlsText.cameras = [menuCam];
 		add(controlsText);
 

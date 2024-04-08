@@ -19,6 +19,14 @@ typedef WeekJsonData =
 	public var hideSongsFromFreeplay:Bool;
 }
 
+typedef MenuCharJsonData =
+{
+	public var position:Array<Int>;
+	public var scale:Float;
+	public var idle:String;
+	public var confirm:String;
+}
+
 typedef SongJsonData =
 {
 	public var name:String;
