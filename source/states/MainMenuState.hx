@@ -14,6 +14,7 @@ class MainMenuState extends MusicMenuState
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
+		DiscordRPC.changePresence("Menu: Main Menu");
 		setupMenu();
 		createMenuBG();
 		for (val in ModManager.allMods)

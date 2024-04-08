@@ -17,6 +17,7 @@ class InitState extends MusicState
 		Path.loadAssets();
 		ModManager.loadMods();
 		Path.reloadEnabledMods();
+		DiscordRPC.init();
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

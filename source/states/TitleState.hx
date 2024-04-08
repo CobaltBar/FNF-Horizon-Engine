@@ -20,6 +20,7 @@ class TitleState extends MusicState
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
+		DiscordRPC.changePresence("Menu: Title");
 		loadTitleData();
 		generateObjects();
 		if (!comingBack && FlxG.sound.music == null)

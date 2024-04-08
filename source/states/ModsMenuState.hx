@@ -28,6 +28,7 @@ class ModsMenuState extends MusicMenuState
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
+		DiscordRPC.changePresence("Menu: Mods Menu");
 		setupMenu();
 		createMenuBG();
 		createModUI();
