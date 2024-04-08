@@ -9,7 +9,7 @@ class Conductor extends FlxBasic
 	public static var crochet:Float = 0;
 	public static var stepCrochet:Float = 0;
 	public static var offset(default, set):Float = 0;
-	public static var song:FlxSound;
+	public static var song(default, set):FlxSound;
 
 	public static var curStep:Int = 0;
 	public static var curBeat:Int = 0;
@@ -40,6 +40,16 @@ class Conductor extends FlxBasic
 				Conductor.song = FlxG.sound.music;
 		}
 		super.update(elapsed);
+	}
+
+	public static function set_song(val:FlxSound):FlxSound
+	{
+		val.onComplete = () ->
+		{
+			curStep = curBeat = 0;
+			curDecBeat = curCrochetStep = curCrochetBeat = 0;
+		}
+		return song = val;
 	}
 
 	public static function set_bpm(val:Float):Float

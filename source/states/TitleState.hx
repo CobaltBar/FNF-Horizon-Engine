@@ -23,14 +23,7 @@ class TitleState extends MusicState
 		loadTitleData();
 		generateObjects();
 		if (!comingBack && FlxG.sound.music == null)
-		{
 			FlxG.sound.playMusic(Path.sound("menuSong"), 0);
-			FlxG.sound.music.onComplete = () ->
-			{
-				curBeat = curStep = 0;
-				curDecBeat = 0;
-			}
-		}
 		if (comingBack)
 			skipIntro();
 		super.create();
