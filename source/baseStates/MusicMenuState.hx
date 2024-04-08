@@ -1,4 +1,4 @@
-package abstractions;
+package baseStates;
 
 import flixel.FlxObject;
 

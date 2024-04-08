@@ -42,6 +42,8 @@
 	<haxelib name="tjson" />
 	<haxelib name="haxeui-core" />
 	<haxelib name="haxeui-flixel" />
+	<haxelib name="hxdiscord_rpc" />
+	<haxelib name="hxcpp-debug-server" if="debug"/>
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
@@ -54,6 +56,8 @@
 	<haxedef name="no_deprecation_warnings" />
 	<haxedef name="openflPos" />
 	<haxedef name="hscriptPos" />
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
+	<!--<haxedef name="HXC_LIBVLC_LOGGING" if="debug" />-->
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->

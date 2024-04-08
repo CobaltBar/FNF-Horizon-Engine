@@ -1,4 +1,4 @@
-package abstractions;
+package baseStates;
 
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
@@ -24,8 +24,8 @@ class MusicState extends FlxTransitionableState
 
 	public override function create():Void
 	{
-		transitionFromPoint = new FlxPoint(-1, 0);
-		transitionToPoint = new FlxPoint(1, 0);
+		transitionFromPoint = FlxPoint.weak(-1, 0);
+		transitionToPoint = FlxPoint.weak(1, 0);
 		transIn = FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xff000000, 0.5, transitionFromPoint);
 		transOut = FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xff000000, 0.5, transitionToPoint);
 
