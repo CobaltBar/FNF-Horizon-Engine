@@ -10,6 +10,7 @@ class InitState extends MusicState
 
 	public override function create()
 	{
+		Log.init();
 		Settings.load();
 		Toolkit.init();
 		Toolkit.theme = 'dark';
