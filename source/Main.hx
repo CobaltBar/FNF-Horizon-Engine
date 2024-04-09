@@ -18,7 +18,7 @@ class Main extends Sprite
 		super();
 
 		FlxTransitionableState.skipNextTransIn = true;
-		addChild(new FlxModdedGame(0, 0, InitState, 60, 60, true));
+		addChild(new FlxModdedGame(1920, 1080, InitState, 60, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFF));
 		#if linux Lib.current.stage.window.setIcon(Image.fromFile("icon.png")); #end
 
