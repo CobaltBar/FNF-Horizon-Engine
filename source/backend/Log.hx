@@ -51,7 +51,7 @@ class Log
 	}
 
 	public static function error(value:Dynamic, ?pos:PosInfos)
-		print(value, "high_intensity_red", "ERROR", pos);
+		print(ansiColors.get("high_intensity_red") + value + ansiColors.get("reset"), "high_intensity_red", "ERROR", pos);
 
 	public static function warn(value:Dynamic, ?pos:PosInfos)
 		print(value, "high_intensity_yellow", "WARN", pos);
@@ -60,8 +60,6 @@ class Log
 		print(value, "high_intensity_cyan", "INFO", pos);
 
 	static inline function print(value:Dynamic, color:String, word:String, ?pos:PosInfos)
-	{
 		ogTrace('${ansiColors.get('purple')}[${ansiColors.get('yellow')}${DateTools.format(Date.now(), '%T')}${ansiColors.get('purple')}]${ansiColors.get('reset')}-${ansiColors.get('purple')}[${ansiColors.get(color)}${word}${ansiColors.get("purple")}]: ${ansiColors.get("reset")}$value',
 			pos);
-	}
 }

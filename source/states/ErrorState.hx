@@ -52,8 +52,9 @@ class ErrorState extends MusicState
 
 	public static function error(?err:Exception, description:String, errorState:Bool = false):Void
 	{
-		MusicState.errorText += '$description\n' + (err == null ? '' : err.details());
-		trace('$description' + (err == null ? '' : '- ${err.details()}'));
+		var error:String = err == null ? description : '\n$description\n${err.details()}';
+		MusicState.errorText += error;
+		Log.error(error);
 		if (errorState)
 		{
 			MusicState.erroring = true;
