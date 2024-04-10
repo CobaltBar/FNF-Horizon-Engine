@@ -17,9 +17,6 @@
 	<!--These window settings apply to all targets-->
 	<window width="1920" height="1080" fps="" background="#000000" hardware="true" vsync="false" />
 
-	<!--HTML5-specific-->
-	<window if="html5" resizable="false" />
-
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
 
