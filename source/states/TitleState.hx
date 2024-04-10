@@ -123,6 +123,7 @@ class TitleState extends MusicState
 				case 2:
 					tweenLastIntroText(1, 150);
 					createIntroText("Cobalt Bar", -50);
+					introTexts[1].setColorTransform(0, 0.5, 1, 1, 0, 10, 10, 10);
 				case 3:
 					clearIntroTexts();
 				case 4:

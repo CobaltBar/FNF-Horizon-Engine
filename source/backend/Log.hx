@@ -51,14 +51,14 @@ class Log
 	}
 
 	public static function error(value:Dynamic, ?pos:PosInfos)
-		print(ansiColors.get("high_intensity_red") + value + ansiColors.get("reset"), "high_intensity_red", "ERROR", pos);
+		print(value, "high_intensity_red", "ERROR", false, pos);
 
 	public static function warn(value:Dynamic, ?pos:PosInfos)
-		print(value, "high_intensity_yellow", "WARN", pos);
+		print(value, "high_intensity_yellow", "WARN", true, pos);
 
 	static function haxeTrace(value:Dynamic, ?pos:PosInfos)
-		print(value, "high_intensity_cyan", "INFO", pos);
+		print(value, "high_intensity_cyan", "INFO", true, pos);
 
-	static inline function print(value:Dynamic, color:String, word:String, ?pos:PosInfos)
-		Sys.println('${ansiColors.get('purple')}[${ansiColors.get('yellow')}${DateTools.format(Date.now(), '%T')}${ansiColors.get('purple')}]${ansiColors.get('reset')}-${ansiColors.get('purple')}[${ansiColors.get(color)}${word}${ansiColors.get("purple")}]-[${ansiColors.get("bold_high_intensity_white")}${pos.fileName}:${pos.lineNumber}${ansiColors.get("purple")}]${ansiColors.get("reset")}: $value');
+	static inline function print(value:Dynamic, color:String, word:String, space:Bool, ?pos:PosInfos)
+		Sys.println('${ansiColors.get('purple')}[${ansiColors.get('yellow')}${DateTools.format(Date.now(), '%T')}${ansiColors.get('purple')}]${ansiColors.get('reset')}-${ansiColors.get('purple')}[${ansiColors.get(color)}${word}${ansiColors.get("purple")}] ${space ? ' ' : ''}[${ansiColors.get("bold_high_intensity_white")}${pos.fileName}:${pos.lineNumber}${ansiColors.get("purple")}]${ansiColors.get(color)}: $value${ansiColors.get("reset")}');
 }

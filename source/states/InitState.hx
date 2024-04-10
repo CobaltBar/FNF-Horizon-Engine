@@ -20,10 +20,6 @@ class InitState extends MusicState
 		ModManager.reloadEnabledMods();
 		DiscordRPC.init();
 
-		trace('this is info');
-		Log.warn('you have been warned');
-		Log.error('error motherfucker');
-
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();
 		MusicState.switchState(new TitleState(), true);

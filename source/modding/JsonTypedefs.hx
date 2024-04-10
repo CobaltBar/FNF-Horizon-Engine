@@ -16,7 +16,7 @@ typedef WeekJsonData =
 	public var menuChars:Array<String>;
 	public var menuBG:String;
 	public var locked:Bool;
-	public var songs:Array<Array<String>>;
+	public var songs:Array<String>;
 	public var hideSongsFromFreeplay:Bool;
 }
 

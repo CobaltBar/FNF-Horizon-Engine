@@ -28,23 +28,10 @@ class Alphabet extends FlxSpriteGroup
 				letterWidth += 35 * scale;
 				continue;
 			}
-			else if (animName == "&")
-				animName = "ampersand";
-			else if (animName == "")
-				animName = "bullet";
 			else if (animName == "'")
-			{
-				animName = "apostrophe";
 				char.y -= char.height / 2;
-			}
 			else if (animName == "-")
 				char.y -= char.height / 4;
-			else if (animName == "\\")
-				animName = "back slash";
-			else if (animName == "!")
-				animName = "exclamation";
-			else if (animName == "/")
-				animName = "forward slash";
 			else if (animName == "¡")
 				animName = "inverted exclamation";
 			else if (animName == "¿")
@@ -55,15 +42,9 @@ class Alphabet extends FlxSpriteGroup
 				char.y -= char.height / 2;
 			}
 			else if (animName == "“")
-			{
-				animName = "start quote";
 				char.y -= char.height / 2;
-			}
 			else if (animName == "”")
-			{
-				animName = "end quote";
 				char.y -= char.height / 2;
-			}
 			else if (animName == "*")
 				char.y -= char.height / 2;
 			if (bold)
