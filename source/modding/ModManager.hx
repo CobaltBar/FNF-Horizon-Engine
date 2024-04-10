@@ -1,7 +1,7 @@
 package modding;
 
-import modding.JsonTypedefs.WeekJsonData;
 import modding.JsonTypedefs.ModJsonData;
+import modding.JsonTypedefs.WeekJsonData;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
@@ -81,22 +81,15 @@ class ModManager
 								case "charts":
 								case "events":
 								case "notetypes":
-								case "fonts":
-									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
-								case "images":
+								case "fonts" | "images" | "shaders" | "sounds" | "videos":
 									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
 								case "menu_scripts":
 								case "scripts":
-								case "shaders":
-									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
-								case "sounds":
-									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
 								case "stages":
-								case "videos":
-									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
 								case "weeks":
 									var json:WeekJsonData = TJSON.parse(File.getContent(Path.combine(['mods', mod.path, folder, file])));
-									mod.weeks.push(new Week(json.name ?? "N/A", json.menuChars ?? ["bf", "gf", "dad"], json.menuBG ?? "blank", json.locked ?? false, json.hideSongsFromFreeplay ?? false, []));
+									mod.weeks.push(new Week(json.name ?? "N/A", json.menuChars ?? ["bf", "gf", "dad"], json.menuBG ?? "blank",
+										json.locked ?? false, json.songs ?? [], json.hideSongsFromFreeplay ?? false, []));
 							}
 						}
 						else
