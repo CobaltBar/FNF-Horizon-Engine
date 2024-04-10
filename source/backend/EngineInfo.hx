@@ -26,7 +26,7 @@ class EngineInfo extends TextField
 		defaultTextFormat = new TextFormat("VCR OSD Mono", 16, color);
 		autoSize = LEFT;
 		multiline = true;
-		alpha = 0.5;
+		alpha = 0.8;
 		text = "FPS: ";
 
 		times = [];

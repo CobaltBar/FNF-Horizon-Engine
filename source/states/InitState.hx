@@ -17,8 +17,12 @@ class InitState extends MusicState
 		CursorHelper.useCustomCursors = false;
 		Path.loadAssets();
 		ModManager.loadMods();
-		Path.reloadEnabledMods();
+		ModManager.reloadEnabledMods();
 		DiscordRPC.init();
+
+		trace('this is info');
+		Log.warn('you have been warned');
+		Log.error('error motherfucker');
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

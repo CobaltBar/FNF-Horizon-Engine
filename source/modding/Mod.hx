@@ -9,6 +9,9 @@ class Mod
 	public var rpcChange:String;
 	public var modSysVer:Int;
 
+	public var weeks:Array<Week> = [];
+	public var songs:Array<Song> = [];
+
 	public var staticMod:Bool = false;
 	public var enabled:Bool = false;
 

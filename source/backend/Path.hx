@@ -165,40 +165,6 @@ class Path
 				addAsset(asset, combine(['assets', asset]));
 	}
 
-	public static function reloadEnabledMods():Void
-	{
-		modAssets.clear();
-		modAssets = [];
-		for (mod in ModManager.allMods)
-		{
-			modAssets.set(mod, []);
-			if (!mod.enabled)
-				continue;
-			for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
-				if (FileSystem.isDirectory(combine(['mods', mod.path, asset]))
-					&& asset != "custom_events"
-					&& asset != "custom_notetypes"
-					&& asset != "menu_scripts"
-					&& asset != "scripts"
-					&& asset != "stages")
-				{
-					for (asset2 in FileSystem.readDirectory(combine(['mods', mod.path, asset])))
-						if (!FileSystem.isDirectory(combine(['mods', mod.path, asset, asset2])))
-							addAsset(asset2, combine(['mods', mod.path, asset, asset2]), mod);
-						else
-						{
-							if (asset == "songs")
-							{
-								addAsset('song-$asset2', combine(['mods', mod.path, asset, asset2]), mod);
-								continue;
-							}
-						}
-				}
-				else
-					addAsset(asset, combine(['mods', mod.path, asset]));
-		}
-	}
-
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void
 		mod == null ? assets.set(assets.exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key,
 			path) : modAssets[mod].set(modAssets[mod].exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key, path);

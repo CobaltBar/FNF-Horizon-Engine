@@ -1,5 +1,6 @@
 package modding;
 
+import modding.JsonTypedefs.WeekJsonData;
 import modding.JsonTypedefs.ModJsonData;
 import sys.FileSystem;
 import sys.io.File;
@@ -7,7 +8,6 @@ import tjson.TJSON;
 
 class ModManager
 {
-	// final folders:Array<String> = [ "achievements", "characters", "charts", "custom_events", "custom_notetypes", "fonts", "images", "menu_scripts", "scripts", "shaders", "songs", "sounds", "stages", "videos", "weeks"];
 	public static var allMods:Map<String, Mod> = [];
 	public static var enabledMods:Array<Mod> = [];
 
@@ -56,6 +56,82 @@ class ModManager
 				allMods[key].enabled = true;
 				enabledMods.push(allMods[key]);
 			}
+	}
+
+	public static function reloadEnabledMods():Void
+	{
+		@:privateAccess Path.modAssets.clear();
+		@:privateAccess Path.modAssets = [];
+		for (mod in allMods)
+		{
+			@:privateAccess Path.modAssets.set(mod, []);
+			if (!mod.enabled)
+				continue;
+			for (folder in FileSystem.readDirectory(Path.combine(['mods', mod.path])))
+				if (FileSystem.isDirectory(Path.combine(['mods', mod.path, folder])))
+				{
+					for (file in FileSystem.readDirectory(Path.combine(['mods', mod.path, folder])))
+					{
+						if (!FileSystem.isDirectory(Path.combine(['mods', mod.path, folder, file])))
+						{
+							switch (folder)
+							{
+								case "achievements":
+								case "characters":
+								case "charts":
+								case "events":
+								case "notetypes":
+								case "fonts":
+									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+								case "images":
+									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+								case "menu_scripts":
+								case "scripts":
+								case "shaders":
+									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+								case "sounds":
+									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+								case "stages":
+								case "videos":
+									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+								case "weeks":
+									var json:WeekJsonData = TJSON.parse(File.getContent(Path.combine(['mods', mod.path, folder, file])));
+									mod.weeks.push(new Week(json.name ?? "N/A", json.menuChars ?? ["bf", "gf", "dad"], json.menuBG ?? "blank", json.locked ?? false, json.hideSongsFromFreeplay ?? false, []));
+							}
+						}
+						else
+						{
+							if (folder == "songs")
+								@:privateAccess Path.addAsset('song-' + file, Path.combine(['mods', mod.path, folder, file]), mod);
+						}
+					}
+				}
+		}
+		/*for (mod in ModManager.allMods)
+			{
+				for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
+					if (FileSystem.isDirectory(combine(['mods', mod.path, asset]))
+						&& asset != "custom_events"
+						&& asset != "custom_notetypes"
+						&& asset != "menu_scripts"
+						&& asset != "scripts"
+						&& asset != "stages")
+					{
+						for (asset2 in FileSystem.readDirectory(combine(['mods', mod.path, asset])))
+							if (!FileSystem.isDirectory(combine(['mods', mod.path, asset, asset2])))
+								addAsset(asset2, combine(['mods', mod.path, asset, asset2]), mod);
+							else
+							{
+								if (asset == "songs")
+								{
+									addAsset('song-$asset2', combine(['mods', mod.path, asset, asset2]), mod);
+									continue;
+								}
+							}
+					}
+					else
+						addAsset(asset, combine(['mods', mod.path, asset]));
+		}*/
 	}
 
 	public static function reloadMods():Void
