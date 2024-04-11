@@ -29,7 +29,7 @@ class Alphabet extends FlxSpriteGroup
 				continue;
 			}
 			else if (animName == "'")
-				char.y -= char.height / 2;
+				char.y -= char.height * .5;
 			else if (animName == "-")
 				char.y -= char.height / 4;
 			else if (animName == "¡")
@@ -39,14 +39,14 @@ class Alphabet extends FlxSpriteGroup
 			else if (animName == '"')
 			{
 				animName = "quote";
-				char.y -= char.height / 2;
+				char.y -= char.height * .5;
 			}
 			else if (animName == "“")
-				char.y -= char.height / 2;
+				char.y -= char.height * .5;
 			else if (animName == "”")
-				char.y -= char.height / 2;
+				char.y -= char.height * .5;
 			else if (animName == "*")
-				char.y -= char.height / 2;
+				char.y -= char.height * .5;
 			if (bold)
 				animName += " bold";
 			else if (animName.toLowerCase() != animName && letters.contains(chars[i].toLowerCase()))
@@ -84,7 +84,7 @@ class Alphabet extends FlxSpriteGroup
 		{
 			case LEFT | JUSTIFY:
 			case CENTER:
-				this.x -= this.width / 2;
+				this.x -= this.width * .5;
 			case RIGHT:
 				this.x -= this.width;
 		}
