@@ -398,14 +398,14 @@
 	<SubTexture name="¡ normal 10001" x="1572" y="154" width="17" height="65"/>
 	<SubTexture name="¡ normal 10002" x="636" y="167" width="17" height="64" frameX="0" frameY="-1" frameWidth="17" frameHeight="65"/>
 	<SubTexture name="¡ normal 10003" x="636" y="167" width="17" height="64" frameX="0" frameY="-1" frameWidth="17" frameHeight="65"/>
-	<SubTexture name="inverted question bold 10000" x="499" y="162" width="46" height="74"/>
-	<SubTexture name="inverted question bold 10001" x="499" y="162" width="46" height="74"/>
-	<SubTexture name="inverted question bold 10002" x="837" y="225" width="45" height="73" frameX="-1" frameY="-1" frameWidth="46" frameHeight="74"/>
-	<SubTexture name="inverted question bold 10003" x="837" y="225" width="45" height="73" frameX="-1" frameY="-1" frameWidth="46" frameHeight="74"/>
-	<SubTexture name="inverted question normal 10000" x="722" y="363" width="39" height="66"/>
-	<SubTexture name="inverted question normal 10001" x="722" y="363" width="39" height="66"/>
-	<SubTexture name="inverted question normal 10002" x="1665" y="366" width="39" height="65" frameX="0" frameY="-1" frameWidth="39" frameHeight="66"/>
-	<SubTexture name="inverted question normal 10003" x="1665" y="366" width="39" height="65" frameX="0" frameY="-1" frameWidth="39" frameHeight="66"/>
+	<SubTexture name="¿ bold 10000" x="499" y="162" width="46" height="74"/>
+	<SubTexture name="¿ bold 10001" x="499" y="162" width="46" height="74"/>
+	<SubTexture name="¿ bold 10002" x="837" y="225" width="45" height="73" frameX="-1" frameY="-1" frameWidth="46" frameHeight="74"/>
+	<SubTexture name="¿ bold 10003" x="837" y="225" width="45" height="73" frameX="-1" frameY="-1" frameWidth="46" frameHeight="74"/>
+	<SubTexture name="¿ normal 10000" x="722" y="363" width="39" height="66"/>
+	<SubTexture name="¿ normal 10001" x="722" y="363" width="39" height="66"/>
+	<SubTexture name="¿ normal 10002" x="1665" y="366" width="39" height="65" frameX="0" frameY="-1" frameWidth="39" frameHeight="66"/>
+	<SubTexture name="¿ normal 10003" x="1665" y="366" width="39" height="65" frameX="0" frameY="-1" frameWidth="39" frameHeight="66"/>
 	<SubTexture name="j bold 10000" x="1054" y="81" width="54" height="71"/>
 	<SubTexture name="j bold 10001" x="1054" y="81" width="54" height="71"/>
 	<SubTexture name="j bold 10002" x="1109" y="81" width="54" height="71"/>

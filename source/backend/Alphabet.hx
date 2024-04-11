@@ -2,9 +2,7 @@ package backend;
 
 class Alphabet extends FlxSpriteGroup
 {
-	static final letters:Array<String> = [
-		"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
-	];
+	static final letters:String = "abcdefghijklmnopqrstuvwxyz";
 
 	var daX:Float = 0;
 	var alignment:FlxTextAlign;
@@ -31,11 +29,7 @@ class Alphabet extends FlxSpriteGroup
 			else if (animName == "'")
 				char.y -= char.height * .5;
 			else if (animName == "-")
-				char.y -= char.height / 4;
-			else if (animName == "¡")
-				animName = "inverted exclamation";
-			else if (animName == "¿")
-				animName = "inverted question";
+				char.y -= char.height * .25;
 			else if (animName == '"')
 			{
 				animName = "quote";
@@ -49,9 +43,9 @@ class Alphabet extends FlxSpriteGroup
 				char.y -= char.height * .5;
 			if (bold)
 				animName += " bold";
-			else if (animName.toLowerCase() != animName && letters.contains(chars[i].toLowerCase()))
+			else if (animName.toLowerCase() != animName && letters.indexOf(chars[i].toLowerCase()) != -1)
 				animName += " uppercase";
-			else if (animName.toLowerCase() == animName && letters.contains(chars[i].toLowerCase()))
+			else if (animName.toLowerCase() == animName && letters.indexOf(chars[i].toLowerCase()) != -1)
 				animName += " lowercase";
 			else
 				animName += " normal";
