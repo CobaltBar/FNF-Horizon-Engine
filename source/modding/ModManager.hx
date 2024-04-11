@@ -91,6 +91,11 @@ class ModManager
 										json.locked ?? false, json.songs ?? [], json.hideSongsFromFreeplay ?? false, []));
 							}
 						}
+						else
+						{
+							if (folder == "songs")
+								@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
+						}
 		}
 	}
 
