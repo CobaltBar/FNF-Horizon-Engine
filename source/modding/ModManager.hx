@@ -1,6 +1,7 @@
 package modding;
 
 import modding.JsonTypedefs.ModJsonData;
+import modding.JsonTypedefs.SongJsonData;
 import modding.JsonTypedefs.WeekJsonData;
 import sys.FileSystem;
 import sys.io.File;
@@ -69,9 +70,7 @@ class ModManager
 				continue;
 			for (folder in FileSystem.readDirectory(Path.combine(['mods', mod.path])))
 				if (FileSystem.isDirectory(Path.combine(['mods', mod.path, folder])))
-				{
 					for (file in FileSystem.readDirectory(Path.combine(['mods', mod.path, folder])))
-					{
 						if (!FileSystem.isDirectory(Path.combine(['mods', mod.path, folder, file])))
 						{
 							switch (folder)
@@ -85,46 +84,15 @@ class ModManager
 									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
 								case "menu_scripts":
 								case "scripts":
+								case "songs": // TODO
 								case "stages":
 								case "weeks":
 									var json:WeekJsonData = TJSON.parse(File.getContent(Path.combine(['mods', mod.path, folder, file])));
-									mod.weeks.push(new Week(json.name ?? "N/A", json.menuChars ?? ["bf", "gf", "dad"], json.menuBG ?? "blank",
+									mod.weeks.push(new Week(json.name ?? file, json.menuChars ?? ["bf", "gf", "dad"], json.menuBG ?? "blank",
 										json.locked ?? false, json.songs ?? [], json.hideSongsFromFreeplay ?? false, []));
 							}
 						}
-						else
-						{
-							if (folder == "songs")
-								@:privateAccess Path.addAsset('song-' + file, Path.combine(['mods', mod.path, folder, file]), mod);
-						}
-					}
-				}
 		}
-		/*for (mod in ModManager.allMods)
-			{
-				for (asset in FileSystem.readDirectory(combine(['mods', mod.path])))
-					if (FileSystem.isDirectory(combine(['mods', mod.path, asset]))
-						&& asset != "custom_events"
-						&& asset != "custom_notetypes"
-						&& asset != "menu_scripts"
-						&& asset != "scripts"
-						&& asset != "stages")
-					{
-						for (asset2 in FileSystem.readDirectory(combine(['mods', mod.path, asset])))
-							if (!FileSystem.isDirectory(combine(['mods', mod.path, asset, asset2])))
-								addAsset(asset2, combine(['mods', mod.path, asset, asset2]), mod);
-							else
-							{
-								if (asset == "songs")
-								{
-									addAsset('song-$asset2', combine(['mods', mod.path, asset, asset2]), mod);
-									continue;
-								}
-							}
-					}
-					else
-						addAsset(asset, combine(['mods', mod.path, asset]));
-		}*/
 	}
 
 	public static function reloadMods():Void
