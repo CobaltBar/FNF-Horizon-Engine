@@ -28,16 +28,15 @@ class ModsMenuState extends MusicMenuState
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
+		super.create();
 		DiscordRPC.changePresence("Menu: Mods Menu");
-		setupMenu();
 		createMenuBG();
 		createModUI();
 		targetColor = FlxColor.WHITE;
-		shouldBop = handleInput = false;
+		shouldBop = _handleInput = false;
 		createModOptions();
 		changeSection(0, false);
 		changeSelection(0, false);
-		super.create();
 	}
 
 	public override function update(elapsed:Float):Void
@@ -76,29 +75,32 @@ class ModsMenuState extends MusicMenuState
 
 		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")) && !transitioningOut)
-			exitState();
+		if (!transitioningOut)
+		{
+			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")))
+				exitState();
 
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")) && !transitioningOut)
-			returnState();
+			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")))
+				returnState();
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2]]) && !transitioningOut)
-			shiftSelection(1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2]]))
+				shiftSelection(1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1]]) && !transitioningOut)
-			shiftSelection(-1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1]]))
+				shiftSelection(-1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]) && !transitioningOut)
-			changeSection(1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[3], Settings.data.keybinds.get("ui")[7]]))
+				changeSection(1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]) && !transitioningOut)
-			changeSection(-1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[0], Settings.data.keybinds.get("ui")[4]]))
+				changeSection(-1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[5]]) && !transitioningOut)
-			changeSelection(1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[5]]))
+				changeSelection(1);
 
-		if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[6]]) && !transitioningOut)
-			changeSelection(-1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[6]]))
+				changeSelection(-1);
+		}
 	}
 
 	public override function exitState():Void
@@ -207,6 +209,9 @@ class ModsMenuState extends MusicMenuState
 			curSection = 2;
 		if (curSection > 2)
 			curSection = 0;
+
+		targetColor = FlxColor.WHITE;
+		modIcon.loadGraphic(Path.image("unknownMod"));
 
 		switch (curSection)
 		{
