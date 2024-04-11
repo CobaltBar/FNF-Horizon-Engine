@@ -77,14 +77,13 @@ class ModManager
 							{
 								case "achievements":
 								case "characters":
-								case "charts":
 								case "events":
 								case "notetypes":
 								case "fonts" | "images" | "shaders" | "sounds" | "videos":
 									@:privateAccess Path.addAsset(file, Path.combine(['mods', mod.path, folder, file]), mod);
 								case "menu_scripts":
 								case "scripts":
-								case "songs": // TODO
+								case "songs":
 								case "stages":
 								case "weeks":
 									var json:WeekJsonData = TJSON.parse(File.getContent(Path.combine(['mods', mod.path, folder, file])));
