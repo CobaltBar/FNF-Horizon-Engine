@@ -60,5 +60,5 @@ class Log
 		print(value, "high_intensity_cyan", "INFO", true, pos);
 
 	static inline function print(value:Dynamic, color:String, word:String, space:Bool, ?pos:PosInfos)
-		Sys.println('${ansiColors.get('purple')}[${ansiColors.get('yellow')}${DateTools.format(Date.now(), '%T')}${ansiColors.get('purple')}]${ansiColors.get('reset')}-${ansiColors.get('purple')}[${ansiColors.get(color)}${word}${ansiColors.get("purple")}] ${space ? ' ' : ''}[${ansiColors.get("bold_high_intensity_white")}${pos.fileName}:${pos.lineNumber}${ansiColors.get("purple")}]${ansiColors.get(color)}: $value${ansiColors.get("reset")}');
+		Sys.println('${ansiColors.get('purple')}[${ansiColors.get('yellow')}${DateTools.format(Date.now(), '%T')}${ansiColors.get('purple')}]${ansiColors.get('reset')}-${ansiColors.get('purple')}[${ansiColors.get(color)}${word}${ansiColors.get("purple")}]-${space ? '-' : ''}[${ansiColors.get("bold_high_intensity_white")}${pos.fileName}:${pos.lineNumber}${ansiColors.get("purple")}]${ansiColors.get(color)}: $value${ansiColors.get("reset")}');
 }

@@ -4,20 +4,21 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import modding.Mod;
 
+@:publicFields
 class SaveVars
 {
-	public var downscroll = false;
-	public var middleScroll = false;
-	public var ghostTapping:Bool = true;
-	public var antialiasing:Bool = true;
-	public var framerate:Int = 60;
-	public var autoPause:Bool = true;
-	public var showFPS:Bool = true;
-	public var opponentStrums:Bool = true;
-	public var flashing:Bool = true;
-	public var safeMS:Float = 10;
-	public var hitWindows:Array<Float> = [30, 80, 125, 140];
-	public var keybinds:Map<String, Array<FlxKey>> = [
+	var downscroll = false;
+	var middleScroll = false;
+	var ghostTapping:Bool = true;
+	var antialiasing:Bool = true;
+	var framerate:Int = 0;
+	var autoPause:Bool = true;
+	var showFPS:Bool = true;
+	var opponentStrums:Bool = true;
+	var flashing:Bool = true;
+	var safeMS:Float = 10;
+	var hitWindows:Array<Float> = [30, 80, 125, 140];
+	var keybinds:Map<String, Array<FlxKey>> = [
 		'notes' => [A, S, W, D, LEFT, DOWN, UP, RIGHT],
 		'ui' => [A, S, W, D, LEFT, DOWN, UP, RIGHT],
 		'accept' => [SPACE, ENTER],
@@ -27,10 +28,10 @@ class SaveVars
 		'volume' => [PLUS, MINUS, LBRACKET, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
-	public var savedMods:Map<String, Mod> = [];
-	public var fullscreen:Bool = false;
+	var savedMods:Map<String, Mod> = [];
+	var fullscreen:Bool = false;
 
-	public function new() {};
+	function new() {};
 }
 
 class Settings
@@ -58,7 +59,8 @@ class Settings
 
 		FlxG.fullscreen = data.fullscreen;
 
-		FlxG.drawFramerate = FlxG.updateFramerate = data.framerate;
+		FlxG.drawFramerate = data.framerate;
+		FlxG.updateFramerate = Std.int(data.framerate * 1.5);
 		if (FlxG.save.data.volume != null)
 			FlxG.sound.volume = FlxG.save.data.volume;
 		if (FlxG.save.data.mute != null)

@@ -165,11 +165,39 @@ class Path
 				addAsset(asset, combine(['assets', asset]));
 	}
 
+	public static function reloadModAssets():Void
+	{
+		modAssets.clear();
+		for (mod in ModManager.allMods)
+		{
+			modAssets.set(mod, []);
+			if (!mod.enabled)
+				continue;
+			for (folder in FileSystem.readDirectory(combine(['mods', mod.path])))
+				if (FileSystem.isDirectory(combine(['mods', mod.path, folder])))
+					for (file in FileSystem.readDirectory(combine(['mods', mod.path, folder])))
+						if (!FileSystem.isDirectory(combine(['mods', mod.path, folder, file])))
+							switch (folder)
+							{
+								case "achievements":
+								case "characters":
+								case "events":
+								case "notetypes":
+								case "fonts" | "images" | "shaders" | "sounds" | "videos":
+									addAsset(file, combine(['mods', mod.path, folder, file]), mod);
+								case "menu_scripts":
+								case "scripts":
+								case "songs":
+								case "stages":
+								case "weeks":
+							}
+		}
+	}
+
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void
 		mod == null ? assets.set(assets.exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key,
 			path) : modAssets[mod].set(modAssets[mod].exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key, path);
 
-	@:keep
-	public static inline function combine(paths:Array<String>):String
+	public static function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
 }

@@ -1,35 +1,22 @@
 package modding;
 
+@:structInit
+@:publicFields
 class Mod
 {
-	public var name:String;
-	public var description:String;
-	public var version:String;
-	public var color:Array<Int> = [255, 255, 255];
-	public var rpcChange:String;
-	public var modSysVer:Int;
+	var name:String;
+	var description:String;
+	var version:String;
+	var color:Array<Int>;
+	var globalMod:Bool;
+	var modSysVer:Int;
 
-	public var weeks:Array<Week> = [];
-	public var songs:Array<Song> = [];
+	var path:String;
+	var icon:String;
 
-	public var staticMod:Bool = false;
-	public var enabled:Bool = false;
-
-	public var path:String;
-	public var icon:String;
-	public var ID:Int;
-
-	public function new(name:String, description:String, version:String, color:Array<Int>, rpcChange:String, modSysVer:Int, path:String, icon:String, ID:Int)
-	{
-		this.name = name;
-		this.description = description;
-		this.version = version;
-		this.color = color;
-		this.rpcChange = rpcChange;
-		this.modSysVer = modSysVer;
-
-		this.path = path;
-		this.icon = icon;
-		this.ID = ID;
-	}
+	@:optional var enabled:Bool;
+	@:optional var staticMod:Bool;
+	@:optional var weeks:Map<String, Week>;
+	@:optional var songs:Map<String, Song>;
+	@:optional var ID:Int;
 }

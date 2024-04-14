@@ -136,6 +136,7 @@ class ModsMenuState extends MusicMenuState
 	public override function returnState():Void
 	{
 		ModManager.enabledMods = [];
+		Settings.data.savedMods.clear();
 
 		for (i in 0...menuOptions.length)
 			ModManager.allMods[cast(menuOptions[i], Alphabet).option.path].ID = i;
@@ -158,7 +159,7 @@ class ModsMenuState extends MusicMenuState
 			ModManager.enabledMods.insert(0, theStaticOption.option);
 		}
 
-		for (mod in ModManager.enabledMods)
+		for (mod in ModManager.allMods)
 			Settings.data.savedMods.set(mod.path, mod);
 
 		super.returnState();

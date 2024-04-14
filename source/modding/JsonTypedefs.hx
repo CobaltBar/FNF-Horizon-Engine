@@ -6,7 +6,7 @@ typedef ModJsonData =
 	public var description:String;
 	public var version:String;
 	public var color:Array<Int>;
-	public var rpcChange:String;
+	public var globalMod:Bool;
 	public var modSysVer:Int;
 }
 
@@ -31,9 +31,10 @@ typedef MenuCharJsonData =
 typedef SongJsonData =
 {
 	public var name:String;
-	public var difficulties:Array<String>;
 	public var icon:String;
 }
+
+typedef ChartJsonData = {}
 
 typedef TitleJsonData =
 {

@@ -27,3 +27,5 @@ FNF Horizon Engine is a recode of Friday Night Funkin', built for mods and made 
 ## Special Thanks:
 
 -   Psych Engine (Assets, most introtexts, and some code)
+
+If i missed any credits they're probably in the files

@@ -7,7 +7,6 @@ import haxe.Exception;
 import lime.graphics.Image;
 import openfl.Lib;
 import openfl.display.Sprite;
-import openfl.display.StageScaleMode;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
 
@@ -21,6 +20,28 @@ class Main extends Sprite
 		addChild(new FlxModdedGame(1920, 1080, InitState, 60, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFF));
 		#if linux Lib.current.stage.window.setIcon(Image.fromFile("icon.png")); #end
+
+		// shader coords fix (stolen from PsychEngine)
+		FlxG.signals.gameResized.add(function(w, h)
+		{
+			if (FlxG.cameras != null)
+			{
+				for (cam in FlxG.cameras.list)
+				{
+					if (cam != null && cam.filters != null)
+						@:privateAccess {
+						cam.flashSprite.__cacheBitmap = null;
+						cam.flashSprite.__cacheBitmapData = null;
+					};
+				}
+			}
+
+			if (FlxG.game != null)
+				@:privateAccess {
+				FlxG.game.__cacheBitmap = null;
+				FlxG.game.__cacheBitmapData = null;
+			}
+		});
 
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
 		{

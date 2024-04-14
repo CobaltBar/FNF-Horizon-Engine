@@ -3,6 +3,6 @@
     "description": "The Tutorial of Friday Night Funkin'",
     "version": "1.0",
     "color": [165, 0, 77],
-    "rpcChange": "",
+    "globalMod": false,
     "modSysVer": 1
 }
