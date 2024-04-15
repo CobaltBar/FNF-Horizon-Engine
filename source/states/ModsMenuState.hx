@@ -31,12 +31,12 @@ class ModsMenuState extends MusicMenuState
 		super.create();
 		DiscordRPC.changePresence("Menu: Mods Menu");
 		createMenuBG();
-		createModUI();
+		createUI();
 		targetColor = FlxColor.WHITE;
 		shouldBop = _handleInput = false;
 		createModOptions();
-		changeSection(0, false);
-		changeSelection(0, false);
+		changeSection(0);
+		changeSelection(0);
 	}
 
 	public override function update(elapsed:Float):Void
@@ -121,7 +121,7 @@ class ModsMenuState extends MusicMenuState
 				cast(menuOptions[curSelected], Alphabet).option.ID = enabledOptions.length - 1;
 				enabledOptions.push(cast menuOptions[curSelected]);
 				menuOptions.remove(menuOptions[curSelected]);
-				changeSelection(0, false);
+				changeSelection(0);
 			case 2:
 				if (enabledOptions.length <= 0)
 					return;
@@ -130,7 +130,7 @@ class ModsMenuState extends MusicMenuState
 				enabledOptions[curSelected].option.ID = menuOptions.length - 1;
 				menuOptions.push(enabledOptions[curEnabled]);
 				enabledOptions.remove(enabledOptions[curEnabled]);
-				changeSelection(0, false);
+				changeSelection(0);
 		}
 
 	public override function returnState():Void
@@ -196,7 +196,7 @@ class ModsMenuState extends MusicMenuState
 				enabledOptions[newCurEnabled] = op1;
 				curEnabled -= change;
 		}
-		changeSelection(0, false);
+		changeSelection(0);
 	}
 
 	public function changeSection(change:Int, sound:Bool = true, set:Bool = false):Void
@@ -238,10 +238,10 @@ class ModsMenuState extends MusicMenuState
 				if (menuOptions[curSelected] != null)
 					menuOptions[curSelected].alpha = .6;
 		}
-		changeSelection(0, false);
+		changeSelection(0);
 	}
 
-	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
+	public override function changeSelection(change:Int, set:Bool = false):Void
 		switch (curSection)
 		{
 			case 0:
@@ -249,7 +249,7 @@ class ModsMenuState extends MusicMenuState
 					return;
 				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
 					staticOptions[curStatic].alpha = .6;
-				if (sound)
+				if (change != 0)
 					FlxG.sound.play(Path.sound("Scroll"), .7);
 				set ? curStatic = change : curStatic += change;
 				if (curStatic < 0)
@@ -268,7 +268,7 @@ class ModsMenuState extends MusicMenuState
 					return;
 				if (menuOptions[curSelected] != null)
 					menuOptions[curSelected].alpha = .6;
-				super.changeSelection(change, sound, set);
+				super.changeSelection(change, set);
 				menuOptions[curSelected].alpha = 1;
 				modIcon.loadGraphic(cast(menuOptions[curSelected], Alphabet).option.icon);
 				modDesc.text = cast(menuOptions[curSelected], Alphabet).option.description;
@@ -280,7 +280,7 @@ class ModsMenuState extends MusicMenuState
 					return;
 				if (enabledOptions[curEnabled] != null)
 					enabledOptions[curEnabled].alpha = .6;
-				if (sound)
+				if (change != 0)
 					FlxG.sound.play(Path.sound("Scroll"), .7);
 				set ? curEnabled = change : curEnabled += change;
 				if (curEnabled < 0)
@@ -302,7 +302,7 @@ class ModsMenuState extends MusicMenuState
 		add(bg);
 	}
 
-	public inline function createModUI():Void
+	public inline function createUI():Void
 	{
 		var allModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
 		allModsBG.screenCenter(X);

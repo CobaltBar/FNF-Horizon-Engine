@@ -67,7 +67,7 @@ class MusicState extends FlxTransitionableState
 			{
 				if (cam == null)
 					continue;
-				cam.zoom = 1.05;
+				cam.zoom = 1.035;
 			}
 	}
 

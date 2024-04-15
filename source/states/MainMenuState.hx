@@ -11,6 +11,8 @@ class MainMenuState extends MusicMenuState
 
 	var allModsCount:Int = 0;
 
+	static var prevCurSelected:Int = 0;
+
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -34,17 +36,18 @@ class MainMenuState extends MusicMenuState
 			});
 			i++;
 		}, menuOptions.length);
-
-		changeSelection(0, false);
+		curSelected = prevCurSelected;
+		changeSelection(0);
 	}
 
-	public override function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
+	public override function changeSelection(change:Int, set:Bool = false):Void
 	{
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
 		menuOptions[curSelected].animation.play("idle");
 		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
 
-		super.changeSelection(change, sound, set);
+		super.changeSelection(change, set);
+		prevCurSelected = curSelected;
 
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
 		menuOptions[curSelected].animation.play("selected");
@@ -129,7 +132,7 @@ class MainMenuState extends MusicMenuState
 		}
 	}
 
-	public override function returnState()
+	public override function returnState():Void
 	{
 		super.returnState();
 		MusicState.switchState(new TitleState());

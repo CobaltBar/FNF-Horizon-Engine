@@ -42,15 +42,19 @@ class ModManager
 							'png'),
 						enabled: savedMod == null ? true : savedMod.enabled,
 						staticMod: checkModStatic(Path.combine(['mods', modDir, 'menu_scripts'])),
-						weeks: getModWeeks(Path.combine(['mods', modDir, 'weeks']), savedMod),
-						songs: getModSongs(Path.combine(['mods', modDir, 'songs']), savedMod),
+						weeks: getModWeeks(Path.combine(['mods', modDir, 'weeks']), savedMod, json.name ?? modDir),
+						songs: getModSongs(Path.combine(['mods', modDir, 'songs']), savedMod, json.name ?? modDir),
 						ID: savedMod == null ? i : savedMod.ID
 					}
+					for (key => value in mod.weeks)
+						for (song in value.songs)
+							if (mod.songs.exists(song))
+								for (difficulty in mod.songs.get(song).difficulties)
+									if (!mod.weeks[key].difficulties.contains(difficulty))
+										mod.weeks[key].difficulties.push(difficulty);
 					allMods.set(modDir, mod);
 					if (mod.enabled)
 						enabledMods.insert(mod.ID, mod);
-
-					trace('LOADED MOD ${mod.icon}');
 					i++;
 				}
 		haxe.ds.ArraySort.sort(ModManager.enabledMods, (a, b) ->
@@ -77,7 +81,7 @@ class ModManager
 		return false;
 	}
 
-	private static function getModWeeks(dir:String, savedMod:Mod):Map<String, Week>
+	private static function getModWeeks(dir:String, savedMod:Mod, modName:String):Map<String, Week>
 	{
 		var weeks:Map<String, Week> = [];
 		if (FileSystem.exists(dir) && FileSystem.isDirectory(dir))
@@ -92,13 +96,14 @@ class ModManager
 						locked: json.locked ?? false,
 						hideSongsFromFreeplay: json.hideSongsFromFreeplay ?? false,
 						songs: json.songs ?? ["Test"],
+						modName: modName,
 						score: savedMod == null ? 0 : savedMod.weeks.get(week.toLowerCase()).score
 					});
 				}
 		return weeks;
 	}
 
-	private static function getModSongs(dir:String, savedMod:Mod):Map<String, Song>
+	private static function getModSongs(dir:String, savedMod:Mod, modName:String):Map<String, Song>
 	{
 		var songs:Map<String, Song> = [];
 		if (FileSystem.exists(dir) && FileSystem.isDirectory(dir))
@@ -133,6 +138,7 @@ class ModManager
 						difficulties: difficulties,
 						icon: json.icon ?? "bf",
 						audioFiles: audioFiles,
+						modName: modName,
 						score: savedMod == null ? 0 : savedMod.songs.get(songDir.toLowerCase()).score,
 						accuracy: savedMod == null ? 0 : savedMod.songs.get(songDir.toLowerCase()).accuracy
 					});

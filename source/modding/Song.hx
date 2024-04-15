@@ -9,7 +9,9 @@ class Song
 	var icon:String;
 
 	var audioFiles:Array<String> = [];
-	
+
+	private var modName:String;
+
 	@:optional var score:Int;
 	@:optional var accuracy:Float;
 }

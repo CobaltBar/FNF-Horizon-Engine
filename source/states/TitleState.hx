@@ -52,7 +52,7 @@ class TitleState extends MusicState
 				}
 				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {
 					type: ONESHOT,
-					ease: FlxEase.expoOut,
+					ease: FlxEase.backIn,
 				});
 				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {
 					type: ONESHOT,
@@ -64,16 +64,16 @@ class TitleState extends MusicState
 				});
 				new FlxTimer().start(0.3, (tmr:FlxTimer) ->
 				{
-					FlxTween.tween(logo, {alpha: 0}, 1, {
+					FlxTween.tween(logo, {alpha: 0}, 0.7, {
 						type: ONESHOT,
 						ease: FlxEase.expoOut,
 					});
 				});
-				FlxTween.tween(logo.scale, {x: 2, y: 2}, 1, {
+				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, 1, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				new FlxTimer().start(1, (tmr:FlxTimer) ->
+				new FlxTimer().start(1.2, (tmr:FlxTimer) ->
 				{
 					comingBack = true;
 					MusicState.switchState(new MainMenuState(), false, true);
@@ -123,7 +123,7 @@ class TitleState extends MusicState
 				case 2:
 					tweenLastIntroText(1, 150);
 					createIntroText("Cobalt Bar", -50);
-					introTexts[1].setColorTransform(0, 0.6, 1, 1, 0, 10, 10, 10);
+					introTexts[1].setColorTransform(0, 0.6, 1.1, 1, 0, 0, 0, 0);
 				case 3:
 					clearIntroTexts();
 				case 4:

@@ -11,6 +11,8 @@ class Week
 	var hideSongsFromFreeplay:Bool;
 	var songs:Array<String>;
 
+	private var modName:String;
+
 	@:optional var difficulties:Array<String>;
 	@:optional var score:Int;
 }

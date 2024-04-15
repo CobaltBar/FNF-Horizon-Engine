@@ -17,7 +17,7 @@ class Util
 		return bg;
 	}
 
-	public static function createSparrowSprite(x:Float, y:Float, path:FlxGraphicAsset, scale:Float = 1, ?antiAliasing:Bool):FlxSprite
+	public static function createSparrowSprite(x:Float, y:Float, path:String, scale:Float = 1, ?antiAliasing:Bool):FlxSprite
 	{
 		var spr:FlxSprite = sprCreate(x, y, scale, antiAliasing);
 		spr.frames = Path.sparrow(path);

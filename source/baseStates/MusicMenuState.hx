@@ -58,9 +58,9 @@ class MusicMenuState extends MusicState
 		}
 	}
 
-	public function changeSelection(change:Int, sound:Bool = true, set:Bool = false):Void
+	public function changeSelection(change:Int, set:Bool = false):Void
 	{
-		if (sound)
+		if (change != 0)
 			FlxG.sound.play(Path.sound("Scroll"), 0.7);
 
 		set ? curSelected = change : curSelected += change;
