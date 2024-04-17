@@ -57,26 +57,25 @@ class StoryMenuState extends MusicMenuState
 		difficulty = Util.createGraphicSprite(0, 680, Path.image("difficulty-normal"), 1.4);
 		difficulty.screenCenter(X);
 		difficulty.x += 550;
+		difficulty.y -= difficulty.height * .5;
 		difficulty.cameras = [menuCam];
 		add(difficulty);
 
-		leftArrow = Util.createSparrowSprite(0, 600, "storyModeAssets", 1.5);
+		leftArrow = Util.createSparrowSprite(0, difficulty.y, "storyModeAssets", 1.5);
 		leftArrow.animation.addByPrefix("push", "arrow push left", 24);
 		leftArrow.animation.addByPrefix("idle", "arrow left", 24);
 		leftArrow.animation.play("idle");
 		leftArrow.screenCenter(X);
 		leftArrow.x = difficulty.x - (leftArrow.width + 25);
-		leftArrow.y += leftArrow.height * .5;
 		leftArrow.cameras = [menuCam];
 		add(leftArrow);
 
-		rightArrow = Util.createSparrowSprite(0, 600, "storyModeAssets", 1.5);
+		rightArrow = Util.createSparrowSprite(0, difficulty.y, "storyModeAssets", 1.5);
 		rightArrow.animation.addByPrefix("push", "arrow push right", 24);
 		rightArrow.animation.addByPrefix("idle", "arrow right", 24);
 		rightArrow.animation.play("idle");
 		rightArrow.screenCenter(X);
 		rightArrow.x = difficulty.x + difficulty.width + 25;
-		rightArrow.y += rightArrow.height * .5;
 		rightArrow.cameras = [menuCam];
 		add(rightArrow);
 	}
