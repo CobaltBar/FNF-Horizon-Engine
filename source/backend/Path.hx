@@ -143,29 +143,41 @@ class Path
 		assets.clear();
 		assets = [];
 		for (asset in FileSystem.readDirectory('assets'))
-			if (FileSystem.isDirectory(combine(['assets', asset])))
+		{
+			var assetPath = combine(['assets', asset]);
+			if (FileSystem.isDirectory(assetPath))
 			{
-				for (asset2 in FileSystem.readDirectory(combine(['assets', asset])))
-					if (FileSystem.isDirectory(combine(['assets', asset, asset2])))
+				for (asset2 in FileSystem.readDirectory(assetPath))
+				{
+					var asset2Path = combine(['assets', asset, asset2]);
+					if (FileSystem.isDirectory(asset2Path))
 					{
 						if (asset == "songs")
 							continue;
 						else
-							for (asset3 in FileSystem.readDirectory(combine(['assets', asset, asset2])))
-								if (FileSystem.isDirectory(combine(['assets', asset, asset2, asset3])))
+							for (asset3 in FileSystem.readDirectory(asset2Path))
+							{
+								var asset3Path = combine(['assets', asset, asset2, asset3]);
+								if (FileSystem.isDirectory(asset3Path))
 								{
-									for (asset4 in FileSystem.readDirectory(combine(['assets', asset, asset2, asset3])))
-										if (!FileSystem.isDirectory(combine(['assets', asset, asset2, asset3, asset4])))
-											addAsset(asset4, combine(['assets', asset, asset2, asset3, asset4]));
+									for (asset4 in FileSystem.readDirectory(asset3Path))
+									{
+										var asset4Path = combine(['assets', asset, asset2, asset3, asset4]);
+										if (!FileSystem.isDirectory(asset4Path))
+											addAsset(asset4, asset4Path);
+									}
 								}
 								else
-									addAsset(asset3, combine(['assets', asset, asset2, asset3]));
+									addAsset(asset3, asset3Path);
+							}
 					}
 					else
-						addAsset(asset2, combine(['assets', asset, asset2]));
+						addAsset(asset2, asset2Path);
+				}
 			}
 			else
-				addAsset(asset, combine(['assets', asset]));
+				addAsset(asset, assetPath);
+		}
 	}
 
 	public static function reloadModAssets():Void
@@ -201,6 +213,6 @@ class Path
 		mod == null ? assets.set(assets.exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key,
 			path) : modAssets[mod].set(modAssets[mod].exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key, path);
 
-	public static function combine(paths:Array<String>):String
+	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
 }
