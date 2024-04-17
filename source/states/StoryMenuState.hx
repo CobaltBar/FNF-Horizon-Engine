@@ -4,6 +4,7 @@ class StoryMenuState extends MusicMenuState
 {
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
+	var difficulty:FlxSprite;
 	var curDifficulty:Int = 0;
 
 	var scoreTxt:FlxText;
@@ -33,13 +34,13 @@ class StoryMenuState extends MusicMenuState
 
 	public inline function createUI():Void
 	{
+		bg = Util.makeSprite(50, 100, FlxG.width - 100, 400, 0xFFF9CF51);
+		bg.cameras = [menuCam];
+		add(bg);
+
 		scoreTxt = Util.createText(50, 50, "000000", 48, Path.font("vcr"), 0xFFe55777, LEFT);
 		scoreTxt.cameras = [menuCam];
 		add(scoreTxt);
-
-		bg = Util.makeSprite(0, 100, FlxG.width, 400, 0xFFF9CF51);
-		bg.cameras = [menuCam];
-		add(bg);
 
 		var tracks = Util.createGraphicSprite(0, 600, Path.image("tracks"), 1.5);
 		tracks.screenCenter(X);
@@ -53,12 +54,19 @@ class StoryMenuState extends MusicMenuState
 		songsText.cameras = [menuCam];
 		add(songsText);
 
+		difficulty = Util.createGraphicSprite(0, 680, Path.image("difficulty-normal"), 1.4);
+		difficulty.screenCenter(X);
+		difficulty.x += 550;
+		difficulty.cameras = [menuCam];
+		add(difficulty);
+
 		leftArrow = Util.createSparrowSprite(0, 600, "storyModeAssets", 1.5);
 		leftArrow.animation.addByPrefix("push", "arrow push left", 24);
 		leftArrow.animation.addByPrefix("idle", "arrow left", 24);
 		leftArrow.animation.play("idle");
 		leftArrow.screenCenter(X);
-		leftArrow.x += 500;
+		leftArrow.x = difficulty.x - (leftArrow.width + 25);
+		leftArrow.y += leftArrow.height * .5;
 		leftArrow.cameras = [menuCam];
 		add(leftArrow);
 
@@ -67,7 +75,8 @@ class StoryMenuState extends MusicMenuState
 		rightArrow.animation.addByPrefix("idle", "arrow right", 24);
 		rightArrow.animation.play("idle");
 		rightArrow.screenCenter(X);
-		rightArrow.x += 500;
+		rightArrow.x = difficulty.x + difficulty.width + 25;
+		rightArrow.y += rightArrow.height * .5;
 		rightArrow.cameras = [menuCam];
 		add(rightArrow);
 	}

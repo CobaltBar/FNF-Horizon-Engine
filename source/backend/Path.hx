@@ -149,13 +149,16 @@ class Path
 					if (FileSystem.isDirectory(combine(['assets', asset, asset2])))
 					{
 						if (asset == "songs")
-						{
-							addAsset('song-$asset2', combine(['assets', asset, asset2]));
 							continue;
-						}
 						else
 							for (asset3 in FileSystem.readDirectory(combine(['assets', asset, asset2])))
-								if (!FileSystem.isDirectory(combine(['assets', asset, asset2, asset3])))
+								if (FileSystem.isDirectory(combine(['assets', asset, asset2, asset3])))
+								{
+									for (asset4 in FileSystem.readDirectory(combine(['assets', asset, asset2, asset3])))
+										if (!FileSystem.isDirectory(combine(['assets', asset, asset2, asset3, asset4])))
+											addAsset(asset4, combine(['assets', asset, asset2, asset3, asset4]));
+								}
+								else
 									addAsset(asset3, combine(['assets', asset, asset2, asset3]));
 					}
 					else

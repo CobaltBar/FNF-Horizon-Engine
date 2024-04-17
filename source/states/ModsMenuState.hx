@@ -213,6 +213,7 @@ class ModsMenuState extends MusicMenuState
 
 		targetColor = FlxColor.WHITE;
 		modIcon.loadGraphic(Path.image("unknownMod"));
+		modDesc.text = "N/A";
 
 		switch (curSection)
 		{
