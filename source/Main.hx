@@ -4,6 +4,7 @@ import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import haxe.Exception;
+import lime.app.Application;
 import lime.graphics.Image;
 import openfl.Lib;
 import openfl.display.Sprite;
@@ -25,16 +26,12 @@ class Main extends Sprite
 		FlxG.signals.gameResized.add(function(w, h)
 		{
 			if (FlxG.cameras != null)
-			{
 				for (cam in FlxG.cameras.list)
-				{
 					if (cam != null && cam.filters != null)
 						@:privateAccess {
 						cam.flashSprite.__cacheBitmap = null;
 						cam.flashSprite.__cacheBitmapData = null;
 					};
-				}
-			}
 
 			if (FlxG.game != null)
 				@:privateAccess {
@@ -53,9 +50,9 @@ class Main extends Sprite
 				{
 					case FilePos(s, file, line, column):
 						err += '$file: Line: $line\n';
-					default: trace(item);
+					default: Log.error(item);
 				}
-			ErrorState.error(null, "Uncaught Error", true);
+			Util.error(null, "Uncaught Error", true);
 		});
 	}
 } // Referenced from Super Engine lmao
@@ -68,7 +65,7 @@ class FlxModdedGame extends FlxGame
 			super.create(_);
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: create", true);
+			Util.error(e, "FlxGame: create", true);
 
 	override function onEnterFrame(_)
 		try
@@ -76,7 +73,7 @@ class FlxModdedGame extends FlxGame
 			super.onEnterFrame(_);
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: onEnterFrame", true);
+			Util.error(e, "FlxGame: onEnterFrame", true);
 
 	override function update()
 		try
@@ -84,7 +81,7 @@ class FlxModdedGame extends FlxGame
 			super.update();
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: update", true);
+			Util.error(e, "FlxGame: update", true);
 
 	override function draw()
 		try
@@ -92,7 +89,7 @@ class FlxModdedGame extends FlxGame
 			super.draw();
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: draw", true);
+			Util.error(e, "FlxGame: draw", true);
 
 	override function onFocus(_)
 		try
@@ -100,7 +97,7 @@ class FlxModdedGame extends FlxGame
 			super.onFocus(_);
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: onFocus", true);
+			Util.error(e, "FlxGame: onFocus", true);
 
 	override function onFocusLost(_)
 		try
@@ -108,5 +105,5 @@ class FlxModdedGame extends FlxGame
 			super.onFocusLost(_);
 		}
 		catch (e:Exception)
-			ErrorState.error(e, "FlxGame: onFocusLost", true);
+			Util.error(e, "FlxGame: onFocusLost", true);
 }
