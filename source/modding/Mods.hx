@@ -55,10 +55,13 @@ class Mods
 					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']),
 					enabled: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath).enabled : false,
 					staticMod: isStaticMod(modPath),
-					songs: getSongs(modPath),
-					weeks: getWeeks(modPath),
+					songs: [],
+					weeks: [],
 					ID: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath).ID : i
 				});
+
+				all[modPath].songs = getSongs(modPath);
+				all[modPath].weeks = getWeeks(modPath);
 
 				if (all[modPath].enabled)
 					enabled.push(all[modPath]);
