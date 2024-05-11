@@ -8,7 +8,7 @@ class AccessibilityState extends MusicMenuState
 	static var options = ['Flashing Lights', 'Reduced Motion', 'Low Quality Mode', 'Continue'];
 	static var descriptions = [
 		'Enable Flashing Lights',
-		'Enable Reduced Motion',
+		'Enable Reduced Motion (Disables the insane Title and Main Menu Tweens)',
 		'Enable Low Quality Mode (Enable if your PC is bad)'
 	];
 

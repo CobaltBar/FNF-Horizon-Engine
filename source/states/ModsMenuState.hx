@@ -41,8 +41,6 @@ class ModsMenuState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
-		super.update(elapsed);
-
 		for (i in 0...staticOptions.length)
 		{
 			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
@@ -101,6 +99,8 @@ class ModsMenuState extends MusicMenuState
 			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[6]]))
 				changeSelection(-1);
 		}
+
+		super.update(elapsed);
 	}
 
 	public override function exitState():Void
