@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.TransitionData;
 import haxe.CallStack;
 import haxe.Exception;
 import lime.app.Application;
@@ -13,14 +14,29 @@ import openfl.events.UncaughtErrorEvent;
 
 class Main extends Sprite
 {
+	public static final modSysVer:Float = 1;
+	public static var horizonVer(get, null):String;
+	@:noCompletion public static var verboseLogging:Bool = true;
+
 	public function new()
 	{
 		super();
 
+		var args = Sys.args().shift().trim().split(" ");
+		if (args.contains('--verbose'))
+		{
+			verboseLogging = true;
+			Log.info("Verbose Logging Enabled");
+		}
+
 		FlxTransitionableState.skipNextTransIn = true;
-		addChild(new FlxModdedGame(1920, 1080, InitState, 60, 60, true));
-		addChild(new EngineInfo(10, 10, 0xFFFFFF));
+		addChild(new FlxSafeGame(1920, 1080, InitState, 90, 60, true));
+		addChild(new EngineInfo(10, 10, 0xFFFFFFFF));
+
 		#if linux Lib.current.stage.window.setIcon(Image.fromFile("icon.png")); #end
+
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(-1, 0));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(1, 0));
 
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add(function(w, h)
@@ -52,12 +68,16 @@ class Main extends Sprite
 						err += '$file: Line: $line\n';
 					default: Log.error(item);
 				}
-			Util.error(null, "Uncaught Error", true);
+			Util.error(null, 'Uncaught Error\n$err', true);
 		});
 	}
-} // Referenced from Super Engine lmao
 
-class FlxModdedGame extends FlxGame
+	@:noCompletion public static function get_horizonVer():String
+		return Application.current.meta.get("version");
+}
+
+// Referenced from Super Engine lmao
+class FlxSafeGame extends FlxGame
 {
 	override function create(_:Event)
 		try

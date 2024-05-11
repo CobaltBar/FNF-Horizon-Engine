@@ -3,7 +3,6 @@ package states;
 import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
-import modding.ModManager;
 
 class MainMenuState extends MusicMenuState
 {
@@ -17,40 +16,49 @@ class MainMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.changePresence("Menu: Main Menu");
+		DiscordRPC.changePresence('In The Menus', 'The Main Menu');
+		persistentUpdate = true;
 		createMenuBG();
-		for (val in ModManager.allMods)
+		for (val in Mods.all)
 			allModsCount++;
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
 		createVersionTexts();
 
 		var i:Int = 0;
-		new FlxTimer().start(0.1, (t:FlxTimer) ->
+		FlxTimer.wait(.1, () ->
 		{
-			var trueX:Float = menuOptions[i].x;
-			menuOptions[i].x -= (2000 * (i % 2 == 0 ? 1 : -1));
-			menuOptions[i].visible = true;
-			FlxTween.tween(menuOptions[i], {x: trueX}, 1, {
-				type: ONESHOT,
-				ease: FlxEase.expoOut,
-			});
-			i++;
-		}, menuOptions.length);
-		curSelected = prevCurSelected;
+			for (i in 0...menuOptions.length)
+			{
+				var trueX:Float = menuOptions[i].x;
+				var trueY:Float = menuOptions[i].y;
+				menuOptions[i].x -= 2000 * (i % 2 == 0 ? 1 : -1);
+				menuOptions[i].y -= 2000;
+				menuOptions[i].visible = true;
+				FlxTween.tween(menuOptions[i], {x: trueX}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+				});
+				FlxTween.tween(menuOptions[i], {y: trueY}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.cubeOut
+				});
+			}
+		});
 		changeSelection(0);
+		curSelected = prevCurSelected;
 	}
 
-	public override function changeSelection(change:Int, set:Bool = false):Void
+	public override function changeSelection(change:Int):Void
 	{
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
-		menuOptions[curSelected].animation.play("idle");
+		menuOptions[curSelected].animation.play('idle');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
 
-		super.changeSelection(change, set);
+		super.changeSelection(change);
 		prevCurSelected = curSelected;
 
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
-		menuOptions[curSelected].animation.play("selected");
+		menuOptions[curSelected].animation.play('selected');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
 
 		var offset:Float = 0;
@@ -62,7 +70,7 @@ class MainMenuState extends MusicMenuState
 		}
 
 		optionsFollow.y = menuOptions[curSelected].y * 0.5 + 450;
-		menuFollow.y = menuOptions[curSelected].y / 8 + 450;
+		menuFollow.y = menuOptions[curSelected].y * 0.125 + 450;
 	}
 
 	public override function exitState()
@@ -73,7 +81,7 @@ class MainMenuState extends MusicMenuState
 			Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
 		else
 		{
-			if (Settings.data.flashing)
+			if (Settings.data.flashingLights)
 				FlxFlicker.flicker(bgFlash, 1.1, 0.15, false);
 			optionsCam.follow(menuOptions[curSelected], LOCKON, 0.12);
 			transitioningOut = true;
@@ -92,31 +100,31 @@ class MainMenuState extends MusicMenuState
 					switch (curSelected)
 					{
 						case 0:
-							MusicState.switchState(new StoryMenuState());
+						// MusicState.switchState(new StoryMenuState());
 						case 1:
-							MusicState.switchState(new FreeplayState());
+						// MusicState.switchState(new FreeplayState());
 						case 2:
-							MusicState.switchState(new AwardsState());
+						// MusicState.switchState(new AwardsState());
 						case 3:
-							MusicState.switchState(new CreditsState());
+						// MusicState.switchState(new CreditsState());
 						case 5:
-							MusicState.switchState(new OptionsState());
+							// MusicState.switchState(new OptionsState());
 					}
 				else
 					switch (curSelected)
 					{
 						case 0:
-							MusicState.switchState(new StoryMenuState());
+						// MusicState.switchState(new StoryMenuState());
 						case 1:
-							MusicState.switchState(new FreeplayState());
+						// MusicState.switchState(new FreeplayState());
 						case 2:
 							MusicState.switchState(new ModsMenuState());
 						case 3:
-							MusicState.switchState(new AwardsState());
+						// MusicState.switchState(new AwardsState());
 						case 4:
-							MusicState.switchState(new CreditsState());
+						// MusicState.switchState(new CreditsState());
 						case 6:
-							MusicState.switchState(new OptionsState());
+							// MusicState.switchState(new OptionsState());
 					}
 			});
 			for (i in 0...menuOptions.length)
@@ -140,13 +148,13 @@ class MainMenuState extends MusicMenuState
 
 	public function createVersionTexts():Void
 	{
-		var horizonEngineText = Util.createText(5, FlxG.height - 65, "Horizon Engine v" + Application.current.meta.get("version"), 28, Path.font("vcr"),
+		var horizonEngineText = Util.createText(5, FlxG.height - 65, 'Horizon Engine v' + Application.current.meta.get('version'), 28, Path.font('vcr'),
 			0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		horizonEngineText.cameras = [otherCam];
 		add(horizonEngineText);
 
-		var fnfVersion = Util.createText(5, FlxG.height - 35, "Friday Night Funkin' v0.2.8", 28, Path.font("vcr"), 0xFFFFFFFF, LEFT)
+		var fnfVersion = Util.createText(5, FlxG.height - 35, 'Friday Night Funkin\' v0.2.8', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		fnfVersion.cameras = [otherCam];
 		add(fnfVersion);
@@ -159,9 +167,9 @@ class MainMenuState extends MusicMenuState
 			if (allModsCount == 0 && name == 'mods')
 				continue;
 			var option = Util.createSparrowSprite(0, 0, name, 1.4);
-			option.animation.addByPrefix("selected", name + " white", 24, true);
-			option.animation.addByPrefix("idle", name + " basic", 24, true);
-			option.animation.play("idle");
+			option.animation.addByPrefix('selected', name + ' white', 24, true);
+			option.animation.addByPrefix('idle', name + ' basic', 24, true);
+			option.animation.play('idle');
 			option.cameras = [optionsCam];
 			option.visible = false;
 			option.updateHitbox();
@@ -180,13 +188,19 @@ class MainMenuState extends MusicMenuState
 
 	public inline function createMenuBG():Void
 	{
-		bg = Util.createBackdrop(Path.image("menuBG"), 1.7);
+		bg = Util.createBackdrop(Path.image('menuBG'), 1.7);
 		bg.cameras = [menuCam];
 		add(bg);
 
-		bgFlash = Util.createBackdrop(Path.image("menuBGMagenta"), 1.7);
+		bgFlash = Util.createBackdrop(Path.image('menuBGMagenta'), 1.7);
 		bgFlash.cameras = [menuCam];
 		bgFlash.visible = false;
 		add(bgFlash);
+	}
+
+	public override function destroy()
+	{
+		persistentUpdate = false; // Not sure if this is necessary but just in case
+		super.destroy();
 	}
 }

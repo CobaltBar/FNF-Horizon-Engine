@@ -3,15 +3,9 @@ package states;
 import haxe.ui.Toolkit;
 import haxe.ui.backend.flixel.CursorHelper;
 import lime.app.Application;
-import modding.ModManager;
 
 class InitState extends MusicState
 {
-	public static final modSysVer:Int = 1;
-
-	// maybe add audio in the future if i ever add HTML5 support
-	public static final extensions:Map<String, Array<String>> = ["script" => ["hx", "lua"]];
-
 	public override function create()
 	{
 		Log.init();
@@ -20,7 +14,9 @@ class InitState extends MusicState
 		Toolkit.theme = 'dark';
 		CursorHelper.useCustomCursors = false;
 		Path.loadAssets();
-		ModManager.reloadMods();
+		Mods.load();
+		Path.loadModAssets();
+
 		DiscordRPC.init();
 
 		// Thanks superpowers04
@@ -32,6 +28,9 @@ class InitState extends MusicState
 			FlxG.updateFramerate = Std.int(frameRate * 1.5);
 			FlxG.drawFramerate = Std.int(frameRate);
 		}
+
+		if (Main.verboseLogging)
+			Log.info("HaxeUI Setup Complete");
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

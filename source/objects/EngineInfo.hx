@@ -1,4 +1,4 @@
-package backend;
+package objects;
 
 import flixel.util.FlxStringUtil;
 import openfl.system.System;

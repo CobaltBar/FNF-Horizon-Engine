@@ -1,47 +1,46 @@
 package backend;
 
-import flash.media.Sound;
+import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets;
 import haxe.io.Path as HaxePath;
-import modding.Mod;
-import modding.ModManager;
+import modding.ModTypes;
+import modding.Mods;
 import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.media.Sound;
 import openfl.system.System;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
+import util.Log;
 
+// Based off of PsychEngine's Paths.hx
 class Path
 {
 	static var assets:Map<String, String> = [];
 	static var modAssets:Map<Mod, Map<String, String>> = [];
 
-	// Stolen Psych Code
-	static var localTrackedAssets:Array<String> = [];
-	static var currentTrackedAssets:Map<String, FlxGraphic> = [];
-	static var currentTrackedSounds:Map<String, Sound> = [];
+	static var localAssets:Array<String> = [];
+	static var trackedImages:Map<String, FlxGraphic> = [];
+	static var trackedSounds:Map<String, Sound> = [];
+
+	static final memoryClearExlusions:Array<String> = ['assets/songs/menuSong.ogg'];
 
 	public static function clearUnusedMemory():Void
 	{
-		for (key in currentTrackedAssets.keys())
-		{
-			if (!localTrackedAssets.contains(key) && key != "assets/songs/menuSong.ogg")
+		for (key in trackedImages.keys())
+			if (!localAssets.contains(key) && !memoryClearExlusions.contains(key) && trackedImages.get(key) != null)
 			{
-				var obj = currentTrackedAssets.get(key);
-				if (obj != null)
-				{
-					@:privateAccess FlxG.bitmap._cache.remove(key);
-					Assets.cache.removeBitmapData(key);
-					currentTrackedAssets.remove(key);
-					obj.persist = false;
-					obj.destroyOnNoUse = true;
-					obj.destroy();
-				}
+				var obj = trackedImages.get(key);
+				@:privateAccess FlxG.bitmap._cache.remove(key);
+				Assets.cache.removeBitmapData(key);
+				trackedImages.remove(key);
+				obj.persist = false;
+				obj.destroyOnNoUse = true;
+				obj.destroy();
 			}
-		}
 		System.gc();
 	}
 
@@ -50,7 +49,7 @@ class Path
 		for (key in @:privateAccess FlxG.bitmap._cache.keys())
 		{
 			var obj = @:privateAccess FlxG.bitmap._cache.get(key);
-			if (obj != null && !currentTrackedAssets.exists(key))
+			if (obj != null && !trackedImages.exists(key))
 			{
 				Assets.cache.removeBitmapData(key);
 				@:privateAccess FlxG.bitmap._cache.remove(key);
@@ -58,161 +57,177 @@ class Path
 			}
 		}
 
-		for (key => value in currentTrackedSounds)
-			if (!localTrackedAssets.contains(key) && key != "assets/songs/menuSong.ogg")
+		for (key => value in trackedSounds)
+			if (!localAssets.contains(key) && !memoryClearExlusions.contains(key))
 			{
 				Assets.cache.clear(key);
-				currentTrackedSounds.remove(key);
+				trackedSounds.remove(key);
 			}
 
 		// Thanks Sword
 		for (key in cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.keys())
 			cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.remove(key);
-		localTrackedAssets = [];
+		localAssets = [];
 	}
-
-	public static function cacheBitmap(key:String, ?mod:Mod, ?path:Bool = false):FlxGraphicAsset
-	{
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : find(key, 'png', true, true, 'Bitmap Cache - Image', mod)), false,
-			key);
-		graphic.persist = true;
-		graphic.destroyOnNoUse = false;
-		currentTrackedAssets.set(key, graphic);
-		localTrackedAssets.push(key);
-		return graphic;
-	} // Horizon Engine Time
-
-	@:keep
-	public static inline function find(key:String, extension:String, error:Bool = false, kill:Bool = false, ?description:String, ?mod:Mod):String
-	{
-		if (mod != null && modAssets[mod].exists('$key.$extension'))
-			return modAssets[mod].get('$key.$extension');
-		if (assets.exists('$key.$extension'))
-			return assets.get('$key.$extension');
-
-		ErrorState.error(null, description == null ? extension.toUpperCase() : description + ' $key not found.', kill);
-		return null;
-	}
-
-	@:keep
-	public static inline function image(key:String, ?mod:Mod):FlxGraphicAsset
-	{
-		if (currentTrackedAssets.exists(key))
-		{
-			localTrackedAssets.push(key);
-			return currentTrackedAssets.get(key);
-		}
-
-		return cacheBitmap(key, mod);
-	}
-
-	@:keep
-	public static inline function sound(key:String, ?mod:Mod):Sound
-	{
-		var file = find(key, 'ogg', true, false, 'Sound', mod);
-		if (!currentTrackedSounds.exists(file))
-			currentTrackedSounds.set(file, Sound.fromFile(file));
-		localTrackedAssets.push(file);
-		return currentTrackedSounds.get(file);
-	}
-
-	@:keep
-	public static inline function font(key:String, ?mod:Mod):String
-		if (find(key, 'ttf', false, false, 'Font (TTF)', mod) != null)
-			return find(key, 'ttf', false, false, 'Font (TTF)', mod);
-		else
-			return find(key, 'otf', false, false, 'Font (OTF)', mod);
-
-	@:keep
-	public static inline function json(key:String, ?mod:Mod):Dynamic
-		return TJSON.parse(File.getContent(find(key, 'json', true, true, null, mod)));
-
-	@:keep
-	public static inline function xml(key:String, ?mod:Mod):String
-		return find(key, 'xml', true, true, mod);
-
-	@:keep
-	public static inline function txt(key:String, ?mod:Mod):String
-		return File.getContent(find(key, 'txt', true, true, mod));
-
-	public static function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
-		return FlxAtlasFrames.fromSparrow(image(key, mod), xml(key, mod));
 
 	public static function loadAssets():Void
 	{
 		assets.clear();
-		assets = [];
 		for (asset in FileSystem.readDirectory('assets'))
 		{
 			var assetPath = combine(['assets', asset]);
 			if (FileSystem.isDirectory(assetPath))
-			{
 				for (asset2 in FileSystem.readDirectory(assetPath))
 				{
 					var asset2Path = combine(['assets', asset, asset2]);
 					if (FileSystem.isDirectory(asset2Path))
 					{
-						if (asset == "songs")
+						if (asset == 'songs')
 							continue;
-						else
-							for (asset3 in FileSystem.readDirectory(asset2Path))
-							{
-								var asset3Path = combine(['assets', asset, asset2, asset3]);
-								if (FileSystem.isDirectory(asset3Path))
+						for (asset3 in FileSystem.readDirectory(asset2Path))
+						{
+							var asset3Path = combine(['assets', asset, asset2, asset3]);
+							if (FileSystem.isDirectory(asset3Path))
+								for (asset4 in FileSystem.readDirectory(asset3Path))
 								{
-									for (asset4 in FileSystem.readDirectory(asset3Path))
-									{
-										var asset4Path = combine(['assets', asset, asset2, asset3, asset4]);
-										if (!FileSystem.isDirectory(asset4Path))
-											addAsset(asset4, asset4Path);
-									}
+									var asset4Path = combine(['assets', asset, asset2, asset3, asset4]);
+									if (!FileSystem.isDirectory(asset4Path))
+										addAsset(asset4, asset4Path);
 								}
-								else
-									addAsset(asset3, asset3Path);
-							}
+							else
+								addAsset(asset3, asset3Path);
+						}
 					}
 					else
 						addAsset(asset2, asset2Path);
 				}
-			}
 			else
 				addAsset(asset, assetPath);
 		}
+		if (Main.verboseLogging)
+			Log.info('Assets Loaded');
 	}
 
-	public static function reloadModAssets():Void
+	public static function loadModAssets():Void
 	{
 		modAssets.clear();
-		for (mod in ModManager.allMods)
+		for (mod in Mods.enabled)
 		{
 			modAssets.set(mod, []);
-			if (!mod.enabled)
-				continue;
-			for (folder in FileSystem.readDirectory(combine(['mods', mod.path])))
-				if (FileSystem.isDirectory(combine(['mods', mod.path, folder])))
-					for (file in FileSystem.readDirectory(combine(['mods', mod.path, folder])))
-						if (!FileSystem.isDirectory(combine(['mods', mod.path, folder, file])))
-							switch (folder)
-							{
-								case "achievements":
-								case "characters":
-								case "events":
-								case "notetypes":
-								case "fonts" | "images" | "shaders" | "sounds" | "videos":
-									addAsset(file, combine(['mods', mod.path, folder, file]), mod);
-								case "menu_scripts":
-								case "scripts":
-								case "songs":
-								case "stages":
-								case "weeks":
-							}
+			var modDir = combine(['mods', mod.path]);
+			for (folder in FileSystem.readDirectory(modDir))
+				if (FileSystem.isDirectory(modDir))
+					if (folder == 'fonts' || folder == 'images' || folder == 'shaders' || folder == 'sounds' || folder == 'videos')
+						for (asset in FileSystem.readDirectory(combine([modDir, folder])))
+						{
+							var assetPath = combine([modDir, folder, asset]);
+							if (!FileSystem.isDirectory(assetPath))
+								addAsset(asset, assetPath, mod);
+						}
 		}
+		if (Main.verboseLogging)
+			Log.info('Mod Assets Loaded: ${Mods.enabled.length} Mods');
 	}
 
-	private static function addAsset(key:String, path:String, ?mod:Mod):Void
-		mod == null ? assets.set(assets.exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key,
-			path) : modAssets[mod].set(modAssets[mod].exists(key) ? '${HaxePath.withoutExtension(key)}-1${HaxePath.extension(key)}' : key, path);
+	public static function cacheBitmap(key:String, ?mod:Mod, path:Null<Bool> = false):FlxGraphic
+	{
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : find(key, ['png'], mod)), false,
+			mod != null ? '${mod.path}-$key' : key);
+		graphic.persist = true;
+		graphic.destroyOnNoUse = false;
+		trackedImages.set(mod != null ? '${mod.path}-$key' : key, graphic);
+		localAssets.push(mod != null ? '${mod.path}-$key' : key);
+		return graphic;
+	}
+
+	public static function find(key:String, extensions:Array<String>, ?mod:Mod, fatal:Null<Bool> = false):Null<String>
+	{
+		for (extension in extensions)
+		{
+			if (mod != null)
+				if (modAssets.exists(mod))
+					if (modAssets[mod].exists('$key.$extension'))
+						return modAssets[mod].get('$key.$extension');
+			if (assets.exists('$key.$extension'))
+				return assets.get('$key.$extension');
+
+			Log.warn('Asset $key.$extension not found.');
+			return null;
+		}
+		return null;
+	}
+
+	@:keep
+	public static inline function image(key:String, ?mod:Mod):FlxGraphic
+		if (trackedImages.exists(key))
+		{
+			localAssets.push(key);
+			return trackedImages.get(key);
+		}
+		else
+		{
+			Log.info('Caching image $key');
+			return cacheBitmap(key, mod);
+		}
+
+	public static function sound(key:String, ?mod:Mod):Sound
+	{
+		if (!trackedSounds.exists(key))
+			if (find(key, ['ogg'], mod) == null)
+			{
+				Log.warn('Sound $key not found. Playing beep.');
+				return FlxAssets.getSound('flixel/sounds/beep');
+			}
+			else
+				trackedSounds.set(key, Sound.fromFile(find(key, ['ogg'], mod)));
+		localAssets.push(key);
+		return trackedSounds.get(key);
+	}
+
+	@:keep
+	public static inline function font(key:String, ?mod:Mod):Null<String>
+		return find(key, ['ttf', 'otf'], mod);
+
+	@:keep
+	public static inline function json(key:String, ?mod:Mod):Dynamic
+		return TJSON.parse(File.getContent(find(key, ['json'], mod) ?? ''));
+
+	@:keep
+	public static inline function xml(key:String, ?mod:Mod):Null<String>
+		return find(key, ['xml'], mod, true);
+
+	@:keep
+	public static inline function txt(key:String, ?mod:Mod):Null<String>
+		return File.getContent(find(key, ['txt'], mod));
+
+	@:keep
+	public static inline function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
+		return FlxAtlasFrames.fromSparrow(image(key, mod), xml(key, mod));
 
 	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
+
+	private static function addAsset(key:String, path:String, ?mod:Mod):Void
+	{
+		if (mod != null)
+		{
+			if (modAssets[mod].exists(key))
+			{
+				Log.warn('Mod (${mod.name}) Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}');
+				modAssets[mod].set('${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}', path);
+			}
+			else
+				modAssets[mod].set(key, path);
+		}
+		else
+		{
+			if (assets.exists(key))
+			{
+				Log.warn('Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}');
+				assets.set('${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}', path);
+			}
+			else
+				assets.set(key, path);
+		}
+	}
 }

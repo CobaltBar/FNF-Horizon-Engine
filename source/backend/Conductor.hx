@@ -1,64 +1,84 @@
 package backend;
 
-import flixel.FlxBasic;
-import flixel.sound.FlxSound;
+import flixel.util.FlxSignal;
 
+@:publicFields
 class Conductor extends FlxBasic
 {
-	public static var bpm(default, set):Float = 100;
-	public static var crochet:Float = 0;
-	public static var stepCrochet:Float = 0;
-	public static var offset(default, set):Float = 0;
-	public static var song(default, set):FlxSound;
+	static var bpm(default, set):Float = 100;
+	static var beatLength:Float = 0;
+	static var stepLength:Float = 0;
+	static var offset:Float = 0;
+	static var time(get, null):Float = 0;
+	static var song(default, set):FlxSound;
 
-	public static var curStep:Int = 0;
-	public static var curBeat:Int = 0;
-	public static var curDecBeat:Float = 0;
+	static var curStep:Int = -1;
+	static var curBeat:Int = -1;
+	static var curDecBeat:Float = -1;
 
-	private static var curCrochetStep:Float = 0;
-	private static var curCrochetBeat:Float = 0;
+	@:noCompletion private static var crochetStep:Float = 0;
+	@:noCompletion private static var crochetBeat:Float = 0;
 
-	public override function update(elapsed:Float)
+	@:noCompletion private static var stepSignal:FlxSignal;
+	@:noCompletion private static var beatSignal:FlxSignal;
+
+	public function new()
+	{
+		super();
+		stepSignal = new FlxSignal();
+		beatSignal = new FlxSignal();
+		if (Main.verboseLogging)
+			Log.info("Conductor Initialized");
+	}
+
+	override function update(elapsed:Float)
 	{
 		if (song != null)
 		{
-			if (song.time > curCrochetStep + stepCrochet)
+			if (song.time > crochetStep + stepLength)
 			{
-				curCrochetStep += stepCrochet;
+				crochetStep += stepLength;
 				curStep++;
-				curDecBeat = curStep * 0.25;
+				curDecBeat = curStep * .25;
+				stepSignal.dispatch();
 			}
-			if (song.time > curCrochetBeat + crochet)
+
+			if (song.time > crochetBeat + beatLength)
 			{
-				curCrochetBeat += crochet;
+				crochetBeat += beatLength;
 				curBeat++;
+				beatSignal.dispatch();
 			}
 		}
 		else
 		{
 			if (FlxG.sound.music != null)
-				Conductor.song = FlxG.sound.music;
+			{
+				song = FlxG.sound.music;
+				if (Main.verboseLogging)
+					Log.info("Song is null, setting to FlxG.sound.music");
+			}
 		}
 		super.update(elapsed);
 	}
 
-	public static function set_song(val:FlxSound):FlxSound
+	@:noCompletion static function set_song(val:FlxSound):FlxSound
 	{
 		val.onComplete = () ->
 		{
-			curStep = curBeat = 0;
-			curDecBeat = curCrochetStep = curCrochetBeat = 0;
+			curStep = curBeat = -1;
+			curDecBeat = crochetStep = crochetBeat = 0;
 		}
 		return song = val;
 	}
 
-	public static function set_bpm(val:Float):Float
+	@:noCompletion static function set_bpm(val:Float):Float
 	{
-		crochet = 60 / val * 1000;
-		stepCrochet = crochet * 0.25;
+		beatLength = 60 / val * 1000;
+		stepLength = crochetBeat * .25;
 		return bpm = val;
 	}
 
-	public static function set_offset(val:Float):Float
-		return song.offset = offset = val;
+	@:noCompletion static function get_time():Float
+		return song.time + offset;
 }

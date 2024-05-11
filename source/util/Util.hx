@@ -1,9 +1,8 @@
-package backend;
+package util;
 
 import flixel.addons.display.FlxBackdrop;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets.FlxGraphicAsset;
-import openfl.display.BitmapData;
+import haxe.Exception;
 
 class Util
 {
@@ -71,5 +70,12 @@ class Util
 		spr.antialiasing = antiAliasing ?? Settings.data.antialiasing;
 		spr.scale.set(scale, scale);
 		return spr;
+	}
+
+	public static function error(?err:Exception, description:String, fatal:Bool = false):Void
+	{
+		var error:String = err == null ? description : '\n$description\n${err.details()}';
+
+		Log.error(error);
 	}
 }

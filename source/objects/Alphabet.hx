@@ -1,11 +1,11 @@
-package backend;
+package objects;
 
 class Alphabet extends FlxSpriteGroup
 {
 	static final letters:String = "abcdefghijklmnopqrstuvwxyz";
 
 	var daX:Float = 0;
-	var alignment:FlxTextAlign;
+	var alignment(default, set):FlxTextAlign;
 
 	public var option:Dynamic;
 
@@ -19,28 +19,21 @@ class Alphabet extends FlxSpriteGroup
 		{
 			var animName:String = chars[i];
 			var char:FlxSprite = Util.createSparrowSprite(0, 0, "alphabet", scale, antiAliasing);
-			if (animName == "\r" || animName == "\n")
-				continue;
-			else if (animName == " ")
+			switch (animName)
 			{
-				letterWidth += 35 * scale;
-				continue;
+				case '\r' | '\n':
+					continue;
+				case ' ':
+					letterWidth += 35 * scale;
+					continue;
+				case "'" | "“" | "”" | "*":
+					char.y -= char.height * .5;
+				case '-':
+					char.y -= char.height * .25;
+				case '"':
+					animName = "quote";
+					char.y -= char.height * .5;
 			}
-			else if (animName == "'")
-				char.y -= char.height * .5;
-			else if (animName == "-")
-				char.y -= char.height * .25;
-			else if (animName == '"')
-			{
-				animName = "quote";
-				char.y -= char.height * .5;
-			}
-			else if (animName == "“")
-				char.y -= char.height * .5;
-			else if (animName == "”")
-				char.y -= char.height * .5;
-			else if (animName == "*")
-				char.y -= char.height * .5;
 			if (bold)
 				animName += " bold";
 			else if (animName.toLowerCase() != animName && letters.indexOf(chars[i].toLowerCase()) != -1)
@@ -58,23 +51,21 @@ class Alphabet extends FlxSpriteGroup
 			char.y -= char.height;
 			letterWidth += char.width;
 			add(char);
-
-			daX = x;
-			this.alignment = alignment;
-			updateAlignment();
 		}
+		daX = x;
+		this.alignment = alignment;
 	}
 
-	public override function set_x(Value:Float):Float
+	@:noCompletion override function set_x(Value:Float):Float
 	{
 		daX = Value;
 		return super.set_x(Value);
 	}
 
-	public function updateAlignment():Void
+	@:noCompletion function set_alignment(val:FlxTextAlign):FlxTextAlign
 	{
 		this.x = daX;
-		switch (alignment)
+		switch (val)
 		{
 			case LEFT | JUSTIFY:
 			case CENTER:
@@ -82,6 +73,7 @@ class Alphabet extends FlxSpriteGroup
 			case RIGHT:
 				this.x -= this.width;
 		}
+		return alignment = val;
 	}
 
 	public override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0,

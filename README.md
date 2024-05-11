@@ -4,28 +4,28 @@ FNF Horizon Engine is a recode of Friday Night Funkin', built for mods and made 
 
 (Formerly called Wonder Engine)
 
-### Supported Platforms
+## Supported Platforms
 
--   HXCPP - Windows, Mac, Linux
+-HXCPP - Windows, Mac, Linux
 
 ### Planned Platforms
 
--   Hashlink
--   Android
+-Hashlink (flixel is refusing to compile to it atm)
+-Android
 
 ## Compilation Instructions
 
--   Libraries:
--   latest lime, openfl, flixel, flixel-addons, flixel-ui, tjson
--   git hxcpp (extra setup required, see [here](https://github.com/HaxeFoundation/hxcpp)), hxdiscord_rpc, haxeui-flixel, haxeui-core (install haxeui-flixel before haxeui-core)
+-Libraries:
+-latest lime, openfl, flixel, flixel-addons, flixel-ui, tjson
+-git hxcpp (extra setup required, see [here](https://github.com/HaxeFoundation/hxcpp)), hxdiscord_rpc, haxeui-flixel, haxeui-core (install haxeui-flixel before haxeui-core)
 
-## Credits:
+## Credits
 
--   Cobalt Bar (Creator)
--   Betopia (Note sprite stuff)
+-Cobalt Bar (Creator)
+-Betopia (Note sprite stuff)
 
-## Special Thanks:
+## Special Thanks
 
--   Psych Engine (Assets, most introtexts, and some code)
+-Psych Engine (Assets, most introtexts, and some code)
 
 If i missed any credits they're probably in the files
