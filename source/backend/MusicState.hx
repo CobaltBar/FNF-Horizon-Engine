@@ -30,13 +30,6 @@ class MusicState extends FlxTransitionableState
 				cam.zoom = 1.035;
 			}
 
-	public static function switchState(state:FlxState, skipTransitionIn:Bool = false, skipTransitionOut:Bool = false):Void
-	{
-		FlxTransitionableState.skipNextTransIn = skipTransitionIn;
-		FlxTransitionableState.skipNextTransOut = skipTransitionOut;
-		FlxG.switchState(() -> state);
-	}
-
 	public override function create()
 	{
 		super.create();
@@ -62,6 +55,15 @@ class MusicState extends FlxTransitionableState
 		@:privateAccess Conductor.beatSignal.remove(onBeat);
 		@:privateAccess Conductor.stepSignal.remove(onStep);
 		super.destroy();
+	}
+
+	public static function switchState(state:FlxState, skipTransitionIn:Bool = false, skipTransitionOut:Bool = false):Void
+	{
+		FlxTransitionableState.skipNextTransIn = skipTransitionIn;
+		FlxTransitionableState.skipNextTransOut = skipTransitionOut;
+		FlxG.switchState(() -> state);
+		if (Main.verboseLogging)
+			Log.info('State Switch: ${Type.getClassName(Type.getClass(state))}');
 	}
 
 	@:noCompletion function get_curStep():Int

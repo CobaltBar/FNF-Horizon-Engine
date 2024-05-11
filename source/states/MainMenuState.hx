@@ -16,7 +16,7 @@ class MainMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.changePresence('In The Menus', 'The Main Menu');
+		DiscordRPC.change('In The Menus', 'The Main Menu');
 		persistentUpdate = true;
 		createMenuBG();
 		for (val in Mods.all)
@@ -196,11 +196,5 @@ class MainMenuState extends MusicMenuState
 		bgFlash.cameras = [menuCam];
 		bgFlash.visible = false;
 		add(bgFlash);
-	}
-
-	public override function destroy()
-	{
-		persistentUpdate = false; // Not sure if this is necessary but just in case
-		super.destroy();
 	}
 }

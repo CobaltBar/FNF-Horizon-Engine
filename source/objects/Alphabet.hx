@@ -24,7 +24,7 @@ class Alphabet extends FlxSpriteGroup
 				case '\r' | '\n':
 					continue;
 				case ' ':
-					letterWidth += 35 * scale;
+					letterWidth += 30 * scale;
 					continue;
 				case '\'' | '“' | '”' | '*':
 					char.y -= char.height * .5;

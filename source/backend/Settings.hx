@@ -15,14 +15,15 @@ class SaveVars
 	var opponentStrums:Bool = true;
 	var showFPS:Bool = true;
 	var showMemory:Bool = true;
-	var flashingLights:Bool = true;
 
 	var antialiasing:Bool = true;
 	var framerate:Int = 0;
 	var shaders:Bool = true;
-	var lowQuality:Bool = false;
 
-	var confirmedOptions:Bool = false;
+	var accessibilityConfirmed:Bool = false;
+	var flashingLights:Bool = true;
+	var reducedMotion:Bool = false;
+	var lowQuality:Bool = false;
 
 	var keybinds:Map<String, Array<FlxKey>> = [
 		'notes' => [A, S, W, D, LEFT, DOWN, UP, RIGHT],

@@ -34,7 +34,7 @@ class DiscordRPC
 		});
 	}
 
-	public static function changePresence(?state:String, ?details:String):Void
+	public static function change(?state:String, ?details:String):Void
 	{
 		if (state != null)
 			presence.state = state;

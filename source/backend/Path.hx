@@ -207,6 +207,7 @@ class Path
 	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
 
+	// TODO: Change `-1` to be a number rather than a hardcoded string
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void
 	{
 		if (mod != null)

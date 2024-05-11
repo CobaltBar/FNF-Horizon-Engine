@@ -18,7 +18,7 @@ class TitleState extends MusicState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.changePresence('In The Menus', 'The Title');
+		DiscordRPC.change('In The Menus', 'The Title');
 		loadTitleData();
 		generateObjects();
 		if (!comingBack && FlxG.sound.music == null)
@@ -57,12 +57,12 @@ class TitleState extends MusicState
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .75, {
+				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .5, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 					onComplete: tween ->
 					{
-						FlxTween.tween(logo, {y: -1250}, .75, {
+						FlxTween.tween(logo, {y: -1250}, .5, {
 							type: ONESHOT,
 							ease: FlxEase.expoIn,
 							onComplete: tween ->

@@ -34,6 +34,6 @@ class InitState extends MusicState
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();
-		MusicState.switchState(new TitleState(), true);
+		MusicState.switchState(Settings.data.accessibilityConfirmed ? new TitleState() : new AccessibilityState(), true);
 	}
 }
