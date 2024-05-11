@@ -68,9 +68,9 @@ class Settings
 		FlxG.drawFramerate = data.framerate;
 		FlxG.updateFramerate = Std.int(data.framerate * 1.5);
 
-		FlxG.sound.volumeUpKeys = [data.keybinds.get("volume")[0], data.keybinds.get("volume")[3]];
-		FlxG.sound.volumeDownKeys = [data.keybinds.get("volume")[1], data.keybinds.get("volume")[4]];
-		FlxG.sound.muteKeys = [data.keybinds.get("volume")[2], data.keybinds.get("volume")[5]];
+		FlxG.sound.volumeUpKeys = [data.keybinds.get('volume')[0], data.keybinds.get('volume')[3]];
+		FlxG.sound.volumeDownKeys = [data.keybinds.get('volume')[1], data.keybinds.get('volume')[4]];
+		FlxG.sound.muteKeys = [data.keybinds.get('volume')[2], data.keybinds.get('volume')[5]];
 
 		if (FlxG.save.data.volume != null)
 			FlxG.sound.volume = FlxG.save.data.volume;
@@ -78,6 +78,6 @@ class Settings
 			FlxG.sound.muted = FlxG.save.data.mute;
 
 		if (Main.verboseLogging)
-			Log.info("Settings Loaded.");
+			Log.info('Settings Loaded.');
 	}
 }

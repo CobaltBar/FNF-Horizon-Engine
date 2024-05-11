@@ -2,7 +2,7 @@ package objects;
 
 class Alphabet extends FlxSpriteGroup
 {
-	static final letters:String = "abcdefghijklmnopqrstuvwxyz";
+	static final letters:String = 'abcdefghijklmnopqrstuvwxyz';
 
 	var daX:Float = 0;
 	var alignment(default, set):FlxTextAlign;
@@ -13,12 +13,12 @@ class Alphabet extends FlxSpriteGroup
 			?antiAliasing:Bool, seperation:Float = 0)
 	{
 		super(x + offsetX, y - offsetY);
-		var chars:Array<String> = text.split("");
+		var chars:Array<String> = text.split('');
 		var letterWidth:Float = 0;
 		for (i in 0...chars.length)
 		{
 			var animName:String = chars[i];
-			var char:FlxSprite = Util.createSparrowSprite(0, 0, "alphabet", scale, antiAliasing);
+			var char:FlxSprite = Util.createSparrowSprite(0, 0, 'alphabet', scale, antiAliasing);
 			switch (animName)
 			{
 				case '\r' | '\n':
@@ -26,25 +26,25 @@ class Alphabet extends FlxSpriteGroup
 				case ' ':
 					letterWidth += 35 * scale;
 					continue;
-				case "'" | "“" | "”" | "*":
+				case '\'' | '“' | '”' | '*':
 					char.y -= char.height * .5;
 				case '-':
 					char.y -= char.height * .25;
 				case '"':
-					animName = "quote";
+					animName = 'quote';
 					char.y -= char.height * .5;
 			}
 			if (bold)
-				animName += " bold";
+				animName += ' bold';
 			else if (animName.toLowerCase() != animName && letters.indexOf(chars[i].toLowerCase()) != -1)
-				animName += " uppercase";
+				animName += ' uppercase';
 			else if (animName.toLowerCase() == animName && letters.indexOf(chars[i].toLowerCase()) != -1)
-				animName += " lowercase";
+				animName += ' lowercase';
 			else
-				animName += " normal";
+				animName += ' normal';
 			animName = animName.toLowerCase();
-			char.animation.addByPrefix("idle", animName, 24);
-			char.animation.play("idle");
+			char.animation.addByPrefix('idle', animName, 24);
+			char.animation.play('idle');
 			char.updateHitbox();
 			char.centerOffsets();
 			char.x = letterWidth;

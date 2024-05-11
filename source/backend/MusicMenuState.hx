@@ -45,16 +45,16 @@ class MusicMenuState extends MusicState
 
 		if (handleInput && !transitioningOut)
 		{
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[1], Settings.data.keybinds.get("ui")[5]]))
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[1], Settings.data.keybinds.get('ui')[5]]))
 				changeSelection(1);
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get("ui")[2], Settings.data.keybinds.get("ui")[6]]))
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2], Settings.data.keybinds.get('ui')[6]]))
 				changeSelection(-1);
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("accept")))
+			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('accept')))
 				exitState();
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get("back")))
+			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('back')))
 				returnState();
 		}
 	}
@@ -62,7 +62,7 @@ class MusicMenuState extends MusicState
 	public function changeSelection(change:Int):Void
 	{
 		if (change != 0)
-			FlxG.sound.play(Path.sound("Scroll"), 0.7);
+			FlxG.sound.play(Path.sound('Scroll'), 0.7);
 
 		curSelected += change;
 
@@ -75,12 +75,12 @@ class MusicMenuState extends MusicState
 	public function exitState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.sound("Confirm"), 0.7);
+		FlxG.sound.play(Path.sound('Confirm'), 0.7);
 	}
 
 	public function returnState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.sound("Cancel"), 0.7);
+		FlxG.sound.play(Path.sound('Cancel'), 0.7);
 	}
 }

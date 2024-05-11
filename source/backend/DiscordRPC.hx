@@ -11,7 +11,7 @@ import sys.thread.Thread;
 
 class DiscordRPC
 {
-	private static final defaultID = "1226704469312409692";
+	private static final defaultID = '1226704469312409692';
 	public static var clientID:String = defaultID;
 	private static var presence:DiscordRichPresence = DiscordRichPresence.create();
 
@@ -45,7 +45,7 @@ class DiscordRPC
 
 	private static function onReady(request:RawConstPointer<DiscordUser>):Void
 	{
-		presence.state = "Initializing...";
+		presence.state = 'Initializing...';
 		presence.startTimestamp = Std.int(Date.now().getTime() / 1000);
 		Discord.UpdatePresence(RawConstPointer.addressOf(presence));
 	}

@@ -30,7 +30,7 @@ class InitState extends MusicState
 		}
 
 		if (Main.verboseLogging)
-			Log.info("HaxeUI Setup Complete");
+			Log.info('HaxeUI Setup Complete');
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

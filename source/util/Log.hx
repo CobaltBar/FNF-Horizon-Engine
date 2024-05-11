@@ -50,7 +50,7 @@ class Log
 		ogTrace = haxe.Log.trace;
 		haxe.Log.trace = haxeTrace;
 		if (Main.verboseLogging)
-			info("Logger Initialized");
+			info('Logger Initialized');
 	}
 
 	@:keep public static inline function ansiColor(mode:AnsiMode, color:AnsiColor):String
@@ -73,7 +73,7 @@ class Log
 		var msg:String = '${ansiColor(RESET, MAGENTA)}[${ansiColor(RESET, YELLOW)}${DateTools.format(Date.now(), '%H:%M:%S')}${ansiColor(RESET, MAGENTA)}]';
 		if (pos != null)
 			msg += '[${ansiColor(BOLD, WHITE)}${pos.fileName}:${pos.lineNumber}${ansiColor(RESET, MAGENTA)}]';
-		msg += [for (i in 0...82 - msg.length) " "].join("");
+		msg += [for (i in 0...82 - msg.length) ' '].join('');
 		msg += '[${ansiColor(mode, color)}${level}${ansiColor(RESET, MAGENTA)}]${ansiColor(mode, color)}:   ';
 		msg += '${ansiColor(RESET, color)}$value${ansiColor(RESET, RESET)}';
 		Sys.println(msg);

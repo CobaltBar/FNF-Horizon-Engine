@@ -22,18 +22,18 @@ class Main extends Sprite
 	{
 		super();
 
-		var args = Sys.args().shift().trim().split(" ");
+		var args = Sys.args().shift().trim().split(' ');
 		if (args.contains('--verbose'))
 		{
 			verboseLogging = true;
-			Log.info("Verbose Logging Enabled");
+			Log.info('Verbose Logging Enabled');
 		}
 
 		FlxTransitionableState.skipNextTransIn = true;
 		addChild(new FlxSafeGame(1920, 1080, InitState, 90, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFFFF));
 
-		#if linux Lib.current.stage.window.setIcon(Image.fromFile("icon.png")); #end
+		#if linux Lib.current.stage.window.setIcon(Image.fromFile('icon.png')); #end
 
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(-1, 0));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(1, 0));
@@ -59,7 +59,7 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, (e:UncaughtErrorEvent) ->
 		{
 			var cs:Array<StackItem> = CallStack.exceptionStack(true);
-			var err = "";
+			var err = '';
 
 			for (item in cs)
 				switch (item)
@@ -73,7 +73,7 @@ class Main extends Sprite
 	}
 
 	@:noCompletion public static function get_horizonVer():String
-		return Application.current.meta.get("version");
+		return Application.current.meta.get('version');
 }
 
 // Referenced from Super Engine lmao
@@ -85,7 +85,7 @@ class FlxSafeGame extends FlxGame
 			super.create(_);
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: create", true);
+			Util.error(e, 'FlxGame: create', true);
 
 	override function onEnterFrame(_)
 		try
@@ -93,7 +93,7 @@ class FlxSafeGame extends FlxGame
 			super.onEnterFrame(_);
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: onEnterFrame", true);
+			Util.error(e, 'FlxGame: onEnterFrame', true);
 
 	override function update()
 		try
@@ -101,7 +101,7 @@ class FlxSafeGame extends FlxGame
 			super.update();
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: update", true);
+			Util.error(e, 'FlxGame: update', true);
 
 	override function draw()
 		try
@@ -109,7 +109,7 @@ class FlxSafeGame extends FlxGame
 			super.draw();
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: draw", true);
+			Util.error(e, 'FlxGame: draw', true);
 
 	override function onFocus(_)
 		try
@@ -117,7 +117,7 @@ class FlxSafeGame extends FlxGame
 			super.onFocus(_);
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: onFocus", true);
+			Util.error(e, 'FlxGame: onFocus', true);
 
 	override function onFocusLost(_)
 		try
@@ -125,5 +125,5 @@ class FlxSafeGame extends FlxGame
 			super.onFocusLost(_);
 		}
 		catch (e:Exception)
-			Util.error(e, "FlxGame: onFocusLost", true);
+			Util.error(e, 'FlxGame: onFocusLost', true);
 }

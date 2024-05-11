@@ -28,7 +28,7 @@ class Conductor extends FlxBasic
 		stepSignal = new FlxSignal();
 		beatSignal = new FlxSignal();
 		if (Main.verboseLogging)
-			Log.info("Conductor Initialized");
+			Log.info('Conductor Initialized');
 	}
 
 	override function update(elapsed:Float)
@@ -56,7 +56,7 @@ class Conductor extends FlxBasic
 			{
 				song = FlxG.sound.music;
 				if (Main.verboseLogging)
-					Log.info("Song is null, setting to FlxG.sound.music");
+					Log.info('Song is null, setting to FlxG.sound.music');
 			}
 		}
 		super.update(elapsed);
