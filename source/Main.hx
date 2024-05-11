@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 import haxe.CallStack;
 import haxe.Exception;
 import lime.app.Application;
@@ -34,9 +33,6 @@ class Main extends Sprite
 		addChild(new EngineInfo(10, 10, 0xFFFFFFFF));
 
 		#if linux Lib.current.stage.window.setIcon(Image.fromFile('icon.png')); #end
-
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(-1, 0));
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(1, 0));
 
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add(function(w, h)

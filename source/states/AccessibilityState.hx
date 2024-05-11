@@ -1,6 +1,7 @@
 package states;
 
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.transition.FlxTransitionableState;
 
 class AccessibilityState extends MusicMenuState
 {
@@ -26,9 +27,10 @@ class AccessibilityState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
-		for (i in 0...menuOptions.length)
-			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
-				FlxMath.lerp(menuOptions[i].y, 350 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+		if (!transitioningOut)
+			for (i in 0...menuOptions.length)
+				menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
+					FlxMath.lerp(menuOptions[i].y, 350 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
 		super.update(elapsed);
 	}
 
@@ -51,7 +53,15 @@ class AccessibilityState extends MusicMenuState
 			Settings.data.reducedMotion = checkboxes[1].checked;
 			Settings.data.lowQuality = checkboxes[2].checked;
 			Settings.data.accessibilityConfirmed = true;
-			MusicState.switchState(new TitleState());
+			transitioningOut = true;
+			new FlxTimer().start(0.1, timer ->
+			{
+				FlxTween.tween(menuOptions[timer.loopsLeft], {x: menuOptions[timer.loopsLeft].x - 1250}, 1, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut
+				});
+			}, menuOptions.length);
+			FlxTimer.wait(1, () -> MusicState.switchState(new TitleState(), true));
 		}
 		else
 			checkboxes[curSelected].checked = !checkboxes[curSelected].checked;
@@ -82,16 +92,16 @@ class AccessibilityState extends MusicMenuState
 
 	private inline function createUI():Void
 	{
-		var bg = Util.createBackdrop(FlxGridOverlay.create(128, 128, 256, 256, true, 0x85CCCCCC, 0x85FFFFFF).graphic);
+		var bg = Util.createBackdrop(FlxGridOverlay.create(128, 128, 256, 256, true, 0x85252525, 0x85505050).graphic);
 		bg.velocity.set(50, 30);
 		bg.cameras = [menuCam];
 		add(bg);
 		var descriptionBG = Util.makeSprite(0, FlxG.height - 50, FlxG.width, 50, 0xCC000000);
-		descriptionBG.cameras = [otherCam];
+		descriptionBG.cameras = [optionsCam];
 		add(descriptionBG);
 		description = Util.createText(0, FlxG.height - 45, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, CENTER).setBorderStyle(OUTLINE, 0xFF000000, 2);
 		description.screenCenter(X);
-		description.cameras = [otherCam];
+		description.cameras = [optionsCam];
 		add(description);
 	}
 }

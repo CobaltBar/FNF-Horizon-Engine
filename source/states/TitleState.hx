@@ -53,24 +53,41 @@ class TitleState extends MusicState
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5, y: (FlxG.height - logo.height) * .5}, 1, {
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5}, 1, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
+				if (!Settings.data.reducedMotion)
+					FlxTween.tween(logo, {y: (FlxG.height - logo.height) * .5}, 1, {
+						type: ONESHOT,
+						ease: FlxEase.expoOut,
+					});
+				else
+					FlxTween.tween(logo, {alpha: 0}, 1, {
+						type: ONESHOT,
+						ease: FlxEase.expoOut,
+					});
 				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .5, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 					onComplete: tween ->
 					{
-						FlxTween.tween(logo, {y: -1250}, .5, {
-							type: ONESHOT,
-							ease: FlxEase.expoIn,
-							onComplete: tween ->
+						if (!Settings.data.reducedMotion)
+							FlxTween.tween(logo, {y: -1250}, .5, {
+								type: ONESHOT,
+								ease: FlxEase.expoIn,
+								onComplete: tween ->
+								{
+									comingBack = true;
+									MusicState.switchState(new MainMenuState(), false, true);
+								}
+							});
+						else
+							FlxTimer.wait(.5, () ->
 							{
 								comingBack = true;
-								MusicState.switchState(new MainMenuState(), false, true);
-							}
-						});
+								MusicState.switchState(new MainMenuState());
+							});
 					}
 				});
 			}
@@ -114,7 +131,7 @@ class TitleState extends MusicState
 					createIntroText('Cobalt Bar', -50);
 					introTexts[1].setColorTransform(0, .5, 1, 1, 0, 0, 0, 0);
 				case 3:
-					clearIntroTexts();
+					clearIntroTexts(Settings.data.reducedMotion);
 				case 4:
 					createIntroText('Not Associated with', 100);
 				case 6:
@@ -122,15 +139,15 @@ class TitleState extends MusicState
 					createIntroText('Newgrounds', 100);
 					createIntroImage(Path.image('newgrounds_logo'), 0);
 				case 7:
-					clearIntroTexts();
-					clearIntroImages();
+					clearIntroTexts(Settings.data.reducedMotion);
+					clearIntroImages(Settings.data.reducedMotion);
 				case 8:
 					createIntroText(goofyTexts[0], 50);
 				case 10:
 					tweenLastIntroText(1, 50);
 					createIntroText(goofyTexts[1], -50);
 				case 11:
-					clearIntroTexts();
+					clearIntroTexts(Settings.data.reducedMotion);
 				case 12:
 					shouldBop = false;
 					targetZoom = 1.2;

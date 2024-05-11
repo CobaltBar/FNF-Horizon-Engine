@@ -30,17 +30,20 @@ class MainMenuState extends MusicMenuState
 			for (i in 0...menuOptions.length)
 			{
 				var trueX:Float = menuOptions[i].x;
-				var trueY:Float = menuOptions[i].y;
 				menuOptions[i].x -= 2000 * (i % 2 == 0 ? 1 : -1);
-				menuOptions[i].y -= 2000;
+				if (!Settings.data.reducedMotion)
+				{
+					var trueY:Float = menuOptions[i].y;
+					menuOptions[i].y -= 2000;
+					FlxTween.tween(menuOptions[i], {y: trueY}, 1, {
+						type: ONESHOT,
+						ease: FlxEase.cubeOut
+					});
+				}
 				menuOptions[i].visible = true;
 				FlxTween.tween(menuOptions[i], {x: trueX}, 1, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
-				});
-				FlxTween.tween(menuOptions[i], {y: trueY}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.cubeOut
 				});
 			}
 		});

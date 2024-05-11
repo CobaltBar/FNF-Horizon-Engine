@@ -1,5 +1,7 @@
 package states;
 
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.TransitionData;
 import haxe.ui.Toolkit;
 import haxe.ui.backend.flixel.CursorHelper;
 import lime.app.Application;
@@ -18,6 +20,9 @@ class InitState extends MusicState
 		Path.loadModAssets();
 
 		DiscordRPC.init();
+
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(-1, 0));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(1, 0));
 
 		// Thanks superpowers04
 		if (Settings.data.framerate == 0)
