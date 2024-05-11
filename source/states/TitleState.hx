@@ -156,7 +156,7 @@ class TitleState extends MusicState
 		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
 		targetZoom = 1;
 		clearIntroTexts(true);
-		clearIntroImages();
+		clearIntroImages(true);
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 		if (curBeat % 2 == 0)
 			gf.animation.play('danceLeft');
@@ -214,21 +214,27 @@ class TitleState extends MusicState
 		introTexts = [];
 	}
 
-	private function clearIntroImages():Void
+	private function clearIntroImages(instaClear:Bool = false):Void
 	{
-		var i = 0;
-		for (obj in introImages)
+		if (!instaClear)
 		{
-			FlxTween.tween(obj, {y: -1250 * (obj.y > FlxG.width * .5 ? 1 : -1)}, .5, {
-				type: ONESHOT,
-				ease: FlxEase.expoIn,
-				onComplete: tween ->
-				{
-					obj.destroy();
-				}
-			});
-			i++;
+			var i = 0;
+			for (obj in introImages)
+			{
+				FlxTween.tween(obj, {y: -1250 * (obj.y > FlxG.width * .5 ? 1 : -1)}, .5, {
+					type: ONESHOT,
+					ease: FlxEase.expoIn,
+					onComplete: tween ->
+					{
+						obj.destroy();
+					}
+				});
+				i++;
+			}
 		}
+		else
+			for (obj in introImages)
+				obj.destroy();
 		introImages = [];
 	}
 

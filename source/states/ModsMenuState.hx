@@ -333,7 +333,7 @@ class ModsMenuState extends MusicMenuState
 		modDesc.cameras = [menuCam];
 		add(modDesc);
 
-		modVer = Util.createText(modIcon.width + 880, FlxG.height - 105, 'Version N/A', 32, Path.font('vcr'), 0xFFCCCCCC, RIGHT);
+		modVer = Util.createText(modIcon.width + 880, FlxG.height - 75, 'Version N/A', 32, Path.font('vcr'), 0xFFCCCCCC, RIGHT);
 		modVer.fieldWidth = 300;
 		modVer.fieldHeight = 175;
 		modVer.cameras = [menuCam];
