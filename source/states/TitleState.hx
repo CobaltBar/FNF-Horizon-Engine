@@ -53,20 +53,10 @@ class TitleState extends MusicState
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5}, 1, {
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5, y: (FlxG.height - logo.height) * .5}, 1, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 				});
-				if (!Settings.data.reducedMotion)
-					FlxTween.tween(logo, {y: (FlxG.height - logo.height) * .5}, 1, {
-						type: ONESHOT,
-						ease: FlxEase.expoOut,
-					});
-				else
-					FlxTween.tween(logo, {alpha: 0}, 1, {
-						type: ONESHOT,
-						ease: FlxEase.expoOut,
-					});
 				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .5, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
@@ -83,10 +73,14 @@ class TitleState extends MusicState
 								}
 							});
 						else
-							FlxTimer.wait(.5, () ->
-							{
-								comingBack = true;
-								MusicState.switchState(new MainMenuState());
+							FlxTween.tween(logo, {alpha: 0}, .5, {
+								type: ONESHOT,
+								ease: FlxEase.expoOut,
+								onComplete: tween ->
+								{
+									comingBack = true;
+									MusicState.switchState(new MainMenuState());
+								}
 							});
 					}
 				});
