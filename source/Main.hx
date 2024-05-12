@@ -68,7 +68,7 @@ class Main extends Sprite
 		});
 	}
 
-	@:noCompletion public static function get_horizonVer():String
+	@:noCompletion @:keep public static inline function get_horizonVer():String
 		return Application.current.meta.get('version');
 }
 

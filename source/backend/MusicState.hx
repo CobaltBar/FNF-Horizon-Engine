@@ -66,12 +66,12 @@ class MusicState extends FlxTransitionableState
 			Log.info('State Switch: ${Type.getClassName(Type.getClass(state))}');
 	}
 
-	@:noCompletion function get_curStep():Int
+	@:noCompletion @:keep inline function get_curStep():Int
 		return Conductor.curStep;
 
-	@:noCompletion function get_curBeat():Int
+	@:noCompletion @:keep inline function get_curBeat():Int
 		return Conductor.curBeat;
 
-	@:noCompletion function get_curDecBeat():Float
+	@:noCompletion @:keep inline function get_curDecBeat():Float
 		return Conductor.curDecBeat;
 }
