@@ -108,7 +108,7 @@ class Mods
 
 						modName: modPath,
 						difficulties: [],
-						score: Settings.data.savedMods.get(modPath)?.weeks.get(week)?.score ?? 0
+						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
 					});
 
 					for (song in weeks[week].songs)
@@ -139,8 +139,8 @@ class Mods
 
 						difficulties: [],
 						audioFiles: [],
-						score: Settings.data.savedMods.get(modPath)?.songs.get(songPath)?.score ?? 0,
-						accuracy: Settings.data.savedMods.get(modPath)?.songs.get(songPath)?.accuracy ?? 0
+						score: Settings.data.savedMods.get(modPath)?.songs?.get(songPath)?.score ?? 0,
+						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(songPath)?.accuracy ?? 0
 					});
 
 					for (file in FileSystem.readDirectory(songPath))
