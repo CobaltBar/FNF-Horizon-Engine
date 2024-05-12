@@ -1,0 +1,7 @@
+{
+    "name": "Tutorial",
+    "menuChars": ["bf", "gf"],
+    "menuBG": ["stage"],
+    "locked": false,
+    "hideSongsFromFreeplay": false
+}

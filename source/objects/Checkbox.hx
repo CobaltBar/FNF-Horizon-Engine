@@ -15,7 +15,7 @@ class Checkbox extends FlxAttachedSprite
 		animation.addByPrefix('checking', 'checkbox anim0', 24, false);
 		animation.addByPrefix('checked', 'checkbox finish', 24, false);
 
-		setGraphicSize(Std.int(0.9 * width));
+		setGraphicSize(Std.int(.9 * width));
 		updateHitbox();
 
 		animationFinished(checked ? 'checking' : 'unchecking');
@@ -35,7 +35,7 @@ class Checkbox extends FlxAttachedSprite
 		}
 		else if (animation.curAnim.name != 'unchecked' && animation.curAnim.name != 'unchecking')
 		{
-			animation.play("unchecking", true);
+			animation.play('unchecking', true);
 			offset.set(25, 28);
 		}
 		return checked = val;

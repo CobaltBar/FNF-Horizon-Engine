@@ -28,8 +28,8 @@ class MusicMenuState extends MusicState
 			otherCam = Util.createCamera(false, true);
 			menuFollow = new FlxObject(FlxG.width * .5, FlxG.height * .5);
 			optionsFollow = new FlxObject(FlxG.width * .5, FlxG.height * .5);
-			menuCam.follow(menuFollow, LOCKON, 0.1);
-			optionsCam.follow(optionsFollow, LOCKON, 0.15);
+			menuCam.follow(menuFollow, LOCKON, .1);
+			optionsCam.follow(optionsFollow, LOCKON, .15);
 			camerasToBop.push(menuCam);
 			camerasToBop.push(optionsCam);
 		}
@@ -40,8 +40,8 @@ class MusicMenuState extends MusicState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.8)
-			FlxG.sound.music.volume += 0.5 * elapsed;
+		if (FlxG.sound.music != null && FlxG.sound.music.volume < .8)
+			FlxG.sound.music.volume += .5 * elapsed;
 
 		if (handleInput && !transitioningOut)
 		{
@@ -62,7 +62,7 @@ class MusicMenuState extends MusicState
 	public function changeSelection(change:Int):Void
 	{
 		if (change != 0)
-			FlxG.sound.play(Path.sound('Scroll'), 0.7);
+			FlxG.sound.play(Path.sound('Scroll'), .7);
 
 		curSelected += change;
 
@@ -75,12 +75,12 @@ class MusicMenuState extends MusicState
 	public function exitState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.sound('Confirm'), 0.7);
+		FlxG.sound.play(Path.sound('Confirm'), .7);
 	}
 
 	public function returnState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.sound('Cancel'), 0.7);
+		FlxG.sound.play(Path.sound('Cancel'), .7);
 	}
 }

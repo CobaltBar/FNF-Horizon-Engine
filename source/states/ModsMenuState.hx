@@ -300,7 +300,7 @@ class ModsMenuState extends MusicMenuState
 		add(bg);
 	}
 
-	public inline function createUI():Void
+	inline function createUI():Void
 	{
 		var allModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
 		allModsBG.screenCenter(X);
@@ -374,10 +374,10 @@ class ModsMenuState extends MusicMenuState
 		add(enabledTitle);
 	}
 
-	public inline function createModOptions():Void
+	inline function createModOptions():Void
 		for (mod in Mods.all)
 		{
-			var option = new Alphabet(0, 200, mod.name, false, CENTER, .7);
+			var option:Alphabet = new Alphabet(0, 200, mod.name, false, CENTER, .7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 			option.clipRect = option.clipRect;

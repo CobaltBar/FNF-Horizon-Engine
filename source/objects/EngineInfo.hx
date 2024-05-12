@@ -23,11 +23,11 @@ class EngineInfo extends TextField
 		curFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("VCR OSD Mono", 16, color);
+		defaultTextFormat = new TextFormat('VCR OSD Mono', 16, color);
 		autoSize = LEFT;
 		multiline = true;
-		alpha = 0.8;
-		text = "FPS: ";
+		alpha = .75;
+		text = 'FPS: ';
 
 		times = [];
 	}
@@ -55,8 +55,8 @@ class EngineInfo extends TextField
 	{ // so people can override it in hscript
 		text = 'Horizon Engine Stats:\nFPS: ${curFPS}' + '\nMemory: ${FlxStringUtil.formatBytes(System.totalMemory)}';
 
-		if (curFPS < FlxG.drawFramerate * 0.75)
-			textColor = FlxColor.interpolate(0xFF2E0000, 0xFF004CFF, curFPS / (60 * 0.75));
+		if (curFPS < FlxG.drawFramerate * .75)
+			textColor = FlxColor.interpolate(0xFF2E0000, 0xFF004CFF, curFPS / (60 * .75));
 		else
 			textColor = 0xFF004CFF;
 	}

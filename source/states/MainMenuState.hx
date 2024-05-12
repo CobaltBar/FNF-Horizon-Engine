@@ -21,48 +21,48 @@ class MainMenuState extends MusicMenuState
 		createMenuBG();
 		for (val in Mods.all)
 			allModsCount++;
+		Log.info('Reloading Mods & Mod Assets');
+		Mods.load();
+		@:privateAccess Path.modAssets.clear();
+		Path.loadModAssets();
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
 		createVersionTexts();
 
-		var i:Int = 0;
-		FlxTimer.wait(.1, () ->
+		new FlxTimer().start(.035, timer ->
 		{
-			for (i in 0...menuOptions.length)
+			var trueX:Float = menuOptions[timer.loopsLeft].x;
+			menuOptions[timer.loopsLeft].x -= 2000 * (timer.loopsLeft % 2 == 0 ? 1 : -1);
+			if (!Settings.data.reducedMotion)
 			{
-				var trueX:Float = menuOptions[i].x;
-				menuOptions[i].x -= 2000 * (i % 2 == 0 ? 1 : -1);
-				if (!Settings.data.reducedMotion)
-				{
-					var trueY:Float = menuOptions[i].y;
-					menuOptions[i].y -= 2000;
-					FlxTween.tween(menuOptions[i], {y: trueY}, 1, {
-						type: ONESHOT,
-						ease: FlxEase.cubeOut
-					});
-				}
-				menuOptions[i].visible = true;
-				FlxTween.tween(menuOptions[i], {x: trueX}, 1, {
+				var trueY:Float = menuOptions[timer.loopsLeft].y;
+				menuOptions[timer.loopsLeft].y -= 2000;
+				FlxTween.tween(menuOptions[timer.loopsLeft], {y: trueY}, 1, {
 					type: ONESHOT,
-					ease: FlxEase.expoOut,
+					ease: FlxEase.cubeOut
 				});
 			}
-		});
+			menuOptions[timer.loopsLeft].visible = true;
+			FlxTween.tween(menuOptions[timer.loopsLeft], {x: trueX}, 1, {
+				type: ONESHOT,
+				ease: FlxEase.expoOut,
+			});
+		}, menuOptions.length);
 		changeSelection(0);
 		curSelected = prevCurSelected;
 	}
 
 	public override function changeSelection(change:Int):Void
 	{
-		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
+		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;
 		menuOptions[curSelected].animation.play('idle');
-		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
+		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
 
 		super.changeSelection(change);
 		prevCurSelected = curSelected;
 
-		menuOptions[curSelected].x -= menuOptions[curSelected].width * 0.5;
+		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;
 		menuOptions[curSelected].animation.play('selected');
-		menuOptions[curSelected].x += menuOptions[curSelected].width * 0.5;
+		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
 
 		var offset:Float = 0;
 		for (i in 0...menuOptions.length)
@@ -72,8 +72,8 @@ class MainMenuState extends MusicMenuState
 			offset += menuOptions[i].height + 45;
 		}
 
-		optionsFollow.y = menuOptions[curSelected].y * 0.5 + 450;
-		menuFollow.y = menuOptions[curSelected].y * 0.125 + 450;
+		optionsFollow.y = menuOptions[curSelected].y * .5 + 450;
+		menuFollow.y = menuOptions[curSelected].y * .125 + 450;
 	}
 
 	public override function exitState()
@@ -85,15 +85,15 @@ class MainMenuState extends MusicMenuState
 		else
 		{
 			if (Settings.data.flashingLights)
-				FlxFlicker.flicker(bgFlash, 1.1, 0.15, false);
-			optionsCam.follow(menuOptions[curSelected], LOCKON, 0.12);
+				FlxFlicker.flicker(bgFlash, 1.1, .15, false);
+			optionsCam.follow(menuOptions[curSelected], LOCKON, .12);
 			transitioningOut = true;
 
 			FlxTween.tween(optionsCam, {zoom: 1.2}, 1, {
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
 			});
-			FlxTween.tween(menuCam, {zoom: 0.9}, 1, {
+			FlxTween.tween(menuCam, {zoom: .9}, 1, {
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
 			});
@@ -103,7 +103,7 @@ class MainMenuState extends MusicMenuState
 					switch (curSelected)
 					{
 						case 0:
-						// MusicState.switchState(new StoryMenuState());
+							MusicState.switchState(new StoryMenuState());
 						case 1:
 						// MusicState.switchState(new FreeplayState());
 						case 2:
@@ -117,7 +117,7 @@ class MainMenuState extends MusicMenuState
 					switch (curSelected)
 					{
 						case 0:
-						// MusicState.switchState(new StoryMenuState());
+							MusicState.switchState(new StoryMenuState());
 						case 1:
 						// MusicState.switchState(new FreeplayState());
 						case 2:
@@ -132,7 +132,7 @@ class MainMenuState extends MusicMenuState
 			});
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
-					FlxTween.tween(menuOptions[i], {alpha: 0}, 0.3, {
+					FlxTween.tween(menuOptions[i], {alpha: 0}, .3, {
 						ease: FlxEase.quintOut,
 						type: ONESHOT,
 						onComplete: tween ->
@@ -149,7 +149,7 @@ class MainMenuState extends MusicMenuState
 		MusicState.switchState(new TitleState());
 	}
 
-	public function createVersionTexts():Void
+	function createVersionTexts():Void
 	{
 		var horizonEngineText = Util.createText(5, FlxG.height - 65, 'Horizon Engine v' + Application.current.meta.get('version'), 28, Path.font('vcr'),
 			0xFFFFFFFF, LEFT)
@@ -163,7 +163,7 @@ class MainMenuState extends MusicMenuState
 		add(fnfVersion);
 	}
 
-	public function createMenuOptions(options:Array<String>):Void
+	function createMenuOptions(options:Array<String>):Void
 	{
 		for (name in options)
 		{
@@ -183,13 +183,13 @@ class MainMenuState extends MusicMenuState
 		var offset:Float = 0;
 		for (i in 0...menuOptions.length)
 		{
-			menuOptions[i].x = (FlxG.width - menuOptions[i].width) * 0.5;
+			menuOptions[i].x = (FlxG.width - menuOptions[i].width) * .5;
 			menuOptions[i].y = 100 + offset;
 			offset += menuOptions[i].height + 45;
 		}
 	}
 
-	public inline function createMenuBG():Void
+	inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image('menuBG'), 1.7);
 		bg.cameras = [menuCam];

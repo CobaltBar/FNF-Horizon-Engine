@@ -7,6 +7,7 @@ import modding.ModTypes;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
+import util.Dictionary.StringDictionary;
 import util.Log;
 
 class Mods
@@ -53,11 +54,11 @@ class Mods
 
 					path: modPath,
 					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']),
-					enabled: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath).enabled : false,
+					enabled: Settings.data.savedMods.get(modPath)?.enabled ?? false,
 					staticMod: isStaticMod(modPath),
-					songs: [],
-					weeks: [],
-					ID: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath).ID : i
+					songs: new StringDictionary(),
+					weeks: new StringDictionary(),
+					ID: Settings.data.savedMods.get(modPath)?.ID ?? i
 				});
 
 				all[modPath].songs = getSongs(modPath);
@@ -85,9 +86,9 @@ class Mods
 		return false;
 	}
 
-	private static function getWeeks(modPath:String):Map<String, Week>
+	private static function getWeeks(modPath:String):StringDictionary<Week>
 	{
-		var weeks:Map<String, Week> = [];
+		var weeks:StringDictionary<Week> = new StringDictionary<Week>();
 		var weeksPath = Path.combine(['mods', modPath, 'weeks']);
 		if (FileSystem.exists(weeksPath))
 			for (week in FileSystem.readDirectory(weeksPath))
@@ -107,10 +108,7 @@ class Mods
 
 						modName: modPath,
 						difficulties: [],
-						score: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath)
-							.weeks.exists(week) ? Settings.data.savedMods.get(modPath)
-							.songs.get(week)
-							.score : 0 : 0
+						score: Settings.data.savedMods.get(modPath)?.weeks.get(week)?.score ?? 0
 					});
 
 					for (song in weeks[week].songs)
@@ -123,9 +121,9 @@ class Mods
 		return weeks;
 	}
 
-	private static function getSongs(modPath:String):Map<String, Song>
+	private static function getSongs(modPath:String):StringDictionary<Song>
 	{
-		var songs:Map<String, Song> = [];
+		var songs:StringDictionary<Song> = new StringDictionary<Song>();
 		var songsPath = Path.combine(['mods', modPath, 'songs']);
 		if (FileSystem.exists(songsPath))
 			for (song in FileSystem.readDirectory(songsPath))
@@ -141,14 +139,8 @@ class Mods
 
 						difficulties: [],
 						audioFiles: [],
-						score: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath)
-							.songs.exists(songPath) ? Settings.data.savedMods.get(modPath)
-							.songs.get(songPath)
-							.score : 0 : 0,
-						accuracy: Settings.data.savedMods.exists(modPath) ? Settings.data.savedMods.get(modPath)
-							.songs.exists(songPath) ? Settings.data.savedMods.get(modPath)
-							.songs.get(songPath)
-							.accuracy : 0 : 0
+						score: Settings.data.savedMods.get(modPath)?.songs.get(songPath)?.score ?? 0,
+						accuracy: Settings.data.savedMods.get(modPath)?.songs.get(songPath)?.accuracy ?? 0
 					});
 
 					for (file in FileSystem.readDirectory(songPath))

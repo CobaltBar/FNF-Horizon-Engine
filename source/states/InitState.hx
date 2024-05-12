@@ -21,8 +21,8 @@ class InitState extends MusicState
 
 		DiscordRPC.init();
 
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(-1, 0));
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.5, FlxPoint.weak(1, 0));
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .5, FlxPoint.weak(-1, 0));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .5, FlxPoint.weak(1, 0));
 
 		// Thanks superpowers04
 		if (Settings.data.framerate == 0)

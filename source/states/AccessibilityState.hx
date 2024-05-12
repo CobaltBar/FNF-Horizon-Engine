@@ -27,10 +27,9 @@ class AccessibilityState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
-		if (!transitioningOut)
-			for (i in 0...menuOptions.length)
-				menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
-					FlxMath.lerp(menuOptions[i].y, 350 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+		for (i in 0...menuOptions.length)
+			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, 300 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
+				FlxMath.lerp(menuOptions[i].y, 500 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
 		super.update(elapsed);
 	}
 
@@ -46,7 +45,7 @@ class AccessibilityState extends MusicMenuState
 
 	public override function exitState():Void
 	{
-		FlxG.sound.play(Path.sound('Confirm'), 0.7);
+		FlxG.sound.play(Path.sound('Confirm'), .7);
 		if (curSelected == 3)
 		{
 			Settings.data.flashingLights = checkboxes[0].checked;
@@ -54,7 +53,7 @@ class AccessibilityState extends MusicMenuState
 			Settings.data.lowQuality = checkboxes[2].checked;
 			Settings.data.accessibilityConfirmed = true;
 			transitioningOut = true;
-			new FlxTimer().start(0.1, timer ->
+			new FlxTimer().start(.1, timer ->
 			{
 				FlxTween.tween(menuOptions[timer.loopsLeft], {x: menuOptions[timer.loopsLeft].x - 1250}, 1, {
 					type: ONESHOT,
@@ -72,7 +71,7 @@ class AccessibilityState extends MusicMenuState
 	private inline function createOptions():Void
 		for (i in 0...options.length)
 		{
-			var option = new Alphabet(200 + (50 * i), 350 + (200 * i), options[i], true, LEFT);
+			var option = new Alphabet(300 + (50 * i), 500 + (200 * i), options[i], true, LEFT);
 			option.cameras = [optionsCam];
 			option.alpha = .6;
 			add(option);

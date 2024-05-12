@@ -1,6 +1,7 @@
 package modding;
 
 import flixel.util.FlxColor;
+import util.Dictionary.StringDictionary;
 
 typedef ModJson =
 {
@@ -111,8 +112,8 @@ class Mod
 	var icon:String;
 	var enabled:Bool;
 	var staticMod:Bool;
-	var weeks:Map<String, Week>;
-	var songs:Map<String, Song>;
+	var weeks:StringDictionary<Week>;
+	var songs:StringDictionary<Song>;
 	var ID:Int;
 }
 
