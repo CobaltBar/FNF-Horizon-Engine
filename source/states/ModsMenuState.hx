@@ -75,10 +75,10 @@ class ModsMenuState extends MusicMenuState
 
 		if (!transitioningOut)
 		{
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('accept')))
+			if (Controls.accept)
 				exitState();
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('back')))
+			if (Controls.back)
 				returnState();
 
 			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2]]))

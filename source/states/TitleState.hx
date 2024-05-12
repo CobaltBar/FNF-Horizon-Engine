@@ -29,7 +29,7 @@ class TitleState extends MusicState
 
 	public override function update(elapsed:Float)
 	{
-		if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('accept')))
+		if (Controls.accept)
 		{
 			if (!skippedIntro)
 				skipIntro();

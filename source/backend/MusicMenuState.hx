@@ -45,16 +45,16 @@ class MusicMenuState extends MusicState
 
 		if (handleInput && !transitioningOut)
 		{
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[1], Settings.data.keybinds.get('ui')[5]]))
+			if (Controls.ui_down)
 				changeSelection(1);
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2], Settings.data.keybinds.get('ui')[6]]))
+			if (Controls.ui_up)
 				changeSelection(-1);
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('accept')))
+			if (Controls.accept)
 				exitState();
 
-			if (FlxG.keys.anyJustPressed(Settings.data.keybinds.get('back')))
+			if (Controls.back)
 				returnState();
 		}
 	}
