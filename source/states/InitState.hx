@@ -15,14 +15,16 @@ class InitState extends MusicState
 		Toolkit.init();
 		Toolkit.theme = 'dark';
 		CursorHelper.useCustomCursors = false;
+		if (Main.verboseLogging)
+			Log.info('HaxeUI Setup Complete');
 		Path.loadAssets();
 		Mods.load();
 		Path.loadModAssets();
 
 		DiscordRPC.init();
 
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .5, FlxPoint.weak(-1, 0));
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .5, FlxPoint.weak(1, 0));
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .35, FlxPoint.weak(-1, 0));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .35, FlxPoint.weak(1, 0));
 
 		// Thanks superpowers04
 		if (Settings.data.framerate == 0)
@@ -33,9 +35,6 @@ class InitState extends MusicState
 			FlxG.updateFramerate = Std.int(frameRate * 1.5);
 			FlxG.drawFramerate = Std.int(frameRate);
 		}
-
-		if (Main.verboseLogging)
-			Log.info('HaxeUI Setup Complete');
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

@@ -21,33 +21,31 @@ class MainMenuState extends MusicMenuState
 		createMenuBG();
 		for (val in Mods.all)
 			allModsCount++;
-		Log.info('Reloading Mods & Mod Assets');
-		Mods.load();
-		@:privateAccess Path.modAssets.clear();
-		Path.loadModAssets();
 		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
 		createVersionTexts();
 
-		new FlxTimer().start(.035, timer ->
+		changeSelection(0);
+
+		for (i in 0...menuOptions.length)
 		{
-			var trueX:Float = menuOptions[timer.loopsLeft].x;
-			menuOptions[timer.loopsLeft].x -= 2000 * (timer.loopsLeft % 2 == 0 ? 1 : -1);
+			var oldX = menuOptions[i].x;
+			menuOptions[i].x -= 2000 * (i % 2 == 0 ? 1 : -1);
+			FlxTween.tween(menuOptions[i], {x: oldX}, 1, {
+				type: ONESHOT,
+				ease: FlxEase.expoOut
+			});
 			if (!Settings.data.reducedMotion)
 			{
-				var trueY:Float = menuOptions[timer.loopsLeft].y;
-				menuOptions[timer.loopsLeft].y -= 2000;
-				FlxTween.tween(menuOptions[timer.loopsLeft], {y: trueY}, 1, {
+				var oldY = menuOptions[i].y;
+				menuOptions[i].y -= 2000;
+				FlxTween.tween(menuOptions[i], {y: oldY}, 1, {
 					type: ONESHOT,
 					ease: FlxEase.cubeOut
 				});
 			}
-			menuOptions[timer.loopsLeft].visible = true;
-			FlxTween.tween(menuOptions[timer.loopsLeft], {x: trueX}, 1, {
-				type: ONESHOT,
-				ease: FlxEase.expoOut,
-			});
-		}, menuOptions.length);
-		changeSelection(0);
+			menuOptions[i].visible = true;
+		}
+
 		curSelected = prevCurSelected;
 	}
 

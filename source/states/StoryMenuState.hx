@@ -11,6 +11,8 @@ class StoryMenuState extends MusicMenuState
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
 
+	var optionToData:Map<FlxSprite, Array<Dynamic>> = [];
+
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -27,7 +29,7 @@ class StoryMenuState extends MusicMenuState
 		for (i in 0...menuOptions.length)
 			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5 - (50 * (curSelected - i)),
 				FlxMath.bound(elapsed * 5, 0, 1)),
-				FlxMath.lerp(menuOptions[i].y, 750 - (100 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+				FlxMath.lerp(menuOptions[i].y, 600 - (100 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
 		super.update(elapsed);
 	}
 
@@ -95,17 +97,18 @@ class StoryMenuState extends MusicMenuState
 	}
 
 	function createMenuOptions():Void
-		for (mod in 0...Mods.enabled.length)
+		for (mod in Mods.enabled)
 		{
 			var i = 0;
-			for (week in Mods.enabled[mod].weeks)
+			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(0, 750 + (100 * i), Path.image('week-${week.name}', Mods.enabled[mod]), 1.4);
+				var option = Util.createGraphicSprite(0, 600 + (100 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.x = (FlxG.width - option.width) * .5 + (50 * i);
-				// option.mod = mod;
+				optionToData.set(option, [mod, week]);
 				option.cameras = [optionsCam];
 				add(option);
 				menuOptions.push(option);
+				i++;
 			}
 		}
 }

@@ -15,7 +15,7 @@ class Main extends Sprite
 {
 	public static final modSysVer:Float = 1;
 	public static var horizonVer(get, null):String;
-	@:noCompletion public static var verboseLogging:Bool = true;
+	@:noCompletion public static var verboseLogging:Bool = false;
 
 	public function new()
 	{

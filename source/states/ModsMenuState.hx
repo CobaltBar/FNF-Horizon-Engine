@@ -81,23 +81,31 @@ class ModsMenuState extends MusicMenuState
 			if (Controls.back)
 				returnState();
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2]]))
-				shiftSelection(1);
+			if (Controls.reset)
+			{
+				Log.info('Reloading Mods & Mod Assets');
+				Mods.load();
+				@:privateAccess Path.modAssets.clear();
+				Path.loadModAssets();
+			}
 
 			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[1]]))
 				shiftSelection(-1);
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[3], Settings.data.keybinds.get('ui')[7]]))
-				changeSection(1);
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2]]))
+				shiftSelection(1);
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[0], Settings.data.keybinds.get('ui')[4]]))
+			if (Controls.ui_left)
 				changeSection(-1);
 
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[5]]))
-				changeSelection(1);
+			if (Controls.ui_right)
+				changeSection(1);
 
 			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[6]]))
 				changeSelection(-1);
+
+			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[5]]))
+				changeSelection(1);
 		}
 
 		super.update(elapsed);
@@ -164,6 +172,9 @@ class ModsMenuState extends MusicMenuState
 
 		for (mod in Mods.all)
 			Settings.data.savedMods.set(mod.path, mod);
+
+		@:privateAccess Path.modAssets.clear();
+		Path.loadModAssets();
 
 		super.returnState();
 		Settings.save();
@@ -344,7 +355,7 @@ class ModsMenuState extends MusicMenuState
 		add(controlsBG);
 
 		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
-			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
+			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReload Mods:${Settings.data.keybinds.get('reset')[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
 			24, Path.font('vcr'), 0xFFFFFFFF, LEFT);
 		controlsText.fieldWidth = 500;
 		controlsText.cameras = [menuCam];

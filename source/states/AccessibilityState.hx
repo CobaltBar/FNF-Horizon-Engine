@@ -60,7 +60,7 @@ class AccessibilityState extends MusicMenuState
 					ease: FlxEase.expoOut
 				});
 			}, menuOptions.length);
-			FlxTimer.wait(1, () -> MusicState.switchState(new TitleState(), true));
+			FlxTimer.wait(.75, () -> MusicState.switchState(new TitleState(), true));
 		}
 		else
 			checkboxes[curSelected].checked = !checkboxes[curSelected].checked;
