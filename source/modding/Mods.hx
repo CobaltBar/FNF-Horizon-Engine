@@ -70,6 +70,7 @@ class Mods
 			}
 		if (Main.verboseLogging)
 			Log.info('Mods Loaded: $i');
+		Path.loadModAssets();
 	}
 
 	private static function isStaticMod(modPath:String):Bool

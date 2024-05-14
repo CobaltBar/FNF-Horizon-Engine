@@ -44,7 +44,7 @@ class SaveVars
 
 class Settings
 {
-	public static var data:SaveVars;
+	public static var data:SaveVars = null;
 
 	public static function save()
 	{
@@ -54,6 +54,8 @@ class Settings
 		for (setting in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(data, setting));
 		FlxG.save.flush();
+		if (Main.verboseLogging)
+			Log.info('Settings saved.');
 	}
 
 	public static function load()

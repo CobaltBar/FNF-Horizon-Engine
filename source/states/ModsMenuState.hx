@@ -176,8 +176,8 @@ class ModsMenuState extends MusicMenuState
 		@:privateAccess Path.modAssets.clear();
 		Path.loadModAssets();
 
-		super.returnState();
 		Settings.save();
+		super.returnState();
 		MusicState.switchState(new MainMenuState());
 	}
 
@@ -304,7 +304,7 @@ class ModsMenuState extends MusicMenuState
 				targetColor = enabledOptions[curEnabled].option.color;
 		}
 
-	public inline function createMenuBG():Void
+	inline function createMenuBG():Void
 	{
 		bg = Util.createBackdrop(Path.image('menuBGDesat'), 1.7);
 		bg.cameras = [menuCam];
@@ -412,7 +412,7 @@ class ModsMenuState extends MusicMenuState
 			add(option);
 		}
 
-	private inline function resetModInfo():Void
+	inline function resetModInfo():Void
 	{
 		modIcon.loadGraphic(Path.image('unknownMod'));
 		modDesc.text = 'N/A';

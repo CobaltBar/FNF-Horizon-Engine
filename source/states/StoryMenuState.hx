@@ -11,7 +11,7 @@ class StoryMenuState extends MusicMenuState
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
 
-	var optionToData:Map<FlxSprite, Array<Dynamic>> = [];
+	var optionToData:Map<FlxSprite, {mod:Mod, week:Week}> = [];
 
 	public override function create():Void
 	{
@@ -35,11 +35,21 @@ class StoryMenuState extends MusicMenuState
 
 	public override function changeSelection(change:Int):Void
 	{
+		menuOptions[curSelected].alpha = .6;
 		super.changeSelection(change);
+		menuOptions[curSelected].alpha = 1;
+		weekName.text = optionToData[menuOptions[curSelected]].week.name;
+		weekName.x = FlxG.width - weekName.width - 10;
+		// garbage code below, replace with a loop or something
+		songsText.text = Std.string(optionToData[menuOptions[curSelected]].week.songs)
+			.toUpperCase()
+			.replace('[', '')
+			.replace(']', '');
 	}
 
 	public override function exitState():Void
 	{
+		// Transfer to PlayState
 		super.exitState();
 	}
 
@@ -60,7 +70,7 @@ class StoryMenuState extends MusicMenuState
 		add(weekScore);
 
 		weekName = Util.createText(0, 55, 'Week', 64, Path.font('vcr'), 0xFFAAAAAA, RIGHT);
-		weekName.x = FlxG.width - weekName.width - 10;
+
 		weekName.cameras = [menuCam];
 		add(weekName);
 
@@ -104,7 +114,7 @@ class StoryMenuState extends MusicMenuState
 			{
 				var option = Util.createGraphicSprite(0, 600 + (100 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.x = (FlxG.width - option.width) * .5 + (50 * i);
-				optionToData.set(option, [mod, week]);
+				optionToData.set(option, {mod: mod, week: week});
 				option.cameras = [optionsCam];
 				add(option);
 				menuOptions.push(option);

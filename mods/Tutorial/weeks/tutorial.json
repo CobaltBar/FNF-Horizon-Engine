@@ -3,5 +3,6 @@
     "menuChars": ["bf", "gf"],
     "menuBG": ["stage"],
     "locked": false,
-    "hideSongsFromFreeplay": false
+    "hideSongsFromFreeplay": false,
+    "songs": ["tutorial"]
 }

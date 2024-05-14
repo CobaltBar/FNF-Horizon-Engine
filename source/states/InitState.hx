@@ -19,7 +19,6 @@ class InitState extends MusicState
 			Log.info('HaxeUI Setup Complete');
 		Path.loadAssets();
 		Mods.load();
-		Path.loadModAssets();
 
 		DiscordRPC.init();
 
