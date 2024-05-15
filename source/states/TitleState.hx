@@ -166,6 +166,17 @@ class TitleState extends MusicState
 	{
 		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
 		targetZoom = 1;
+		// Dumb fix for it not disappearing instantly
+		for (obj in introTexts)
+		{
+			FlxTween.cancelTweensOf(obj);
+			obj.setPosition(-10000, -10000);
+		}
+		for (obj in introImages)
+		{
+			FlxTween.cancelTweensOf(obj);
+			obj.setPosition(-10000, -10000);
+		}
 		clearIntroTexts(true);
 		clearIntroImages(true);
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
