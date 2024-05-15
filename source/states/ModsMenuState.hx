@@ -170,8 +170,26 @@ class ModsMenuState extends MusicMenuState
 			Mods.enabled.insert(0, theStaticOption.option);
 		}
 
-		for (mod in Mods.all)
-			Settings.data.savedMods.set(mod.path, mod);
+		for (mod in Mods.enabled)
+		{
+			var weeks:Map<String, {score:Int}> = [];
+			var songs:Map<String, {score:Int, accuracy:Float}> = [];
+			for (key => value in mod.weeks)
+				weeks.set(key, {
+					score: value.score
+				});
+			for (key => value in mod.songs)
+				songs.set(key, {
+					score: value.score,
+					accuracy: value.accuracy
+				});
+			Settings.data.savedMods.set(mod.path, {
+				enabled: mod.enabled,
+				ID: mod.ID,
+				weeks: weeks,
+				songs: songs
+			});
+		}
 
 		@:privateAccess Path.modAssets.clear();
 		Path.loadModAssets();

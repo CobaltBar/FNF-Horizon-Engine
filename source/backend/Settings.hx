@@ -36,7 +36,13 @@ class SaveVars
 		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
 	];
 
-	var savedMods:Map<String, Mod> = [];
+	var savedMods:Map<String,
+		{ // i dont like it either
+			enabled:Bool,
+			ID:Int,
+			weeks:Map<String, {score:Int}>,
+			songs:Map<String, {score:Int, accuracy:Float}>
+		}> = [];
 	var fullscreen:Bool = false;
 
 	function new() {};
