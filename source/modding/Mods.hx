@@ -98,6 +98,10 @@ class Mods
 				if (!FileSystem.isDirectory(weekPath) && HaxePath.extension(weekPath) == 'json')
 				{
 					var json:WeekJson = TJSON.parse(File.getContent(weekPath));
+					var lowercaseSongs:Array<String> = [];
+					if (json.songs != null)
+						for (song in json.songs)
+							lowercaseSongs.push(song.toLowerCase());
 					weeks.set(week, {
 						name: json.name ?? 'Blank Week',
 						menuChars: json.menuChars ?? ['dad', 'bf', 'gf'],
@@ -105,7 +109,7 @@ class Mods
 						locked: json.locked ?? false,
 						unlocks: json.unlocks ?? [],
 						hideSongsFromFreeplay: json.hideSongsFromFreeplay ?? false,
-						songs: json.songs ?? [],
+						songs: lowercaseSongs,
 
 						difficulties: [],
 						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
@@ -133,14 +137,14 @@ class Mods
 				if (FileSystem.isDirectory(songPath) && FileSystem.exists(jsonPath))
 				{
 					var json:SongJson = TJSON.parse(File.getContent(jsonPath));
-					songs.set(song, {
+					songs.set(song.toLowerCase(), {
 						name: json.name ?? 'Blank Song',
 						icon: json.icon ?? 'bf',
 
 						difficulties: [],
 						audioFiles: [],
-						score: Settings.data.savedMods.get(modPath)?.songs?.get(song)?.score ?? 0,
-						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song)?.accuracy ?? 0
+						score: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.score ?? 0,
+						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.accuracy ?? 0
 					});
 
 					for (file in FileSystem.readDirectory(songPath))
@@ -150,16 +154,16 @@ class Mods
 						{
 							if (HaxePath.extension(filePath) == 'json'
 								&& file != 'song.json'
-								&& !songs[song].difficulties.contains(HaxePath.withoutExtension(file)))
-								songs[song].difficulties.push(HaxePath.withoutExtension(file));
+								&& !songs[song.toLowerCase()].difficulties.contains(HaxePath.withoutExtension(file)))
+								songs[song.toLowerCase()].difficulties.push(HaxePath.withoutExtension(file));
 
 							if (HaxePath.extension(filePath) == 'ogg')
 							{
 								if (file == 'Inst.ogg' || file == 'Voices.ogg')
-									songs[song].audioFiles.push(filePath);
-								if (!songs[song].audioFiles.contains('Voices.ogg')
+									songs[song.toLowerCase()].audioFiles.push(filePath);
+								if (!songs[song.toLowerCase()].audioFiles.contains('Voices.ogg')
 									&& (file == 'Voices-Player.ogg' || file == 'Voices-Opponent.ogg'))
-									songs[song].audioFiles.push(filePath);
+									songs[song.toLowerCase()].audioFiles.push(filePath);
 							}
 						}
 					}
