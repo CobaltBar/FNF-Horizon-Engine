@@ -54,8 +54,8 @@ class TitleState extends MusicState
 					ease: FlxEase.expoOut,
 					onComplete: tween ->
 					{
-						Settings.data.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .45,
-							{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -1250}, .45, {type: ONESHOT, ease: FlxEase.expoIn});
+						Settings.data.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .5,
+							{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -1250}, .5, {type: ONESHOT, ease: FlxEase.expoIn});
 						FlxTimer.wait(.5, () ->
 						{
 							comingBack = true;
