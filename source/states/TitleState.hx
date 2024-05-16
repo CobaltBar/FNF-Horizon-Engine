@@ -126,7 +126,7 @@ class TitleState extends MusicState
 					createIntroText('Cobalt Bar', -50);
 					introTexts[1].setColorTransform(0, .5, 1, 1, 0, 0, 0, 0);
 				case 3:
-					clearIntroTexts(Settings.data.reducedMotion);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
 				case 4:
 					createIntroText('Not Associated with', 100);
 				case 6:
@@ -134,15 +134,14 @@ class TitleState extends MusicState
 					createIntroText('Newgrounds', 100);
 					createIntroImage(Path.image('newgrounds_logo'), 0);
 				case 7:
-					clearIntroTexts(Settings.data.reducedMotion);
-					clearIntroImages(Settings.data.reducedMotion);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
 				case 8:
 					createIntroText(goofyTexts[0], 50);
 				case 10:
 					tweenLastIntroText(1, 50);
 					createIntroText(goofyTexts[1], -50);
 				case 11:
-					clearIntroTexts(Settings.data.reducedMotion);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
 				case 12:
 					shouldBop = false;
 					targetZoom = 1.2;
@@ -167,8 +166,7 @@ class TitleState extends MusicState
 	{
 		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
 		targetZoom = 1;
-		clearIntroTexts(true);
-		clearIntroImages(true);
+		clearIntroObjects();
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 		if (curBeat % 2 == 0)
 			gf.animation.play('danceLeft');
@@ -202,57 +200,32 @@ class TitleState extends MusicState
 		return img;
 	}
 
-	private function clearIntroTexts(instaClear:Bool = false):Void
+	private function tweenOutIntroObjs(destroy:Bool = false):Void
 	{
-		if (!instaClear)
-		{
-			var i = 0;
-			for (obj in introTexts)
-			{
-				FlxTween.tween(obj, {y: -1250 * (i % 2 == 0 ? 1 : -1)}, .5, {
-					type: ONESHOT,
-					ease: FlxEase.expoIn,
-					onComplete: tween ->
-					{
-						obj.destroy();
-					}
-				});
-				i++;
-			}
-		}
-		else
-			for (obj in introTexts)
-			{
-				FlxTween.cancelTweensOf(obj);
-				obj.destroy();
-			}
-		introTexts = [];
+		for (i in 0...introTexts.length)
+			FlxTween.tween(introTexts[i], {y: -1250 * (i % 2 == 0 ? 1 : -1)}, .5,
+				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> if (destroy) introTexts[i].destroy()});
+		for (obj in introImages)
+			FlxTween.tween(obj, {y: obj.y > FlxG.height * .5 ? 1 : -1}, .5, {
+				type: ONESHOT,
+				ease: FlxEase.expoIn,
+				onComplete: tween -> if (destroy) obj.destroy()
+			});
 	}
 
-	private function clearIntroImages(instaClear:Bool = false):Void
+	private function clearIntroObjects():Void
 	{
-		if (!instaClear)
+		for (obj in introTexts)
 		{
-			var i = 0;
-			for (obj in introImages)
-			{
-				FlxTween.tween(obj, {y: -1250 * (obj.y > FlxG.width * .5 ? 1 : -1)}, .5, {
-					type: ONESHOT,
-					ease: FlxEase.expoIn,
-					onComplete: tween ->
-					{
-						obj.destroy();
-					}
-				});
-				i++;
-			}
+			FlxTween.cancelTweensOf(obj);
+			obj.destroy();
 		}
-		else
-			for (obj in introImages)
-			{
-				FlxTween.cancelTweensOf(obj);
-				obj.destroy();
-			}
+		introTexts = [];
+		for (obj in introImages)
+		{
+			FlxTween.cancelTweensOf(obj);
+			obj.destroy();
+		}
 		introImages = [];
 	}
 
