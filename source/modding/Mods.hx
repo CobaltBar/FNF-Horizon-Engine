@@ -107,7 +107,6 @@ class Mods
 						hideSongsFromFreeplay: json.hideSongsFromFreeplay ?? false,
 						songs: json.songs ?? [],
 
-						modName: modPath,
 						difficulties: [],
 						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
 					});
@@ -134,14 +133,14 @@ class Mods
 				if (FileSystem.isDirectory(songPath) && FileSystem.exists(jsonPath))
 				{
 					var json:SongJson = TJSON.parse(File.getContent(jsonPath));
-					songs.set(songPath, {
+					songs.set(song, {
 						name: json.name ?? 'Blank Song',
 						icon: json.icon ?? 'bf',
 
 						difficulties: [],
 						audioFiles: [],
-						score: Settings.data.savedMods.get(modPath)?.songs?.get(songPath)?.score ?? 0,
-						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(songPath)?.accuracy ?? 0
+						score: Settings.data.savedMods.get(modPath)?.songs?.get(song)?.score ?? 0,
+						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song)?.accuracy ?? 0
 					});
 
 					for (file in FileSystem.readDirectory(songPath))
@@ -151,16 +150,16 @@ class Mods
 						{
 							if (HaxePath.extension(filePath) == 'json'
 								&& file != 'song.json'
-								&& !songs[songPath].difficulties.contains(HaxePath.withoutExtension(file)))
-								songs[songPath].difficulties.push(HaxePath.withoutExtension(file));
+								&& !songs[song].difficulties.contains(HaxePath.withoutExtension(file)))
+								songs[song].difficulties.push(HaxePath.withoutExtension(file));
 
 							if (HaxePath.extension(filePath) == 'ogg')
 							{
 								if (file == 'Inst.ogg' || file == 'Voices.ogg')
-									songs[songPath].audioFiles.push(filePath);
-								if (!songs[songPath].audioFiles.contains('Voices.ogg')
+									songs[song].audioFiles.push(filePath);
+								if (!songs[song].audioFiles.contains('Voices.ogg')
 									&& (file == 'Voices-Player.ogg' || file == 'Voices-Opponent.ogg'))
-									songs[songPath].audioFiles.push(filePath);
+									songs[song].audioFiles.push(filePath);
 							}
 						}
 					}

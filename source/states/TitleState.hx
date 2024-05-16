@@ -19,6 +19,7 @@ class TitleState extends MusicState
 		Path.clearStoredMemory();
 		super.create();
 		DiscordRPC.change('In The Menus', 'The Title');
+		persistentUpdate = true;
 		loadTitleData();
 		generateObjects();
 		if (!comingBack && FlxG.sound.music == null)
@@ -79,7 +80,7 @@ class TitleState extends MusicState
 								onComplete: tween ->
 								{
 									comingBack = true;
-									MusicState.switchState(new MainMenuState());
+									MusicState.switchState(new MainMenuState(), false, true);
 								}
 							});
 					}
@@ -166,17 +167,6 @@ class TitleState extends MusicState
 	{
 		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
 		targetZoom = 1;
-		// Dumb fix for it not disappearing instantly
-		for (obj in introTexts)
-		{
-			FlxTween.cancelTweensOf(obj);
-			obj.setPosition(-10000, -10000);
-		}
-		for (obj in introImages)
-		{
-			FlxTween.cancelTweensOf(obj);
-			obj.setPosition(-10000, -10000);
-		}
 		clearIntroTexts(true);
 		clearIntroImages(true);
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
@@ -232,7 +222,10 @@ class TitleState extends MusicState
 		}
 		else
 			for (obj in introTexts)
+			{
+				FlxTween.cancelTweensOf(obj);
 				obj.destroy();
+			}
 		introTexts = [];
 	}
 
@@ -256,7 +249,10 @@ class TitleState extends MusicState
 		}
 		else
 			for (obj in introImages)
+			{
+				FlxTween.cancelTweensOf(obj);
 				obj.destroy();
+			}
 		introImages = [];
 	}
 
