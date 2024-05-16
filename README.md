@@ -6,12 +6,12 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Supported Platforms
 
--HXCPP - Windows, Mac, Linux
+- HXCPP - Windows, Mac, Linux
 
 ### Planned Platforms
 
--Hashlink (flixel is refusing to compile to it atm)
--Android
+- Hashlink (flixel is refusing to compile to it atm)
+- Android
 
 ## Compilation Instructions
 
@@ -23,12 +23,12 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Credits
 
--Cobalt Bar (Creator)
--Betopia (Note sprite stuff)
--CrowPlexus (Ordered Map/Dictionary)
+- Cobalt Bar (Creator)
+- Betopia (Note sprite stuff)
+- CrowPlexus (Ordered Map/Dictionary)
 
 ## Special Thanks
 
--Psych Engine (Assets, most introtexts, and some code)
+- Psych Engine (Assets, most introtexts, and some code)
 
 If i missed any credits they're probably in the files
