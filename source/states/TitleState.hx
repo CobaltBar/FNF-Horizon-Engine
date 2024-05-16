@@ -46,43 +46,21 @@ class TitleState extends MusicState
 					FlxG.sound.music.resume();
 					FlxG.sound.music.fadeIn(2, 0, .7);
 				}
-				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.backIn,
-				});
-				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.expoOut,
-				});
-				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5, y: (FlxG.height - logo.height) * .5}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.expoOut,
-				});
-				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .5, {
+				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {type: ONESHOT, ease: FlxEase.backIn,});
+				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {type: ONESHOT, ease: FlxEase.expoOut,});
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5, y: (FlxG.height - logo.height) * .5}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .75, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 					onComplete: tween ->
 					{
-						if (!Settings.data.reducedMotion)
-							FlxTween.tween(logo, {y: -1250}, .5, {
-								type: ONESHOT,
-								ease: FlxEase.expoIn,
-								onComplete: tween ->
-								{
-									comingBack = true;
-									MusicState.switchState(new MainMenuState(), false, true);
-								}
-							});
-						else
-							FlxTween.tween(logo, {alpha: 0}, .5, {
-								type: ONESHOT,
-								ease: FlxEase.expoOut,
-								onComplete: tween ->
-								{
-									comingBack = true;
-									MusicState.switchState(new MainMenuState(), false, true);
-								}
-							});
+						Settings.data.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .45,
+							{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -1250}, .45, {type: ONESHOT, ease: FlxEase.expoIn});
+						FlxTimer.wait(.5, () ->
+						{
+							comingBack = true;
+							MusicState.switchState(new MainMenuState(), false, true);
+						});
 					}
 				});
 			}
@@ -126,7 +104,7 @@ class TitleState extends MusicState
 					createIntroText('Cobalt Bar', -50);
 					introTexts[1].setColorTransform(0, .5, 1, 1, 0, 0, 0, 0);
 				case 3:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 4:
 					createIntroText('Not Associated with', 100);
 				case 6:
@@ -134,14 +112,14 @@ class TitleState extends MusicState
 					createIntroText('Newgrounds', 100);
 					createIntroImage(Path.image('newgrounds_logo'), 0);
 				case 7:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 8:
 					createIntroText(goofyTexts[0], 50);
 				case 10:
 					tweenLastIntroText(1, 50);
 					createIntroText(goofyTexts[1], -50);
 				case 11:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjs(true);
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 12:
 					shouldBop = false;
 					targetZoom = 1.2;
@@ -180,10 +158,7 @@ class TitleState extends MusicState
 		var alphabet:Alphabet = new Alphabet(FlxG.width * 2 * (introTexts.length % 2 == 0 ? 1 : -1), FlxG.height * .5, text, true, CENTER, 1.4, 0, yOff);
 		introTexts.push(alphabet);
 		add(alphabet);
-		FlxTween.tween(alphabet, {x: (FlxG.width - alphabet.width) * .5}, .5, {
-			type: ONESHOT,
-			ease: FlxEase.expoOut,
-		});
+		FlxTween.tween(alphabet, {x: (FlxG.width - alphabet.width) * .5}, .5, {type: ONESHOT, ease: FlxEase.expoOut,});
 		return alphabet;
 	}
 
@@ -193,24 +168,18 @@ class TitleState extends MusicState
 		img.screenCenter(X);
 		introImages.push(img);
 		add(img);
-		FlxTween.tween(img, {y: FlxG.height * .5 + yOff}, .5, {
-			type: ONESHOT,
-			ease: FlxEase.expoOut
-		});
+		FlxTween.tween(img, {y: FlxG.height * .5 + yOff}, .5, {type: ONESHOT, ease: FlxEase.expoOut});
 		return img;
 	}
 
-	private function tweenOutIntroObjs(destroy:Bool = false):Void
+	private function tweenOutIntroObjects(destroy:Bool = false):Void
 	{
 		for (i in 0...introTexts.length)
 			FlxTween.tween(introTexts[i], {y: -1250 * (i % 2 == 0 ? 1 : -1)}, .5,
 				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> if (destroy) introTexts[i].destroy()});
 		for (obj in introImages)
-			FlxTween.tween(obj, {y: obj.y > FlxG.height * .5 ? 1 : -1}, .5, {
-				type: ONESHOT,
-				ease: FlxEase.expoIn,
-				onComplete: tween -> if (destroy) obj.destroy()
-			});
+			FlxTween.tween(obj, {y: -1250 * (obj.y > FlxG.height * .5 ? 1 : -1)}, .5,
+				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> if (destroy) obj.destroy()});
 	}
 
 	private function clearIntroObjects():Void
