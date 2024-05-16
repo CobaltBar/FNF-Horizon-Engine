@@ -16,13 +16,16 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 ## Compilation Instructions
 
 -Libraries:
+
 -latest lime, openfl, flixel, flixel-addons, flixel-ui, tjson
+
 -git hxcpp (extra setup required, see [here](https://github.com/HaxeFoundation/hxcpp)), hxdiscord_rpc, haxeui-flixel, haxeui-core (install haxeui-flixel before haxeui-core)
 
 ## Credits
 
 -Cobalt Bar (Creator)
 -Betopia (Note sprite stuff)
+-CrowPlexus (Ordered Map/Dictionary)
 
 ## Special Thanks
 
