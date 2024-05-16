@@ -41,6 +41,7 @@ class StoryMenuState extends MusicMenuState
 		weekName.text = optionToData[menuOptions[curSelected]].week.name;
 		weekName.x = FlxG.width - weekName.width - 10;
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
+		weekScore.text = Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6);
 	}
 
 	public override function exitState():Void
@@ -78,7 +79,9 @@ class StoryMenuState extends MusicMenuState
 		songsText.cameras = [menuCam];
 		add(songsText);
 
-		difficulty = Util.createGraphicSprite(0, 600, Path.image('difficulty-hard'), 1.4);
+		difficulty = Util.createGraphicSprite(0, 600, Path.image('difficulty-easy'), 1.4)
+			.loadGraphic(Path.image('difficulty-normal'))
+			.loadGraphic('difficulty-hard');
 		difficulty.x = FlxG.width - 200 - difficulty.width;
 		difficulty.cameras = [menuCam];
 		add(difficulty);
