@@ -9,7 +9,8 @@ class AccessibilityState extends MusicMenuState
 	static var descriptions = [
 		'Enable Flashing Lights',
 		'Enable Reduced Motion (Disables the insane Title and Main Menu Tweens)',
-		'Enable Low Quality Mode (Enable if your PC is bad)'
+		'Enable Low Quality Mode (Enable if your PC is bad)',
+		'Continue'
 	];
 
 	var checkboxes:Array<Checkbox> = [];
@@ -37,8 +38,7 @@ class AccessibilityState extends MusicMenuState
 	{
 		menuOptions[curSelected].alpha = .6;
 		super.changeSelection(change);
-		if (curSelected != 3)
-			description.text = descriptions[curSelected];
+		description.text = descriptions[curSelected];
 		description.screenCenter(X);
 		menuOptions[curSelected].alpha = 1;
 	}
@@ -53,13 +53,19 @@ class AccessibilityState extends MusicMenuState
 			Settings.data.lowQuality = checkboxes[2].checked;
 			Settings.data.accessibilityConfirmed = true;
 			transitioningOut = true;
-			new FlxTimer().start(.1, timer ->
+			if (!Settings.data.reducedMotion)
 			{
-				FlxTween.tween(menuOptions[timer.loopsLeft], {x: menuOptions[timer.loopsLeft].x - 1250}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.expoOut
-				});
-			}, menuOptions.length);
+				new FlxTimer().start(.1, timer ->
+				{
+					FlxTween.tween(menuOptions[timer.loopsLeft], {x: menuOptions[timer.loopsLeft].x - 1250}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+				}, menuOptions.length - 1);
+
+				FlxTween.tween(menuOptions[menuOptions.length - 1],
+					{x: (FlxG.width - menuOptions[menuOptions.length - 1].width) * .5, y: (FlxG.height - menuOptions[menuOptions.length - 1].height) * .5},
+					.75, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(optionsCam, {zoom: 2}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
+			}
+
 			FlxTimer.wait(.75, () -> MusicState.switchState(new TitleState(), true));
 		}
 		else
@@ -96,11 +102,11 @@ class AccessibilityState extends MusicMenuState
 		bg.cameras = [menuCam];
 		add(bg);
 		var descriptionBG = Util.makeSprite(0, FlxG.height - 50, FlxG.width, 50, 0xCC000000);
-		descriptionBG.cameras = [optionsCam];
+		descriptionBG.cameras = [otherCam];
 		add(descriptionBG);
 		description = Util.createText(0, FlxG.height - 45, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, CENTER).setBorderStyle(OUTLINE, 0xFF000000, 2);
 		description.screenCenter(X);
-		description.cameras = [optionsCam];
+		description.cameras = [otherCam];
 		add(description);
 	}
 }
