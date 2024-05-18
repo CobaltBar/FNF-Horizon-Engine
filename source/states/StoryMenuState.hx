@@ -1,7 +1,9 @@
 package states;
 
+import flixel.math.FlxRect;
+
 /*
-	TODO - ClipRect, Difficulty Switch, Difficulty movement centering + shrink a bit
+	TODO - Difficulty Switch, Difficulty movement centering + shrink a bit
  */
 class StoryMenuState extends MusicMenuState
 {
@@ -34,6 +36,9 @@ class StoryMenuState extends MusicMenuState
 			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5 - (50 * (curSelected - i)),
 				FlxMath.bound(elapsed * 5, 0, 1)),
 				FlxMath.lerp(menuOptions[i].y, 600 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 625 ? -menuOptions[i].height - (menuOptions[i].y - 625) : -menuOptions[i].height,
+				menuOptions[i].width + 10, menuOptions[i].height * 2);
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
 		super.update(elapsed);
 	}
@@ -127,6 +132,8 @@ class StoryMenuState extends MusicMenuState
 				var option = Util.createGraphicSprite(0, 600 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.x = (FlxG.width - option.width) * .5 + (50 * i);
 				option.alpha = .6;
+				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+				option.clipRect = option.clipRect;
 				var songs:Array<String> = [];
 				for (song in week.songs)
 					songs.push(mod.songs.get(song).name);
