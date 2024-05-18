@@ -1,5 +1,8 @@
 package states;
 
+/*
+	TODO - ClipRect, Difficulty Switch, Difficulty movement centering + shrink a bit
+ */
 class StoryMenuState extends MusicMenuState
 {
 	var difficulty:FlxSprite;
@@ -27,9 +30,11 @@ class StoryMenuState extends MusicMenuState
 	public override function update(elapsed:Float):Void
 	{
 		for (i in 0...menuOptions.length)
+		{
 			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5 - (50 * (curSelected - i)),
 				FlxMath.bound(elapsed * 5, 0, 1)),
-				FlxMath.lerp(menuOptions[i].y, 600 - (100 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+				FlxMath.lerp(menuOptions[i].y, 600 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+		}
 		super.update(elapsed);
 	}
 
@@ -119,8 +124,9 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(0, 600 + (100 * i), Path.image('week-${week.name}', mod), 1.4);
+				var option = Util.createGraphicSprite(0, 600 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.x = (FlxG.width - option.width) * .5 + (50 * i);
+				option.alpha = .6;
 				var songs:Array<String> = [];
 				for (song in week.songs)
 					songs.push(mod.songs.get(song).name);
