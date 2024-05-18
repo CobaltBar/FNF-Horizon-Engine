@@ -404,9 +404,11 @@ class ModsMenuState extends MusicMenuState
 	}
 
 	inline function createModOptions():Void
+	{
+		var i:Int = 0;
 		for (mod in Mods.all)
 		{
-			var option:Alphabet = new Alphabet(0, 200, mod.name, false, CENTER, .7);
+			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, CENTER, .7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 			option.clipRect = option.clipRect;
@@ -428,7 +430,9 @@ class ModsMenuState extends MusicMenuState
 			if (!mod.staticMod && !mod.enabled)
 				menuOptions.insert(mod.ID, option);
 			add(option);
+			i++;
 		}
+	}
 
 	inline function resetModInfo():Void
 	{

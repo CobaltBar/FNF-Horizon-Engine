@@ -42,6 +42,13 @@ class StoryMenuState extends MusicMenuState
 		weekName.x = FlxG.width - weekName.width - 10;
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
 		weekScore.text = Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6);
+		difficulty.loadGraphic(Path.image('difficulty-${(optionToData[menuOptions[curSelected]].week.difficulties.length < 2 ? optionToData[menuOptions[curSelected]].week.difficulties[1] : optionToData[menuOptions[curSelected]].week.difficulties[0]) ?? 'normal'}',
+			optionToData[menuOptions[curSelected]].mod));
+		difficulty.updateHitbox();
+		leftArrow.x = difficulty.x - leftArrow.width - 20;
+		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
+		rightArrow.x = difficulty.x + difficulty.width + 20;
+		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 	}
 
 	public override function exitState():Void
@@ -67,48 +74,49 @@ class StoryMenuState extends MusicMenuState
 		add(weekScore);
 
 		weekName = Util.createText(0, 55, 'Week', 64, Path.font('vcr'), 0xFFAAAAAA, RIGHT);
-
 		weekName.cameras = [menuCam];
 		add(weekName);
 
-		var tracks = Util.createGraphicSprite(200, 600, Path.image('tracks'), 1.5);
+		var tracks = Util.createGraphicSprite(150, 600, Path.image('tracks'), 1.5);
 		tracks.cameras = [menuCam];
 		add(tracks);
 
-		songsText = Util.createText(200, 680, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
+		songsText = Util.createText(150, 680, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
 		songsText.cameras = [menuCam];
 		add(songsText);
 
 		difficulty = Util.createGraphicSprite(0, 600, Path.image('difficulty-easy'), 1.4)
 			.loadGraphic(Path.image('difficulty-normal'))
-			.loadGraphic('difficulty-hard');
+			.loadGraphic(Path.image('difficulty-hard'));
+		difficulty.updateHitbox();
 		difficulty.x = FlxG.width - 200 - difficulty.width;
 		difficulty.cameras = [menuCam];
 		add(difficulty);
 
-		leftArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.4);
+		leftArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.5);
 		leftArrow.animation.addByPrefix('idle', 'arrow left', 24);
 		leftArrow.animation.addByPrefix('press', 'arrow push left', 24);
 		leftArrow.animation.play('idle');
-		leftArrow.x = difficulty.x - leftArrow.width - 25;
+		leftArrow.x = difficulty.x - leftArrow.width - 20;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 		leftArrow.cameras = [menuCam];
 		add(leftArrow);
 
-		rightArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.4);
+		rightArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.5);
 		rightArrow.animation.addByPrefix('idle', 'arrow right', 24);
 		rightArrow.animation.addByPrefix('press', 'arrow push right', 24);
 		rightArrow.animation.play('idle');
-		rightArrow.x = difficulty.x + difficulty.width + 25;
+		rightArrow.x = difficulty.x + difficulty.width + 20;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 		rightArrow.cameras = [menuCam];
 		add(rightArrow);
 	}
 
-	function createMenuOptions():Void
+	inline function createMenuOptions():Void
+	{
+		var i:Int = 0;
+
 		for (mod in Mods.enabled)
-		{
-			var i = 0;
 			for (week in mod.weeks)
 			{
 				var option = Util.createGraphicSprite(0, 600 + (100 * i), Path.image('week-${week.name}', mod), 1.4);
@@ -122,5 +130,5 @@ class StoryMenuState extends MusicMenuState
 				menuOptions.push(option);
 				i++;
 			}
-		}
+	}
 }
