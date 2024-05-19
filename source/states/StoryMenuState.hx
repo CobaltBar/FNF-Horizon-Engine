@@ -1,6 +1,8 @@
 package states;
 
+import flixel.group.FlxContainer.FlxTypedContainer;
 import flixel.math.FlxRect;
+import haxe.io.Path as HaxePath;
 
 class StoryMenuState extends MusicMenuState
 {
@@ -12,6 +14,8 @@ class StoryMenuState extends MusicMenuState
 	var weekName:FlxText;
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
+
+	var weekChars:FlxTypedContainer<MenuChar>;
 
 	var optionToData:Map<FlxSprite, {mod:Mod, week:Week, songs:Array<String>}> = [];
 
@@ -48,6 +52,12 @@ class StoryMenuState extends MusicMenuState
 		super.update(elapsed);
 	}
 
+	public override function onBeat()
+	{
+		super.onBeat();
+		weekChars.forEach(char -> char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight'));
+	}
+
 	public override function changeSelection(change:Int):Void
 	{
 		menuOptions[curSelected].alpha = .6;
@@ -58,10 +68,19 @@ class StoryMenuState extends MusicMenuState
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
 		weekScore.text = Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6);
 		if (optionToData[menuOptions[curSelected]].week.menuBG == "blank")
+		{
+			bg.scale.set(1, 1);
 			bg.makeGraphic(FlxG.width, 400, 0xFFF9CF51);
+		}
 		else
+		{
 			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', optionToData[menuOptions[curSelected]].mod));
-		
+			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
+		}
+		weekChars.forEach(char -> char.destroy());
+		bg.updateHitbox();
+		for (char in optionToData[menuOptions[curSelected]].week.menuChars)
+			weekChars.add(new MenuChar('menu-$char', optionToData[menuOptions[curSelected]].mod));
 		curDifficulty = 1;
 		changeDifficulty(0);
 	}
@@ -105,6 +124,9 @@ class StoryMenuState extends MusicMenuState
 		bg = Util.makeSprite(0, 120, FlxG.width, 400, 0xFFF9CF51);
 		bg.cameras = [menuCam];
 		add(bg);
+
+		add(weekChars = new FlxTypedContainer<MenuChar>());
+		weekChars.cameras = [menuCam];
 
 		weekScore = Util.createText(10, 55, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
 		weekScore.cameras = [menuCam];
@@ -162,12 +184,37 @@ class StoryMenuState extends MusicMenuState
 				option.clipRect = option.clipRect;
 				var songs:Array<String> = [];
 				for (song in week.songs)
-					songs.push(mod.songs.get(song).name);
+					songs.push(mod.songs?.get(song)?.name);
 				optionToData.set(option, {mod: mod, week: week, songs: songs});
 				option.cameras = [optionsCam];
 				add(option);
 				menuOptions.push(option);
 				i++;
 			}
+	}
+}
+
+class MenuChar extends FlxSprite
+{
+	public function new(jsonPath:String, mod:Mod)
+	{
+		var json:MenuCharJson = Path.json(jsonPath, mod);
+		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
+		scale.set(json?.scale ?? 1, json?.scale ?? 1);
+		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath));
+		animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
+		if (json?.idle?.length == 1)
+		{
+			animation.addByPrefix('idle', json?.idle[0], json?.fps ?? 24);
+			animation.play('idle');
+		}
+		else
+		{
+			animation.addByPrefix('danceLeft', json?.idle[0], json?.fps ?? 24);
+			animation.addByPrefix('danceRight', json?.idle[1], json?.fps ?? 24);
+			animation.play('danceLeft');
+		}
+		updateHitbox();
+		centerOffsets(true);
 	}
 }

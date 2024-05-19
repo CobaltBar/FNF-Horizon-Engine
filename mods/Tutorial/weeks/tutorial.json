@@ -1,6 +1,7 @@
 {
     "name": "Tutorial",
     "menuChars": ["bf", "gf"],
-    "menuBG": ["stage"],
+    "menuBG": "stage",
+    "bgScale": 1.5,
     "songs": ["tutorial"]
 }

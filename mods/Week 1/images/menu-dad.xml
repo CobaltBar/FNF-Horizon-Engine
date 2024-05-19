@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="Menu_Dad.png">
+<TextureAtlas imagePath="menu-dad.png">
 	<!-- Created with Adobe Animate version 21.0.1.37179 -->
 	<!-- http://www.adobe.com/products/animate.html -->
 	<SubTexture name="M Dad Idle0000" x="4" y="4" width="206" height="364" pivotX="0" pivotY="3.8" frameX="0" frameY="-3" frameWidth="206" frameHeight="367"/>

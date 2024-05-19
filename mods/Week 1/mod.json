@@ -1,6 +1,6 @@
 {
-    "name": "Mod Template",
-    "description": "Mod Template for Horizon Engine",
+    "name": "Week 1",
+    "description": "Week 1 of Friday Night Funkin'",
     "version": "1.0",
     "color": [255, 255, 255],
     "globalMod": false,

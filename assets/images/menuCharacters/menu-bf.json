@@ -1,0 +1,6 @@
+{
+	"position": [750, 280],
+	"scale": 1.5,
+	"idle": ["M BF Idle"],
+	"confirm": ["M bf HEY"]
+}

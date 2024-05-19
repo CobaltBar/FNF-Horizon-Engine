@@ -7,6 +7,7 @@ import modding.ModTypes;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
+import tjson.TJSON;
 import util.Dictionary.StringDictionary;
 import util.Log;
 
@@ -44,13 +45,13 @@ class Mods
 				};
 				var iconPath = Path.combine(['mods', modPath, 'mod.png']);
 				all.set(modPath, {
-					name: json.name ?? 'Blank Mod',
-					description: json.description ?? 'Blank Mod Description',
-					version: json.version ?? '1.0.0',
-					color: json.color != null ? FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255,
-						json.color[2] ?? 255) : FlxColor.fromRGB(255, 255, 255),
-					global: json.global ?? true,
-					modSysVer: json.modSysVer ?? Main.modSysVer,
+					name: json?.name ?? 'Blank Mod',
+					description: json?.description ?? 'Blank Mod Description',
+					version: json?.version ?? '1.0.0',
+					color: json?.color != null ? FlxColor.fromRGB(json?.color[0] ?? 255, json?.color[1] ?? 255,
+						json?.color[2] ?? 255) : FlxColor.fromRGB(255, 255, 255),
+					global: json?.global ?? true,
+					modSysVer: json?.modSysVer ?? Main.modSysVer,
 
 					path: modPath,
 					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']),
@@ -99,19 +100,20 @@ class Mods
 				{
 					var json:WeekJson = TJSON.parse(File.getContent(weekPath));
 					var lowercaseSongs:Array<String> = [];
-					if (json.songs != null)
-						for (song in json.songs)
+					if (json?.songs != null)
+						for (song in json?.songs)
 							lowercaseSongs.push(song.toLowerCase());
 					weeks.set(week, {
-						name: json.name ?? 'Blank Week',
-						menuChars: json.menuChars ?? ['dad', 'bf', 'gf'],
-						menuBG: json.menuBG ?? 'blank',
-						locked: json.locked ?? false,
-						unlocks: json.unlocks ?? [],
-						hideSongsFromFreeplay: json.hideSongsFromFreeplay ?? false,
+						name: json?.name ?? 'Blank Week',
+						menuChars: json?.menuChars ?? ['dad', 'bf', 'gf'],
+						menuBG: json?.menuBG ?? 'blank',
+						bgScale: json?.bgScale ?? 1,
+						locked: json?.locked ?? false,
+						unlocks: json?.unlocks ?? [],
+						hideSongsFromFreeplay: json?.hideSongsFromFreeplay ?? false,
 						songs: lowercaseSongs,
 
-						difficulties: json.difficulties ?? ["easy", "normal", "hard"],
+						difficulties: json?.difficulties ?? ["easy", "normal", "hard"],
 						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
 					});
 				}
@@ -132,8 +134,8 @@ class Mods
 				{
 					var json:SongJson = TJSON.parse(File.getContent(jsonPath));
 					songs.set(song.toLowerCase(), {
-						name: json.name ?? 'Blank Song',
-						icon: json.icon ?? 'bf',
+						name: json?.name ?? 'Blank Song',
+						icon: json?.icon ?? 'bf',
 
 						audioFiles: [],
 						score: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.score ?? 0,

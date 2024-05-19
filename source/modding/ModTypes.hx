@@ -55,6 +55,7 @@ typedef WeekJson =
 	var name:String;
 	var menuChars:Array<String>;
 	var menuBG:String;
+	var bgScale:Float;
 	var locked:Bool;
 	var unlocks:Array<String>;
 	var hideSongsFromFreeplay:Bool;
@@ -66,8 +67,9 @@ typedef MenuCharJson =
 {
 	var position:Array<Float>;
 	var scale:Float;
-	var idle:String;
+	var idle:Array<String>;
 	var confirm:String;
+	var fps:Int;
 }
 
 typedef CharacterJson =
@@ -136,6 +138,7 @@ class Week
 	var name:String;
 	var menuChars:Array<String>;
 	var menuBG:String;
+	var bgScale:Float;
 	var locked:Bool;
 	var unlocks:Array<String>;
 	var hideSongsFromFreeplay:Bool;
