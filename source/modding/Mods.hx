@@ -7,7 +7,6 @@ import modding.ModTypes;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
-import tjson.TJSON;
 import util.Dictionary.StringDictionary;
 import util.Log;
 
