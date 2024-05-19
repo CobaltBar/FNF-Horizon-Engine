@@ -59,6 +59,7 @@ typedef WeekJson =
 	var unlocks:Array<String>;
 	var hideSongsFromFreeplay:Bool;
 	var songs:Array<String>;
+	var difficulties:Array<String>;
 }
 
 typedef MenuCharJson =
@@ -123,7 +124,6 @@ class Song
 {
 	var name:String;
 	var icon:String;
-	var difficulties:Array<String>;
 	var audioFiles:Array<String>;
 	var score:Int;
 	var accuracy:Float;

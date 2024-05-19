@@ -3,5 +3,8 @@
     "menuChars": ["bf", "gf", "dad"],
     "menuBG": ["blank"],
     "locked": false,
-    "hideSongsFromFreeplay": false
+    "unlocks": [],
+    "hideSongsFromFreeplay": false,
+    "songs": ["example"],
+    "difficulties": []
 }

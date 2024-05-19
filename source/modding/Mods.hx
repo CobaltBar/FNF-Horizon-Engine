@@ -111,15 +111,9 @@ class Mods
 						hideSongsFromFreeplay: json.hideSongsFromFreeplay ?? false,
 						songs: lowercaseSongs,
 
-						difficulties: [],
+						difficulties: json.difficulties ?? ["easy", "normal", "hard"],
 						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
 					});
-
-					for (song in weeks[week].songs)
-						if (all[modPath].songs.exists(song))
-							for (diff in all[modPath].songs.get(song).difficulties)
-								if (!weeks[week].difficulties.contains(diff))
-									weeks[week].difficulties.push(diff);
 				}
 			}
 		return weeks;
@@ -141,7 +135,6 @@ class Mods
 						name: json.name ?? 'Blank Song',
 						icon: json.icon ?? 'bf',
 
-						difficulties: [],
 						audioFiles: [],
 						score: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.score ?? 0,
 						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.accuracy ?? 0
@@ -152,11 +145,6 @@ class Mods
 						var filePath = Path.combine([songPath, file]);
 						if (!FileSystem.isDirectory(filePath))
 						{
-							if (HaxePath.extension(filePath) == 'json'
-								&& file != 'song.json'
-								&& !songs[song.toLowerCase()].difficulties.contains(HaxePath.withoutExtension(file)))
-								songs[song.toLowerCase()].difficulties.push(HaxePath.withoutExtension(file));
-
 							if (HaxePath.extension(filePath) == 'ogg')
 							{
 								if (file == 'Inst.ogg' || file == 'Voices.ogg')
