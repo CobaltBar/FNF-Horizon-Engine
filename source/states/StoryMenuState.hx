@@ -57,6 +57,11 @@ class StoryMenuState extends MusicMenuState
 		weekName.x = FlxG.width - weekName.width - 10;
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
 		weekScore.text = Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6);
+		if (optionToData[menuOptions[curSelected]].week.menuBG == "blank")
+			bg.makeGraphic(FlxG.width, 400, 0xFFF9CF51);
+		else
+			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', optionToData[menuOptions[curSelected]].mod));
+		
 		curDifficulty = 1;
 		changeDifficulty(0);
 	}
@@ -73,7 +78,8 @@ class StoryMenuState extends MusicMenuState
 		if (curDifficulty >= optionToData[menuOptions[curSelected]].week.difficulties.length)
 			curDifficulty = 0;
 
-		difficulty.loadGraphic(Path.image('difficulty-${optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty] ?? 'normal'}'));
+		difficulty.loadGraphic(Path.image('difficulty-${optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty] ?? 'normal'}',
+			optionToData[menuOptions[curSelected]].mod));
 		difficulty.updateHitbox();
 		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
 		leftArrow.x = difficulty.x - leftArrow.width - 20;
