@@ -2,9 +2,6 @@ package states;
 
 import flixel.math.FlxRect;
 
-/*
-	TODO - Difficulty Switch, Difficulty movement centering + shrink a bit
- */
 class StoryMenuState extends MusicMenuState
 {
 	var difficulty:FlxSprite;
@@ -33,12 +30,20 @@ class StoryMenuState extends MusicMenuState
 	{
 		for (i in 0...menuOptions.length)
 		{
-			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5 - (50 * (curSelected - i)),
-				FlxMath.bound(elapsed * 5, 0, 1)),
+			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, FlxG.width * .5 - 400 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
 				FlxMath.lerp(menuOptions[i].y, 600 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
 			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 625 ? -menuOptions[i].height - (menuOptions[i].y - 625) : -menuOptions[i].height,
 				menuOptions[i].width + 10, menuOptions[i].height * 2);
 			menuOptions[i].clipRect = menuOptions[i].clipRect;
+		}
+
+		if (!transitioningOut)
+		{
+			if (Controls.ui_left)
+				changeDifficulty(-1);
+
+			if (Controls.ui_right)
+				changeDifficulty(1);
 		}
 		super.update(elapsed);
 	}
@@ -55,6 +60,28 @@ class StoryMenuState extends MusicMenuState
 		difficulty.loadGraphic(Path.image('difficulty-${(optionToData[menuOptions[curSelected]].week.difficulties.length < 2 ? optionToData[menuOptions[curSelected]].week.difficulties[1] : optionToData[menuOptions[curSelected]].week.difficulties[0]) ?? 'normal'}',
 			optionToData[menuOptions[curSelected]].mod));
 		difficulty.updateHitbox();
+		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
+		leftArrow.x = difficulty.x - leftArrow.width - 20;
+		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
+		rightArrow.x = difficulty.x + difficulty.width + 20;
+		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
+	}
+
+	public function changeDifficulty(change:Int):Void
+	{
+		if (change != 0)
+			FlxG.sound.play(Path.sound('Scroll'), .7);
+
+		curDifficulty += change;
+
+		if (curDifficulty < 0)
+			curDifficulty = optionToData[menuOptions[curSelected]].week.difficulties.length - 1;
+		if (curDifficulty >= optionToData[menuOptions[curSelected]].week.difficulties.length)
+			curDifficulty = 0;
+
+		difficulty.loadGraphic(Path.image('difficulty-${optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty] ?? 'normal'}'));
+		difficulty.updateHitbox();
+		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
 		leftArrow.x = difficulty.x - leftArrow.width - 20;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 		rightArrow.x = difficulty.x + difficulty.width + 20;
@@ -99,11 +126,11 @@ class StoryMenuState extends MusicMenuState
 			.loadGraphic(Path.image('difficulty-normal'))
 			.loadGraphic(Path.image('difficulty-hard'));
 		difficulty.updateHitbox();
-		difficulty.x = FlxG.width - 200 - difficulty.width;
+		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
 		difficulty.cameras = [menuCam];
 		add(difficulty);
 
-		leftArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.5);
+		leftArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.3);
 		leftArrow.animation.addByPrefix('idle', 'arrow left', 24);
 		leftArrow.animation.addByPrefix('press', 'arrow push left', 24);
 		leftArrow.animation.play('idle');
@@ -112,7 +139,7 @@ class StoryMenuState extends MusicMenuState
 		leftArrow.cameras = [menuCam];
 		add(leftArrow);
 
-		rightArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.5);
+		rightArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.3);
 		rightArrow.animation.addByPrefix('idle', 'arrow right', 24);
 		rightArrow.animation.addByPrefix('press', 'arrow push right', 24);
 		rightArrow.animation.play('idle');
@@ -129,8 +156,7 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(0, 600 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
-				option.x = (FlxG.width - option.width) * .5 + (50 * i);
+				var option = Util.createGraphicSprite(FlxG.width * .5 - 350 + (50 * i), 600 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.alpha = .6;
 				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 				option.clipRect = option.clipRect;

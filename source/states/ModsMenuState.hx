@@ -199,7 +199,7 @@ class ModsMenuState extends MusicMenuState
 		MusicState.switchState(new MainMenuState());
 	}
 
-	public function shiftSelection(change:Int)
+	public function shiftSelection(change:Int):Void
 	{
 		switch (curSection)
 		{
@@ -231,12 +231,12 @@ class ModsMenuState extends MusicMenuState
 		changeSelection(0);
 	}
 
-	public function changeSection(change:Int, sound:Bool = true, set:Bool = false):Void
+	public function changeSection(change:Int):Void
 	{
-		if (sound)
+		if (change != 0)
 			FlxG.sound.play(Path.sound('Scroll'), .7);
 
-		set ? curSection = change : curSection += change;
+		curSection += change;
 
 		if (curSection < 0)
 			curSection = 2;
