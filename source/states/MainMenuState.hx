@@ -49,6 +49,13 @@ class MainMenuState extends MusicMenuState
 		curSelected = prevCurSelected;
 	}
 
+	public override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		if (Controls.ui_left)
+			throw 'balls';
+	}
+
 	public override function changeSelection(change:Int):Void
 	{
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;

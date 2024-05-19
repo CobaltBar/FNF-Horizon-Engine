@@ -74,7 +74,7 @@ class Util
 
 	public static function error(?err:Exception, description:String, fatal:Bool = false):Void
 	{
-		var error:String = err == null ? description : '\n$description\n${err.details()}';
+		var error:String = err == null ? description : '$description\n${err.details()}';
 		FlxG.switchState(() -> new ErrorState());
 		Log.error(error);
 	}

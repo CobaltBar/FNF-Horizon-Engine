@@ -45,7 +45,7 @@ class DiscordRPC
 
 	private static function onReady(request:RawConstPointer<DiscordUser>):Void
 	{
-		presence.state = 'Initializing...';
+		presence.state = 'In The Menus';
 		presence.startTimestamp = Std.int(Date.now().getTime() / 1000);
 		Discord.UpdatePresence(RawConstPointer.addressOf(presence));
 	}
