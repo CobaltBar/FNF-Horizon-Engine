@@ -16,9 +16,6 @@ class MusicState extends FlxTransitionableState
 	var curBeat(get, null):Int = 0;
 	var curDecBeat(get, null):Float = 0;
 
-	@:noCompletion public static var erroring:Bool = false;
-	@:noCompletion public static var errorText:String = '';
-
 	private function onStep():Void {}
 
 	private function onBeat():Void

@@ -1,6 +1,6 @@
 package util;
 
-import flash.utils.Function;
+import haxe.Constraints.Function;
 import haxe.PosInfos;
 
 using StringTools;
@@ -44,6 +44,7 @@ class Log
 	// https://gist.github.com/martinwells/5980517
 	// https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 	private static var ogTrace:Function;
+	private static var log:String = "";
 
 	public static function init():Void
 	{
@@ -76,6 +77,13 @@ class Log
 		msg += [for (i in 0...85 - msg.length) ' '].join('');
 		msg += '[${ansiColor(mode, color)}${level}${ansiColor(RESET, MAGENTA)}]${ansiColor(mode, color)}:   ';
 		msg += '${ansiColor(RESET, color)}$value${ansiColor(RESET, RESET)}';
+
 		Sys.println(msg);
+
+		var logMsg:String = '[${DateTools.format(Date.now(), '%H:%M:%S')}]';
+		if (pos != null)
+			logMsg += '[${pos.fileName}:${pos.lineNumber}]';
+		logMsg += '[$level]: $value';
+		log += '$logMsg\n';
 	}
 }
