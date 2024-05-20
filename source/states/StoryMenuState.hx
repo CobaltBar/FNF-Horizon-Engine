@@ -10,8 +10,7 @@ class StoryMenuState extends MusicMenuState
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 
-	var weekScore:FlxText;
-	var weekName:FlxText;
+	var weekInfo:FlxText;
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
 
@@ -35,8 +34,8 @@ class StoryMenuState extends MusicMenuState
 		for (i in 0...menuOptions.length)
 		{
 			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, FlxG.width * .5 - 400 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
-				FlxMath.lerp(menuOptions[i].y, 600 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
-			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 625 ? -menuOptions[i].height - (menuOptions[i].y - 625) : -menuOptions[i].height,
+				FlxMath.lerp(menuOptions[i].y, 750 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 825 ? -menuOptions[i].height - (menuOptions[i].y - 825) : -menuOptions[i].height,
 				menuOptions[i].width + 10, menuOptions[i].height * 2);
 			menuOptions[i].clipRect = menuOptions[i].clipRect;
 		}
@@ -63,10 +62,9 @@ class StoryMenuState extends MusicMenuState
 		menuOptions[curSelected].alpha = .6;
 		super.changeSelection(change);
 		menuOptions[curSelected].alpha = 1;
-		weekName.text = optionToData[menuOptions[curSelected]].week.name;
-		weekName.x = FlxG.width - weekName.width - 10;
+		weekInfo.text = '${Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6)} - ${optionToData[menuOptions[curSelected]].week.name}';
+		weekInfo.screenCenter(X);
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
-		weekScore.text = Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6);
 		if (optionToData[menuOptions[curSelected]].week.menuBG == "blank")
 		{
 			bg.scale.set(1, 1);
@@ -121,30 +119,26 @@ class StoryMenuState extends MusicMenuState
 
 	inline function createMenuBG():Void
 	{
-		bg = Util.makeSprite(0, 120, FlxG.width, 400, 0xFFF9CF51);
+		bg = Util.makeSprite(0, 100, FlxG.width, 400, 0xFFF9CF51);
 		bg.cameras = [menuCam];
 		add(bg);
 
 		add(weekChars = new FlxTypedContainer<MenuChar>());
 		weekChars.cameras = [menuCam];
 
-		weekScore = Util.createText(10, 55, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
-		weekScore.cameras = [menuCam];
-		add(weekScore);
+		weekInfo = Util.createText(FlxG.width * .5, 25, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
+		weekInfo.cameras = [menuCam];
+		add(weekInfo);
 
-		weekName = Util.createText(0, 55, 'Week', 64, Path.font('vcr'), 0xFFAAAAAA, RIGHT);
-		weekName.cameras = [menuCam];
-		add(weekName);
-
-		var tracks = Util.createGraphicSprite(150, 600, Path.image('tracks'), 1.5);
+		var tracks = Util.createGraphicSprite(150, 750, Path.image('tracks'), 1.5);
 		tracks.cameras = [menuCam];
 		add(tracks);
 
-		songsText = Util.createText(150, 680, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
+		songsText = Util.createText(150, 830, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
 		songsText.cameras = [menuCam];
 		add(songsText);
 
-		difficulty = Util.createGraphicSprite(0, 600, Path.image('difficulty-easy'), 1.4)
+		difficulty = Util.createGraphicSprite(0, 750, Path.image('difficulty-easy'), 1.4)
 			.loadGraphic(Path.image('difficulty-normal'))
 			.loadGraphic(Path.image('difficulty-hard'));
 		difficulty.updateHitbox();
@@ -178,7 +172,7 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(FlxG.width * .5 - 350 + (50 * i), 600 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
+				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.alpha = .6;
 				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 				option.clipRect = option.clipRect;
@@ -196,12 +190,15 @@ class StoryMenuState extends MusicMenuState
 
 class MenuChar extends FlxSprite
 {
+	public var name:String;
+
 	public function new(jsonPath:String, mod:Mod)
 	{
 		var json:MenuCharJson = Path.json(jsonPath, mod);
+		name = HaxePath.withoutExtension(jsonPath);
 		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
 		scale.set(json?.scale ?? 1, json?.scale ?? 1);
-		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath));
+		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), mod);
 		animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
 		if (json?.idle?.length == 1)
 		{
