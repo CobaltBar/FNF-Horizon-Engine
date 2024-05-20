@@ -76,7 +76,7 @@ class StoryMenuState extends MusicMenuState
 			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
 		}
 		var names:Array<String> = [];
-		weekChars.forEach(char -> optionToData[menuOptions[curSelected]].week.menuChars.contains('menu-${char.name}') ? names.push(char.name) : char.destroy());
+		weekChars.forEach(char -> optionToData[menuOptions[curSelected]].week.menuChars.contains(char.name.substr(5)) ? names.push(char.name) : char.destroy());
 		bg.updateHitbox();
 		for (char in optionToData[menuOptions[curSelected]].week.menuChars)
 			if (!names.contains('menu-$char'))
