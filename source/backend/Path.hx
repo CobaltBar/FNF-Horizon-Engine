@@ -159,10 +159,10 @@ class Path
 
 	@:keep
 	public static inline function image(key:String, ?mod:Mod):FlxGraphic
-		if (trackedImages.exists(key))
+		if (trackedImages.exists(mod != null ? '${mod.path}-$key' : key))
 		{
-			localAssets.push(key);
-			return trackedImages.get(key);
+			localAssets.push(mod != null ? '${mod.path}-$key' : key);
+			return trackedImages.get(mod != null ? '${mod.path}-$key' : key);
 		}
 		else
 		{
