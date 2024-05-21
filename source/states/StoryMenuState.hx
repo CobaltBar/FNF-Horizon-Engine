@@ -67,6 +67,7 @@ class StoryMenuState extends MusicMenuState
 		weekInfo.text = '${Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6)} - ${optionToData[menuOptions[curSelected]].week.name}';
 		weekInfo.screenCenter(X);
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
+		songsText.x = 150;
 		if (optionToData[menuOptions[curSelected]].week.menuBG == "blank")
 		{
 			bg.scale.set(1, 1);
