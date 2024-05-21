@@ -4,6 +4,7 @@ import flixel.group.FlxContainer.FlxTypedContainer;
 import flixel.math.FlxRect;
 import haxe.io.Path as HaxePath;
 
+// tbh this could be a lot better, but idrc anymore lmfao
 class StoryMenuState extends MusicMenuState
 {
 	var difficulty:FlxSprite;
@@ -14,8 +15,8 @@ class StoryMenuState extends MusicMenuState
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
 
-	var weekChars:FlxTypedContainer<MenuChar>;
-
+	var menuChars:Array<MenuChar> = [];
+	var menuCharNames:Array<String> = [];
 	var optionToData:Map<FlxSprite, {mod:Mod, week:Week, songs:Array<String>}> = [];
 
 	public override function create():Void
@@ -54,7 +55,8 @@ class StoryMenuState extends MusicMenuState
 	public override function onBeat()
 	{
 		super.onBeat();
-		weekChars.forEach(char -> char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight'));
+		for (char in menuChars)
+			char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -75,12 +77,26 @@ class StoryMenuState extends MusicMenuState
 			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', optionToData[menuOptions[curSelected]].mod));
 			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
 		}
-		var names:Array<String> = [];
-		weekChars.forEach(char -> optionToData[menuOptions[curSelected]].week.menuChars.contains(char.name.substr(5)) ? names.push(char.name) : char.destroy());
+
 		bg.updateHitbox();
+
+		for (i in 0...menuCharNames.length)
+			if (!optionToData[menuOptions[curSelected]].week.menuChars.contains(menuCharNames[i]))
+			{
+				menuChars[i].destroy();
+				menuChars.remove(menuChars[i]);
+				menuCharNames.remove(menuCharNames[i]);
+			}
+
 		for (char in optionToData[menuOptions[curSelected]].week.menuChars)
-			if (!names.contains('menu-$char'))
-				weekChars.insert(0, new MenuChar('menu-$char', optionToData[menuOptions[curSelected]].mod));
+			if (!menuCharNames.contains(char))
+			{
+				var option = new MenuChar('menu-$char', optionToData[menuOptions[curSelected]].mod);
+				option.cameras = [optionsCam];
+				add(option);
+				menuChars.push(option);
+				menuCharNames.push(char);
+			}
 		curDifficulty = 1;
 		changeDifficulty(0);
 	}
@@ -124,9 +140,6 @@ class StoryMenuState extends MusicMenuState
 		bg = Util.makeSprite(0, 100, FlxG.width, 400, 0xFFF9CF51);
 		bg.cameras = [menuCam];
 		add(bg);
-
-		add(weekChars = new FlxTypedContainer<MenuChar>());
-		weekChars.cameras = [menuCam];
 
 		weekInfo = Util.createText(FlxG.width * .5, 25, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
 		weekInfo.cameras = [menuCam];
@@ -192,12 +205,9 @@ class StoryMenuState extends MusicMenuState
 
 class MenuChar extends FlxSprite
 {
-	public var name:String;
-
 	public function new(jsonPath:String, mod:Mod)
 	{
 		var json:MenuCharJson = Path.json(jsonPath, mod);
-		name = HaxePath.withoutExtension(jsonPath);
 		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
 		scale.set(json?.scale ?? 1, json?.scale ?? 1);
 		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), mod);

@@ -54,7 +54,7 @@ class Mods
 
 					path: modPath,
 					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']),
-					enabled: Settings.data.savedMods.get(modPath)?.enabled ?? false,
+					enabled: Settings.data.savedMods.get(modPath)?.enabled ?? true,
 					staticMod: isStaticMod(modPath),
 					songs: new StringDictionary(),
 					weeks: new StringDictionary(),
