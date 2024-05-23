@@ -5,6 +5,13 @@ import flixel.input.keyboard.FlxKey;
 @:publicFields
 class SaveVars
 {
+	var noteRGB:Array<{base:Float, highlight:Float, outline:Float}> = [
+		{base: 0xFFC24B99, highlight: 0xFFFFFFFF, outline: 0xFF3C1F56},
+		{base: 0xFF00FFFF, highlight: 0xFFFFFFFF, outline: 0xFF1542B7},
+		{base: 0xFF12FA05, highlight: 0xFFFFFFFF, outline: 0xFF0A4447},
+		{base: 0xFFF9393F, highlight: 0xFFFFFFFF, outline: 0xFF651038}
+	];
+
 	var downScroll:Bool = false;
 	var middleScroll:Bool = false;
 	var ghostTapping:Bool = true;

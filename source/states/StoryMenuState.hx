@@ -1,5 +1,6 @@
 package states;
 
+import flixel.effects.FlxFlicker;
 import flixel.group.FlxContainer.FlxTypedContainer;
 import flixel.math.FlxRect;
 import haxe.io.Path as HaxePath;
@@ -104,9 +105,6 @@ class StoryMenuState extends MusicMenuState
 
 	public function changeDifficulty(change:Int):Void
 	{
-		if (change != 0)
-			FlxG.sound.play(Path.sound('Scroll'), .7);
-
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
@@ -127,6 +125,10 @@ class StoryMenuState extends MusicMenuState
 	public override function exitState():Void
 	{
 		// Transfer to PlayState
+		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
+		for (i in 0...menuOptions.length)
+			if (i != curSelected)
+				FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {type: ONESHOT, ease: FlxEase.expoOut});
 		super.exitState();
 	}
 

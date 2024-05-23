@@ -1,5 +1,6 @@
 package backend;
 
+// TODO finish the todo below and MAKE MODS  AN ARRAY
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;

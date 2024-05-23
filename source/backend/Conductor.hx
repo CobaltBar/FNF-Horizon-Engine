@@ -15,6 +15,7 @@ class Conductor extends FlxBasic
 	static var curStep:Int = -1;
 	static var curBeat:Int = -1;
 	static var curDecBeat:Float = -1;
+	static var switchToMusic:Bool = true;
 
 	@:noCompletion private static var crochetStep:Float = 0;
 	@:noCompletion private static var crochetBeat:Float = 0;
@@ -52,7 +53,7 @@ class Conductor extends FlxBasic
 		}
 		else
 		{
-			if (FlxG.sound.music != null)
+			if (FlxG.sound.music != null && switchToMusic)
 			{
 				song = FlxG.sound.music;
 				if (Main.verboseLogging)
