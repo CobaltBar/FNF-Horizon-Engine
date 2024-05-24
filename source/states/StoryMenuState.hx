@@ -33,15 +33,6 @@ class StoryMenuState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
-		for (i in 0...menuOptions.length)
-		{
-			menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, FlxG.width * .5 - 400 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
-				FlxMath.lerp(menuOptions[i].y, 750 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
-			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 825 ? -menuOptions[i].height - (menuOptions[i].y - 825) : -menuOptions[i].height,
-				menuOptions[i].width + 10, menuOptions[i].height * 2);
-			menuOptions[i].clipRect = menuOptions[i].clipRect;
-		}
-
 		if (!transitioningOut)
 		{
 			if (Controls.ui_left)
@@ -49,6 +40,15 @@ class StoryMenuState extends MusicMenuState
 
 			if (Controls.ui_right)
 				changeDifficulty(1);
+
+			for (i in 0...menuOptions.length)
+			{
+				menuOptions[i].setPosition(FlxMath.lerp(menuOptions[i].x, FlxG.width * .5 - 400 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)),
+					FlxMath.lerp(menuOptions[i].y, 750 - (200 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1)));
+				menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 825 ? -menuOptions[i].height - (menuOptions[i].y - 825) : -menuOptions[i].height,
+					menuOptions[i].width + 10, menuOptions[i].height * 2);
+				menuOptions[i].clipRect = menuOptions[i].clipRect;
+			}
 		}
 		super.update(elapsed);
 	}
@@ -79,7 +79,6 @@ class StoryMenuState extends MusicMenuState
 			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', optionToData[menuOptions[curSelected]].mod));
 			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
 		}
-
 		bg.updateHitbox();
 
 		for (i in 0...menuCharNames.length)
@@ -94,7 +93,7 @@ class StoryMenuState extends MusicMenuState
 			if (!menuCharNames.contains(char))
 			{
 				var option = new MenuChar('menu-$char', optionToData[menuOptions[curSelected]].mod);
-				option.cameras = [optionsCam];
+				option.cameras = [menuCam];
 				add(option);
 				menuChars.push(option);
 				menuCharNames.push(char);
@@ -126,9 +125,21 @@ class StoryMenuState extends MusicMenuState
 	{
 		// Transfer to PlayState
 		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
-		for (i in 0...menuOptions.length)
-			if (i != curSelected)
-				FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {type: ONESHOT, ease: FlxEase.expoOut});
+		if (!Settings.data.reducedMotion)
+		{
+			menuOptions[curSelected].clipRect = null;
+			menuOptions[curSelected].clipRect = menuOptions[curSelected].clipRect;
+			if (Settings.data.flashingLights)
+				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
+			FlxTween.tween(menuOptions[curSelected],
+				{x: (FlxG.width - menuOptions[curSelected].width) * .5, y: (FlxG.height - menuOptions[curSelected].height) * .5}, 1,
+				{type: ONESHOT, ease: FlxEase.expoOut});
+			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.4, y: 1.4}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			for (i in 0...menuOptions.length)
+				if (i != curSelected)
+					FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {type: ONESHOT, ease: FlxEase.expoOut});
+			FlxTween.tween(menuCam, {alpha: 0.25}, .5, {type: ONESHOT, ease: FlxEase.expoOut});
+		}
 		super.exitState();
 	}
 

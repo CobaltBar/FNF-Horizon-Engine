@@ -13,8 +13,8 @@ class PlayState extends MusicState
 		Conductor.switchToMusic = false;
 		FlxG.sound.music.destroy();
 		DiscordRPC.change('In Game', 'Song: \nScore: 69');
-		add(playerStrum = new Strumline(FlxG.width - 50, 100));
+		add(playerStrum = new Strumline(FlxG.width - 50, 150));
 		playerStrum.x -= playerStrum.width;
-		add(opponentStrum = new Strumline(50, 100));
+		add(opponentStrum = new Strumline(50, 150));
 	}
 }

@@ -1,6 +1,5 @@
 package backend;
 
-// TODO finish the todo below and MAKE MODS  AN ARRAY
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -215,8 +214,11 @@ class Path
 		{
 			if (modAssets[mod].exists(key))
 			{
-				Log.warn('Mod (${mod.name}) Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}');
-				modAssets[mod].set('${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}', path);
+				var i = 1;
+				while (modAssets[mod].exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
+					i++;
+				Log.warn('Mod (${mod.name}) Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}');
+				modAssets[mod].set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
 			}
 			else
 				modAssets[mod].set(key, path);
@@ -225,8 +227,11 @@ class Path
 		{
 			if (assets.exists(key))
 			{
-				Log.warn('Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}');
-				assets.set('${HaxePath.withoutExtension(key)}-1.${HaxePath.extension(key)}', path);
+				var i = 1;
+				while (assets.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
+					i++;
+				Log.warn('Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}');
+				assets.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
 			}
 			else
 				assets.set(key, path);

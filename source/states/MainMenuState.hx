@@ -95,39 +95,10 @@ class MainMenuState extends MusicMenuState
 				ease: FlxEase.expoOut,
 				type: ONESHOT,
 			});
-			FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false, (flicker:FlxFlicker) ->
-			{
-				if (allModsCount == 0)
-					switch (curSelected)
-					{
-						case 0:
-							MusicState.switchState(new StoryMenuState());
-						case 1:
-						// MusicState.switchState(new FreeplayState());
-						case 2:
-						// MusicState.switchState(new AwardsState());
-						case 3:
-						// MusicState.switchState(new CreditsState());
-						case 5:
-							// MusicState.switchState(new OptionsState());
-					}
-				else
-					switch (curSelected)
-					{
-						case 0:
-							MusicState.switchState(new StoryMenuState());
-						case 1:
-						// MusicState.switchState(new FreeplayState());
-						case 2:
-							MusicState.switchState(new ModsMenuState());
-						case 3:
-						// MusicState.switchState(new AwardsState());
-						case 4:
-						// MusicState.switchState(new CreditsState());
-						case 6:
-							// MusicState.switchState(new OptionsState());
-					}
-			});
+			if (Settings.data.flashingLights)
+				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false, flicker -> out());
+			else
+				FlxTimer.wait(1.3, () -> out());
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
 					FlxTween.tween(menuOptions[i], {alpha: 0}, .3, {
@@ -198,4 +169,36 @@ class MainMenuState extends MusicMenuState
 		bgFlash.visible = false;
 		add(bgFlash);
 	}
+
+	inline function out():Void
+		if (allModsCount == 0)
+			switch (curSelected)
+			{
+				case 0:
+					MusicState.switchState(new StoryMenuState());
+				case 1:
+				// MusicState.switchState(new FreeplayState());
+				case 2:
+				// MusicState.switchState(new AwardsState());
+				case 3:
+				// MusicState.switchState(new CreditsState());
+				case 5:
+					// MusicState.switchState(new OptionsState());
+			}
+		else
+			switch (curSelected)
+			{
+				case 0:
+					MusicState.switchState(new StoryMenuState());
+				case 1:
+				// MusicState.switchState(new FreeplayState());
+				case 2:
+					MusicState.switchState(new ModsMenuState());
+				case 3:
+				// MusicState.switchState(new AwardsState());
+				case 4:
+				// MusicState.switchState(new CreditsState());
+				case 6:
+					// MusicState.switchState(new OptionsState());
+			}
 }
