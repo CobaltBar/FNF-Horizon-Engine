@@ -3,12 +3,18 @@ package objects;
 class Note extends FlxAttachedSprite
 {
 	public var rgb:RGBPalette = new RGBPalette();
-	public var angleOffset:Float = 0;
+	public var angleOffset(default, set):Float = 0;
 	public var realAngle(default, set):Float = 0;
+
+	@:noCompletion function set_angleOffset(val:Float):Float
+	{
+		realAngle = realAngle;
+		return angleOffset = val;
+	}
 
 	@:noCompletion function set_realAngle(val:Float):Float
 	{
-		super.set_angle(realAngle + angleOffset);
+		angle = realAngle + angleOffset;
 		return realAngle = val;
 	}
 

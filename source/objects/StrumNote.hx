@@ -26,8 +26,18 @@ class StrumNote extends Note
 
 	public override function update(elapsed:Float)
 	{
-		blurSpr.alpha = FlxMath.lerp(blurSpr.alpha, glowAlphaTarget, FlxMath.bound(elapsed * (glowAlphaTarget > blurSpr.alpha ? 35 : 5), 0, 1));
+		if (blurSpr.x != x)
+			blurSpr.x = x;
+		if (blurSpr.y != y)
+			blurSpr.y = y;
+		blurSpr.alpha = FlxMath.lerp(blurSpr.alpha, glowAlphaTarget, FlxMath.bound(elapsed * (glowAlphaTarget > blurSpr.alpha ? 40 : 10), 0, 1));
 		super.update(elapsed);
+	}
+
+	public override function draw()
+	{
+		super.draw();
+		blurSpr.draw();
 	}
 
 	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>
@@ -38,13 +48,7 @@ class StrumNote extends Note
 
 	@:noCompletion override function set_angle(val:Float):Float
 	{
-		blurSpr.realAngle = val;
+		blurSpr.angle = val;
 		return super.set_angle(val);
-	}
-
-	@:noCompletion override function set_realAngle(val:Float):Float
-	{
-		blurSpr.set_realAngle(val);
-		return super.set_realAngle(val);
 	}
 }
