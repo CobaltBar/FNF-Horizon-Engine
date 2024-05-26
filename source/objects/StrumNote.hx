@@ -9,6 +9,8 @@ class StrumNote extends Note
 	var strumRGB:RGBPalette = new RGBPalette();
 	var blurSpr:Note;
 
+	public var glowAlphaTarget:Float = 0;
+
 	public function new(noteData:Int = 2, ?mod:Mod)
 	{
 		super(noteData, mod);
@@ -16,11 +18,16 @@ class StrumNote extends Note
 		strumRGB.set(0x87A3AD, -1, 0);
 		blurSpr = new Note(noteData, mod);
 		blurSpr.targetSprite = this;
-		blurSpr.copyAlpha = true;
 		blurSpr.shader = rgb.shader;
 		blurSpr.blend = ADD;
-		blurSpr.alpha = .8;
-		createFilterFrames(blurSpr, new BlurFilter(72, 72));
+		blurSpr.alpha = glowAlphaTarget;
+		FlxFilterFrames.fromFrames(blurSpr.frames, 64, 64, [new BlurFilter(72, 72)]).applyToSprite(blurSpr, false, true);
+	}
+
+	public override function update(elapsed:Float)
+	{
+		blurSpr.alpha = FlxMath.lerp(blurSpr.alpha, glowAlphaTarget, FlxMath.bound(elapsed * (glowAlphaTarget > blurSpr.alpha ? 35 : 5), 0, 1));
+		super.update(elapsed);
 	}
 
 	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>
@@ -31,13 +38,13 @@ class StrumNote extends Note
 
 	@:noCompletion override function set_angle(val:Float):Float
 	{
-		blurSpr.angle = val;
+		blurSpr.realAngle = val;
 		return super.set_angle(val);
 	}
 
-	inline function createFilterFrames(sprite:FlxSprite, filter:BitmapFilter)
-		updateFilter(sprite, FlxFilterFrames.fromFrames(sprite.frames, 64, 64, [filter]));
-
-	inline function updateFilter(spr:FlxSprite, sprFilter:FlxFilterFrames)
-		sprFilter.applyToSprite(spr, false, true);
+	@:noCompletion override function set_realAngle(val:Float):Float
+	{
+		blurSpr.set_realAngle(val);
+		return super.set_realAngle(val);
+	}
 }

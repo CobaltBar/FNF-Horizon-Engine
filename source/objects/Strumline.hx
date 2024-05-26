@@ -12,9 +12,11 @@ class Strumline extends FlxTypedSpriteContainer<StrumNote>
 
 		for (i in 0...4)
 		{
-			add(new StrumNote(i, mod));
-			members[i].angle = members[i].angleOffset = angles[i];
-			members[i].x = x + ((members[i].width * i) + 5);
+			var strum:StrumNote;
+			add(strum = new StrumNote(i, mod));
+			strum.angle = strum.angleOffset = angles[i];
+			strum.x = x + ((strum.width * i) + 5);
+			strum.rgb.set(Settings.data.noteRGB[i].base, Settings.data.noteRGB[i].highlight, Settings.data.noteRGB[i].outline);
 		}
 	}
 }

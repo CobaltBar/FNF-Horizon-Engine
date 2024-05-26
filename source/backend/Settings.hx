@@ -5,7 +5,7 @@ import flixel.input.keyboard.FlxKey;
 @:publicFields
 class SaveVars
 {
-	var noteRGB:Array<{base:Float, highlight:Float, outline:Float}> = [
+	var noteRGB:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}> = [
 		{base: 0xFFC24B99, highlight: 0xFFFFFFFF, outline: 0xFF3C1F56},
 		{base: 0xFF00FFFF, highlight: 0xFFFFFFFF, outline: 0xFF1542B7},
 		{base: 0xFF12FA05, highlight: 0xFFFFFFFF, outline: 0xFF0A4447},
