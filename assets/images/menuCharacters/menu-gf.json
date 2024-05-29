@@ -1,6 +1,5 @@
 {
 	"position": [1200, 280],
 	"scale": 1.5,
-	"idle": ["M GF Idle"],
-	"confirm": ["M GF Idle"]
+	"idle": ["M GF Idle"]
 }

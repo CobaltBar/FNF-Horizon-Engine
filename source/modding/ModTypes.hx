@@ -16,34 +16,36 @@ typedef ModJson =
 typedef Chart =
 {
 	var sections:Array<Section>;
-	var events:Array<EventJson>;
+	var events:Array<Array<Dynamic>>;
 	var bpm:Float;
-	var scroll:Float;
+	var scrollSpeed:Float;
 	var characters:Array<String>;
 }
 
 typedef Section =
 {
-	var beats:Int;
+	var beatsPerSection:Int;
 	var focus:Int;
-	var notes:Array<NoteJson>;
+	var notes:Array<Array<Dynamic>>; // time, data, length, type
 }
 
-typedef NoteJson =
-{
+/*
+
+	the following is no longer used
+
+	typedef NoteJson =
+	{
 	var time:Float;
 	var data:Int;
 	var length:Float;
 	var type:String;
-}
-
-typedef EventJson =
-{
+	}
+	typedef EventJson =
+	{
 	var name:String;
 	var time:Float;
 	var value:Array<String>;
-}
-
+}*/
 typedef SongJson =
 {
 	var name:String;

@@ -56,8 +56,9 @@ class StoryMenuState extends MusicMenuState
 	public override function onBeat()
 	{
 		super.onBeat();
-		for (char in menuChars)
-			char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
+		if (!transitioningOut)
+			for (char in menuChars)
+				char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -140,6 +141,10 @@ class StoryMenuState extends MusicMenuState
 					FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(menuCam, {alpha: 0.25}, .5, {type: ONESHOT, ease: FlxEase.expoOut});
 		}
+		for (char in menuChars)
+			if (char.animation.exists('confirm'))
+				char.animation.play('confirm', true);
+
 		super.exitState();
 	}
 
@@ -225,7 +230,8 @@ class MenuChar extends FlxSprite
 		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
 		scale.set(json?.scale ?? 1, json?.scale ?? 1);
 		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), mod);
-		animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
+		if (json?.confirm != null)
+			animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
 		if (json?.idle?.length == 1)
 		{
 			animation.addByPrefix('idle', json?.idle[0], json?.fps ?? 24);
