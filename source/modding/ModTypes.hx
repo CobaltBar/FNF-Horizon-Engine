@@ -15,37 +15,28 @@ typedef ModJson =
 
 typedef Chart =
 {
-	var sections:Array<Section>;
-	var events:Array<Array<Dynamic>>;
+	var notes:Array<NoteJson>;
+	var events:Array<EventJson>;
 	var bpm:Float;
 	var scrollSpeed:Float;
 	var characters:Array<String>;
 }
 
-typedef Section =
+typedef NoteJson =
 {
-	var beatsPerSection:Int;
-	var focus:Int;
-	var notes:Array<Array<Dynamic>>; // time, data, length, type
-}
-
-/*
-
-	the following is no longer used
-
-	typedef NoteJson =
-	{
-	var time:Float;
 	var data:Int;
+	var time:Float;
 	var length:Float;
 	var type:String;
-	}
-	typedef EventJson =
-	{
+}
+
+typedef EventJson =
+{
 	var name:String;
 	var time:Float;
 	var value:Array<String>;
-}*/
+}
+
 typedef SongJson =
 {
 	var name:String;
@@ -71,6 +62,9 @@ typedef MenuCharJson =
 	var scale:Float;
 	var idle:Array<String>;
 	var confirm:String;
+	var idleIndices:Array<Array<Int>>;
+	var confirmIndices:Array<Int>;
+	var repeatEvery:Int;
 	var fps:Int;
 }
 
@@ -131,6 +125,7 @@ class Song
 	var audioFiles:Array<String>;
 	var score:Int;
 	var accuracy:Float;
+	var path:String;
 }
 
 @:structInit

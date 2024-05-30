@@ -1,6 +1,5 @@
 {
-	"position": [250, 280],
+	"position": [270, 240],
 	"scale": 1.5,
-	"idle": "M Dad Idle",
-	"confirm": "M Dad Idle"
+	"idle": ["M Dad Idle"]
 }

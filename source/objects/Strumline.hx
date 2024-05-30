@@ -1,10 +1,13 @@
 package objects;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteContainer.FlxTypedSpriteContainer;
 
 class Strumline extends FlxTypedSpriteContainer<StrumNote>
 {
 	static final angles = [270, 180, 0, 90];
+
+	public var notes:Array<FlxTypedGroup<Note>> = [];
 
 	public function new(x:Float, y:Float, ?mod:Mod)
 	{

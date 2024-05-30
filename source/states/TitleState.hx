@@ -48,14 +48,18 @@ class TitleState extends MusicState
 				}
 				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {type: ONESHOT, ease: FlxEase.backIn,});
 				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {type: ONESHOT, ease: FlxEase.expoOut,});
-				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5, y: (FlxG.height - logo.height) * .5}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(logo, {y: (FlxG.height - logo.height) * .5}, .45, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+					onComplete: tween -> Settings.data.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .5,
+						{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -1250}, .5, {type: ONESHOT, ease: FlxEase.expoIn})
+				});
 				FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .75, {
 					type: ONESHOT,
 					ease: FlxEase.expoOut,
 					onComplete: tween ->
 					{
-						Settings.data.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .5,
-							{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -1250}, .5, {type: ONESHOT, ease: FlxEase.expoIn});
 						FlxTimer.wait(.5, () ->
 						{
 							comingBack = true;

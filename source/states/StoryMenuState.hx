@@ -15,6 +15,7 @@ class StoryMenuState extends MusicMenuState
 	var weekInfo:FlxText;
 	var songsText:FlxText;
 	var curDifficulty:Int = 0;
+	var tracks:FlxSprite;
 
 	var menuChars:Array<MenuChar> = [];
 	var menuCharNames:Array<String> = [];
@@ -58,7 +59,13 @@ class StoryMenuState extends MusicMenuState
 		super.onBeat();
 		if (!transitioningOut)
 			for (char in menuChars)
-				char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
+				if (char.json?.repeatEvery != null)
+				{
+					if (curBeat % char.json?.repeatEvery == 0)
+						char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight', true);
+				}
+				else
+					char.animation.play(char.animation.exists('idle') ? 'idle' : curBeat % 2 == 0 ? 'danceLeft' : 'danceRight', true);
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -69,8 +76,10 @@ class StoryMenuState extends MusicMenuState
 		weekInfo.text = '${Std.string(optionToData[menuOptions[curSelected]].week.score).lpad('0', 6)} - ${optionToData[menuOptions[curSelected]].week.name}';
 		weekInfo.screenCenter(X);
 		songsText.text = optionToData[menuOptions[curSelected]].songs.join('\n');
-		songsText.x = 150;
-		if (optionToData[menuOptions[curSelected]].week.menuBG == "blank")
+
+		songsText.screenCenter(X);
+		songsText.x -= FlxG.width * .35;
+		if (optionToData[menuOptions[curSelected]].week.menuBG == null || optionToData[menuOptions[curSelected]].week.menuBG == "blank")
 		{
 			bg.scale.set(1, 1);
 			bg.makeGraphic(FlxG.width, 400, 0xFFF9CF51);
@@ -124,7 +133,14 @@ class StoryMenuState extends MusicMenuState
 
 	public override function exitState():Void
 	{
-		// Transfer to PlayState
+		var mods = [optionToData[menuOptions[curSelected]].mod];
+		for (mod in Mods.enabled)
+			if (mod.global)
+				mods.push(mod);
+		var songs = [];
+		for (song in optionToData[menuOptions[curSelected]].songs)
+			songs.push(optionToData[menuOptions[curSelected]].mod.songs.get(song.toLowerCase()));
+		PlayState.config = {mods: mods, songs: songs, difficulty: optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty]};
 		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
 		if (!Settings.data.reducedMotion)
 		{
@@ -138,12 +154,18 @@ class StoryMenuState extends MusicMenuState
 			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.4, y: 1.4}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
-					FlxTween.tween(menuOptions[i], {alpha: 0}, 0.5, {type: ONESHOT, ease: FlxEase.expoOut});
-			FlxTween.tween(menuCam, {alpha: 0.25}, .5, {type: ONESHOT, ease: FlxEase.expoOut});
+					FlxTween.tween(menuOptions[i], {alpha: 0}, .5);
+
+			for (spr in [difficulty, leftArrow, rightArrow, weekInfo, songsText, tracks, bg])
+				FlxTween.tween(spr, {alpha: .25}, .5);
+			for (char in menuChars)
+				FlxTween.tween(char, {alpha: .25}, char.animation.exists('confirm') ? 1.5 : .5);
 		}
 		for (char in menuChars)
 			if (char.animation.exists('confirm'))
 				char.animation.play('confirm', true);
+
+		FlxG.sound.music.fadeOut(.5, 0, tween -> FlxG.sound.music.pause());
 
 		super.exitState();
 	}
@@ -164,11 +186,15 @@ class StoryMenuState extends MusicMenuState
 		weekInfo.cameras = [menuCam];
 		add(weekInfo);
 
-		var tracks = Util.createGraphicSprite(150, 750, Path.image('tracks'), 1.5);
+		tracks = Util.createGraphicSprite(0, 750, Path.image('tracks'), 1.5);
+		tracks.screenCenter(X);
+		tracks.x -= FlxG.width * .35;
 		tracks.cameras = [menuCam];
 		add(tracks);
 
-		songsText = Util.createText(150, 830, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
+		songsText = Util.createText(0, 830, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
+		songsText.screenCenter(X);
+		songsText.x -= FlxG.width * .35;
 		songsText.cameras = [menuCam];
 		add(songsText);
 
@@ -206,7 +232,7 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i), Path.image('week-${week.name}', mod), 1.4);
+				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 - (50 * i), 750 - (200 * i), Path.image('week-${week.name}', mod), 1.4);
 				option.alpha = .6;
 				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 				option.clipRect = option.clipRect;
@@ -224,23 +250,39 @@ class StoryMenuState extends MusicMenuState
 
 class MenuChar extends FlxSprite
 {
+	public var json:MenuCharJson;
+
 	public function new(jsonPath:String, mod:Mod)
 	{
-		var json:MenuCharJson = Path.json(jsonPath, mod);
+		json = Path.json(jsonPath, mod);
 		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
 		scale.set(json?.scale ?? 1, json?.scale ?? 1);
 		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), mod);
 		if (json?.confirm != null)
-			animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
+			if (json?.confirmIndices != null)
+				animation.addByIndices('confirm', json?.confirm, json?.confirmIndices, '', json?.fps ?? 24, false);
+			else
+				animation.addByPrefix('confirm', json?.confirm, json?.fps ?? 24, false);
 		if (json?.idle?.length == 1)
 		{
-			animation.addByPrefix('idle', json?.idle[0], json?.fps ?? 24);
+			if (json?.idleIndices != null)
+				animation.addByIndices('idle', json?.idle[0], json?.idleIndices[0], '', json?.fps ?? 24, false);
+			else
+				animation.addByPrefix('idle', json?.idle[0], json?.fps ?? 24, false);
 			animation.play('idle');
 		}
 		else
 		{
-			animation.addByPrefix('danceLeft', json?.idle[0], json?.fps ?? 24);
-			animation.addByPrefix('danceRight', json?.idle[1], json?.fps ?? 24);
+			if (json?.idleIndices != null)
+			{
+				animation.addByIndices('danceLeft', json?.idle[0], json?.idleIndices[0], '', json?.fps ?? 24, false);
+				animation.addByIndices('danceRight', json?.idle[1], json?.idleIndices[1], '', json?.fps ?? 24, false);
+			}
+			else
+			{
+				animation.addByPrefix('danceLeft', json?.idle[0], json?.fps ?? 24, false);
+				animation.addByPrefix('danceRight', json?.idle[1], json?.fps ?? 24, false);
+			}
 			animation.play('danceLeft');
 		}
 		updateHitbox();

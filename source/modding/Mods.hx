@@ -138,24 +138,18 @@ class Mods
 
 						audioFiles: [],
 						score: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.score ?? 0,
-						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.accuracy ?? 0
+						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.accuracy ?? 0,
+						path: songPath
 					});
 
-					for (file in FileSystem.readDirectory(songPath))
-					{
-						var filePath = Path.combine([songPath, file]);
-						if (!FileSystem.isDirectory(filePath))
-						{
-							if (HaxePath.extension(filePath) == 'ogg')
-							{
-								if (file == 'Inst.ogg' || file == 'Voices.ogg')
-									songs[song.toLowerCase()].audioFiles.push(filePath);
-								if (!songs[song.toLowerCase()].audioFiles.contains('Voices.ogg')
-									&& (file == 'Voices-Player.ogg' || file == 'Voices-Opponent.ogg'))
-									songs[song.toLowerCase()].audioFiles.push(filePath);
-							}
-						}
-					}
+					if (FileSystem.readDirectory(songPath).indexOf("Inst.ogg") != -1)
+						songs[song.toLowerCase()].audioFiles.push(Path.combine([songPath, "Inst.ogg"]));
+					if (FileSystem.readDirectory(songPath).indexOf("Voices-Player.ogg") != -1)
+						songs[song.toLowerCase()].audioFiles.push(Path.combine([songPath, "Voices-Player.ogg"]));
+					if (FileSystem.readDirectory(songPath).indexOf("Voices-Opponent.ogg") != -1)
+						songs[song.toLowerCase()].audioFiles.push(Path.combine([songPath, "Voices-Opponent.ogg"]));
+					if (FileSystem.readDirectory(songPath).indexOf("Voices.ogg") != -1)
+						songs[song.toLowerCase()].audioFiles.push(Path.combine([songPath, "Voices.ogg"]));
 				}
 			}
 		return songs;

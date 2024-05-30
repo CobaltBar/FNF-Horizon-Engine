@@ -1,5 +1,6 @@
 {
-	"position": [1200, 280],
+	"position": [1200, 270],
 	"scale": 1.5,
-	"idle": ["M GF Idle"]
+	"idle": ["M GF Idle"],
+	"repeatEvery": 2
 }

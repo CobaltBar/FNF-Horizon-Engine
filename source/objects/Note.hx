@@ -24,7 +24,7 @@ class Note extends FlxAttachedSprite
 		frames = Path.sparrow('note', mod);
 		animation.addByPrefix('idle', 'idle', 24, true);
 		animation.play('idle', true);
-		scale.set(1.2, 1.2);
+		scale.set(1.1, 1.1);
 		updateHitbox();
 		antialiasing = Settings.data.antialiasing;
 		moves = false;
