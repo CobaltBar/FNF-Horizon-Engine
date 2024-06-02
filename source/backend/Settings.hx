@@ -44,7 +44,7 @@ class SaveVars
 	];
 
 	var savedMods:Map<String,
-		{ // i dont like it either
+		{
 			enabled:Bool,
 			ID:Int,
 			weeks:Map<String, {score:Int}>,
@@ -68,7 +68,7 @@ class Settings
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(data, setting));
 		FlxG.save.flush();
 		if (Main.verboseLogging)
-			Log.info('Settings saved.');
+			Log.info('Settings saved');
 	}
 
 	public static function load()
@@ -94,6 +94,6 @@ class Settings
 			FlxG.sound.muted = FlxG.save.data.mute;
 
 		if (Main.verboseLogging)
-			Log.info('Settings Loaded.');
+			Log.info('Settings Loaded');
 	}
 }

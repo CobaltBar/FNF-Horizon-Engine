@@ -60,15 +60,15 @@ class MusicState extends FlxTransitionableState
 		FlxTransitionableState.skipNextTransOut = skipTransitionOut;
 		FlxG.switchState(() -> state);
 		if (Main.verboseLogging)
-			Log.info('State Switch: ${Type.getClassName(Type.getClass(state))}');
+			Log.info('State Switch: \'${Type.getClassName(Type.getClass(state))}\'');
 	}
 
-	@:noCompletion inline function get_curStep():Int
+	@:noCompletion @:keep inline function get_curStep():Int
 		return Conductor.curStep;
 
-	@:noCompletion inline function get_curBeat():Int
+	@:noCompletion @:keep inline function get_curBeat():Int
 		return Conductor.curBeat;
 
-	@:noCompletion inline function get_curDecBeat():Float
+	@:noCompletion @:keep inline function get_curDecBeat():Float
 		return Conductor.curDecBeat;
 }

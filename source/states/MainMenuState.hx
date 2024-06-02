@@ -96,7 +96,7 @@ class MainMenuState extends MusicMenuState
 				type: ONESHOT,
 			});
 			if (Settings.data.flashingLights)
-				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false, flicker -> out());
+				FlxFlicker.flicker(menuOptions[curSelected], 1.3, .06, false, false, flicker -> out());
 			else
 				FlxTimer.wait(1.3, () -> out());
 			for (i in 0...menuOptions.length)

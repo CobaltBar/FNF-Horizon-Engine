@@ -69,7 +69,7 @@ class Mods
 				i++;
 			}
 		if (Main.verboseLogging)
-			Log.info('Mods Loaded: $i');
+			Log.info('Mods Loaded: ${[for (mod in all) mod.name].join(', ')}');
 		Path.loadModAssets();
 	}
 
@@ -79,7 +79,7 @@ class Mods
 		if (FileSystem.exists(menuScriptPath))
 			for (script in FileSystem.readDirectory(menuScriptPath))
 			{
-				var scriptPath = Path.combine(['mods', modPath, 'menu_scripts', script]);
+				var scriptPath = Path.combine([menuScriptPath, script]);
 				if (!FileSystem.isDirectory(scriptPath)
 					&& (HaxePath.extension(scriptPath) == 'hx' || HaxePath.extension(scriptPath) == 'lua'))
 					return true;
@@ -94,7 +94,7 @@ class Mods
 		if (FileSystem.exists(weeksPath))
 			for (week in FileSystem.readDirectory(weeksPath))
 			{
-				var weekPath = Path.combine(['mods', modPath, 'weeks', week]);
+				var weekPath = Path.combine([weeksPath, week]);
 				if (!FileSystem.isDirectory(weekPath) && HaxePath.extension(weekPath) == 'json')
 				{
 					var json:WeekJson = TJSON.parse(File.getContent(weekPath));
@@ -127,7 +127,7 @@ class Mods
 		if (FileSystem.exists(songsPath))
 			for (song in FileSystem.readDirectory(songsPath))
 			{
-				var songPath = Path.combine(['mods', modPath, 'songs', song]);
+				var songPath = Path.combine([songsPath, song]);
 				var jsonPath = Path.combine([songPath, 'song.json']);
 				if (FileSystem.isDirectory(songPath) && FileSystem.exists(jsonPath))
 				{

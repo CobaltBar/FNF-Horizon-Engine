@@ -25,6 +25,7 @@ class Main extends Sprite
 		if (args.contains('--verbose'))
 		{
 			verboseLogging = true;
+			Sys.println('');
 			Log.info('Verbose Logging Enabled');
 		}
 

@@ -54,36 +54,37 @@ class Log
 			info('Logger Initialized');
 	}
 
-	@:keep public static inline function ansiColor(mode:AnsiMode, color:AnsiColor):String
+	@:keep public static inline function ansi(mode:AnsiMode, color:AnsiColor):String
 		return '\033[${mode};${color}m';
 
-	static function haxeTrace(value:Dynamic, ?pos:PosInfos):Void
+	@:keep static inline function haxeTrace(value:Dynamic, ?pos:PosInfos):Void
 		print(value, 'TRACE', BOLD, GREEN, pos);
 
-	public static function error(value:Dynamic, ?pos:PosInfos):Void
+	@:keep public static inline function error(value:Dynamic, ?pos:PosInfos):Void
 		print(value, 'ERROR', BOLD, RED, pos);
 
-	public static function warn(value:Dynamic, ?pos:PosInfos):Void
+	@:keep public static inline function warn(value:Dynamic, ?pos:PosInfos):Void
 		print(value, 'WARN', BOLD, YELLOW, pos);
 
-	public static function info(value:Dynamic, ?pos:PosInfos):Void
-		print(value, 'INFO', BOLD, CYAN, pos);
+	@:keep public static inline function info(value:Dynamic, ?pos:PosInfos):Void
+		print(value, 'INFO', BOLD, MAGENTA, pos);
 
-	static function print(value:Dynamic, level:String, mode:AnsiMode, color:AnsiColor, ?pos:PosInfos):Void
+	@:keep static inline function print(value:Dynamic, level:String, mode:AnsiMode, color:AnsiColor, ?pos:PosInfos):Void
 	{
-		var msg:String = '${ansiColor(RESET, MAGENTA)}[${ansiColor(RESET, YELLOW)}${DateTools.format(Date.now(), '%H:%M:%S')}${ansiColor(RESET, MAGENTA)}]';
+		var msg:String = '${ansi(RESET, HIGHINTENSITY_BLUE)}[${ansi(RESET, YELLOW)}${DateTools.format(Date.now(), '%H:%M:%S')}';
 		if (pos != null)
-			msg += '[${ansiColor(BOLD, WHITE)}${pos.fileName}:${pos.lineNumber}${ansiColor(RESET, MAGENTA)}]';
-		msg += [for (i in 0...85 - msg.length) ' '].join('');
-		msg += '[${ansiColor(mode, color)}${level}${ansiColor(RESET, MAGENTA)}]${ansiColor(mode, color)}:   ';
-		msg += '${ansiColor(RESET, color)}$value${ansiColor(RESET, RESET)}';
-
+			msg += '${ansi(RESET, HIGHINTENSITY_BLUE)} - ${ansi(RESET, HIGHINTENSITY_CYAN)}${pos.fileName}:${pos.lineNumber}';
+		msg += '${ansi(RESET, HIGHINTENSITY_BLUE)}]';
+		msg += [for (i in 0...80 - msg.length) ' '].join('');
+		msg += '${ansi(mode, color)}${level}: ';
+		msg += [for (i in 0...93 - msg.length) ' '].join('');
+		msg += '${ansi(RESET, color)}$value${ansi(RESET, RESET)}';
 		Sys.println(msg);
 
-		var logMsg:String = '[${DateTools.format(Date.now(), '%H:%M:%S')}]';
+		var logMsg:String = '[${DateTools.format(Date.now(), '%H:%M:%S')}';
 		if (pos != null)
-			logMsg += '[${pos.fileName}:${pos.lineNumber}]';
-		logMsg += '[$level]: $value';
-		log += '$logMsg\n';
+			logMsg += ' - ${pos.fileName}:${pos.lineNumber}';
+		logMsg += ']${level}: $value\n';
+		log += logMsg;
 	}
 }

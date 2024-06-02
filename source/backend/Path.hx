@@ -126,7 +126,7 @@ class Path
 						}
 		}
 		if (Main.verboseLogging)
-			Log.info('Mod Assets Loaded: ${Mods.enabled.length} Mods');
+			Log.info('Assets Loaded for Mods: ${[for (mod in Mods.enabled) mod.name].join(', ')}');
 	}
 
 	public static function cacheBitmap(key:String, ?mod:Mod, path:Null<Bool> = false):FlxGraphic
@@ -145,16 +145,15 @@ class Path
 		for (extension in extensions)
 		{
 			if (mod != null)
-				if (modAssets.exists(mod))
-					if (modAssets[mod].exists('$key.$extension'))
-						return modAssets[mod].get('$key.$extension');
+				if (modAssets[mod].exists('$key.$extension'))
+					return modAssets[mod].get('$key.$extension');
 			if (assets.exists('$key.$extension'))
 				return assets.get('$key.$extension');
 
-			Log.warn('Asset $key.$extension not found.');
-			return null;
+			Log.warn('Asset \'$key.$extension\' not found.');
+			return '';
 		}
-		return null;
+		return '';
 	}
 
 	@:keep
@@ -166,16 +165,16 @@ class Path
 		}
 		else
 		{
-			Log.info('Caching image $key');
+			Log.info('Caching image \'$key\'');
 			return cacheBitmap(key, mod);
 		}
 
 	public static function sound(key:String, ?mod:Mod):Sound
 	{
 		if (!trackedSounds.exists(key))
-			if (find(key, ['ogg'], mod) == null)
+			if (find(key, ['ogg'], mod) == '')
 			{
-				Log.warn('Sound $key not found. Playing beep.');
+				Log.warn('Sound \'$key\' not found. Playing beep.');
 				return FlxAssets.getSound('flixel/sounds/beep');
 			}
 			else
@@ -204,37 +203,23 @@ class Path
 	public static inline function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
 		return FlxAtlasFrames.fromSparrow(image(key, mod), xml(key, mod));
 
+	@:keep
 	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
 
-	// TODO: Change `-1` to be a number rather than a hardcoded string
 	private static function addAsset(key:String, path:String, ?mod:Mod):Void
 	{
-		if (mod != null)
+		var map = mod != null ? modAssets[mod] : assets;
+		if (map.exists(key))
 		{
-			if (modAssets[mod].exists(key))
-			{
-				var i = 1;
-				while (modAssets[mod].exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
-					i++;
-				Log.warn('Mod (${mod.name}) Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}');
-				modAssets[mod].set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
-			}
-			else
-				modAssets[mod].set(key, path);
+			var i:Int = 1;
+			while (map.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
+				i++;
+			Log.warn((mod != null ? 'Mod \'${mod.name}\' ' : '')
+				+ 'Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
+			map.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
 		}
 		else
-		{
-			if (assets.exists(key))
-			{
-				var i = 1;
-				while (assets.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
-					i++;
-				Log.warn('Asset $key already exists. Renaming to ${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}');
-				assets.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
-			}
-			else
-				assets.set(key, path);
-		}
+			map.set(key, path);
 	}
 }
