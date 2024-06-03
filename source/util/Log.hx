@@ -75,16 +75,13 @@ class Log
 		if (pos != null)
 			msg += '${ansi(RESET, HIGHINTENSITY_BLUE)} - ${ansi(RESET, HIGHINTENSITY_CYAN)}${pos.fileName}:${pos.lineNumber}';
 		msg += '${ansi(RESET, HIGHINTENSITY_BLUE)}]';
-		msg += [for (i in 0...80 - msg.length) ' '].join('');
-		msg += '${ansi(mode, color)}${level}: ';
-		msg += [for (i in 0...93 - msg.length) ' '].join('');
-		msg += '${ansi(RESET, color)}$value${ansi(RESET, RESET)}';
+		msg = (msg.rpad(' ', 80) + '${ansi(mode, color)}${level}: ').rpad(' ', 95) + '${ansi(RESET, color)}$value${ansi(RESET, RESET)}';
 		Sys.println(msg);
 
 		var logMsg:String = '[${DateTools.format(Date.now(), '%H:%M:%S')}';
 		if (pos != null)
 			logMsg += ' - ${pos.fileName}:${pos.lineNumber}';
-		logMsg += ']${level}: $value\n';
+		logMsg += '] ${level}: $value\n';
 		log += logMsg;
 	}
 }

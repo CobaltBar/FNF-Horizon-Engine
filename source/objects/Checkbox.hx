@@ -1,7 +1,7 @@
 package objects;
 
 // PsychEngine's CheckboxThingie.hx with minor edits
-class Checkbox extends FlxAttachedSprite
+class Checkbox extends FlxCopySprite
 {
 	public var checked(default, set):Bool = false;
 

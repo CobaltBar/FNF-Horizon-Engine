@@ -416,7 +416,7 @@ class ModsMenuState extends MusicMenuState
 			option.alpha = .6;
 			option.cameras = [optionsCam];
 			option.option = mod;
-			Path.cacheBitmap(mod.icon, mod, true);
+			Path.cacheBitmap(mod.icon, [mod], true);
 			if (mod.enabled)
 			{
 				option.x += theWidth + 25;

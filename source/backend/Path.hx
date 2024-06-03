@@ -16,7 +16,7 @@ import sys.io.File;
 import tjson.TJSON;
 import util.Log;
 
-// Based off of PsychEngine's Paths.hx
+// Based off of Psych Engine's Paths.hx
 class Path
 {
 	static var assets:Map<String, String> = [];
@@ -73,37 +73,20 @@ class Path
 	public static function loadAssets():Void
 	{
 		assets.clear();
-		for (asset in FileSystem.readDirectory('assets'))
+		recursiveSearch('assets', path ->
 		{
-			var assetPath = combine(['assets', asset]);
-			if (FileSystem.isDirectory(assetPath))
-				for (asset2 in FileSystem.readDirectory(assetPath))
-				{
-					var asset2Path = combine(['assets', asset, asset2]);
-					if (FileSystem.isDirectory(asset2Path))
-					{
-						if (asset == 'songs')
-							continue;
-						for (asset3 in FileSystem.readDirectory(asset2Path))
-						{
-							var asset3Path = combine(['assets', asset, asset2, asset3]);
-							if (FileSystem.isDirectory(asset3Path))
-								for (asset4 in FileSystem.readDirectory(asset3Path))
-								{
-									var asset4Path = combine(['assets', asset, asset2, asset3, asset4]);
-									if (!FileSystem.isDirectory(asset4Path))
-										addAsset(asset4, asset4Path);
-								}
-							else
-								addAsset(asset3, asset3Path);
-						}
-					}
-					else
-						addAsset(asset2, asset2Path);
-				}
+			var key = HaxePath.withoutDirectory(path);
+			if (assets.exists(key))
+			{
+				var i:Int = 1;
+				while (assets.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
+					i++;
+				Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
+				assets.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
+			}
 			else
-				addAsset(asset, assetPath);
-		}
+				assets.set(key, path);
+		});
 		if (Main.verboseLogging)
 			Log.info('Assets Loaded');
 	}
@@ -114,112 +97,149 @@ class Path
 		for (mod in Mods.enabled)
 		{
 			modAssets.set(mod, []);
-			var modDir = combine(['mods', mod.path]);
-			for (folder in FileSystem.readDirectory(modDir))
-				if (FileSystem.isDirectory(modDir))
-					if (folder == 'fonts' || folder == 'images' || folder == 'shaders' || folder == 'sounds' || folder == 'videos')
-						for (asset in FileSystem.readDirectory(combine([modDir, folder])))
-						{
-							var assetPath = combine([modDir, folder, asset]);
-							if (!FileSystem.isDirectory(assetPath))
-								addAsset(asset, assetPath, mod);
-						}
+			recursiveSearch(combine(['mods', mod.path]), path ->
+			{
+				var key = HaxePath.withoutDirectory(path);
+				if (modAssets[mod].exists(key))
+				{
+					var i:Int = 1;
+					while (modAssets[mod].exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
+						i++;
+					Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
+					modAssets[mod].set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
+				}
+				else
+					modAssets[mod].set(key, path);
+			}, ['fonts', 'images', 'shaders', 'sounds', 'videos']);
+			if (Main.verboseLogging)
+				Log.info('Assets Loaded for Mods: ${[for (mod in Mods.enabled) mod.name].join(', ')}');
 		}
-		if (Main.verboseLogging)
-			Log.info('Assets Loaded for Mods: ${[for (mod in Mods.enabled) mod.name].join(', ')}');
 	}
 
-	public static function cacheBitmap(key:String, ?mod:Mod, path:Null<Bool> = false):FlxGraphic
-	{
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : find(key, ['png'], mod)), false,
-			mod != null ? '${mod.path}-$key' : key);
-		graphic.persist = true;
-		graphic.destroyOnNoUse = false;
-		trackedImages.set(mod != null ? '${mod.path}-$key' : key, graphic);
-		localAssets.push(mod != null ? '${mod.path}-$key' : key);
-		return graphic;
-	}
-
-	public static function find(key:String, extensions:Array<String>, ?mod:Mod, fatal:Null<Bool> = false):Null<String>
+	public static function find(key:String, extensions:Array<String>, ?mods:Array<Mod>, fatal:Null<Bool> = false):Null<{path:String, mod:Mod}>
 	{
 		for (extension in extensions)
 		{
-			if (mod != null)
-				if (modAssets[mod].exists('$key.$extension'))
-					return modAssets[mod].get('$key.$extension');
-			if (assets.exists('$key.$extension'))
-				return assets.get('$key.$extension');
+			if (mods != null)
+				for (mod in mods)
+				{
+					if (mod != null)
+						if (modAssets[mod].exists('$key.$extension'))
+							return {path: modAssets[mod].get('$key.$extension'), mod: mod};
+					if (assets.exists('$key.$extension'))
+						return {path: assets.get('$key.$extension'), mod: null};
 
-			Log.warn('Asset \'$key.$extension\' not found.');
-			return '';
+					Log.warn('Asset \'$key.$extension\' not found.');
+					return {path: '', mod: null};
+				}
+			else
+			{
+				if (assets.exists('$key.$extension'))
+					return {path: assets.get('$key.$extension'), mod: null};
+
+				Log.warn('Asset \'$key.$extension\' not found.');
+				return {path: '', mod: null};
+			}
 		}
-		return '';
+		return {path: '', mod: null};
 	}
 
-	@:keep
-	public static inline function image(key:String, ?mod:Mod):FlxGraphic
-		if (trackedImages.exists(mod != null ? '${mod.path}-$key' : key))
-		{
-			localAssets.push(mod != null ? '${mod.path}-$key' : key);
-			return trackedImages.get(mod != null ? '${mod.path}-$key' : key);
-		}
+	public static function cacheBitmap(key:String, ?mods:Array<Mod>, path:Null<Bool> = false):FlxGraphic
+	{
+		var found = find(key, ['png'], mods);
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : found.path), false,
+			found.mod != null ? '${found.mod.path}-$key' : key);
+		graphic.persist = true;
+		graphic.destroyOnNoUse = false;
+		trackedImages.set(found.mod != null ? '${found.mod.path}-$key' : key, graphic);
+		localAssets.push(found.mod != null ? '${found.mod.path}-$key' : key);
+		Log.info('Caching image \'$key\' ' + (found.mod != null ? '(Mod \'${found.mod.name}\')' : '(Assets)'));
+		return graphic;
+	}
+
+	public static function image(key:String, ?mods:Array<Mod>):FlxGraphic
+	{
+		if (mods != null)
+			for (mod in mods)
+				if (trackedImages.exists(mod != null ? '${mod.path}-$key' : key))
+				{
+					localAssets.push(mod != null ? '${mod.path}-$key' : key);
+					return trackedImages.get(mod != null ? '${mod.path}-$key' : key);
+				}
+				else
+				{
+					if (mod != null && trackedImages.exists(key))
+					{
+						localAssets.push(key);
+						return trackedImages.get(key);
+					}
+					return cacheBitmap(key, mods);
+				}
 		else
 		{
-			Log.info('Caching image \'$key\'');
-			return cacheBitmap(key, mod);
+			if (trackedImages.exists(key))
+			{
+				localAssets.push(key);
+				return trackedImages.get(key);
+			}
+			else
+				return cacheBitmap(key, mods);
 		}
+		return null;
+	}
 
-	public static function sound(key:String, ?mod:Mod):Sound
+	public static function sound(key:String, ?mods:Array<Mod>):Sound
 	{
 		if (!trackedSounds.exists(key))
-			if (find(key, ['ogg'], mod) == '')
+			if (find(key, ['ogg'], mods).path == '')
 			{
 				Log.warn('Sound \'$key\' not found. Playing beep.');
 				return FlxAssets.getSound('flixel/sounds/beep');
 			}
 			else
-				trackedSounds.set(key, Sound.fromFile(find(key, ['ogg'], mod)));
+				trackedSounds.set(key, Sound.fromFile(find(key, ['ogg'], mods).path));
 		localAssets.push(key);
 		return trackedSounds.get(key);
 	}
 
-	@:keep
-	public static inline function font(key:String, ?mod:Mod):Null<String>
-		return find(key, ['ttf', 'otf'], mod);
+	private static function recursiveSearch(path:String, callback:String->Void, ?include:Array<String>)
+		if (FileSystem.isDirectory(path))
+			for (entry in FileSystem.readDirectory(path))
+			{
+				var realPath = combine([path, entry]);
+				if (FileSystem.isDirectory(realPath))
+					if (include != null)
+					{
+						if (include.contains(HaxePath.withoutDirectory(realPath)))
+							recursiveSearch(realPath, callback, include);
+					}
+					else
+						recursiveSearch(realPath, callback, include);
+				else
+					callback(realPath);
+			}
 
 	@:keep
-	public static inline function json(key:String, ?mod:Mod):Dynamic
-		return TJSON.parse(File.getContent(find(key, ['json'], mod) ?? ''));
+	public static inline function font(key:String, ?mods:Array<Mod>):Null<String>
+		return find(key, ['ttf', 'otf'], mods).path;
 
 	@:keep
-	public static inline function xml(key:String, ?mod:Mod):Null<String>
-		return find(key, ['xml'], mod, true);
+	public static inline function json(key:String, ?mods:Array<Mod>):Dynamic
+		return TJSON.parse(File.getContent(find(key, ['json'], mods).path ?? ''));
 
 	@:keep
-	public static inline function txt(key:String, ?mod:Mod):Null<String>
-		return File.getContent(find(key, ['txt'], mod));
+	public static inline function xml(key:String, ?mods:Array<Mod>):Null<String>
+		return find(key, ['xml'], mods, true).path;
 
 	@:keep
-	public static inline function sparrow(key:String, ?mod:Mod):FlxAtlasFrames
-		return FlxAtlasFrames.fromSparrow(image(key, mod), xml(key, mod));
+	public static inline function txt(key:String, ?mods:Array<Mod>):Null<String>
+		return File.getContent(find(key, ['txt'], mods).path ?? '');
+
+	@:keep
+	public static inline function sparrow(key:String, ?mods:Array<Mod>):FlxAtlasFrames
+		return FlxAtlasFrames.fromSparrow(image(key, mods), xml(key, mods));
 
 	@:keep
 	public static inline function combine(paths:Array<String>):String
 		return HaxePath.removeTrailingSlashes(HaxePath.normalize(HaxePath.join(paths)));
-
-	private static function addAsset(key:String, path:String, ?mod:Mod):Void
-	{
-		var map = mod != null ? modAssets[mod] : assets;
-		if (map.exists(key))
-		{
-			var i:Int = 1;
-			while (map.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
-				i++;
-			Log.warn((mod != null ? 'Mod \'${mod.name}\' ' : '')
-				+ 'Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
-			map.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
-		}
-		else
-			map.set(key, path);
-	}
 }

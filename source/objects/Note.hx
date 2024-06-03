@@ -1,6 +1,6 @@
 package objects;
 
-class Note extends FlxAttachedSprite
+class Note extends FlxCopySprite
 {
 	public var rgb:RGBPalette = new RGBPalette();
 	public var angleOffset(default, set):Float = 0;
@@ -18,10 +18,10 @@ class Note extends FlxAttachedSprite
 		return realAngle = val;
 	}
 
-	public function new(noteData:Int = 2, ?mod:Mod)
+	public function new(noteData:Int = 2)
 	{
 		super();
-		frames = Path.sparrow('note', mod);
+		frames = Path.sparrow('note', PlayState.config.mods);
 		animation.addByPrefix('idle', 'idle', 24, true);
 		animation.play('idle', true);
 		scale.set(1.1, 1.1);

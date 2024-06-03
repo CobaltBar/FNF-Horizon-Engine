@@ -53,7 +53,7 @@ class Mods
 					modSysVer: json?.modSysVer ?? Main.modSysVer,
 
 					path: modPath,
-					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']),
+					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']).path,
 					enabled: Settings.data.savedMods.get(modPath)?.enabled ?? true,
 					staticMod: isStaticMod(modPath),
 					songs: new StringDictionary(),

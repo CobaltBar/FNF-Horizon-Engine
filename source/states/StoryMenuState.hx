@@ -86,7 +86,7 @@ class StoryMenuState extends MusicMenuState
 		}
 		else
 		{
-			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', optionToData[menuOptions[curSelected]].mod));
+			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', [optionToData[menuOptions[curSelected]].mod]));
 			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
 		}
 		bg.updateHitbox();
@@ -121,8 +121,8 @@ class StoryMenuState extends MusicMenuState
 		if (curDifficulty >= optionToData[menuOptions[curSelected]].week.difficulties.length)
 			curDifficulty = 0;
 
-		difficulty.loadGraphic(Path.image('difficulty-${optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty] ?? 'normal'}',
-			optionToData[menuOptions[curSelected]].mod));
+		difficulty.loadGraphic(Path.image('difficulty-${optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty].toLowerCase() ?? 'normal'}',
+			[optionToData[menuOptions[curSelected]].mod]));
 		difficulty.updateHitbox();
 		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
 		leftArrow.x = difficulty.x - leftArrow.width - 20;
@@ -148,10 +148,9 @@ class StoryMenuState extends MusicMenuState
 			menuOptions[curSelected].clipRect = menuOptions[curSelected].clipRect;
 			if (Settings.data.flashingLights)
 				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
-			FlxTween.tween(menuOptions[curSelected],
-				{x: (FlxG.width - menuOptions[curSelected].width) * .5, y: (FlxG.height - menuOptions[curSelected].height) * .5}, 1,
+			FlxTween.tween(menuOptions[curSelected], {x: (FlxG.width - menuOptions[curSelected].width) * .5, y: FlxG.height - 350}, 1,
 				{type: ONESHOT, ease: FlxEase.expoOut});
-			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.4, y: 1.4}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.5, y: 1.5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
 					FlxTween.tween(menuOptions[i], {alpha: 0}, .5);
@@ -165,7 +164,7 @@ class StoryMenuState extends MusicMenuState
 			if (char.animation.exists('confirm'))
 				char.animation.play('confirm', true);
 
-		FlxG.sound.music.fadeOut(.5, 0, tween -> FlxG.sound.music.pause());
+		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
 
 		super.exitState();
 	}
@@ -232,7 +231,8 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 - (50 * i), 750 - (200 * i), Path.image('week-${week.name}', mod), 1.4);
+				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 - (50 * i), 750 - (200 * i),
+					Path.image('week-${week.name.toLowerCase().replace(' ', '')}', [mod]), 1.4);
 				option.alpha = .6;
 				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 				option.clipRect = option.clipRect;
@@ -254,10 +254,10 @@ class MenuChar extends FlxSprite
 
 	public function new(jsonPath:String, mod:Mod)
 	{
-		json = Path.json(jsonPath, mod);
+		json = Path.json(jsonPath, [mod]);
 		super(json?.position[0] ?? 0, json?.position[1] ?? 0);
 		scale.set(json?.scale ?? 1, json?.scale ?? 1);
-		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), mod);
+		frames = Path.sparrow(HaxePath.withoutExtension(jsonPath), [mod]);
 		if (json?.confirm != null)
 			if (json?.confirmIndices != null)
 				animation.addByIndices('confirm', json?.confirm, json?.confirmIndices, '', json?.fps ?? 24, false);

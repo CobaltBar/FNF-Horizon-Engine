@@ -220,7 +220,7 @@ class TitleState extends MusicState
 		goofyTexts.push(goofyTextList[num].split('--')[1]);
 	}
 
-	private inline function generateObjects():Void
+	private function generateObjects():Void
 	{
 		gf = Util.createSparrowSprite(titleData.gfPosition[0], titleData.gfPosition[1], 'gfDanceTitle', 1.35);
 		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], '', 24, false);

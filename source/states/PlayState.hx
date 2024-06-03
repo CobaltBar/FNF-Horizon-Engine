@@ -20,8 +20,7 @@ class PlayState extends MusicState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		shouldBop = shouldZoom = false;
-		Conductor.switchToMusic = false;
+		shouldBop = shouldZoom = Conductor.switchToMusic = false;
 
 		DiscordRPC.change('In Game', 'Song: \nScore: 69');
 		createUI();
@@ -45,7 +44,7 @@ class PlayState extends MusicState
 			var strum = note.data > 3 ? playerStrum : opponentStrum;
 			n.x = strum.members[note.data % 4].x;
 			n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight, Settings.data.noteRGB[note.data % 4].outline);
-			n.angle = n.angleOffset = strum.members[note.data % 4].angleOffset;
+			n.angle = n.angleOffset = cast(strum.members[note.data % 4], Note).angleOffset;
 		}
 	}
 }
