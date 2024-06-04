@@ -4,12 +4,12 @@ import flixel.graphics.frames.FlxFilterFrames;
 import openfl.filters.BitmapFilter;
 import openfl.filters.BlurFilter;
 
-class StrumNote extends Note
+class StrumNote extends NoteSprite
 {
 	var strumRGB:RGBPalette = new RGBPalette();
 	var pressedRGB:RGBPalette = new RGBPalette();
-	var confirmSpr:Note;
-	var pressedSpr:Note;
+	var confirmSpr:NoteSprite;
+	var pressedSpr:NoteSprite;
 
 	public var glowAlphaTarget:Float = 0;
 	public var scaleTarget:Float = 1.1;
@@ -21,7 +21,7 @@ class StrumNote extends Note
 		shader = strumRGB.shader;
 		strumRGB.set(0x87A3AD, -1, 0);
 		rgb.set(Settings.data.noteRGB[noteData].base, Settings.data.noteRGB[noteData].highlight, Settings.data.noteRGB[noteData].outline);
-		confirmSpr = new Note(noteData);
+		confirmSpr = new NoteSprite(noteData);
 		confirmSpr.targetSpr = this;
 		confirmSpr.shader = rgb.shader;
 		confirmSpr.blend = ADD;
@@ -34,7 +34,7 @@ class StrumNote extends Note
 		var b = Settings.data.noteRGB[noteData].outline;
 		b.setRGB(b.red - 50, b.green - 50, b.blue - 50);
 		pressedRGB.set(r, g, b);
-		pressedSpr = new Note(noteData);
+		pressedSpr = new NoteSprite(noteData);
 		pressedSpr.targetSpr = this;
 		pressedSpr.shader = pressedRGB.shader;
 		pressedSpr.alpha = 0;

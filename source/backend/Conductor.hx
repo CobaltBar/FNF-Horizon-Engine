@@ -63,6 +63,13 @@ class Conductor extends FlxBasic
 		super.update(elapsed);
 	}
 
+	@:noCompletion public static function reset():Void
+	{
+		bpm = 100;
+		curStep = curBeat = -1;
+		curDecBeat = crochetStep = crochetBeat = 0;
+	}
+
 	@:noCompletion static function set_song(val:FlxSound):FlxSound
 	{
 		val.onComplete = () ->

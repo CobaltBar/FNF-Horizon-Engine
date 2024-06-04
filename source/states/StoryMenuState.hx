@@ -148,6 +148,7 @@ class StoryMenuState extends MusicMenuState
 			menuOptions[curSelected].clipRect = menuOptions[curSelected].clipRect;
 			if (Settings.data.flashingLights)
 				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
+			menuOptions[curSelected].updateHitbox();
 			FlxTween.tween(menuOptions[curSelected], {x: (FlxG.width - menuOptions[curSelected].width) * .5, y: FlxG.height - 350}, 1,
 				{type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.5, y: 1.5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});

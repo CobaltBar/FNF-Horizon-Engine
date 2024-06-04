@@ -50,9 +50,7 @@ class ErrorState extends MusicState
 		Log.info('Resetting Game\n');
 		@:privateAccess TitleState.comingBack = false;
 		@:privateAccess TitleState.titleData = null;
-		Conductor.bpm = 100;
-		Conductor.curStep = Conductor.curBeat = -1;
-		@:privateAccess Conductor.curDecBeat = Conductor.crochetStep = Conductor.crochetBeat = 0;
+		Conductor.reset();
 		@:bypassAccessor Conductor.song = null;
 		FlxG.sound.music.destroy();
 		FlxG.sound.music = null;

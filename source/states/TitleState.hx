@@ -91,11 +91,9 @@ class TitleState extends MusicState
 
 	public override function onBeat()
 	{
-		if (gf.visible)
-			gf.animation.play(curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
+		gf.animation.play(curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
 
-		if (logo.visible)
-			logo.animation.play('bop', true);
+		logo.animation.play('bop', true);
 
 		if (!skippedIntro)
 			switch (curBeat)
@@ -150,11 +148,6 @@ class TitleState extends MusicState
 		targetZoom = 1;
 		clearIntroObjects();
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
-		if (curBeat % 2 == 0)
-			gf.animation.play('danceLeft');
-		else
-			gf.animation.play('danceRight');
-		logo.animation.play('bop', true);
 	}
 
 	private function createIntroText(text:String, yOff:Float):Alphabet

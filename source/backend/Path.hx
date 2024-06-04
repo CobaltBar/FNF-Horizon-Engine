@@ -146,7 +146,7 @@ class Path
 
 	public static function cacheBitmap(key:String, ?mods:Array<Mod>, path:Null<Bool> = false):FlxGraphic
 	{
-		var found = find(key, ['png'], mods);
+		var found = path ? {path: '', mod: null} : find(key, ['png'], mods, false);
 		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : found.path), false,
 			found.mod != null ? '${found.mod.path}-$key' : key);
 		graphic.persist = true;
