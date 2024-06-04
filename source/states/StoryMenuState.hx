@@ -159,7 +159,8 @@ class StoryMenuState extends MusicMenuState
 			for (spr in [difficulty, leftArrow, rightArrow, weekInfo, songsText, tracks, bg])
 				FlxTween.tween(spr, {alpha: .25}, .5);
 			for (char in menuChars)
-				FlxTween.tween(char, {alpha: .25}, char.animation.exists('confirm') ? 1.25 : .5);
+				if (!char.animation.exists('confirm'))
+					FlxTween.tween(char, {alpha: .25}, .5);
 		}
 		for (char in menuChars)
 			if (char.animation.exists('confirm'))

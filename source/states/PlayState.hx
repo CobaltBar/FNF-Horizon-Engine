@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.FlxSort;
 import openfl.events.KeyboardEvent;
 import sys.io.File;
 import tjson.TJSON;
@@ -41,7 +42,19 @@ class PlayState extends MusicState
 	{
 		add(playerStrum = new Strumline(FlxG.width - 50, 150));
 		playerStrum.x -= playerStrum.width;
+		playerStrum.noteMove = note ->
+		{
+			note.y = playerStrum.y
+				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
+		}
 		add(opponentStrum = new Strumline(50, 150));
+		opponentStrum.noteMove = note ->
+		{
+			note.y = opponentStrum.y
+				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
+			if (note.y < opponentStrum.y)
+				note.kill();
+		}
 	}
 
 	inline function createChart():Void
@@ -68,6 +81,8 @@ class PlayState extends MusicState
 			n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
 			strum.notes[note.data % 4].add(n);
 		}
+		for (note in playerStrum.notes.concat(opponentStrum.notes))
+			note.sort(FlxSort.byY, FlxSort.DESCENDING);
 	}
 
 	public override function destroy()

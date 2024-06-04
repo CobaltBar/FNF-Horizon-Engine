@@ -9,6 +9,8 @@ class Strumline extends FlxSpriteGroup
 	public var covers:Array<FlxCopySprite> = [];
 	public var splashes:FlxTypedSpriteGroup<FlxCopySprite>;
 
+	public var noteMove:Note->Void;
+
 	public function new(x:Float, y:Float, ?mod:Mod)
 	{
 		super(x, y);
@@ -33,10 +35,7 @@ class Strumline extends FlxSpriteGroup
 	public override function update(elapsed:Float)
 	{
 		for (i in 0...notes.length)
-			notes[i].forEachAlive(note ->
-			{
-				note.y = y + strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
-			});
+			notes[i].forEachAlive(note -> noteMove(note));
 		super.update(elapsed);
 	}
 }
