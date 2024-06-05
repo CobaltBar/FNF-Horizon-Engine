@@ -22,6 +22,8 @@ class PlayState extends MusicState
 			difficulty:String
 		};
 
+	static var notesToSpawn:Array<NoteJson> = [];
+
 	public override function create()
 	{
 		Path.clearStoredMemory();
@@ -51,9 +53,13 @@ class PlayState extends MusicState
 		opponentStrum.noteMove = note ->
 		{
 			note.y = opponentStrum.y
-				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
+				+ opponentStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
 			if (note.y < opponentStrum.y)
+			{
 				note.kill();
+				opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 1;
+				FlxTimer.wait(.15, () -> opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
+			}
 		}
 	}
 
@@ -67,21 +73,28 @@ class PlayState extends MusicState
 			audio.pause();
 			audios.push(audio);
 		}
+
+		var noteCount:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0];
 		for (note in chart.notes)
-		{
-			var n = new Note(note.data);
-			n.data = note.data;
-			n.time = note.time;
-			n.length = note.length;
-			n.type = note.type;
-			n.mult = note.mult;
-			var strum = note.data > 3 ? opponentStrum : playerStrum;
-			n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
-			n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight, Settings.data.noteRGB[note.data % 4].outline);
-			n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
-			strum.notes[note.data % 4].add(n);
-		}
-		for (note in playerStrum.notes.concat(opponentStrum.notes))
+			if (noteCount[note.data] < 100)
+			{
+				var strum = note.data > 3 ? opponentStrum : playerStrum;
+				var n = strum.notes[note.data % 4].recycle(Note, () -> new Note(note.data));
+				n.data = note.data;
+				n.time = note.time;
+				n.length = note.length;
+				n.type = note.type;
+				n.mult = note.mult;
+				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
+				n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight,
+					Settings.data.noteRGB[note.data % 4].outline);
+				n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
+				strum.notes[note.data % 4].add(n);
+				noteCount[note.data] += 1;
+			}
+		for (note in playerStrum.notes)
+			note.sort(FlxSort.byY, FlxSort.DESCENDING);
+		for (note in opponentStrum.notes)
 			note.sort(FlxSort.byY, FlxSort.DESCENDING);
 	}
 

@@ -47,6 +47,7 @@ class DiscordRPC
 	{
 		presence.state = 'In The Menus';
 		presence.startTimestamp = Std.int(Date.now().getTime() / 1000);
+		presence.largeImageKey = 'icon';
 		Discord.UpdatePresence(RawConstPointer.addressOf(presence));
 	}
 }
