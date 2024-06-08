@@ -22,7 +22,7 @@ class StrumNote extends NoteSprite
 		rgb.set(Settings.data.noteRGB[noteData].base, Settings.data.noteRGB[noteData].highlight, Settings.data.noteRGB[noteData].outline);
 		confirmSpr = new NoteSprite(noteData);
 		confirmSpr.targetSpr = this;
-		confirmSpr.scale.set(scale.x * 1.2, scale.y * 1.2);
+		confirmSpr.scale.set(scale.x * 1.1, scale.y * 1.1);
 		confirmSpr.shader = rgb.shader;
 		confirmSpr.blend = ADD;
 		confirmSpr.alpha = glowAlphaTarget;
@@ -44,8 +44,8 @@ class StrumNote extends NoteSprite
 	{
 		if (confirmSpr.alpha != glowAlphaTarget * alpha)
 			confirmSpr.alpha = FlxMath.lerp(confirmSpr.alpha, glowAlphaTarget * alpha, FlxMath.bound(elapsed * 10, 0, 1));
-		if (confirmSpr.scale.x != scale.x * 1.2 || confirmSpr.scale.y != scale.y * 1.2)
-			confirmSpr.scale.set(scale.x * 1.2, scale.y * 1.2);
+		if (confirmSpr.scale.x != scale.x * 1.1 || confirmSpr.scale.y != scale.y * 1.1)
+			confirmSpr.scale.set(scale.x * 1.1, scale.y * 1.1);
 
 		if (pressedSpr.alpha != 0)
 			pressedSpr.update(elapsed);

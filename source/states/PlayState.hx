@@ -14,7 +14,7 @@ class PlayState extends MusicState
 	public static var instance:PlayState;
 
 	public var scrollSpeed:Float = 1;
-	public var audios:Array<FlxSound> = [];
+	public var audios:Map<String, FlxSound> = [];
 
 	public static var config:
 		{
@@ -22,8 +22,6 @@ class PlayState extends MusicState
 			songs:Array<Song>,
 			difficulty:String
 		};
-
-	static var notesToSpawn:Array<NoteJson> = [];
 
 	public override function create()
 	{
@@ -38,8 +36,7 @@ class PlayState extends MusicState
 		Conductor.reset();
 		for (audio in audios)
 			audio.play();
-		Conductor.song = audios[0];
-		FlxTimer.wait(5, () -> FlxTween.num(scrollSpeed, 3, 5, null, f -> scrollSpeed = f));
+		Conductor.song = audios["Inst"];
 	}
 
 	inline function createUI():Void
@@ -73,7 +70,7 @@ class PlayState extends MusicState
 		{
 			var audio = FlxG.sound.play(song);
 			audio.pause();
-			audios.push(audio);
+			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
 		var noteCount:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0];
