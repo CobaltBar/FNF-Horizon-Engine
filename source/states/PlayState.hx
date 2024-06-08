@@ -47,6 +47,14 @@ class PlayState extends MusicState
 		{
 			note.y = playerStrum.y
 				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - note.height;
+
+			if (note.y < playerStrum.y)
+			{
+				note.kill();
+				playerStrum.strums.members[note.data % 4].glowAlphaTarget = playerStrum.strums.members[note.data % 4].confirmSpr.alpha = 1;
+				FlxTimer.wait(.1, () -> playerStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
+				playerStrum.addNextNote();
+			}
 		}
 		add(opponentStrum = new Strumline(50, 150));
 		opponentStrum.noteMove = note ->
@@ -58,6 +66,7 @@ class PlayState extends MusicState
 				note.kill();
 				opponentStrum.strums.members[note.data % 4].glowAlphaTarget = opponentStrum.strums.members[note.data % 4].confirmSpr.alpha = 1;
 				FlxTimer.wait(.1, () -> opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
+				opponentStrum.addNextNote();
 			}
 		}
 	}
@@ -73,24 +82,21 @@ class PlayState extends MusicState
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
-		var noteCount:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0];
+		var noteCount:Array<Int> = [0, 0];
 		for (note in chart.notes)
 		{
 			var strum = note.data > 3 ? opponentStrum : playerStrum;
-			if (noteCount[note.data] < 100)
+			if (noteCount[note.data > 3 ? 0 : 1] < 50)
 			{
 				var n = new Note(note.data);
-				n.data = note.data ?? 0;
-				n.time = note.time ?? 0;
-				n.length = note.length ?? 0;
-				n.type = note.type;
-				n.mult = note.mult ?? 1;
+				n.resetNote(note);
 				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
+				n.y = strum.y + strum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - n.height;
 				n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight,
 					Settings.data.noteRGB[note.data % 4].outline);
 				n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
 				strum.notes[note.data % 4].add(n);
-				noteCount[note.data] += 1;
+				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}
 			else
 				strum.uNoteData.push(note);
