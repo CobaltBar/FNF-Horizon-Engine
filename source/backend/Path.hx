@@ -57,7 +57,7 @@ class Path
 			}
 		}
 
-		for (key => value in trackedSounds)
+		for (key in trackedSounds.keys())
 			if (!localAssets.contains(key) && !memoryClearExlusions.contains(key))
 			{
 				Assets.cache.clear(key);
@@ -81,7 +81,7 @@ class Path
 				var i:Int = 1;
 				while (assets.exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
 					i++;
-				Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
+				Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\' (Assets)');
 				assets.set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
 			}
 			else
@@ -100,17 +100,28 @@ class Path
 			recursiveSearch(combine(['mods', mod.path]), path ->
 			{
 				var key = HaxePath.withoutDirectory(path);
+				if (path.contains('songs'))
+				{
+					if (HaxePath.extension(path) == 'json')
+						key = 'song-${HaxePath.withoutDirectory(HaxePath.directory(path))}-$key';
+				}
+				else if (key.contains('stages'))
+					key = 'stage-$key';
+				else if (key.contains('scripts'))
+					key = 'script-$key';
+
 				if (modAssets[mod].exists(key))
 				{
 					var i:Int = 1;
 					while (modAssets[mod].exists('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}'))
 						i++;
-					Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\'');
+					Log.warn('Asset \'$key\' already exists. Renaming to \'${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}\' (Mod \'${mod.name}\')');
 					modAssets[mod].set('${HaxePath.withoutExtension(key)}-$i.${HaxePath.extension(key)}', path);
 				}
 				else
 					modAssets[mod].set(key, path);
-			}, ['fonts', 'images', 'shaders', 'sounds', 'videos']);
+			});
+
 			if (Main.verboseLogging)
 				Log.info('Assets Loaded for Mods: ${[for (mod in Mods.enabled) mod.name].join(', ')}');
 		}
@@ -122,24 +133,11 @@ class Path
 		{
 			if (mods != null)
 				for (mod in mods)
-				{
-					if (mod != null)
-						if (modAssets[mod].exists('$key.$extension'))
-							return {path: modAssets[mod].get('$key.$extension'), mod: mod};
-					if (assets.exists('$key.$extension'))
-						return {path: assets.get('$key.$extension'), mod: null};
-
-					Log.warn('Asset \'$key.$extension\' not found.');
-					return {path: '', mod: null};
-				}
-			else
-			{
-				if (assets.exists('$key.$extension'))
-					return {path: assets.get('$key.$extension'), mod: null};
-
-				Log.warn('Asset \'$key.$extension\' not found.');
-				return {path: '', mod: null};
-			}
+					if (modAssets[mod].exists('$key.$extension'))
+						return {path: modAssets[mod].get('$key.$extension'), mod: mod};
+			if (assets.exists('$key.$extension'))
+				return {path: assets.get('$key.$extension'), mod: null};
+			Log.warn('Asset \'$key.$extension\' not found.');
 		}
 		return {path: '', mod: null};
 	}
@@ -161,31 +159,19 @@ class Path
 	{
 		if (mods != null)
 			for (mod in mods)
-				if (trackedImages.exists(mod != null ? '${mod.path}-$key' : key))
+				if (trackedImages.exists('${mod.path}-$key'))
 				{
-					localAssets.push(mod != null ? '${mod.path}-$key' : key);
-					return trackedImages.get(mod != null ? '${mod.path}-$key' : key);
+					localAssets.push('${mod.path}-$key');
+					return trackedImages.get('${mod.path}-$key');
 				}
-				else
-				{
-					if (mod != null && trackedImages.exists(key))
-					{
-						localAssets.push(key);
-						return trackedImages.get(key);
-					}
-					return cacheBitmap(key, mods);
-				}
-		else
+
+		if (trackedImages.exists(key))
 		{
-			if (trackedImages.exists(key))
-			{
-				localAssets.push(key);
-				return trackedImages.get(key);
-			}
-			else
-				return cacheBitmap(key, mods);
+			localAssets.push(key);
+			return trackedImages.get(key);
 		}
-		return null;
+
+		return cacheBitmap(key, mods);
 	}
 
 	public static function sound(key:String, ?mods:Array<Mod>):Sound
@@ -202,19 +188,13 @@ class Path
 		return trackedSounds.get(key);
 	}
 
-	private static function recursiveSearch(path:String, callback:String->Void, ?include:Array<String>)
+	private static function recursiveSearch(path:String, callback:String->Void)
 		if (FileSystem.isDirectory(path))
 			for (entry in FileSystem.readDirectory(path))
 			{
 				var realPath = combine([path, entry]);
 				if (FileSystem.isDirectory(realPath))
-					if (include != null)
-					{
-						if (include.contains(HaxePath.withoutDirectory(realPath)))
-							recursiveSearch(realPath, callback, include);
-					}
-					else
-						recursiveSearch(realPath, callback, include);
+					recursiveSearch(realPath, callback);
 				else
 					callback(realPath);
 			}

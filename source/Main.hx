@@ -21,11 +21,9 @@ class Main extends Sprite
 	{
 		super();
 
-		var args = Sys.args().shift().trim().split(' ');
-		if (args.contains('--verbose'))
+		if (Sys.args().contains('--verbose'))
 		{
 			verboseLogging = true;
-			Sys.println('');
 			Log.info('Verbose Logging Enabled');
 		}
 

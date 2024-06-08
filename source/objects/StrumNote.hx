@@ -8,12 +8,11 @@ class StrumNote extends NoteSprite
 {
 	var strumRGB:RGBPalette = new RGBPalette();
 	var pressedRGB:RGBPalette = new RGBPalette();
-	var confirmSpr:NoteSprite;
-	var pressedSpr:NoteSprite;
+
+	@:noCompletion public var confirmSpr:NoteSprite;
+	@:noCompletion public var pressedSpr:NoteSprite;
 
 	public var glowAlphaTarget:Float = 0;
-	public var scaleTarget:Float = 1.1;
-	public var lerpScale:Bool = true;
 
 	public function new(noteData:Int = 2)
 	{
@@ -23,6 +22,7 @@ class StrumNote extends NoteSprite
 		rgb.set(Settings.data.noteRGB[noteData].base, Settings.data.noteRGB[noteData].highlight, Settings.data.noteRGB[noteData].outline);
 		confirmSpr = new NoteSprite(noteData);
 		confirmSpr.targetSpr = this;
+		confirmSpr.scale.set(scale.x * 1.2, scale.y * 1.2);
 		confirmSpr.shader = rgb.shader;
 		confirmSpr.blend = ADD;
 		confirmSpr.alpha = glowAlphaTarget;
@@ -43,22 +43,9 @@ class StrumNote extends NoteSprite
 	public override function update(elapsed:Float)
 	{
 		if (confirmSpr.alpha != glowAlphaTarget * alpha)
-			confirmSpr.alpha = FlxMath.lerp(confirmSpr.alpha, glowAlphaTarget * alpha,
-				FlxMath.bound(elapsed * (glowAlphaTarget * alpha > confirmSpr.alpha ? 40 : 10), 0, 1));
-
-		if (lerpScale)
-		{
-			if (scale.x != scaleTarget)
-			{
-				scale.x = FlxMath.lerp(scale.x, scaleTarget, FlxMath.bound(elapsed * 5, 0, 1));
-				updateHitbox();
-			}
-			if (scale.y != scaleTarget)
-			{
-				scale.y = FlxMath.lerp(scale.y, scaleTarget, FlxMath.bound(elapsed * 5, 0, 1));
-				updateHitbox();
-			}
-		}
+			confirmSpr.alpha = FlxMath.lerp(confirmSpr.alpha, glowAlphaTarget * alpha, FlxMath.bound(elapsed * 10, 0, 1));
+		if (confirmSpr.scale.x != scale.x * 1.2 || confirmSpr.scale.y != scale.y * 1.2)
+			confirmSpr.scale.set(scale.x * 1.2, scale.y * 1.2);
 
 		if (pressedSpr.alpha != 0)
 			pressedSpr.update(elapsed);

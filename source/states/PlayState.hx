@@ -1,6 +1,7 @@
 package states;
 
 import flixel.util.FlxSort;
+import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
 import sys.io.File;
 import tjson.TJSON;
@@ -38,6 +39,7 @@ class PlayState extends MusicState
 		for (audio in audios)
 			audio.play();
 		Conductor.song = audios[0];
+		FlxTimer.wait(5, () -> FlxTween.num(scrollSpeed, 3, 5, null, f -> scrollSpeed = f));
 	}
 
 	inline function createUI():Void
@@ -47,25 +49,25 @@ class PlayState extends MusicState
 		playerStrum.noteMove = note ->
 		{
 			note.y = playerStrum.y
-				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
+				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - note.height;
 		}
 		add(opponentStrum = new Strumline(50, 150));
 		opponentStrum.noteMove = note ->
 		{
 			note.y = opponentStrum.y
-				+ opponentStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed) - note.height;
+				+ opponentStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - note.height;
 			if (note.y < opponentStrum.y)
 			{
 				note.kill();
-				opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 1;
-				FlxTimer.wait(.15, () -> opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
+				opponentStrum.strums.members[note.data % 4].glowAlphaTarget = opponentStrum.strums.members[note.data % 4].confirmSpr.alpha = 1;
+				FlxTimer.wait(.1, () -> opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
 			}
 		}
 	}
 
 	inline function createChart():Void
 	{
-		var chart:Chart = TJSON.parse(File.getContent(Path.combine([config.songs[0].path, '${config.difficulty}.json'])));
+		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(config.songs[0].path)}-${config.difficulty}', config.mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
 		for (song in config.songs[0].audioFiles)
 		{
@@ -76,15 +78,16 @@ class PlayState extends MusicState
 
 		var noteCount:Array<Int> = [0, 0, 0, 0, 0, 0, 0, 0];
 		for (note in chart.notes)
+		{
+			var strum = note.data > 3 ? opponentStrum : playerStrum;
 			if (noteCount[note.data] < 100)
 			{
-				var strum = note.data > 3 ? opponentStrum : playerStrum;
-				var n = strum.notes[note.data % 4].recycle(Note, () -> new Note(note.data));
-				n.data = note.data;
-				n.time = note.time;
-				n.length = note.length;
+				var n = new Note(note.data);
+				n.data = note.data ?? 0;
+				n.time = note.time ?? 0;
+				n.length = note.length ?? 0;
 				n.type = note.type;
-				n.mult = note.mult;
+				n.mult = note.mult ?? 1;
 				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
 				n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight,
 					Settings.data.noteRGB[note.data % 4].outline);
@@ -92,6 +95,9 @@ class PlayState extends MusicState
 				strum.notes[note.data % 4].add(n);
 				noteCount[note.data] += 1;
 			}
+			else
+				strum.uNoteData.push(note);
+		}
 		for (note in playerStrum.notes)
 			note.sort(FlxSort.byY, FlxSort.DESCENDING);
 		for (note in opponentStrum.notes)
