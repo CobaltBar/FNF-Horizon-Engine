@@ -21,7 +21,7 @@ class NoteSprite extends FlxCopySprite
 	public function new(noteData:Int = 2)
 	{
 		super();
-		frames = Path.sparrow('note', PlayState.config.mods);
+		frames = Path.sparrow('note', PlayState.mods);
 		animation.addByPrefix('idle', 'idle', 24, true);
 		animation.play('idle', true);
 		scale.set(1.1, 1.1);

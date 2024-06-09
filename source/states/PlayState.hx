@@ -16,12 +16,10 @@ class PlayState extends MusicState
 	public var scrollSpeed:Float = 1;
 	public var audios:Map<String, FlxSound> = [];
 
-	public static var config:
-		{
-			mods:Array<Mod>,
-			songs:Array<Song>,
-			difficulty:String
-		};
+	public static var mods:Array<Mod> = [];
+	public static var songs:Array<Song> = [];
+	public static var difficulty:String = "";
+	public static var week:Week;
 
 	public override function create()
 	{
@@ -43,39 +41,32 @@ class PlayState extends MusicState
 	{
 		add(playerStrum = new Strumline(FlxG.width - 50, 150));
 		playerStrum.x -= playerStrum.width;
-		playerStrum.noteMove = note ->
-		{
-			note.y = playerStrum.y
-				+ playerStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - note.height;
-
-			if (note.y < playerStrum.y)
-			{
-				note.kill();
-				playerStrum.strums.members[note.data % 4].glowAlphaTarget = playerStrum.strums.members[note.data % 4].confirmSpr.alpha = 1;
-				FlxTimer.wait(.1, () -> playerStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
-				playerStrum.addNextNote();
-			}
-		}
 		add(opponentStrum = new Strumline(50, 150));
-		opponentStrum.noteMove = note ->
+		opponentStrum.noteUpdate = note ->
 		{
-			note.y = opponentStrum.y
-				+ opponentStrum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - note.height;
 			if (note.y < opponentStrum.y)
 			{
 				note.kill();
-				opponentStrum.strums.members[note.data % 4].glowAlphaTarget = opponentStrum.strums.members[note.data % 4].confirmSpr.alpha = 1;
-				FlxTimer.wait(.1, () -> opponentStrum.strums.members[note.data % 4].glowAlphaTarget = 0);
+				opponentStrum.strums.members[note.data % 4].confirm();
 				opponentStrum.addNextNote();
+			}
+		}
+		playerStrum.noteUpdate = note ->
+		{
+			if (note.y < playerStrum.y)
+			{
+				note.kill();
+				playerStrum.strums.members[note.data % 4].confirm();
+				playerStrum.addNextNote();
 			}
 		}
 	}
 
-	inline function createChart():Void
+	function createChart():Void
 	{
-		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(config.songs[0].path)}-${config.difficulty}', config.mods);
+		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].path)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
-		for (song in config.songs[0].audioFiles)
+		for (song in songs[0].audioFiles)
 		{
 			var audio = FlxG.sound.play(song);
 			audio.pause();

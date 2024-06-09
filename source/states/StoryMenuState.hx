@@ -138,9 +138,13 @@ class StoryMenuState extends MusicMenuState
 			if (mod.global)
 				mods.push(mod);
 		var songs = [];
-		for (song in optionToData[menuOptions[curSelected]].songs)
+		for (song in optionToData[menuOptions[curSelected]].week.songs)
 			songs.push(optionToData[menuOptions[curSelected]].mod.songs.get(song.toLowerCase()));
-		PlayState.config = {mods: mods, songs: songs, difficulty: optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty]};
+
+		PlayState.mods = mods;
+		PlayState.songs = songs;
+		PlayState.difficulty = optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty];
+		PlayState.week = optionToData[menuOptions[curSelected]].week;
 		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
 		if (!Settings.data.reducedMotion)
 		{
@@ -149,8 +153,6 @@ class StoryMenuState extends MusicMenuState
 			if (Settings.data.flashingLights)
 				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
 			menuOptions[curSelected].updateHitbox();
-			FlxTween.tween(menuOptions[curSelected], {x: (FlxG.width - menuOptions[curSelected].width) * .5, y: FlxG.height - 350}, 1,
-				{type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.5, y: 1.5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
@@ -233,7 +235,7 @@ class StoryMenuState extends MusicMenuState
 		for (mod in Mods.enabled)
 			for (week in mod.weeks)
 			{
-				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 - (50 * i), 750 - (200 * i),
+				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i),
 					Path.image('week-${week.name.toLowerCase().replace(' ', '')}', [mod]), 1.4);
 				option.alpha = .6;
 				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);

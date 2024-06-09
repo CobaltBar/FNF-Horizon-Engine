@@ -18,10 +18,7 @@ class FlxCopySprite extends FlxSprite
 					alpha = targetSpr.alpha;
 			if (copyScale)
 				if (scale != targetSpr.scale)
-				{
 					scale = targetSpr.scale;
-					updateHitbox();
-				}
 		}
 		super.update(elapsed);
 	}
