@@ -44,7 +44,7 @@ class PlayState extends MusicState
 		add(opponentStrum = new Strumline(50, 150));
 		opponentStrum.noteUpdate = note ->
 		{
-			if (note.y < opponentStrum.y)
+			if (note.y < opponentStrum.strums.members[note.data % 4].y)
 			{
 				note.kill();
 				opponentStrum.strums.members[note.data % 4].confirm();
@@ -53,7 +53,7 @@ class PlayState extends MusicState
 		}
 		playerStrum.noteUpdate = note ->
 		{
-			if (note.y < playerStrum.y)
+			if (note.y < playerStrum.strums.members[note.data % 4].y)
 			{
 				note.kill();
 				playerStrum.strums.members[note.data % 4].confirm();

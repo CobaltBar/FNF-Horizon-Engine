@@ -22,6 +22,7 @@ class Main extends Sprite
 
 		if (Sys.args().contains('--verbose'))
 		{
+			#if windows Sys.println(''); #end // because my console was being goofy
 			verboseLogging = true;
 			Log.info('Verbose Logging Enabled');
 		}
