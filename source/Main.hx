@@ -30,7 +30,7 @@ class Main extends Sprite
 		addChild(new FlxSafeGame(1920, 1080, InitState, 90, 60, true));
 		addChild(new EngineInfo(10, 10, 0xFFFFFFFF));
 
-		#if linux Lib.current.stage.window.setIcon(Image.fromFile('icon.png')); #end
+		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile('icon.png')); #end
 
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add(function(w, h)
