@@ -39,8 +39,8 @@ class SaveVars
 		'back' => [BACKSPACE, ESCAPE],
 		'pause' => [ENTER, ESCAPE],
 		'reset' => [R],
-		'volume' => [PLUS, MINUS, BACKSLASH, NUMPADPLUS, NUMPADMINUS, NUMPADNINE],
-		'debug' => [NUMPADSEVEN, NUMPADEIGHT],
+		'volume' => [PLUS, MINUS, BACKSLASH, NUMPADPLUS, NUMPADMINUS, NUMPADMULTIPLY],
+		'debug' => [NUMPADNINE],
 	];
 
 	var savedMods:Map<String,

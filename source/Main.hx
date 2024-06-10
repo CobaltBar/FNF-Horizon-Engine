@@ -5,7 +5,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import haxe.Exception;
 import lime.app.Application;
-import lime.graphics.Image;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
