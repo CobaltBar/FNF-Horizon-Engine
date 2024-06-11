@@ -35,6 +35,8 @@ class PlayState extends MusicState
 		for (audio in audios)
 			audio.play();
 		Conductor.song = audios["Inst"];
+
+		PlayerInput.init();
 	}
 
 	inline function createUI():Void
@@ -51,18 +53,9 @@ class PlayState extends MusicState
 				opponentStrum.addNextNote();
 			}
 		}
-		playerStrum.noteUpdate = note ->
-		{
-			if (note.y < playerStrum.strums.members[note.data % 4].y)
-			{
-				note.kill();
-				playerStrum.strums.members[note.data % 4].confirm();
-				playerStrum.addNextNote();
-			}
-		}
 	}
 
-	function createChart():Void
+	inline function createChart():Void
 	{
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].path)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
