@@ -18,11 +18,11 @@ class Strumline extends FlxSpriteGroup
 
 	public function new(x:Float, y:Float, ?mod:Mod)
 	{
-		super(x, y);
-
 		defaultNoteMove = note -> note.y = y
 			+ strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * PlayState.instance.scrollSpeed * note.mult) - note.height;
 		noteMove = defaultNoteMove;
+
+		super(x, y);
 
 		add(strums = new FlxTypedSpriteGroup<StrumNote>(x, 0));
 		add(splashes = new FlxTypedSpriteGroup<FlxCopySprite>(0, 0));
@@ -45,14 +45,28 @@ class Strumline extends FlxSpriteGroup
 	{
 		if (noteUpdate != null)
 			for (i in 0...notes.length)
-			{
-				notes[i].forEachAlive(note -> noteMove(note));
+				notes[i].forEachAlive(note ->
+				{
+					noteMove(note);
+					noteUpdate(note);
 
-				notes[i].forEachAlive(note -> noteUpdate(note));
-			}
+					if ((Conductor.time - note.time - 350) > 0)
+					{
+						note.kill();
+						addNextNote();
+					}
+				});
 		else
 			for (i in 0...notes.length)
-				notes[i].forEachAlive(note -> noteMove(note));
+				notes[i].forEachAlive(note ->
+				{
+					noteMove(note);
+					if (note.y < -note.height)
+					{
+						note.kill();
+						addNextNote();
+					}
+				});
 		super.update(elapsed);
 	}
 
