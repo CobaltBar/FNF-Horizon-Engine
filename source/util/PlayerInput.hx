@@ -49,13 +49,13 @@ class PlayerInput
 				strum.strums.members[data].confirm(false);
 				return;
 			}
-			if (Math.abs(Conductor.time - note.time) <= (135 + safeFrames)) // Bad
+			else if (Math.abs(Conductor.time - note.time) <= (135 + safeFrames)) // Bad
 			{
 				note.kill();
 				strum.strums.members[data].confirm(false);
 				return;
 			}
-			if (Math.abs(Conductor.time - note.time) <= (180 + safeFrames)) // Shit
+			else if (Math.abs(Conductor.time - note.time) <= (180 + safeFrames)) // Shit
 			{
 				note.kill();
 				strum.strums.members[data].confirm(false);
