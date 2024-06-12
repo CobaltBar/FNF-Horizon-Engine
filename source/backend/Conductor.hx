@@ -65,7 +65,6 @@ class Conductor extends FlxBasic
 
 	@:noCompletion public static function reset():Void
 	{
-		song = null;
 		switchToMusic = true;
 		bpm = 100;
 		curStep = curBeat = -1;

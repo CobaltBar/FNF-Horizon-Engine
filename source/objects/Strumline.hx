@@ -49,24 +49,11 @@ class Strumline extends FlxSpriteGroup
 				{
 					noteMove(note);
 					noteUpdate(note);
-
-					if ((Conductor.time - note.time - 350) > 0)
-					{
-						note.kill();
-						addNextNote();
-					}
 				});
 		else
 			for (i in 0...notes.length)
-				notes[i].forEachAlive(note ->
-				{
-					noteMove(note);
-					if (note.y < -note.height)
-					{
-						note.kill();
-						addNextNote();
-					}
-				});
+				notes[i].forEachAlive(note -> noteMove(note));
+
 		super.update(elapsed);
 	}
 
@@ -81,7 +68,6 @@ class Strumline extends FlxSpriteGroup
 			n.x = ((strums.members[data.data % 4].width * data.data % 4) + 5) - 20;
 			n.rgb.set(Settings.data.noteRGB[data.data % 4].base, Settings.data.noteRGB[data.data % 4].highlight, Settings.data.noteRGB[data.data % 4].outline);
 			n.angle = n.angleOffset = strums.members[data.data % 4].angleOffset;
-			notes[data.data % 4].add(n);
 		}
 	}
 }

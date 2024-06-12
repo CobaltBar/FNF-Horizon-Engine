@@ -8,18 +8,25 @@ import tjson.TJSON;
 
 class PlayState extends MusicState
 {
-	public var playerStrum:Strumline;
-	public var opponentStrum:Strumline;
-
 	public static var instance:PlayState;
-
-	public var scrollSpeed:Float = 1;
-	public var audios:Map<String, FlxSound> = [];
-
 	public static var mods:Array<Mod> = [];
 	public static var songs:Array<Song> = [];
 	public static var difficulty:String = "";
 	public static var week:Week;
+
+	public var audios:Map<String, FlxSound> = [];
+
+	public var playerStrum:Strumline;
+	public var opponentStrum:Strumline;
+
+	public var scrollSpeed:Float = 1;
+	public var score:Int = 0;
+	public var accuracy:Float = 0;
+	public var misses:Int = 0;
+	public var combo:Int = 0;
+	public var scores:Map<String, Int> = ["sick" => 0, "good" => 0, "bad" => 0, "shit" => 0];
+
+	public var comboGroup:Map<String, FlxSpriteGroup> = [];
 
 	public override function create()
 	{
@@ -27,19 +34,31 @@ class PlayState extends MusicState
 		super.create();
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
+
+		for (thing in ['rating', 'combo', 'comboSpr'])
+		{
+			comboGroup.set(thing, new FlxSpriteGroup());
+			add(comboGroup[thing]);
+		}
+
 		add(playerStrum = new Strumline(FlxG.width - 50, 150));
 		playerStrum.x -= playerStrum.width;
 		add(opponentStrum = new Strumline(50, 150));
-		DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
-		opponentStrum.noteUpdate = note ->
+		opponentStrum.noteUpdate = note -> if (note.y < opponentStrum.strums.members[note.data % 4].y)
 		{
-			if (note.y < opponentStrum.strums.members[note.data % 4].y)
-			{
-				note.kill();
-				opponentStrum.strums.members[note.data % 4].confirm();
-				opponentStrum.addNextNote();
-			}
+			note.kill();
+			opponentStrum.strums.members[note.data % 4].confirm();
+			opponentStrum.addNextNote();
 		}
+		playerStrum.noteUpdate = note -> if (note.y < -note.height)
+		{
+			note.kill();
+			playerStrum.addNextNote();
+			miss();
+		}
+
+		DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
+
 		Conductor.reset();
 		createChart();
 		for (audio in audios)
@@ -82,15 +101,14 @@ class PlayState extends MusicState
 			if (noteCount[note.data > 3 ? 0 : 1] < 50)
 			{
 				var n = new Note(note.data);
-				n.visible = false;
+				n.y = -10000;
 				n.resetNote(note);
-				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
-				n.y = strum.y + strum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - n.height;
 				n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight,
 					Settings.data.noteRGB[note.data % 4].outline);
 				n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
+				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
+				n.y = strum.y + strum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - n.height;
 				strum.notes[note.data % 4].add(n);
-				n.visible = true;
 				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}
 			else
@@ -108,5 +126,11 @@ class PlayState extends MusicState
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayerInput.onRelease);
 		instance = null;
 		super.destroy();
+	}
+
+	@:keep public inline function miss()
+	{
+		misses += 1;
+		combo = 0;
 	}
 }
