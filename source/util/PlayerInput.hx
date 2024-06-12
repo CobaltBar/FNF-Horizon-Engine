@@ -13,14 +13,8 @@ class PlayerInput
 	{
 		strum = PlayState.instance.playerStrum;
 
-		keyToData.set(Settings.data.keybinds['notes'][0], 0);
-		keyToData.set(Settings.data.keybinds['notes'][1], 1);
-		keyToData.set(Settings.data.keybinds['notes'][2], 2);
-		keyToData.set(Settings.data.keybinds['notes'][3], 3);
-		keyToData.set(Settings.data.keybinds['notes'][4], 0);
-		keyToData.set(Settings.data.keybinds['notes'][5], 1);
-		keyToData.set(Settings.data.keybinds['notes'][6], 2);
-		keyToData.set(Settings.data.keybinds['notes'][7], 3);
+		for (i in 0...8)
+			keyToData.set(Settings.data.keybinds['notes'][i], i % 4);
 		safeFrames = (10 / FlxG.updateFramerate) * 1000;
 
 		for (setting in Settings.data.keybinds['notes'])
