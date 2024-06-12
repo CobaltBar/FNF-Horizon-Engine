@@ -72,7 +72,6 @@ class PlayState extends MusicState
 		{
 			var audio = FlxG.sound.play(song);
 			audio.pause();
-			audio.pitch = 5;
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
