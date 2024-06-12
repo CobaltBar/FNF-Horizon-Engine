@@ -27,23 +27,10 @@ class PlayState extends MusicState
 		super.create();
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
-
-		DiscordRPC.change('In Game', 'Song: \nScore: 69');
-		createUI();
-		createChart();
-		Conductor.reset();
-		for (audio in audios)
-			audio.play();
-		Conductor.song = audios["Inst"];
-
-		PlayerInput.init();
-	}
-
-	inline function createUI():Void
-	{
 		add(playerStrum = new Strumline(FlxG.width - 50, 150));
 		playerStrum.x -= playerStrum.width;
 		add(opponentStrum = new Strumline(50, 150));
+		DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
 		opponentStrum.noteUpdate = note ->
 		{
 			if (note.y < opponentStrum.strums.members[note.data % 4].y)
@@ -53,16 +40,39 @@ class PlayState extends MusicState
 				opponentStrum.addNextNote();
 			}
 		}
+		Conductor.reset();
+		createChart();
+		for (audio in audios)
+			audio.play();
+		Conductor.song = audios["Inst"];
+		Conductor.song.onComplete = () ->
+		{
+			songs.shift();
+			if (songs.length == 0)
+			{
+				Conductor.reset();
+				Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
+				Conductor.song = FlxG.sound.music;
+				FlxG.sound.music.resume();
+				FlxG.sound.music.fadeIn(.75);
+				MusicState.switchState(new MainMenuState());
+			}
+			else
+				MusicState.switchState(new PlayState(), true, true);
+		}
+		PlayerInput.init();
 	}
 
 	inline function createChart():Void
 	{
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].path)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
+		Conductor.bpm = chart.bpm;
 		for (song in songs[0].audioFiles)
 		{
 			var audio = FlxG.sound.play(song);
 			audio.pause();
+			audio.pitch = 5;
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
@@ -95,7 +105,8 @@ class PlayState extends MusicState
 
 	public override function destroy()
 	{
-		PlayerInput.destroy();
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayerInput.onPress);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayerInput.onRelease);
 		instance = null;
 		super.destroy();
 	}

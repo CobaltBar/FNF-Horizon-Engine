@@ -4,91 +4,55 @@ import openfl.events.KeyboardEvent;
 
 class PlayerInput
 {
-	static var strum:Strumline;
-	static var keys:Map<Int, Bool> = [];
+	static var keyTracker:Map<Int, Bool> = [];
 	static var safeFrames:Float = 0;
 	static var keyToData:Map<Int, Int> = [];
 
 	public static function init():Void
 	{
-		strum = PlayState.instance.playerStrum;
-
-		for (i in 0...8)
+		for (i in 0...Settings.data.keybinds['notes'].length)
+		{
 			keyToData.set(Settings.data.keybinds['notes'][i], i % 4);
+			keyTracker.set(Settings.data.keybinds['notes'][i], false);
+		}
 		safeFrames = (10 / FlxG.updateFramerate) * 1000;
-
-		for (setting in Settings.data.keybinds['notes'])
-			keys.set(setting, false);
-
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onOpenFLPress);
-
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onOpenFLRelease);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onPress);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onRelease);
 	}
 
-	static function onPress(data:Int):Void
+	@:noCompletion public static function onPress(event:KeyboardEvent):Void
 	{
-		for (note in strum.notes[data].members)
-		{
-			if (!note.alive)
-				continue;
-			if (Math.abs(Conductor.time - note.time) <= (45 + safeFrames)) // Sick
-			{
-				note.kill();
-				strum.strums.members[data].confirm(false);
-				return;
-			}
-			else if (Math.abs(Conductor.time - note.time) <= (90 + safeFrames)) // Good
-			{
-				note.kill();
-				strum.strums.members[data].confirm(false);
-				return;
-			}
-			else if (Math.abs(Conductor.time - note.time) <= (135 + safeFrames)) // Bad
-			{
-				note.kill();
-				strum.strums.members[data].confirm(false);
-				return;
-			}
-			else if (Math.abs(Conductor.time - note.time) <= (180 + safeFrames)) // Shit
-			{
-				note.kill();
-				strum.strums.members[data].confirm(false);
-				return;
-			}
-			else
-			{
-				strum.strums.members[data].press(false);
-				return;
-			}
-		}
-		strum.strums.members[data].press(false); // It returns in all other cases, so i can just run this :3
-	}
-
-	static function onRelease(data:Int):Void
-	{
-		@:privateAccess
-		strum.strums.members[data].confirmAlphaTarget = strum.strums.members[data].pressedAlphaTarget = 0;
-	}
-
-	@:noCompletion static function onOpenFLPress(event:KeyboardEvent)
 		if (Settings.data.keybinds['notes'].contains(event.keyCode))
-			if (!keys[event.keyCode])
+			if (!keyTracker[event.keyCode])
 			{
-				keys.set(event.keyCode, true);
-				onPress(keyToData[event.keyCode]);
+				for (note in PlayState.instance.playerStrum.notes[keyToData[event.keyCode]].members)
+				{
+					if (!note.alive)
+						continue;
+					if (Math.abs(Conductor.time - note.time) <= (180 + safeFrames))
+					{
+						note.kill();
+						PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
+						judge(Math.abs(Conductor.time - note.time));
+						return;
+					}
+				}
+				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].press(false);
 			}
+	}
 
-	@:noCompletion static function onOpenFLRelease(event:KeyboardEvent)
+	@:noCompletion public static function onRelease(event:KeyboardEvent):Void
+	{
 		if (Settings.data.keybinds['notes'].contains(event.keyCode))
 		{
-			keys.set(event.keyCode, false);
-			onRelease(keyToData[event.keyCode]);
+			keyTracker.set(event.keyCode, false);
+			@:privateAccess
+			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirmAlphaTarget = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].pressedAlphaTarget = 0;
 		}
+	}
 
-	public static function destroy():Void
+	static inline function judge(time:Float):Void
 	{
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, onOpenFLPress);
-
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onOpenFLRelease);
+		// 45, 90, 135, 180
 	}
 }
