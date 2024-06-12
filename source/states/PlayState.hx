@@ -8,8 +8,8 @@ import tjson.TJSON;
 
 class PlayState extends MusicState
 {
-	var playerStrum:Strumline;
-	var opponentStrum:Strumline;
+	public var playerStrum:Strumline;
+	public var opponentStrum:Strumline;
 
 	public static var instance:PlayState;
 
