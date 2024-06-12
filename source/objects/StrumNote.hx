@@ -78,26 +78,21 @@ class StrumNote extends NoteSprite
 			confirmSpr.draw();
 	}
 
-	@:keep public inline function confirm():Void
+	@:keep public inline function confirm(unconfirm:Bool = true):Void
 	{
-		scale.set(scale.x * 1.1, scale.y * 1.1);
+		scale.set(targetScaleX * 1.1, targetScaleY * 1.1);
+
 		confirmAlphaTarget = confirmSpr.alpha = 1;
-		FlxTimer.wait(.1, () ->
-		{
-			confirmAlphaTarget = 0;
-			targetScaleX = targetScaleY = 1.1;
-		});
+		if (unconfirm)
+			FlxTimer.wait(.1, () -> confirmAlphaTarget = 0);
 	}
 
-	@:keep public inline function press():Void
+	@:keep public inline function press(unconfirm:Bool = true):Void
 	{
-		scale.set(scale.x / 1.1, scale.y / 1.1);
+		scale.set(targetScaleX * .9, targetScaleY * .9);
 		pressedAlphaTarget = pressedSpr.alpha = 1;
-		FlxTimer.wait(.1, () ->
-		{
-			pressedAlphaTarget = 0;
-			targetScaleX = targetScaleY = 1.1;
-		});
+		if (unconfirm)
+			FlxTimer.wait(.1, () -> pressedAlphaTarget = 0);
 	}
 
 	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>

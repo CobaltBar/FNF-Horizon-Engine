@@ -73,6 +73,7 @@ class PlayState extends MusicState
 			if (noteCount[note.data > 3 ? 0 : 1] < 50)
 			{
 				var n = new Note(note.data);
+				n.visible = false;
 				n.resetNote(note);
 				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
 				n.y = strum.y + strum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - n.height;
@@ -80,6 +81,7 @@ class PlayState extends MusicState
 					Settings.data.noteRGB[note.data % 4].outline);
 				n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
 				strum.notes[note.data % 4].add(n);
+				n.visible = true;
 				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}
 			else
@@ -93,6 +95,7 @@ class PlayState extends MusicState
 
 	public override function destroy()
 	{
+		PlayerInput.destroy();
 		instance = null;
 		super.destroy();
 	}
