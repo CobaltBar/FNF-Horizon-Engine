@@ -155,7 +155,7 @@ class TitleState extends MusicState
 		var alphabet:Alphabet = new Alphabet(FlxG.width * 2 * (introTexts.length % 2 == 0 ? 1 : -1), FlxG.height * .5, text, true, CENTER, 1.4, 0, yOff);
 		introTexts.push(alphabet);
 		add(alphabet);
-		FlxTween.tween(alphabet, {x: (FlxG.width - alphabet.width) * .5}, .5, {type: ONESHOT, ease: FlxEase.expoOut,});
+		FlxTween.tween(alphabet, {x: FlxG.width * .5}, .5, {type: ONESHOT, ease: FlxEase.expoOut,});
 		return alphabet;
 	}
 

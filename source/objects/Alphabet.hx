@@ -4,7 +4,6 @@ class Alphabet extends FlxSpriteGroup
 {
 	static final letters:String = 'abcdefghijklmnopqrstuvwxyz';
 
-	var daX:Float = 0;
 	var alignment(default, set):FlxTextAlign;
 
 	public var option:Dynamic;
@@ -52,26 +51,20 @@ class Alphabet extends FlxSpriteGroup
 			letterWidth += char.width;
 			add(char);
 		}
-		daX = x;
-		this.alignment = alignment;
-	}
 
-	@:noCompletion override function set_x(Value:Float):Float
-	{
-		daX = Value;
-		return super.set_x(Value);
+		this.alignment = alignment;
 	}
 
 	@:noCompletion function set_alignment(val:FlxTextAlign):FlxTextAlign
 	{
-		this.x = daX;
+		updateHitbox();
 		switch (val)
 		{
 			case LEFT | JUSTIFY:
 			case CENTER:
-				this.x -= this.width * .5;
+				offset.x = width * .5;
 			case RIGHT:
-				this.x -= this.width;
+				offset.x = width;
 		}
 		return alignment = val;
 	}
