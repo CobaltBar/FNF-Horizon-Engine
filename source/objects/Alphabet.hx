@@ -61,6 +61,7 @@ class Alphabet extends FlxSpriteGroup
 		switch (val)
 		{
 			case LEFT | JUSTIFY:
+				offset.x = 0;
 			case CENTER:
 				offset.x = width * .5;
 			case RIGHT:
