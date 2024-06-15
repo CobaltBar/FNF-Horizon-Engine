@@ -61,25 +61,49 @@ class PlayState extends MusicState
 
 		Conductor.reset();
 		createChart();
-		for (audio in audios)
-			audio.play();
-		Conductor.song = audios["Inst"];
-		Conductor.song.onComplete = () ->
-		{
-			songs.shift();
-			if (songs.length == 0)
-			{
-				Conductor.reset();
-				Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
-				Conductor.song = FlxG.sound.music;
-				FlxG.sound.music.resume();
-				FlxG.sound.music.fadeIn(.75);
-				MusicState.switchState(new MainMenuState());
-			}
-			else
-				MusicState.switchState(new PlayState(), true, true);
-		}
+		startCountdown();
 		PlayerInput.init();
+	}
+
+	inline function startCountdown():Void
+	{
+		var countdownNameArr = ['ready', 'set', 'go'];
+		var countdownSoundArr = ['Three', 'Two', 'One', 'Go'];
+		new FlxTimer().start(Conductor.beatLength * .001, timer ->
+		{
+			FlxG.sound.play(Path.sound(countdownSoundArr[timer.elapsedLoops - 1]));
+			if (timer.elapsedLoops > 1)
+			{
+				var countdownItem = Util.createGraphicSprite(0, 0, Path.image(countdownNameArr[timer.elapsedLoops - 2]), 1.2);
+				countdownItem.screenCenter();
+				add(countdownItem);
+				FlxTween.tween(countdownItem.scale, {x: 1.4, y: 1.4}, Conductor.beatLength * .001,
+					{type: ONESHOT, ease: FlxEase.expoOut, onComplete: tween -> countdownItem.destroy()});
+				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .001, {type: ONESHOT, ease: FlxEase.expoOut});
+			}
+			if (timer.loopsLeft == 0)
+				FlxTimer.wait(Conductor.beatLength * .001, () ->
+				{
+					for (audio in audios)
+						audio.play();
+					Conductor.song = audios["Inst"];
+					Conductor.song.onComplete = () ->
+					{
+						songs.shift();
+						if (songs.length == 0)
+						{
+							Conductor.reset();
+							Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
+							Conductor.song = FlxG.sound.music;
+							FlxG.sound.music.resume();
+							FlxG.sound.music.fadeIn(.75);
+							MusicState.switchState(new MainMenuState());
+						}
+						else
+							MusicState.switchState(new PlayState(), true, true);
+					}
+				});
+		}, 4);
 	}
 
 	inline function createChart():Void
@@ -102,12 +126,7 @@ class PlayState extends MusicState
 			{
 				var n = new Note(note.data);
 				n.y = -10000;
-				n.resetNote(note);
-				n.rgb.set(Settings.data.noteRGB[note.data % 4].base, Settings.data.noteRGB[note.data % 4].highlight,
-					Settings.data.noteRGB[note.data % 4].outline);
-				n.angle = n.angleOffset = strum.strums.members[note.data % 4].angleOffset;
-				n.x = ((strum.strums.members[note.data % 4].width * note.data % 4) + 5) - 20;
-				n.y = strum.y + strum.strums.members[note.data % 4].y - (0.45 * (Conductor.time - note.time) * scrollSpeed * note.mult) - n.height;
+				n.resetNote(note, strum);
 				strum.notes[note.data % 4].add(n);
 				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}

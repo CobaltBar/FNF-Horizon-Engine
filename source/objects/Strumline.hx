@@ -65,9 +65,6 @@ class Strumline extends FlxSpriteGroup
 			var n = notes[data.data % 4].recycle(Note, () -> new Note(data.data));
 			n.y = -20000; // get sent into outer space idiot
 			n.resetNote(data);
-			n.x = ((strums.members[data.data % 4].width * data.data % 4) + 5) - 20;
-			n.rgb.set(Settings.data.noteRGB[data.data % 4].base, Settings.data.noteRGB[data.data % 4].highlight, Settings.data.noteRGB[data.data % 4].outline);
-			n.angle = n.angleOffset = strums.members[data.data % 4].angleOffset;
 		}
 	}
 }
