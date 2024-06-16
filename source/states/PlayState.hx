@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.FlxSignal;
 import flixel.util.FlxSort;
 import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
@@ -28,12 +29,16 @@ class PlayState extends MusicState
 
 	public var comboGroup:Map<String, FlxSpriteGroup> = [];
 
+	public var countdownEnded:FlxSignal;
+
 	public override function create()
 	{
 		Path.clearStoredMemory();
 		super.create();
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
+
+		countdownEnded = new FlxSignal();
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
 		{
@@ -72,6 +77,8 @@ class PlayState extends MusicState
 		new FlxTimer().start(Conductor.beatLength * .001, timer ->
 		{
 			FlxG.sound.play(Path.sound(countdownSoundArr[timer.elapsedLoops - 1]));
+			onBeat();
+
 			if (timer.elapsedLoops > 1)
 			{
 				var countdownItem = Util.createGraphicSprite(0, 0, Path.image(countdownNameArr[timer.elapsedLoops - 2]), 1.2);
@@ -84,6 +91,7 @@ class PlayState extends MusicState
 			if (timer.loopsLeft == 0)
 				FlxTimer.wait(Conductor.beatLength * .001, () ->
 				{
+					countdownEnded.dispatch();
 					for (audio in audios)
 						audio.play();
 					Conductor.song = audios["Inst"];

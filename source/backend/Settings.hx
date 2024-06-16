@@ -5,12 +5,31 @@ import flixel.input.keyboard.FlxKey;
 @:publicFields
 class SaveVars
 {
-	var noteRGB:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}> = [
-		{base: 0xFFC24B99, highlight: 0xFFFFFFFF, outline: 0xFF3C1F56},
-		{base: 0xFF00FFFF, highlight: 0xFFFFFFFF, outline: 0xFF1542B7},
-		{base: 0xFF12FA05, highlight: 0xFFFFFFFF, outline: 0xFF0A4447},
-		{base: 0xFFF9393F, highlight: 0xFFFFFFFF, outline: 0xFF651038}
-	];
+	var noteRGB:
+		{
+			strum:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
+			notes:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
+			press:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
+		} = {
+			strum: [
+				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
+				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
+				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
+				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000}
+			],
+			notes: [
+				{base: 0xFFC24B99, highlight: 0xFFFFFFFF, outline: 0xFF3C1F56},
+				{base: 0xFF00FFFF, highlight: 0xFFFFFFFF, outline: 0xFF1542B7},
+				{base: 0xFF12FA05, highlight: 0xFFFFFFFF, outline: 0xFF0A4447},
+				{base: 0xFFF9393F, highlight: 0xFFFFFFFF, outline: 0xFF651038}
+			],
+			press: [
+				{base: 0xFF8B78BC, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
+				{base: 0xFF6DC0C7, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
+				{base: 0xFF6DC782, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
+				{base: 0xFFBE7683, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
+			]
+		};
 
 	var downScroll:Bool = false;
 	var middleScroll:Bool = false;

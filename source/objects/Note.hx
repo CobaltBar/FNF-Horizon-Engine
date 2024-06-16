@@ -18,9 +18,12 @@ class Note extends NoteSprite
 
 		if (strum != null)
 		{
-			rgb.set(Settings.data.noteRGB[data % 4].base, Settings.data.noteRGB[data % 4].highlight, Settings.data.noteRGB[data % 4].outline);
+			rgb.set(Settings.data.noteRGB.notes[data % 4].base, Settings.data.noteRGB.notes[data % 4].highlight, Settings.data.noteRGB.notes[data % 4].outline);
 			angle = angleOffset = strum.strums.members[data % 4].angleOffset;
 			x = ((strum.strums.members[data % 4].width * data % 4) + 5) - 20;
 		}
 	}
+
+	public function move(strumY:Float, strumNote:StrumNote):Void
+		y = strumY + strumNote.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - height;
 }

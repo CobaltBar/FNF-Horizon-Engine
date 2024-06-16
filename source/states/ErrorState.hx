@@ -17,11 +17,11 @@ class ErrorState extends MusicState
 		shouldBop = false;
 		add(errorTitle = Util.createText(FlxG.width * .5, Settings.data.reducedMotion ? 75 : -100, 'Error Caught', 36, Path.font('vcr'), 0xFFFF0000, CENTER));
 		errorTitle.screenCenter(X);
-		add(errorDescription = Util.createText(0, Settings.data.reducedMotion ? 175 : FlxG.height + 100, @:privateAccess Log.log, 18, Path.font('vcr'),
+		add(errorDescription = Util.createText(0, Settings.data.reducedMotion ? 175 : FlxG.height + 100, @:privateAccess Log.log, 12, Path.font('vcr'),
 			0xFFFFFFFF, LEFT));
-		add(errorControls = Util.createText(0, Settings.data.reducedMotion ? FlxG.height + 40 : FlxG.height + 100,
+		add(errorControls = Util.createText(FlxG.width, Settings.data.reducedMotion ? FlxG.height + 40 : FlxG.height + 100,
 			'Restart Engine: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nCreate Log and Restart: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
-			18, Path.font('vcr'), 0xFF00FF00, LEFT));
+			18, Path.font('vcr'), 0xFF00FF00, RIGHT));
 		if (!Settings.data.reducedMotion)
 		{
 			FlxTween.tween(errorTitle, {y: 75}, 1, {type: ONESHOT, ease: FlxEase.expoOut});

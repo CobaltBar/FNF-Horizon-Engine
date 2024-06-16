@@ -87,7 +87,7 @@ class AccessibilityState extends MusicMenuState
 			var checkbox:Checkbox = new Checkbox(0, 0, options[i] == 'Flashing Lights');
 			checkbox.targetSpr = option;
 			checkbox.offsetX = -checkbox.width - 25;
-			checkbox.offsetY = (checkbox.height + option.height) * .5;
+			checkbox.offsetY = checkbox.height * .5;
 			checkbox.copyAlpha = true;
 			checkbox.cameras = [optionsCam];
 			checkbox.alpha = .6;

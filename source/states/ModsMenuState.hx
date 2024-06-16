@@ -379,14 +379,14 @@ class ModsMenuState extends MusicMenuState
 		controlsText.cameras = [menuCam];
 		add(controlsText);
 
-		allModsTitle = new Alphabet(0, 25, 'All Mods', true, CENTER, .9);
+		allModsTitle = new Alphabet(0, 25, 'All Mods', true, LEFT);
 		allModsTitle.screenCenter(X);
 		allModsTitle.y += allModsTitle.height;
 		allModsTitle.alpha = .6;
 		allModsTitle.cameras = [menuCam];
 		add(allModsTitle);
 
-		staticTitle = new Alphabet(0, 25, 'Static Mods', true, CENTER, .9);
+		staticTitle = new Alphabet(0, 25, 'Static Mods', true, LEFT);
 		staticTitle.screenCenter(X);
 		staticTitle.x -= staticModsBG.width + 25;
 		staticTitle.y += staticTitle.height;
@@ -394,7 +394,7 @@ class ModsMenuState extends MusicMenuState
 		staticTitle.cameras = [menuCam];
 		add(staticTitle);
 
-		enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, CENTER, .9);
+		enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, LEFT);
 		enabledTitle.screenCenter(X);
 		enabledTitle.x += enabledModsBG.width + 25;
 		enabledTitle.y += enabledTitle.height;
@@ -408,7 +408,7 @@ class ModsMenuState extends MusicMenuState
 		var i:Int = 0;
 		for (mod in Mods.all)
 		{
-			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, CENTER, .7);
+			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, LEFT, .7);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
 			option.clipRect = option.clipRect;

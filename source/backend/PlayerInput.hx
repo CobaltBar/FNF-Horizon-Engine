@@ -1,4 +1,4 @@
-package util;
+package backend;
 
 import openfl.events.KeyboardEvent;
 
@@ -7,6 +7,8 @@ class PlayerInput
 	static var keyTracker:Map<Int, Bool> = [];
 	static var safeFrames:Float = 0;
 	static var keyToData:Map<Int, Int> = [];
+
+	static var inputEnabled:Bool = false;
 
 	public static function init():Void
 	{
@@ -18,6 +20,7 @@ class PlayerInput
 		safeFrames = (10 / FlxG.drawFramerate) * 1000;
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onRelease);
+		PlayState.instance.countdownEnded.add(() -> inputEnabled = true);
 	}
 
 	@:noCompletion public static function onPress(event:KeyboardEvent):Void
@@ -26,19 +29,20 @@ class PlayerInput
 			if (!keyTracker[event.keyCode])
 			{
 				keyTracker.set(event.keyCode, true);
-				for (note in PlayState.instance.playerStrum.notes[keyToData[event.keyCode]].members)
-				{
-					if (!note.alive)
-						continue;
-					if (Math.abs(Conductor.time - note.time) <= (120 + safeFrames))
+				if (inputEnabled)
+					for (note in PlayState.instance.playerStrum.notes[keyToData[event.keyCode]].members)
 					{
-						note.kill();
-						PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
-						PlayState.instance.combo += 1;
-						judge(Math.abs(Conductor.time - note.time));
-						return;
+						if (!note.alive)
+							continue;
+						if (Math.abs(Conductor.time - note.time) <= (120 + safeFrames))
+						{
+							note.kill();
+							PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
+							PlayState.instance.combo += 1;
+							judge(Math.abs(Conductor.time - note.time));
+							return;
+						}
 					}
-				}
 				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].press(false);
 				if (!Settings.data.ghostTapping)
 					PlayState.instance.miss();
@@ -50,8 +54,12 @@ class PlayerInput
 		if (Settings.data.keybinds['notes'].contains(event.keyCode))
 		{
 			keyTracker.set(event.keyCode, false);
-			@:privateAccess
-			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirmAlphaTarget = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].pressedAlphaTarget = 0;
+			@:privateAccess {
+				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirmAlphaTarget = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].pressedAlphaTarget = 0;
+				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].lerpScale = true;
+				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].targetScaleX = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].restoreScaleX;
+				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].targetScaleY = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].restoreScaleY;
+			}
 		}
 	}
 
