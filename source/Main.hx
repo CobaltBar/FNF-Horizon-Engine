@@ -33,6 +33,15 @@ class Main extends Sprite
 
 		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile('icon.png')); #end
 
+		if (Sys.args().contains('--start-small'))
+		{
+			#if windows Sys.println(''); #end // because my console was being goofy
+			Log.info('Starting in 1280x720');
+			FlxG.resizeWindow(1280, 720);
+			Application.current.window.resize(1280, 720);
+			Application.current.window.maximized = false;
+		}
+
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add(function(w, h)
 		{
