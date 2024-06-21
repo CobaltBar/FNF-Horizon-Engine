@@ -20,7 +20,7 @@ class PlayerInput
 		safeFrames = (10 / FlxG.drawFramerate) * 1000;
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onRelease);
-		PlayState.instance.countdownEnded.add(() -> inputEnabled = true);
+		Countdown.countdownEnded.add(() -> inputEnabled = true);
 	}
 
 	@:noCompletion public static function onPress(event:KeyboardEvent):Void

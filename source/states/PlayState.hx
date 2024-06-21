@@ -1,6 +1,5 @@
 package states;
 
-import flixel.util.FlxSignal;
 import flixel.util.FlxSort;
 import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
@@ -29,8 +28,6 @@ class PlayState extends MusicState
 
 	public var comboGroup:Map<String, FlxSpriteGroup> = [];
 
-	public var countdownEnded:FlxSignal;
-
 	public override function create()
 	{
 		Path.clearStoredMemory();
@@ -38,7 +35,7 @@ class PlayState extends MusicState
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
 
-		countdownEnded = new FlxSignal();
+		var countdown = new Countdown();
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
 		{
@@ -46,9 +43,13 @@ class PlayState extends MusicState
 			add(comboGroup[thing]);
 		}
 
-		add(playerStrum = new Strumline(FlxG.width - 50, 150));
-		playerStrum.x -= playerStrum.width;
-		add(opponentStrum = new Strumline(50, 150));
+		add(playerStrum = new Strumline(0, 150));
+		playerStrum.screenCenter(X);
+		playerStrum.x += 500;
+		add(opponentStrum = new Strumline(0, 150));
+		opponentStrum.screenCenter(X);
+		opponentStrum.x -= 500;
+
 		opponentStrum.noteUpdate = note -> if (note.y < opponentStrum.strums.members[note.data % 4].y)
 		{
 			note.kill();
@@ -66,52 +67,8 @@ class PlayState extends MusicState
 
 		Conductor.reset();
 		createChart();
-		startCountdown();
+		countdown.start();
 		PlayerInput.init();
-	}
-
-	inline function startCountdown():Void
-	{
-		var countdownNameArr = ['ready', 'set', 'go'];
-		var countdownSoundArr = ['Three', 'Two', 'One', 'Go'];
-		new FlxTimer().start(Conductor.beatLength * .001, timer ->
-		{
-			FlxG.sound.play(Path.sound(countdownSoundArr[timer.elapsedLoops - 1]));
-			onBeat();
-
-			if (timer.elapsedLoops > 1)
-			{
-				var countdownItem = Util.createGraphicSprite(0, 0, Path.image(countdownNameArr[timer.elapsedLoops - 2]), 1.2);
-				countdownItem.screenCenter();
-				add(countdownItem);
-				FlxTween.tween(countdownItem.scale, {x: 1.4, y: 1.4}, Conductor.beatLength * .001,
-					{type: ONESHOT, ease: FlxEase.expoOut, onComplete: tween -> countdownItem.destroy()});
-				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .001, {type: ONESHOT, ease: FlxEase.expoOut});
-			}
-			if (timer.loopsLeft == 0)
-				FlxTimer.wait(Conductor.beatLength * .001, () ->
-				{
-					countdownEnded.dispatch();
-					for (audio in audios)
-						audio.play();
-					Conductor.song = audios["Inst"];
-					Conductor.song.onComplete = () ->
-					{
-						songs.shift();
-						if (songs.length == 0)
-						{
-							Conductor.reset();
-							Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
-							Conductor.song = FlxG.sound.music;
-							FlxG.sound.music.resume();
-							FlxG.sound.music.fadeIn(.75);
-							MusicState.switchState(new MainMenuState());
-						}
-						else
-							MusicState.switchState(new PlayState(), true, true);
-					}
-				});
-		}, 4);
 	}
 
 	inline function createChart():Void

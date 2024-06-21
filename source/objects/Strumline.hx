@@ -16,7 +16,7 @@ class Strumline extends FlxSpriteGroup
 
 	public function new(x:Float, y:Float, ?mod:Mod)
 	{
-		PlayState.instance.countdownEnded.add(() -> updateNotes = true);
+		Countdown.countdownEnded.add(() -> updateNotes = true);
 
 		super(x, y);
 

@@ -12,9 +12,9 @@ class MusicState extends FlxTransitionableState
 	var shouldZoom:Bool = true;
 	var targetZoom:Float = 1;
 
-	var curStep(get, null):Int = 0;
-	var curBeat(get, null):Int = 0;
-	var curDecBeat(get, null):Float = 0;
+	var curStep(get, set):Int;
+	var curBeat(get, set):Int;
+	var curDecBeat(get, set):Float;
 
 	private function onStep():Void {}
 
@@ -71,4 +71,13 @@ class MusicState extends FlxTransitionableState
 
 	@:noCompletion @:keep inline function get_curDecBeat():Float
 		return Conductor.curDecBeat;
+
+	@:noCompletion @:keep inline function set_curStep(val:Int):Int
+		return Conductor.curStep = curStep;
+
+	@:noCompletion @:keep inline function set_curBeat(val:Int):Int
+		return Conductor.curBeat = curStep;
+
+	@:noCompletion @:keep inline function set_curDecBeat(val:Float):Float
+		return Conductor.curDecBeat = val;
 }
