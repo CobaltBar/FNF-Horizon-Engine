@@ -14,13 +14,12 @@ class StrumNote extends NoteSprite
 
 	var confirmAlphaTarget:Float = 0;
 	var pressedAlphaTarget:Float = 0;
-	var lerpScale:Bool = true;
 
-	public var targetScaleX:Float = 1.1;
-	public var targetScaleY:Float = 1.1;
-
+	var targetScaleX:Float = 1.1;
+	var targetScaleY:Float = 1.1;
 	var restoreScaleX:Float = 1.1;
 	var restoreScaleY:Float = 1.1;
+	var lerpMultiplier:Float = 10;
 
 	public function new(noteData:Int = 2)
 	{
@@ -49,10 +48,9 @@ class StrumNote extends NoteSprite
 
 	public override function update(elapsed:Float)
 	{
-		if (lerpScale)
-			if (scale.x != targetScaleX || scale.y != targetScaleY)
-				scale.set(FlxMath.lerp(scale.x, targetScaleX, FlxMath.bound(elapsed * 10, 0, 1)),
-					FlxMath.lerp(scale.y, targetScaleY, FlxMath.bound(elapsed * 10, 0, 1)));
+		if (scale.x != targetScaleX || scale.y != targetScaleY)
+			scale.set(FlxMath.lerp(scale.x, targetScaleX, FlxMath.bound(elapsed * lerpMultiplier, 0, 1)),
+				FlxMath.lerp(scale.y, targetScaleY, FlxMath.bound(elapsed * lerpMultiplier, 0, 1)));
 
 		if (confirmSpr.alpha != confirmAlphaTarget * alpha)
 			confirmSpr.alpha = FlxMath.lerp(confirmSpr.alpha, confirmAlphaTarget * alpha, FlxMath.bound(elapsed * 10, 0, 1));
@@ -77,46 +75,48 @@ class StrumNote extends NoteSprite
 			confirmSpr.draw();
 	}
 
-	@:keep public inline function confirm(unconfirm:Bool = true):Void
+	public function confirm(unconfirm:Bool = true):Void
 	{
-		lerpScale = false;
-		confirmAlphaTarget = 1;
+		confirmAlphaTarget = confirmSpr.alpha = 1;
+		targetScaleX *= 1.05;
+		targetScaleY *= 1.05;
 		if (unconfirm)
 		{
-			confirmSpr.alpha = 1;
-			scale.set(targetScaleX * 1.1, targetScaleY * 1.1);
-			FlxTimer.wait(.1, () -> deConfirm());
+			scale.set(scale.x * 1.05, scale.y * 1.05);
+			FlxTimer.wait(.15, () -> unConfirm());
 		}
 		else
-		{
-			confirmSpr.alpha = .65;
-			restoreScaleX = targetScaleX;
-			restoreScaleY = targetScaleY;
-			scale.set(targetScaleX * 1.05, targetScaleY * 1.05);
-			targetScaleX *= 1.1;
-			targetScaleY *= 1.1;
-		}
+			lerpMultiplier = 25;
 	}
 
-	@:keep public inline function press(unconfirm:Bool = true):Void
+	public function press(unconfirm:Bool = true):Void
 	{
-		scale.set(targetScaleX * .9, targetScaleY * .9);
-		lerpScale = false;
-
-		pressedAlphaTarget = 1;
+		pressedAlphaTarget = pressedSpr.alpha = 1;
+		targetScaleX *= .95;
+		targetScaleY *= .95;
 		if (unconfirm)
 		{
-			pressedSpr.alpha = 1;
-			FlxTimer.wait(.1, () -> deConfirm());
+			scale.set(scale.x * .95, scale.y * .95);
+			FlxTimer.wait(.15, () -> unPress());
 		}
 		else
-			pressedSpr.alpha = .75;
+			lerpMultiplier = 25;
 	}
 
-	@:keep public inline function deConfirm():Void
+	public function unConfirm():Void
 	{
-		confirmAlphaTarget = pressedAlphaTarget = 0;
-		lerpScale = true;
+		confirmAlphaTarget = 0;
+		targetScaleX = restoreScaleX;
+		targetScaleY = restoreScaleY;
+		lerpMultiplier = 10;
+	}
+
+	public function unPress():Void
+	{
+		pressedAlphaTarget = 0;
+		targetScaleX = restoreScaleX;
+		targetScaleY = restoreScaleY;
+		lerpMultiplier = 10;
 	}
 
 	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>

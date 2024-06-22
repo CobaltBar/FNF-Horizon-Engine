@@ -90,7 +90,7 @@ class PlayState extends MusicState
 			if (noteCount[note.data > 3 ? 0 : 1] < 50)
 			{
 				var n = new Note(note.data);
-				n.y = -10000;
+				n.move(strum.strums.members[note.data % 4].y, strum.strums.members[note.data % 4]);
 				n.resetNote(note, strum);
 				strum.notes[note.data % 4].add(n);
 				noteCount[note.data > 3 ? 0 : 1] += 1;

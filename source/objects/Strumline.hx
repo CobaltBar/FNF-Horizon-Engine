@@ -45,12 +45,12 @@ class Strumline extends FlxSpriteGroup
 				for (i in 0...notes.length)
 					notes[i].forEachAlive(note ->
 					{
-						note.move(y, strums.members[note.data % 4]);
+						note.move(strums.members[note.data % 4].y, strums.members[note.data % 4]);
 						noteUpdate(note);
 					});
 			else
 				for (i in 0...notes.length)
-					notes[i].forEachAlive(note -> note.move(y, strums.members[note.data % 4]));
+					notes[i].forEachAlive(note -> note.move(strums.members[note.data % 4].y, strums.members[note.data % 4]));
 		}
 
 		super.update(elapsed);
@@ -61,9 +61,10 @@ class Strumline extends FlxSpriteGroup
 		var data = uNoteData.shift();
 		if (data != null)
 		{
-			var n = notes[data.data % 4].recycle(Note, () -> new Note(data.data));
+			var n = notes[data.data % 4].recycle(Note, () -> new Note(data.data), false, false);
 			n.y = -20000; // get sent into outer space idiot
 			n.resetNote(data);
+			n.revive();
 		}
 	}
 }

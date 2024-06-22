@@ -54,12 +54,8 @@ class PlayerInput
 		if (Settings.data.keybinds['notes'].contains(event.keyCode))
 		{
 			keyTracker.set(event.keyCode, false);
-			@:privateAccess {
-				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirmAlphaTarget = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].pressedAlphaTarget = 0;
-				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].lerpScale = true;
-				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].targetScaleX = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].restoreScaleX;
-				PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].targetScaleY = PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].restoreScaleY;
-			}
+			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].unPress();
+			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].unConfirm();
 		}
 	}
 

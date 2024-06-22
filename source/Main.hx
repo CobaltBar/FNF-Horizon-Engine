@@ -35,7 +35,6 @@ class Main extends Sprite
 
 		if (Sys.args().contains('--start-small'))
 		{
-			#if windows Sys.println(''); #end // because my console was being goofy
 			Log.info('Starting in 1280x720');
 			FlxG.resizeWindow(1280, 720);
 			Application.current.window.resize(1280, 720);
