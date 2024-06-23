@@ -1,3 +1,4 @@
+#if !macro
 import backend.*;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -20,3 +21,4 @@ import states.*;
 import util.*;
 
 using StringTools;
+#end
