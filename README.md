@@ -6,7 +6,7 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Supported Platforms
 
-- HXCPP - Windows, Mac, Linux
+- HXCPP - Windows, Mac (Untested), Linux
 
 ### Planned Platforms
 
@@ -19,7 +19,11 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 - latest lime, openfl, flixel, flixel-addons, flixel-ui, tjson
 
-- git hxcpp (extra setup required, see [here](https://github.com/HaxeFoundation/hxcpp)), hxdiscord_rpc, haxeui-flixel, haxeui-core (install haxeui-flixel before haxeui-core)
+- git hxcpp (extra setup required, see [here](https://github.com/HaxeFoundation/hxcpp)), hxdiscord_rpc, haxeui-flixel, haxeui-core (haxeui-flixel before haxeui-core)
+
+- Run `misc/build-platform` for debug builds (you might have to `chmod +x` it first)
+
+- Run `misc/build-final` for the final build (you might have to `chmod +x` it first)
 
 ## Credits
 

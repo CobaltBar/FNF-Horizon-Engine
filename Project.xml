@@ -56,6 +56,6 @@
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<assets path="art/icon.png" rename="icon.png" if="linux"/>
-	<icon path="art/icon.png" />
+	<assets path="misc/art/icon.png" rename="icon.png" if="linux"/>
+	<icon path="misc/art/icon.png" />
 </project>

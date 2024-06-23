@@ -58,7 +58,7 @@ class SaveVars
 		'back' => [BACKSPACE, ESCAPE],
 		'pause' => [ENTER, ESCAPE],
 		'reset' => [R],
-		'volume' => [PLUS, MINUS, BACKSLASH, NUMPADPLUS, NUMPADMINUS, NUMPADMULTIPLY],
+		'volume' => [PLUS, MINUS, P, NUMPADPLUS, NUMPADMINUS, NUMPADMULTIPLY],
 		'debug' => [NUMPADNINE],
 	];
 

@@ -35,6 +35,12 @@ class PlayState extends MusicState
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
 
+		if (!FlxG.sound.music.playing)
+		{
+			FlxG.sound.music.volume = 0;
+			FlxG.sound.music.pause();
+		}
+
 		loadAssets();
 
 		var countdown = new Countdown();
@@ -58,7 +64,7 @@ class PlayState extends MusicState
 			opponentStrum.strums.members[note.data % 4].confirm();
 			opponentStrum.addNextNote();
 		}
-		playerStrum.noteUpdate = note -> if (note.y < -note.height)
+		playerStrum.noteUpdate = note -> if (Conductor.time > (note.time + 500))
 		{
 			note.kill();
 			playerStrum.addNextNote();
