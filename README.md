@@ -27,7 +27,7 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 - Cobalt Bar (Creator)
 - Betopia (Note sprite stuff)
-- CrowPlexus (Ordered Map/Dictionary)
+- crowplexus (Ordered Map/Dictionary)
 - Superpowers04 (Safer FlxGame)
 
 ## Special Thanks

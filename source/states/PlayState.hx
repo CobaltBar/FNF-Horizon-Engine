@@ -35,12 +35,6 @@ class PlayState extends MusicState
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
 
-		if (!FlxG.sound.music.playing)
-		{
-			FlxG.sound.music.volume = 0;
-			FlxG.sound.music.pause();
-		}
-
 		loadAssets();
 
 		var countdown = new Countdown();

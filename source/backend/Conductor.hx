@@ -12,7 +12,7 @@ class Conductor extends FlxBasic
 	static var time(get, null):Float = 0;
 	static var song(default, set):FlxSound;
 
-	static var curStep:Int = -1;
+	static var curStep:Int = 0;
 	static var curBeat:Int = -1;
 	static var curDecBeat:Float = -1;
 	static var switchToMusic:Bool = true;
@@ -36,7 +36,7 @@ class Conductor extends FlxBasic
 	{
 		if (song != null)
 		{
-			if (song.time > crochetStep + stepLength)
+			if (time > crochetStep + stepLength)
 			{
 				crochetStep += stepLength;
 				curStep++;
@@ -44,7 +44,7 @@ class Conductor extends FlxBasic
 				stepSignal.dispatch();
 			}
 
-			if (song.time > crochetBeat + beatLength)
+			if (time > crochetBeat + beatLength)
 			{
 				crochetBeat += beatLength;
 				curBeat++;
