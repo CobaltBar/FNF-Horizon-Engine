@@ -142,7 +142,7 @@ class TitleState extends MusicState
 		super.onBeat();
 	}
 
-	private function skipIntro():Void
+	function skipIntro():Void
 	{
 		skippedIntro = gf.visible = logo.visible = titleEnter.visible = shouldBop = true;
 		targetZoom = 1;
@@ -150,7 +150,7 @@ class TitleState extends MusicState
 		FlxG.camera.flash(0xFFFFFFFF, 1, () -> {}, true);
 	}
 
-	private function createIntroText(text:String, yOff:Float):Alphabet
+	function createIntroText(text:String, yOff:Float):Alphabet
 	{
 		var alphabet:Alphabet = new Alphabet(FlxG.width * 2 * (introTexts.length % 2 == 0 ? 1 : -1), FlxG.height * .5, text, true, CENTER, 1.4, 0, yOff);
 		introTexts.push(alphabet);
@@ -159,7 +159,7 @@ class TitleState extends MusicState
 		return alphabet;
 	}
 
-	private function createIntroImage(path, yOff:Float):FlxSprite
+	function createIntroImage(path, yOff:Float):FlxSprite
 	{
 		var img:FlxSprite = Util.createGraphicSprite(FlxG.width * .5, FlxG.height * 2, path, 1.4);
 		img.screenCenter(X);
@@ -195,7 +195,7 @@ class TitleState extends MusicState
 		introImages = [];
 	}
 
-	private function tweenLastIntroText(howFarBack:Int = 1, yOff:Float):Void
+	inline function tweenLastIntroText(howFarBack:Int = 1, yOff:Float):Void
 	{
 		FlxTween.tween(introTexts[introTexts.length - howFarBack], {y: introTexts[introTexts.length - howFarBack].y - yOff}, .5, {
 			type: ONESHOT,
@@ -203,7 +203,7 @@ class TitleState extends MusicState
 		});
 	}
 
-	private inline function loadTitleData():Void
+	inline function loadTitleData():Void
 	{
 		titleData = Path.json('titleData');
 		Conductor.bpm = titleData.bpm;
@@ -213,7 +213,7 @@ class TitleState extends MusicState
 		goofyTexts.push(goofyTextList[num].split('--')[1]);
 	}
 
-	private function generateObjects():Void
+	inline function generateObjects():Void
 	{
 		gf = Util.createSparrowSprite(titleData.gfPosition[0], titleData.gfPosition[1], 'gfDanceTitle', 1.35);
 		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], '', 24, false);
