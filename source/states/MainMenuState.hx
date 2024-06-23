@@ -47,6 +47,7 @@ class MainMenuState extends MusicMenuState
 		}
 
 		curSelected = prevCurSelected;
+		Path.clearUnusedMemory();
 	}
 
 	public override function changeSelection(change:Int):Void

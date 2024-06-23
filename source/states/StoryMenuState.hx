@@ -30,6 +30,7 @@ class StoryMenuState extends MusicMenuState
 		createMenuBG();
 		createMenuOptions();
 		changeSelection(0);
+		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float):Void

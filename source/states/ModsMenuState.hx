@@ -37,6 +37,7 @@ class ModsMenuState extends MusicMenuState
 		createModOptions();
 		changeSection(0);
 		changeSelection(0);
+		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float):Void

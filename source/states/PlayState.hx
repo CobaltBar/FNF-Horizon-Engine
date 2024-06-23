@@ -69,6 +69,7 @@ class PlayState extends MusicState
 		createChart();
 		countdown.start();
 		PlayerInput.init();
+		Path.clearUnusedMemory();
 	}
 
 	inline function createChart():Void

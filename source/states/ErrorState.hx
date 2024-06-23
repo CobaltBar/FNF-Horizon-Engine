@@ -28,6 +28,7 @@ class ErrorState extends MusicState
 			FlxTween.tween(errorDescription, {y: 175}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(errorControls, {y: FlxG.height - 40}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 		}
+		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float):Void

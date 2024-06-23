@@ -26,6 +26,7 @@ class TitleState extends MusicState
 			FlxG.sound.playMusic(Path.sound('menuSong'), 0);
 		if (comingBack)
 			skipIntro();
+		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float)

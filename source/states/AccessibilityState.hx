@@ -24,6 +24,7 @@ class AccessibilityState extends MusicMenuState
 		createUI();
 		createOptions();
 		changeSelection(0);
+		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float):Void
