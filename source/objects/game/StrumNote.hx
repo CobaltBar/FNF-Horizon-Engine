@@ -1,7 +1,6 @@
-package objects;
+package objects.game;
 
 import flixel.graphics.frames.FlxFilterFrames;
-import openfl.filters.BitmapFilter;
 import openfl.filters.BlurFilter;
 
 class StrumNote extends NoteSprite

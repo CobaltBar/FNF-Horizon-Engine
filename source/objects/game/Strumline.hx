@@ -1,4 +1,4 @@
-package objects;
+package objects.game;
 
 class Strumline extends FlxSpriteGroup
 {
