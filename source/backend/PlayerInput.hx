@@ -96,7 +96,9 @@ class PlayerInput
 		FlxTween.tween(rating, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> rating.kill(), startDelay: Conductor.beatLength * .001});
 
 		var count:Int = 0;
-		for (num in Std.string(PlayState.instance.combo).lpad('0', 3).split(''))
+		var arr = Std.string(PlayState.instance.combo).lpad('0', 3).split('');
+		arr.reverse();
+		for (num in arr)
 		{
 			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('num$num')), false, false);
 			comboNum.alpha = 1;
@@ -104,7 +106,7 @@ class PlayerInput
 			comboNum.scale.set(.8, .8);
 			comboNum.updateHitbox();
 			comboNum.screenCenter();
-			comboNum.offset.x = (comboNum.width + 5) * count;
+			comboNum.offset.x = (comboNum.width + 5) * count + 50;
 			comboNum.offset.y = -(comboNum.height + 25);
 			comboNum.acceleration.y = FlxG.random.int(200, 300);
 			comboNum.velocity.y = -FlxG.random.int(140, 160);

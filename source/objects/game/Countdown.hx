@@ -1,4 +1,4 @@
-package objects.playState;
+package objects.game;
 
 import flixel.util.FlxSignal;
 

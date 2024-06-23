@@ -18,7 +18,9 @@ class StrumNote extends NoteSprite
 	var targetScaleY:Float = 1.1;
 	var restoreScaleX:Float = 1.1;
 	var restoreScaleY:Float = 1.1;
-	var lerpMultiplier:Float = 10;
+	var lerpMultiplier:Float = 5;
+
+	var playingAnim:Bool = false;
 
 	public function new(noteData:Int = 2)
 	{
@@ -76,12 +78,16 @@ class StrumNote extends NoteSprite
 
 	public function confirm(unconfirm:Bool = true):Void
 	{
+		if (playingAnim)
+			return;
+		playingAnim = true;
 		confirmAlphaTarget = confirmSpr.alpha = 1;
 		targetScaleX *= 1.05;
 		targetScaleY *= 1.05;
 		if (unconfirm)
 		{
 			scale.set(scale.x * 1.05, scale.y * 1.05);
+			lerpMultiplier = 15;
 			FlxTimer.wait(.15, () -> unConfirm());
 		}
 		else
@@ -90,12 +96,16 @@ class StrumNote extends NoteSprite
 
 	public function press(unconfirm:Bool = true):Void
 	{
+		if (playingAnim)
+			return;
+		playingAnim = true;
 		pressedAlphaTarget = pressedSpr.alpha = 1;
 		targetScaleX *= .95;
 		targetScaleY *= .95;
 		if (unconfirm)
 		{
 			scale.set(scale.x * .95, scale.y * .95);
+			lerpMultiplier = 15;
 			FlxTimer.wait(.15, () -> unPress());
 		}
 		else
@@ -104,18 +114,20 @@ class StrumNote extends NoteSprite
 
 	public function unConfirm():Void
 	{
+		playingAnim = false;
 		confirmAlphaTarget = 0;
 		targetScaleX = restoreScaleX;
 		targetScaleY = restoreScaleY;
-		lerpMultiplier = 10;
+		lerpMultiplier = 5;
 	}
 
 	public function unPress():Void
 	{
+		playingAnim = false;
 		pressedAlphaTarget = 0;
 		targetScaleX = restoreScaleX;
 		targetScaleY = restoreScaleY;
-		lerpMultiplier = 10;
+		lerpMultiplier = 5;
 	}
 
 	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>
