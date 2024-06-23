@@ -35,6 +35,8 @@ class PlayState extends MusicState
 		instance = this;
 		shouldBop = shouldZoom = Conductor.switchToMusic = false;
 
+		loadAssets();
+
 		var countdown = new Countdown();
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
@@ -62,6 +64,8 @@ class PlayState extends MusicState
 			playerStrum.addNextNote();
 			miss();
 		}
+
+		FlxG.camera.bgColor = 0xFF9B9B9B;
 
 		DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
 
@@ -118,4 +122,11 @@ class PlayState extends MusicState
 		misses += 1;
 		combo = 0;
 	}
+
+	inline function loadAssets():Void
+		for (item in [
+			'note', 'ready', 'set', 'go', 'combo', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'sick', 'good', 'bad',
+			'shit'
+		])
+			Path.image(item);
 }

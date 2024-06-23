@@ -59,6 +59,7 @@ class PlayerInput
 		}
 	}
 
+	// Todo shrink the ratings and combos
 	static inline function judge(time:Float):Void
 	{
 		var name:String;
@@ -83,28 +84,49 @@ class PlayerInput
 			name = 'shit';
 		}
 
-		var rating = PlayState.instance.comboGroup['rating'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image(name)));
+		var rating = PlayState.instance.comboGroup['rating'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image(name)), false, false);
 		rating.alpha = 1;
 		rating.loadGraphic(Path.image(name));
 		rating.updateHitbox();
 		rating.screenCenter();
-		rating.velocity.set(0, 0);
 		rating.acceleration.y = 550;
-		rating.velocity.y -= FlxG.random.int(140, 175);
-		rating.velocity.x -= FlxG.random.int(0, 10);
+		rating.velocity.y = -FlxG.random.int(140, 175);
+		rating.velocity.x = -FlxG.random.int(0, 10);
+		rating.revive();
 		FlxTween.tween(rating, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> rating.kill(), startDelay: Conductor.beatLength * .001});
+
+		var count:Int = 0;
+		for (num in Std.string(PlayState.instance.score).lpad('0', 3).split(''))
+		{
+			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('num$num')), false, false);
+			comboNum.alpha = 1;
+			comboNum.loadGraphic(Path.image('num$num'));
+			comboNum.scale.set(.8, .8);
+			comboNum.updateHitbox();
+			comboNum.screenCenter();
+			comboNum.offset.x = (comboNum.width + 5) * count;
+			comboNum.offset.y = -(comboNum.height + 25);
+			comboNum.acceleration.y = FlxG.random.int(200, 300);
+			comboNum.velocity.y = -FlxG.random.int(140, 160);
+			comboNum.velocity.x = FlxG.random.float(-5, 5);
+			comboNum.revive();
+			FlxTween.tween(comboNum, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> comboNum.kill(), startDelay: Conductor.beatLength * .001});
+			count++;
+		}
 
 		if (PlayState.instance.combo >= 10)
 		{
-			var comboSpr = PlayState.instance.comboGroup['comboSpr'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('combo')));
+			var comboSpr = PlayState.instance.comboGroup['comboSpr'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('combo')), false,
+				false);
 			comboSpr.alpha = 1;
+			comboSpr.updateHitbox();
 			comboSpr.screenCenter();
-			comboSpr.x += comboSpr.width * .5;
-			comboSpr.y += comboSpr.height + 25;
-			comboSpr.velocity.set(0, 0);
+			comboSpr.offset.x = comboSpr.width * .5;
+			comboSpr.offset.y = -(comboSpr.height + 25);
 			comboSpr.acceleration.y = FlxG.random.int(200, 300);
-			comboSpr.velocity.y -= FlxG.random.int(140, 160);
-			comboSpr.velocity.x += FlxG.random.int(1, 10);
+			comboSpr.velocity.y = -FlxG.random.int(140, 160);
+			comboSpr.velocity.x = FlxG.random.int(1, 10);
+			comboSpr.revive();
 			FlxTween.tween(comboSpr, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> comboSpr.kill(), startDelay: Conductor.beatLength * .001});
 		}
 	}
