@@ -145,13 +145,15 @@ class Path
 	public static function cacheBitmap(key:String, ?mods:Array<Mod>, path:Null<Bool> = false):FlxGraphic
 	{
 		var found = path ? {path: '', mod: null} : find(key, ['png'], mods, false);
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : found.path), false,
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path ? key : found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'),
+			false,
 			found.mod != null ? '${found.mod.path}-$key' : key);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
 		trackedImages.set(found.mod != null ? '${found.mod.path}-$key' : key, graphic);
 		localAssets.push(found.mod != null ? '${found.mod.path}-$key' : key);
-		Log.info('Caching image \'$key\' ' + (found.mod != null ? '(Mod \'${found.mod.name}\')' : '(Assets)'));
+		if (found.path != null)
+			Log.info('Caching image \'$key\' ' + (found.mod != null ? '(Mod \'${found.mod.name}\')' : '(Assets)'));
 		return graphic;
 	}
 
