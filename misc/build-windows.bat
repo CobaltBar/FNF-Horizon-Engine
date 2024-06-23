@@ -1,2 +1,2 @@
 @echo off
-lime build cpp && cd export\release\windows\bin && HorizonEngine.exe --verbose && cd ../../../..
+lime build cpp -debug && cd export\release\windows\bin && HorizonEngine.exe --verbose && cd ../../../..

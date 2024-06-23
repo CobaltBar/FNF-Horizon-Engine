@@ -53,6 +53,7 @@ class AccessibilityState extends MusicMenuState
 			Settings.data.reducedMotion = checkboxes[1].checked;
 			Settings.data.lowQuality = checkboxes[2].checked;
 			Settings.data.accessibilityConfirmed = true;
+			Settings.save();
 			transitioningOut = true;
 			if (!Settings.data.reducedMotion)
 			{
