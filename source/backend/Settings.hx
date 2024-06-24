@@ -59,7 +59,7 @@ class SaveVars
 		'pause' => [ENTER, ESCAPE],
 		'reset' => [R],
 		'volume' => [PLUS, MINUS, P, NUMPADPLUS, NUMPADMINUS, NUMPADMULTIPLY],
-		'debug' => [NUMPADNINE],
+		'debug' => [LBRACKET, RBRACKET],
 	];
 
 	var savedMods:Map<String,
