@@ -2,6 +2,7 @@ package modding;
 
 import backend.Path;
 import flixel.util.FlxColor;
+import haxe.ds.ArraySort;
 import haxe.io.Path as HaxePath;
 import modding.ModTypes;
 import sys.FileSystem;
@@ -27,7 +28,9 @@ class Mods
 		enabled = [];
 
 		var i = 0;
-		for (modPath in FileSystem.readDirectory('mods'))
+		var modsFolderContent = FileSystem.readDirectory('mods');
+		ArraySort.sort(modsFolderContent, (a, b) -> (a < b ? -1 : (a > b ? 1 : 0)));
+		for (modPath in modsFolderContent)
 			if (FileSystem.isDirectory(Path.combine(['mods', modPath])))
 			{
 				if (modPath == 'Mod Template')
