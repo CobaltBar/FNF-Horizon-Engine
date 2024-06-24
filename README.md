@@ -21,6 +21,6 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ### Libraries
 
-- Install the latest `lime`, `openfl`, `flixel`, `flixel-addons`, `flixel-ui`, `tjson`, and git builds of `hxdiscord_rpc`, `haxeui-flixel`,  and `haxeui-core`
+- Install the latest `lime`, `openfl`, `flixel`, `flixel-addons`, `flixel-ui`, `tjson`, and git builds of `hscript-improved`, `hxdiscord_rpc`, `haxeui-flixel`,  and `haxeui-core`
 
 - Run `build/platform` to test quickly (you might have to `chmod +x` it first)

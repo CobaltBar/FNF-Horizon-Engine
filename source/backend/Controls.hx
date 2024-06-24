@@ -11,6 +11,7 @@ class Controls
 	static var back(get, null):Bool;
 	static var pause(get, null):Bool;
 	static var reset(get, null):Bool;
+	static var debug(get, null):Bool;
 
 	@:noCompletion @:keep inline static function get_ui_left():Bool
 		return FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[0], Settings.data.keybinds.get('ui')[4]]);
@@ -35,4 +36,7 @@ class Controls
 
 	@:noCompletion @:keep inline static function get_reset():Bool
 		return FlxG.keys.anyJustPressed(Settings.data.keybinds.get('reset'));
+
+	@:noCompletion @:keep inline static function get_debug():Bool
+		return FlxG.keys.anyJustPressed(Settings.data.keybinds.get('debug'));
 }
