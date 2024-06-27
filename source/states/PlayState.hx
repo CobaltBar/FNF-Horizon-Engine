@@ -111,6 +111,7 @@ class PlayState extends MusicState
 
 	public override function destroy()
 	{
+		FlxG.camera.bgColor = 0xFF000000;
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayerInput.onPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayerInput.onRelease);
 		instance = null;
