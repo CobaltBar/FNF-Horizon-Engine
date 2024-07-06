@@ -7,6 +7,7 @@ class MainMenuState extends MusicMenuState
 {
 	var bgFlash:FlxBackdrop;
 	var allModsCount:Int = -1;
+	var targets:Array<FlxPoint> = [];
 
 	static var prevCurSelected:Int = 0;
 
@@ -39,7 +40,6 @@ class MainMenuState extends MusicMenuState
 			option.animation.addByPrefix('idle', name + ' basic', 24, true);
 			option.animation.play('idle');
 			option.cameras = [optionsCam];
-			option.visible = false;
 			option.updateHitbox();
 			option.centerOffsets();
 			add(option);
@@ -48,8 +48,14 @@ class MainMenuState extends MusicMenuState
 
 		for (i in 0...menuOptions.length)
 		{
-			menuOptions[i].x = 200 + (200 * i);
-			menuOptions[i].y = 100 + (230 * i);
+			targets[i] = Misc.quadBezier((i - 2) / (menuOptions.length - 2), FlxPoint.weak(FlxG.width * .6, 0),
+				FlxPoint.weak(FlxG.width * .35, FlxG.height * .75), FlxPoint.weak(FlxG.width * 1.4, FlxG.height));
+			var index = (i - curSelected + menuOptions.length) % menuOptions.length;
+			if (targets[index] != null)
+			{
+				menuOptions[i].x = targets[index].x - 750;
+				menuOptions[i].y = targets[index].y + 400;
+			}
 		}
 
 		curSelected = prevCurSelected;
@@ -66,18 +72,21 @@ class MainMenuState extends MusicMenuState
 		fnfVersion.cameras = [otherCam];
 		add(fnfVersion);
 
+		Path.clearUnusedMemory();
+	}
+
+	public override function update(elapsed:Float):Void
+	{
 		for (i in 0...menuOptions.length)
 		{
-			var oldX = menuOptions[i].x;
-			menuOptions[i].x -= 2000 * (i % 2 == 0 ? 1 : -1);
-			FlxTween.tween(menuOptions[i], {x: oldX}, 1, {
-				type: ONESHOT,
-				ease: FlxEase.expoOut
-			});
-			menuOptions[i].visible = true;
+			var index = ((i + 2) - curSelected + menuOptions.length) % menuOptions.length;
+			if (targets[index] != null)
+			{
+				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, targets[index].x - 750, FlxMath.bound(elapsed * 10, 0, 1));
+				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, targets[index].y + 400, FlxMath.bound(elapsed * 10, 0, 1));
+			}
 		}
-
-		Path.clearUnusedMemory();
+		super.update(elapsed);
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -92,16 +101,6 @@ class MainMenuState extends MusicMenuState
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;
 		menuOptions[curSelected].animation.play('selected');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
-
-		optionsFollow.setPosition(FlxG.width * .35 + (200 * curSelected), (225 * curSelected) + FlxG.height * .25);
-
-		for (i in 0...menuOptions.length)
-		{
-			menuOptions[i].centerOffsets();
-			menuOptions[i].y = 100 + (230 * i);
-		}
-
-		menuFollow.y = menuOptions[curSelected].y * .125 + 450;
 	}
 
 	public override function exitState():Void

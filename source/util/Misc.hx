@@ -14,4 +14,20 @@ class Misc
 		if (fatal)
 			FlxG.switchState(() -> new ErrorState());
 	}
+
+	// Stolen from BezierUtil.hx (FunkinCrew/Funkin)
+	public static function quadBezier(p:Float, a:FlxPoint, b:FlxPoint, c:FlxPoint):FlxPoint
+	{
+		return FlxPoint.weak(mix3(p, a.x, b.x, c.x), mix3(p, a.y, b.y, c.y));
+	}
+
+	static inline function mix3(p:Float, a:Float, b:Float, c:Float):Float
+	{
+		return mix2(p, mix2(p, a, b), mix2(p, b, c));
+	}
+
+	static inline function mix2(p:Float, a:Float, b:Float):Float
+	{
+		return a * (1 - p) + (b * p);
+	}
 }
