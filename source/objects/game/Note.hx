@@ -24,6 +24,6 @@ class Note extends NoteSprite
 		}
 	}
 
-	public function move(strumY:Float, strumNote:StrumNote):Void
-		y = strumY + strumNote.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - height;
+	public function move(strumNote:StrumNote):Void
+		y = strumNote.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult);
 }

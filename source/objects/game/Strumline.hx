@@ -45,12 +45,12 @@ class Strumline extends FlxSpriteGroup
 				for (i in 0...notes.length)
 					notes[i].forEachAlive(note ->
 					{
-						note.move(strums.members[note.data % 4].y, strums.members[note.data % 4]);
+						note.move(strums.members[note.data % 4]);
 						noteUpdate(note);
 					});
 			else
 				for (i in 0...notes.length)
-					notes[i].forEachAlive(note -> note.move(strums.members[note.data % 4].y, strums.members[note.data % 4]));
+					notes[i].forEachAlive(note -> note.move(strums.members[note.data % 4]));
 		}
 
 		super.update(elapsed);

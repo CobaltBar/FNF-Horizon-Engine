@@ -35,13 +35,13 @@ class PlayState extends MusicState
 
 		loadAssets();
 
-		var countdown = new Countdown();
-
 		for (thing in ['rating', 'combo', 'comboSpr'])
 		{
 			comboGroup.set(thing, new FlxSpriteGroup());
 			add(comboGroup[thing]);
 		}
+
+		var countdown = new Countdown();
 
 		add(playerStrum = new Strumline(0, 150));
 		playerStrum.screenCenter(X);
@@ -50,7 +50,7 @@ class PlayState extends MusicState
 		opponentStrum.screenCenter(X);
 		opponentStrum.x -= 500;
 
-		opponentStrum.noteUpdate = note -> if (note.y < opponentStrum.strums.members[note.data % 4].y)
+		opponentStrum.noteUpdate = note -> if (Conductor.time > note.time)
 		{
 			note.kill();
 			opponentStrum.strums.members[note.data % 4].confirm();
@@ -69,7 +69,7 @@ class PlayState extends MusicState
 		createChart();
 
 		#if DISCORD_ENABLED
-		DiscordRPC.change('In Game:\n${songs[0].name}', 'Score: $score\nCombo: $combo');
+		DiscordRPC.change('In Game: ${songs[0].name}', 'Score: $score - Combo: $combo');
 		#end
 
 		countdown.start();
@@ -96,8 +96,9 @@ class PlayState extends MusicState
 			if (noteCount[note.data > 3 ? 0 : 1] < 50)
 			{
 				var n = new Note(note.data);
-				n.move(strum.strums.members[note.data % 4].y, strum.strums.members[note.data % 4]);
 				n.resetNote(note, strum);
+				n.move(strum.strums.members[note.data % 4]);
+				n.y += 100000;
 				strum.notes[note.data % 4].add(n);
 				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}
@@ -119,7 +120,7 @@ class PlayState extends MusicState
 		super.destroy();
 	}
 
-	@:keep public inline function miss()
+	public function miss()
 	{
 		misses += 1;
 		combo = 0;
