@@ -38,6 +38,7 @@ class Countdown
 					for (audio in PlayState.instance.audios)
 						audio.play();
 					Conductor.song = PlayState.instance.audios["Inst"];
+					Conductor.time = 0;
 					Conductor.song.onComplete = () ->
 					{
 						PlayState.songs.shift();
