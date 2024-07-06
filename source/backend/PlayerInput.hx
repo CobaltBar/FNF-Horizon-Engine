@@ -84,7 +84,7 @@ class PlayerInput
 			name = 'shit';
 		}
 
-		var rating = PlayState.instance.comboGroup['rating'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image(name)), false, false);
+		var rating = PlayState.instance.comboGroup['rating'].recycle(FlxSprite, () -> Create.sprite(0, 0, Path.image(name)), false, false);
 		rating.alpha = 1;
 		rating.loadGraphic(Path.image(name));
 		rating.updateHitbox();
@@ -100,7 +100,7 @@ class PlayerInput
 		arr.reverse();
 		for (num in arr)
 		{
-			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('num$num')), false, false);
+			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () -> Create.sprite(0, 0, Path.image('num$num')), false, false);
 			comboNum.alpha = 1;
 			comboNum.loadGraphic(Path.image('num$num'));
 			comboNum.scale.set(.8, .8);
@@ -118,8 +118,7 @@ class PlayerInput
 
 		if (PlayState.instance.combo >= 10)
 		{
-			var comboSpr = PlayState.instance.comboGroup['comboSpr'].recycle(FlxSprite, () -> Util.createGraphicSprite(0, 0, Path.image('combo')), false,
-				false);
+			var comboSpr = PlayState.instance.comboGroup['comboSpr'].recycle(FlxSprite, () -> Create.sprite(0, 0, Path.image('combo')), false, false);
 			comboSpr.alpha = 1;
 			comboSpr.updateHitbox();
 			comboSpr.screenCenter();

@@ -9,44 +9,44 @@ class Conductor extends FlxBasic
 	static var beatLength:Float = 0;
 	static var stepLength:Float = 0;
 	static var offset:Float = 0;
-	static var time(get, null):Float = 0;
+	static var time:Float = 0;
 	static var song(default, set):FlxSound;
 
 	static var curStep:Int = 0;
 	static var curBeat:Int = -1;
-	static var curDecBeat:Float = -1;
 	static var switchToMusic:Bool = true;
 
-	@:noCompletion private static var crochetStep:Float = 0;
-	@:noCompletion private static var crochetBeat:Float = 0;
+	private static var stepTracker:Float = 0;
+	private static var beatTracker:Float = 0;
 
-	@:noCompletion private static var stepSignal:FlxSignal;
-	@:noCompletion private static var beatSignal:FlxSignal;
+	private static var stepSignal:FlxSignal;
+	private static var beatSignal:FlxSignal;
 
 	public function new()
 	{
 		super();
 		stepSignal = new FlxSignal();
 		beatSignal = new FlxSignal();
-		if (Main.verboseLogging)
+		if (Main.verbose)
 			Log.info('Conductor Initialized');
 	}
 
-	override function update(elapsed:Float)
+	override function update(elapsed:Float):Void
 	{
 		if (song != null)
 		{
-			if (time > crochetStep + stepLength)
+			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
+
+			if (time > stepTracker + stepLength)
 			{
-				crochetStep += stepLength;
+				stepTracker += stepLength;
 				curStep++;
-				curDecBeat = curStep * .25;
 				stepSignal.dispatch();
 			}
 
-			if (time > crochetBeat + beatLength)
+			if (time > beatTracker + beatLength)
 			{
-				crochetBeat += beatLength;
+				beatTracker += beatLength;
 				curBeat++;
 				beatSignal.dispatch();
 			}
@@ -55,9 +55,9 @@ class Conductor extends FlxBasic
 		{
 			if (FlxG.sound.music != null && switchToMusic)
 			{
-				song = FlxG.sound.music;
-				if (Main.verboseLogging)
+				if (Main.verbose)
 					Log.info('Song is null, setting to FlxG.sound.music');
+				song = FlxG.sound.music;
 			}
 		}
 		super.update(elapsed);
@@ -67,8 +67,8 @@ class Conductor extends FlxBasic
 	{
 		switchToMusic = true;
 		bpm = 100;
-		curStep = curBeat = -1;
-		curDecBeat = crochetStep = crochetBeat = 0;
+		curBeat = -1;
+		stepTracker = beatTracker = time = curStep = 0;
 	}
 
 	@:noCompletion static function set_song(val:FlxSound):FlxSound
@@ -81,10 +81,7 @@ class Conductor extends FlxBasic
 	@:noCompletion static function set_bpm(val:Float):Float
 	{
 		beatLength = 60 / val * 1000;
-		stepLength = crochetBeat * .25;
+		stepTracker = beatTracker * .25;
 		return bpm = val;
 	}
-
-	@:noCompletion static function get_time():Float
-		return song.time + offset;
 }

@@ -8,7 +8,7 @@ class Note extends NoteSprite
 	public var type:String;
 	public var mult:Float = 1;
 
-	public function resetNote(?json:NoteJson, ?strum:Strumline):Void
+	public function resetNote(?json:NoteJSON, ?strum:Strumline):Void
 	{
 		data = json?.data ?? 0;
 		time = json?.time ?? 0;

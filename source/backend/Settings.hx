@@ -78,7 +78,7 @@ class Settings
 {
 	public static var data:SaveVars = null;
 
-	public static function save()
+	public static function save():Void
 	{
 		if (data == null)
 			data = new SaveVars();
@@ -86,7 +86,7 @@ class Settings
 		for (setting in Reflect.fields(data))
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(data, setting));
 		FlxG.save.flush();
-		if (Main.verboseLogging)
+		if (Main.verbose)
 			Log.info('Settings saved');
 	}
 
@@ -112,7 +112,7 @@ class Settings
 		if (FlxG.save.data.mute != null)
 			FlxG.sound.muted = FlxG.save.data.mute;
 
-		if (Main.verboseLogging)
+		if (Main.verbose)
 			Log.info('Settings Loaded');
 	}
 }

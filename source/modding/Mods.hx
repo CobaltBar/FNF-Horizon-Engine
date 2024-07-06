@@ -1,88 +1,77 @@
 package modding;
 
-import backend.Path;
-import flixel.util.FlxColor;
 import haxe.ds.ArraySort;
 import haxe.io.Path as HaxePath;
-import modding.ModTypes;
 import sys.FileSystem;
 import sys.io.File;
-import tjson.TJSON;
 import util.Dictionary.StringDictionary;
-import util.Log;
 
 class Mods
 {
 	public static var all:Map<String, Mod>;
 	public static var enabled:Array<Mod>;
 
-	/*
-		To anyone trying to optimize this function:
-
-		Good luck.
-		-Cobalt
-	 */
 	public static function load():Void
 	{
 		all = [];
 		enabled = [];
 
-		var i = 0;
-		var modsFolderContent = FileSystem.readDirectory('mods');
-		ArraySort.sort(modsFolderContent, (a, b) -> (a < b ? -1 : (a > b ? 1 : 0)));
-		for (modPath in modsFolderContent)
-			if (FileSystem.isDirectory(Path.combine(['mods', modPath])))
+		var mods = FileSystem.readDirectory('mods');
+		ArraySort.sort(mods, (a, b) -> (a < b ? -1 : (a > b ? 1 : 0)));
+		for (i in 0...mods.length)
+			if (FileSystem.isDirectory(Path.combine(['mods', mods[i]])))
 			{
-				if (modPath == 'Mod Template')
+				if (mods[i] == 'Mod Template')
 					continue;
 
-				var jsonPath = Path.combine(['mods', modPath, 'mod.json']);
-				var json:ModJson = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : {
-					name: 'Blank Mod',
-					description: 'Blank Mod Description',
-					version: '1.0.0',
-					color: [255, 255, 255],
-					global: false,
-					modSysVer: Main.modSysVer
-				};
-				var iconPath = Path.combine(['mods', modPath, 'mod.png']);
-				all.set(modPath, {
-					name: json?.name ?? 'Blank Mod',
-					description: json?.description ?? 'Blank Mod Description',
-					version: json?.version ?? '1.0.0',
-					color: json?.color != null ? FlxColor.fromRGB(json?.color[0] ?? 255, json?.color[1] ?? 255,
-						json?.color[2] ?? 255) : FlxColor.fromRGB(255, 255, 255),
-					global: json?.global ?? true,
-					modSysVer: json?.modSysVer ?? Main.modSysVer,
+				var json:ModJSON = TJSON.parse(File.getContent(Path.combine(['mods', mods[i], 'mod.json'])) ?? '');
 
-					path: modPath,
-					icon: FileSystem.exists(iconPath) ? iconPath : Path.find('unknownMod', ['png']).path,
-					enabled: Settings.data.savedMods.get(modPath)?.enabled ?? true,
-					staticMod: isStaticMod(modPath),
-					songs: new StringDictionary(),
-					weeks: new StringDictionary(),
-					ID: Settings.data.savedMods.get(modPath)?.ID ?? i
+				var iconPath = Path.combine(['mods', mods[i], 'mod.png']);
+				all.set(mods[i], {
+					name: json.name ?? 'Blank Mod',
+					description: json.description ?? 'This mod does not have a description in mod.json',
+					version: json.version ?? '1.0.0',
+					color: FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255, json.color[2] ?? 255),
+					global: json.global ?? true,
+					modSysVer: json.modSysVer ?? Main.modSysVer,
+
+					folderName: mods[i],
+					iconPath: FileSystem.exists(iconPath) ? iconPath : Path.combine(['assets', 'images', 'unknownMod.png']),
+					enabled: Settings.data.savedMods.get(mods[i])?.enabled ?? true,
+					staticMod: isStatic(mods[i]),
+					songs: getSongs(mods[i]),
+					weeks: getWeeks(mods[i]),
+					ID: Settings.data.savedMods.get(mods[i])?.ID ?? i
 				});
 
-				all[modPath].songs = getSongs(modPath);
-				all[modPath].weeks = getWeeks(modPath);
-
-				if (all[modPath].enabled)
-					enabled.push(all[modPath]);
-				i++;
+				if (all[mods[i]].enabled)
+					enabled.push(all[mods[i]]);
 			}
-		if (Main.verboseLogging)
-			Log.info('Mods Loaded: ${[for (mod in all) mod.name].join(', ')}');
-		Path.loadModAssets();
+
+		all.set('assets', {
+			name: 'Assets',
+			description: 'Internal Horizon Engine Assets - You shouldn\'t see this.',
+			version: lime.app.Application.current.meta.get('version'),
+			color: 0xFF2565FF,
+			global: true,
+			modSysVer: Main.modSysVer,
+			folderName: 'assets',
+			iconPath: Path.combine(['assets', 'images', 'unknownMod.png']),
+			enabled: true,
+			staticMod: false,
+			songs: getSongs('assets'),
+			weeks: null,
+			ID: enabled.length
+		});
 	}
 
-	private static function isStaticMod(modPath:String):Bool
+	private static function isStatic(path:String):Bool
 	{
-		var menuScriptPath = Path.combine(['mods', modPath, 'menu_scripts']);
-		if (FileSystem.exists(menuScriptPath))
-			for (script in FileSystem.readDirectory(menuScriptPath))
+		var scriptsPath = Path.combine(['mods', path, 'menuScripts']);
+		if (FileSystem.exists(scriptsPath))
+			for (script in FileSystem.readDirectory(scriptsPath))
 			{
-				var scriptPath = Path.combine([menuScriptPath, script]);
+				var scriptPath = Path.combine([scriptsPath, script]);
 				if (!FileSystem.isDirectory(scriptPath)
 					&& (HaxePath.extension(scriptPath) == 'hx' || HaxePath.extension(scriptPath) == 'lua'))
 					return true;
@@ -90,43 +79,42 @@ class Mods
 		return false;
 	}
 
-	private static function getWeeks(modPath:String):StringDictionary<Week>
+	private static function getWeeks(path:String):StringDictionary<Week>
 	{
 		var weeks:StringDictionary<Week> = new StringDictionary<Week>();
-		var weeksPath = Path.combine(['mods', modPath, 'weeks']);
+		var weeksPath = Path.combine(['mods', path, 'weeks']);
 		if (FileSystem.exists(weeksPath))
 			for (week in FileSystem.readDirectory(weeksPath))
 			{
 				var weekPath = Path.combine([weeksPath, week]);
 				if (!FileSystem.isDirectory(weekPath) && HaxePath.extension(weekPath) == 'json')
 				{
-					var json:WeekJson = TJSON.parse(File.getContent(weekPath));
+					var json:WeekJSON = TJSON.parse(File.getContent(weekPath));
 					var lowercaseSongs:Array<String> = [];
 					if (json?.songs != null)
-						for (song in json?.songs)
+						for (song in json.songs)
 							lowercaseSongs.push(song.toLowerCase());
 					weeks.set(week, {
-						name: json?.name ?? 'Blank Week',
-						menuChars: json?.menuChars ?? ['dad', 'bf', 'gf'],
-						menuBG: json?.menuBG ?? 'blank',
-						bgScale: json?.bgScale ?? 1,
-						locked: json?.locked ?? false,
-						unlocks: json?.unlocks ?? [],
-						hideSongsFromFreeplay: json?.hideSongsFromFreeplay ?? false,
+						name: json.name ?? 'Blank Week',
+						chars: json.chars ?? ['dad', 'bf', 'gf'],
+						bg: json.bg ?? 'blank',
+						bgScale: json.bgScale ?? 1,
+						locked: json.locked ?? false,
+						unlocks: json.unlocks ?? [],
 						songs: lowercaseSongs,
 
-						difficulties: json?.difficulties ?? ["easy", "normal", "hard"],
-						score: Settings.data.savedMods.get(modPath)?.weeks?.get(week)?.score ?? 0
+						difficulties: json.difficulties ?? ["easy", "normal", "hard"],
+						score: Settings.data.savedMods.get(path)?.weeks?.get(week)?.score ?? 0
 					});
 				}
 			}
 		return weeks;
 	}
 
-	private static function getSongs(modPath:String):StringDictionary<Song>
+	private static function getSongs(path:String):StringDictionary<Song>
 	{
 		var songs:StringDictionary<Song> = new StringDictionary<Song>();
-		var songsPath = Path.combine(['mods', modPath, 'songs']);
+		var songsPath = Path.combine(['mods', path, 'songs']);
 		if (FileSystem.exists(songsPath))
 			for (song in FileSystem.readDirectory(songsPath))
 			{
@@ -134,15 +122,16 @@ class Mods
 				var jsonPath = Path.combine([songPath, 'song.json']);
 				if (FileSystem.isDirectory(songPath) && FileSystem.exists(jsonPath))
 				{
-					var json:SongJson = TJSON.parse(File.getContent(jsonPath));
+					var json:SongJSON = TJSON.parse(File.getContent(jsonPath));
 					songs.set(song.toLowerCase(), {
-						name: json?.name ?? 'Blank Song',
-						icon: json?.icon ?? 'bf',
+						name: json.name ?? 'Blank Song',
+						icon: json.icon ?? 'bf',
+						hide: json.hide ?? false,
 
 						audioFiles: [],
-						score: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.score ?? 0,
-						accuracy: Settings.data.savedMods.get(modPath)?.songs?.get(song.toLowerCase())?.accuracy ?? 0,
-						path: songPath
+						score: Settings.data.savedMods.get(path)?.songs?.get(song.toLowerCase())?.score ?? 0,
+						accuracy: Settings.data.savedMods.get(path)?.songs?.get(song.toLowerCase())?.accuracy ?? 0,
+						folderName: song
 					});
 
 					if (FileSystem.readDirectory(songPath).indexOf("Inst.ogg") != -1)

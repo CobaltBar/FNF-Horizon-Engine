@@ -1,7 +1,6 @@
 package states;
 
 import flixel.math.FlxRect;
-import modding.Mods;
 
 class ModsMenuState extends MusicMenuState
 {
@@ -29,14 +28,117 @@ class ModsMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.change('In The Menus', 'The Mod Menu');
-		createMenuBG();
-		createUI();
+
+		add(bg = Create.backdrop(Path.image('menuBGDesat'), 1.7));
+		bg.cameras = [menuCam];
+
+		var allModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
+		allModsBG.screenCenter(X);
+		allModsBG.cameras = [menuCam];
+		add(allModsBG);
+
+		var staticModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
+		staticModsBG.screenCenter(X);
+		staticModsBG.x -= staticModsBG.width + 25;
+		staticModsBG.cameras = [menuCam];
+		add(staticModsBG);
+
+		var enabledModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
+		enabledModsBG.screenCenter(X);
+		enabledModsBG.x += enabledModsBG.width + 25;
+		enabledModsBG.cameras = [menuCam];
+		add(enabledModsBG);
+
+		var descriptionBG = Create.graphic(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xCC000000);
+		descriptionBG.cameras = [menuCam];
+		add(descriptionBG);
+
+		modIcon = Create.sprite(55, FlxG.height - 205, Path.image('unknownMod'), 1.2);
+		modIcon.cameras = [menuCam];
+		add(modIcon);
+
+		modDesc = Create.text(modIcon.width + 65, FlxG.height - 205, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, LEFT);
+		modDesc.fieldWidth = 900;
+		modDesc.fieldHeight = 175;
+		modDesc.cameras = [menuCam];
+		add(modDesc);
+
+		modVer = Create.text(modIcon.width + 880, FlxG.height - 75, 'Version N/A', 32, Path.font('vcr'), 0xFFCCCCCC, RIGHT);
+		modVer.fieldWidth = 300;
+		modVer.fieldHeight = 175;
+		modVer.cameras = [menuCam];
+		add(modVer);
+
+		var controlsBG = Create.graphic(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xCC000000);
+		controlsBG.cameras = [menuCam];
+		add(controlsBG);
+
+		var controlsText = Create.text(descriptionBG.width + 50, FlxG.height - 225,
+			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReload Mods:${Settings.data.keybinds.get('reset')[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
+			24, Path.font('vcr'), 0xFFFFFFFF, LEFT);
+		controlsText.fieldWidth = 500;
+		controlsText.cameras = [menuCam];
+		add(controlsText);
+
+		allModsTitle = new Alphabet(0, 25, 'All Mods', true, LEFT);
+		allModsTitle.screenCenter(X);
+		allModsTitle.y += allModsTitle.height;
+		allModsTitle.alpha = .6;
+		allModsTitle.cameras = [menuCam];
+		add(allModsTitle);
+
+		staticTitle = new Alphabet(0, 25, 'Static Mods', true, LEFT);
+		staticTitle.screenCenter(X);
+		staticTitle.x -= staticModsBG.width + 25;
+		staticTitle.y += staticTitle.height;
+		staticTitle.alpha = .6;
+		staticTitle.cameras = [menuCam];
+		add(staticTitle);
+
+		enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, LEFT);
+		enabledTitle.screenCenter(X);
+		enabledTitle.x += enabledModsBG.width + 25;
+		enabledTitle.y += enabledTitle.height;
+		enabledTitle.alpha = .6;
+		enabledTitle.cameras = [menuCam];
+		add(enabledTitle);
+
 		targetColor = FlxColor.WHITE;
-		shouldBop = handleInput = false;
-		createModOptions();
+		bop = handleInput = false;
+
+		var i:Int = 0;
+		for (mod in Mods.all)
+		{
+			if (mod.name == 'Assets')
+				continue;
+			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, LEFT, .7);
+			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+			option.clipRect = option.clipRect;
+			option.screenCenter(X);
+			option.alpha = .6;
+			option.cameras = [optionsCam];
+			option.option = mod;
+			Path.cacheBitmap(mod.iconPath, [mod], true);
+			if (mod.enabled)
+			{
+				option.x += theWidth + 25;
+				enabledOptions.insert(mod.ID, option);
+			}
+			if (mod.staticMod)
+			{
+				option.x -= theWidth + 25;
+				staticOptions.insert(mod.ID, option);
+			}
+			if (!mod.staticMod && !mod.enabled)
+				menuOptions.insert(mod.ID, option);
+			add(option);
+			i++;
+		}
+
 		changeSection(0);
 		changeSelection(0);
+
 		Path.clearUnusedMemory();
 	}
 
@@ -86,8 +188,8 @@ class ModsMenuState extends MusicMenuState
 			{
 				Log.info('Reloading Mods & Mod Assets');
 				Mods.load();
-				@:privateAccess Path.modAssets.clear();
-				Path.loadModAssets();
+				@:privateAccess Path.assets.clear();
+				Path.loadAssets();
 			}
 
 			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[1]]))
@@ -184,7 +286,7 @@ class ModsMenuState extends MusicMenuState
 					score: value.score,
 					accuracy: value.accuracy
 				});
-			Settings.data.savedMods.set(mod.path, {
+			Settings.data.savedMods.set(mod.folderName, {
 				enabled: mod.enabled,
 				ID: mod.ID,
 				weeks: weeks,
@@ -192,8 +294,8 @@ class ModsMenuState extends MusicMenuState
 			});
 		}
 
-		@:privateAccess Path.modAssets.clear();
-		Path.loadModAssets();
+		@:privateAccess Path.assets.clear();
+		Path.loadAssets();
 
 		Settings.save();
 		super.returnState();
@@ -235,7 +337,7 @@ class ModsMenuState extends MusicMenuState
 	public function changeSection(change:Int):Void
 	{
 		if (change != 0)
-			FlxG.sound.play(Path.sound('Scroll'), .7);
+			FlxG.sound.play(Path.audio('Scroll'), .7);
 
 		curSection += change;
 
@@ -281,7 +383,7 @@ class ModsMenuState extends MusicMenuState
 				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
 					staticOptions[curStatic].alpha = .6;
 				if (change != 0)
-					FlxG.sound.play(Path.sound('Scroll'), .7);
+					FlxG.sound.play(Path.audio('Scroll'), .7);
 				curStatic += change;
 				if (curStatic < 0)
 					curStatic = staticOptions.length - 1;
@@ -310,7 +412,7 @@ class ModsMenuState extends MusicMenuState
 				if (enabledOptions[curEnabled] != null)
 					enabledOptions[curEnabled].alpha = .6;
 				if (change != 0)
-					FlxG.sound.play(Path.sound('Scroll'), .7);
+					FlxG.sound.play(Path.audio('Scroll'), .7);
 				curEnabled += change;
 				if (curEnabled < 0)
 					curEnabled = enabledOptions.length - 1;
@@ -322,118 +424,6 @@ class ModsMenuState extends MusicMenuState
 				modVer.text = enabledOptions[curEnabled].option.version;
 				targetColor = enabledOptions[curEnabled].option.color;
 		}
-
-	inline function createMenuBG():Void
-	{
-		bg = Util.createBackdrop(Path.image('menuBGDesat'), 1.7);
-		bg.cameras = [menuCam];
-		add(bg);
-	}
-
-	inline function createUI():Void
-	{
-		var allModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		allModsBG.screenCenter(X);
-		allModsBG.cameras = [menuCam];
-		add(allModsBG);
-
-		var staticModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		staticModsBG.screenCenter(X);
-		staticModsBG.x -= staticModsBG.width + 25;
-		staticModsBG.cameras = [menuCam];
-		add(staticModsBG);
-
-		var enabledModsBG = Util.makeSprite(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		enabledModsBG.screenCenter(X);
-		enabledModsBG.x += enabledModsBG.width + 25;
-		enabledModsBG.cameras = [menuCam];
-		add(enabledModsBG);
-
-		var descriptionBG = Util.makeSprite(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xCC000000);
-		descriptionBG.cameras = [menuCam];
-		add(descriptionBG);
-
-		modIcon = Util.createGraphicSprite(55, FlxG.height - 205, Path.image('unknownMod'), 1.2);
-		modIcon.cameras = [menuCam];
-		add(modIcon);
-
-		modDesc = Util.createText(modIcon.width + 65, FlxG.height - 205, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, LEFT);
-		modDesc.fieldWidth = 900;
-		modDesc.fieldHeight = 175;
-		modDesc.cameras = [menuCam];
-		add(modDesc);
-
-		modVer = Util.createText(modIcon.width + 880, FlxG.height - 75, 'Version N/A', 32, Path.font('vcr'), 0xFFCCCCCC, RIGHT);
-		modVer.fieldWidth = 300;
-		modVer.fieldHeight = 175;
-		modVer.cameras = [menuCam];
-		add(modVer);
-
-		var controlsBG = Util.makeSprite(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xCC000000);
-		controlsBG.cameras = [menuCam];
-		add(controlsBG);
-
-		var controlsText = Util.createText(descriptionBG.width + 50, FlxG.height - 225,
-			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReload Mods:${Settings.data.keybinds.get('reset')[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
-			24, Path.font('vcr'), 0xFFFFFFFF, LEFT);
-		controlsText.fieldWidth = 500;
-		controlsText.cameras = [menuCam];
-		add(controlsText);
-
-		allModsTitle = new Alphabet(0, 25, 'All Mods', true, LEFT);
-		allModsTitle.screenCenter(X);
-		allModsTitle.y += allModsTitle.height;
-		allModsTitle.alpha = .6;
-		allModsTitle.cameras = [menuCam];
-		add(allModsTitle);
-
-		staticTitle = new Alphabet(0, 25, 'Static Mods', true, LEFT);
-		staticTitle.screenCenter(X);
-		staticTitle.x -= staticModsBG.width + 25;
-		staticTitle.y += staticTitle.height;
-		staticTitle.alpha = .6;
-		staticTitle.cameras = [menuCam];
-		add(staticTitle);
-
-		enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, LEFT);
-		enabledTitle.screenCenter(X);
-		enabledTitle.x += enabledModsBG.width + 25;
-		enabledTitle.y += enabledTitle.height;
-		enabledTitle.alpha = .6;
-		enabledTitle.cameras = [menuCam];
-		add(enabledTitle);
-	}
-
-	inline function createModOptions():Void
-	{
-		var i:Int = 0;
-		for (mod in Mods.all)
-		{
-			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, LEFT, .7);
-			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
-			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
-			option.clipRect = option.clipRect;
-			option.screenCenter(X);
-			option.alpha = .6;
-			option.cameras = [optionsCam];
-			option.option = mod;
-			Path.cacheBitmap(mod.icon, [mod], true);
-			if (mod.enabled)
-			{
-				option.x += theWidth + 25;
-				enabledOptions.insert(mod.ID, option);
-			}
-			if (mod.staticMod)
-			{
-				option.x -= theWidth + 25;
-				staticOptions.insert(mod.ID, option);
-			}
-			if (!mod.staticMod && !mod.enabled)
-				menuOptions.insert(mod.ID, option);
-			add(option);
-			i++;
-		}
-	}
 
 	inline function resetModInfo():Void
 	{

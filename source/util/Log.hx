@@ -2,86 +2,73 @@ package util;
 
 import haxe.Constraints.Function;
 import haxe.PosInfos;
+import lime.app.Application;
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.FileOutput;
 
 using StringTools;
-
-enum abstract AnsiMode(Int)
-{
-	var RESET = 0;
-	var BOLD = 1;
-	var DIM = 2;
-	var ITALIC = 3;
-	var UNDERLINE = 4;
-	var BLINKING = 5;
-	var INVERT = 7;
-	var INVISIBLE = 8;
-	var STRIKETHROUGH = 9;
-}
-
-enum abstract AnsiColor(Int)
-{
-	var BLACK = 30;
-	var RED = 31;
-	var GREEN = 32;
-	var YELLOW = 33;
-	var BLUE = 34;
-	var MAGENTA = 35;
-	var CYAN = 36;
-	var WHITE = 37;
-	var HIGHINTENSITY_BLACK = 90;
-	var HIGHINTENSITY_RED = 91;
-	var HIGHINTENSITY_GREEN = 92;
-	var HIGHINTENSITY_YELLOW = 93;
-	var HIGHINTENSITY_BLUE = 94;
-	var HIGHINTENSITY_MAGENTA = 95;
-	var HIGHINTENSITY_CYAN = 96;
-	var HIGHINTENSITY_WHITE = 97;
-	var RESET = 0;
-}
 
 class Log
 {
 	// https://gist.github.com/martinwells/5980517
 	// https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+	public static var format(default, set):String = '';
+
 	private static var ogTrace:Function;
-	private static var log:String = "";
+	private static var logFileOutput:FileOutput;
+	private static var preformatted:String = '\033[38;5;63m[\033[38;5;39mTIME \033[38;5;178mFILE\033[38;5;63m] LEVEL: MSG\033[0;0m';
+
+	private static var log:Array<String> = [];
 
 	public static function init():Void
 	{
 		ogTrace = haxe.Log.trace;
-		haxe.Log.trace = haxeTrace;
-		if (Main.verboseLogging)
+		haxe.Log.trace = hxTrace;
+		format = '[TIME FILE] LEVEL: MSG';
+
+		if (Main.verbose)
 			info('Logger Initialized');
 	}
 
-	@:keep public static inline function ansi(mode:AnsiMode, color:AnsiColor):String
-		return '\033[${mode};${color}m';
+	@:keep static inline function ansi(color:Int):String
+		return '\033[38;5;${color}m';
 
-	@:keep static inline function haxeTrace(value:Dynamic, ?pos:PosInfos):Void
-		print(value, 'TRACE', BOLD, GREEN, pos);
+	static function hxTrace(value:Dynamic, ?pos:PosInfos):Void
+		print(value, 'TRACE', 49, pos);
 
-	@:keep public static inline function error(value:Dynamic, ?pos:PosInfos):Void
-		print(value, 'ERROR', BOLD, RED, pos);
-
-	@:keep public static inline function warn(value:Dynamic, ?pos:PosInfos):Void
-		print(value, 'WARN', BOLD, YELLOW, pos);
-
-	@:keep public static inline function info(value:Dynamic, ?pos:PosInfos):Void
-		print(value, 'INFO', BOLD, MAGENTA, pos);
-
-	@:keep static inline function print(value:Dynamic, level:String, mode:AnsiMode, color:AnsiColor, ?pos:PosInfos):Void
+	public static function error(value:Dynamic, ?pos:PosInfos):Void
 	{
-		var msg:String = '${ansi(RESET, HIGHINTENSITY_BLUE)}[${ansi(RESET, YELLOW)}${DateTools.format(Date.now(), '%H:%M:%S')}';
-		if (pos != null)
-			msg += '${ansi(RESET, HIGHINTENSITY_BLUE)} - ${ansi(RESET, HIGHINTENSITY_CYAN)}${pos.fileName}:${pos.lineNumber}';
-		msg += '${ansi(RESET, HIGHINTENSITY_BLUE)}]';
-		msg = (msg.rpad(' ', 80) + '${ansi(mode, color)}${level}: ').rpad(' ', 95) + '${ansi(RESET, color)}$value${ansi(RESET, RESET)}';
+		ErrorState.errs.push('ERROR: $value');
+		print(value, 'ERROR', 160, pos);
+	}
+
+	public static function warn(value:Dynamic, ?pos:PosInfos):Void
+	{
+		ErrorState.errs.push('WARN: $value');
+		print(value, 'WARN', 221, pos);
+	}
+
+	public static function info(value:Dynamic, ?pos:PosInfos):Void
+		print(value, 'INFO', 111, pos);
+
+	static inline function print(value:Dynamic, level:String, color:Int, ?pos:PosInfos):Void
+	{
+		var msg = preformatted.replace('TIME', DateTools.format(Date.now(), '%H:%M:%S')).replace('FILE', '${pos.fileName}:${pos.lineNumber}');
+		msg = msg.replace('LEVEL:', '${[for (i in 0...FlxMath.absInt(105 - msg.length)) ' '].join('')}${ansi(color)}${(level + ':').rpad(' ', 6)}')
+			.replace('MSG', value);
 		Sys.println(msg);
 
-		var logMsg:String = '[${DateTools.format(Date.now(), '%H:%M:%S')}';
-		if (pos != null)
-			logMsg += ' - ${pos.fileName}:${pos.lineNumber}';
-		logMsg += '] ${level}: $value\n';
-		log += logMsg;
+		log.push('${format.replace('TIME', DateTools.format(Date.now(), '%H:%M:%S')).replace('FILE', '${pos.fileName}:${pos.lineNumber}').replace('LEVEL', level).replace('MSG', value)}');
+	}
+
+	@:keep static inline function set_format(val:String):String
+	{
+		preformatted = val.replace('[', '${ansi(63)}[')
+			.replace(']', '${ansi(63)}]')
+			.replace('TIME', '${ansi(39)}TIME')
+			.replace('FILE', '${ansi(178)}FILE')
+			.replace('MSG', 'MSG\033[0;0m');
+		return format = val;
 	}
 }

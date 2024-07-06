@@ -2,23 +2,22 @@ package objects;
 
 class Alphabet extends FlxSpriteGroup
 {
-	static final letters:String = 'abcdefghijklmnopqrstuvwxyz';
+	var align(default, set):FlxTextAlign;
 
-	var alignment(default, set):FlxTextAlign;
+	static final letters = ~/^[a-zA-Z]+$/;
 
 	public var option:Dynamic;
 
-	public function new(x:Float, y:Float, text:String, bold:Bool, alignment:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0,
-			?antiAliasing:Bool, seperation:Float = 0)
+	public function new(x:Float, y:Float, text:String, bold:Bool, align:FlxTextAlign, scale:Float = 1, offsetX:Float = 0, offsetY:Float = 0)
 	{
 		super(x + offsetX, y - offsetY);
-		var chars:Array<String> = text.split('');
+		var chars = text.split('');
 		var letterWidth:Float = 0;
-		for (i in 0...chars.length)
+		for (ch in chars)
 		{
-			var animName:String = chars[i];
-			var char:FlxSprite = Util.createSparrowSprite(0, 0, 'alphabet', scale, antiAliasing);
-			switch (animName)
+			var name = ch;
+			var char = Create.sparrow(0, 0, Path.sparrow('alphabet'), scale);
+			switch (name)
 			{
 				case '\r' | '\n':
 					continue;
@@ -30,19 +29,19 @@ class Alphabet extends FlxSpriteGroup
 				case '-':
 					char.y -= char.height * .25;
 				case '"':
-					animName = 'quote';
+					name = 'quote';
 					char.y -= char.height * .5;
+				case '?':
+					name = 'question';
 			}
 			if (bold)
-				animName += ' bold';
-			else if (animName.toLowerCase() != animName && letters.indexOf(chars[i].toLowerCase()) != -1)
-				animName += ' uppercase';
-			else if (animName.toLowerCase() == animName && letters.indexOf(chars[i].toLowerCase()) != -1)
-				animName += ' lowercase';
+				name += ' bold';
+			else if (letters.match(ch))
+				name += name.toLowerCase() != name ? ' uppercase' : ' lowercase';
 			else
-				animName += ' normal';
-			animName = animName.toLowerCase();
-			char.animation.addByPrefix('idle', animName, 24);
+				name += ' normal';
+			name = name.toLowerCase();
+			char.animation.addByPrefix('idle', name, 24);
 			char.animation.play('idle');
 			char.updateHitbox();
 			char.centerOffsets();
@@ -52,10 +51,10 @@ class Alphabet extends FlxSpriteGroup
 			add(char);
 		}
 
-		this.alignment = alignment;
+		this.align = align;
 	}
 
-	@:noCompletion function set_alignment(val:FlxTextAlign):FlxTextAlign
+	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
 	{
 		updateHitbox();
 		switch (val)
@@ -67,7 +66,7 @@ class Alphabet extends FlxSpriteGroup
 			case RIGHT:
 				offset.x = width;
 		}
-		return alignment = val;
+		return align = val;
 	}
 
 	public override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0,

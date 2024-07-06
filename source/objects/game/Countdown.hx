@@ -24,10 +24,10 @@ class Countdown
 			switch (timer.elapsedLoops)
 			{
 				case 1:
-					FlxG.sound.play(Path.sound(countdownSoundArr[timer.elapsedLoops - 1]));
+					FlxG.sound.play(Path.audio(countdownSoundArr[timer.elapsedLoops - 1]));
 				case 2 | 3 | 4:
-					FlxG.sound.play(Path.sound(countdownSoundArr[timer.elapsedLoops - 1]));
-					var countdownItem = Util.createGraphicSprite(0, 0, Path.image(countdownNameArr[timer.elapsedLoops - 2]), 1.2);
+					FlxG.sound.play(Path.audio(countdownSoundArr[timer.elapsedLoops - 1]));
+					var countdownItem = Create.sprite(0, 0, Path.image(countdownNameArr[timer.elapsedLoops - 2]), 1.2);
 					countdownItem.screenCenter();
 					PlayState.instance.add(countdownItem);
 					FlxTween.tween(countdownItem.scale, {x: 1.4, y: 1.4}, Conductor.beatLength * .001,

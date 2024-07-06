@@ -8,7 +8,7 @@ class Strumline extends FlxSpriteGroup
 	public var notes:Array<FlxTypedSpriteGroup<Note>> = [];
 	public var covers:Array<FlxCopySprite> = [];
 	public var splashes:FlxTypedSpriteGroup<FlxCopySprite>;
-	public var uNoteData:Array<NoteJson> = [];
+	public var uNoteData:Array<NoteJSON> = [];
 
 	public var noteUpdate:Note->Void;
 

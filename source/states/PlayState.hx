@@ -3,8 +3,6 @@ package states;
 import flixel.util.FlxSort;
 import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
-import sys.io.File;
-import tjson.TJSON;
 
 class PlayState extends MusicState
 {
@@ -33,7 +31,7 @@ class PlayState extends MusicState
 		Path.clearStoredMemory();
 		super.create();
 		instance = this;
-		shouldBop = shouldZoom = Conductor.switchToMusic = false;
+		bop = zoom = Conductor.switchToMusic = false;
 
 		loadAssets();
 
@@ -67,7 +65,7 @@ class PlayState extends MusicState
 
 		FlxG.camera.bgColor = 0xFF9B9B9B;
 
-		DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
+		// DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
 
 		Conductor.reset();
 		createChart();
@@ -78,7 +76,7 @@ class PlayState extends MusicState
 
 	inline function createChart():Void
 	{
-		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].path)}-${difficulty}', mods);
+		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
 		Conductor.bpm = chart.bpm;
 		for (song in songs[0].audioFiles)

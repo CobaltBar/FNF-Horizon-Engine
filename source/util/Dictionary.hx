@@ -3,7 +3,6 @@ package util;
 typedef AnyDictionary = Dictionary<Dynamic, Dynamic>;
 typedef StringDictionary<T> = Dictionary<String, T>;
 typedef IntDictionary<T> = Dictionary<Int, T>;
-typedef StringBaseDictionary<T> = BaseDictionary<String, T>;
 
 /**
  * a Dictionary is a Custom-made Map which has a proper order..

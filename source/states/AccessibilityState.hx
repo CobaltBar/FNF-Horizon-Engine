@@ -1,7 +1,7 @@
 package states;
 
 import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.transition.FlxTransitionableState;
+import flixel.effects.FlxFlicker;
 
 class AccessibilityState extends MusicMenuState
 {
@@ -20,9 +20,41 @@ class AccessibilityState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.change('In The Menus', 'Accessibility Menu');
-		createUI();
-		createOptions();
+
+		var bg = Create.backdrop(FlxGridOverlay.create(128, 128, 256, 256, true, 0x85252525, 0x85505050).graphic);
+		bg.velocity.set(50, 30);
+		bg.cameras = [menuCam];
+		add(bg);
+
+		var descriptionBG = Create.graphic(0, FlxG.height - 50, FlxG.width, 50, 0xCC000000);
+		descriptionBG.cameras = [otherCam];
+		add(descriptionBG);
+
+		description = Create.text(0, FlxG.height - 45, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, CENTER).setBorderStyle(OUTLINE, 0xFF000000, 2);
+		description.screenCenter(X);
+		description.cameras = [otherCam];
+		add(description);
+
+		for (i in 0...options.length)
+		{
+			var option = new Alphabet(300 + (50 * i), 500 + (200 * i), options[i], true, LEFT);
+			option.cameras = [optionsCam];
+			option.alpha = .6;
+			add(option);
+			menuOptions.push(option);
+			if (i == options.length - 1)
+				continue;
+			var checkbox:Checkbox = new Checkbox(0, 0, options[i] == 'Flashing Lights');
+			checkbox.targetSpr = option;
+			checkbox.offsetX = -checkbox.width - 25;
+			checkbox.offsetY = checkbox.height * .5;
+			checkbox.copyAlpha = true;
+			checkbox.cameras = [optionsCam];
+			checkbox.alpha = .6;
+			add(checkbox);
+			checkboxes.push(checkbox);
+		}
+
 		changeSelection(0);
 		Path.clearUnusedMemory();
 	}
@@ -46,7 +78,7 @@ class AccessibilityState extends MusicMenuState
 
 	public override function exitState():Void
 	{
-		FlxG.sound.play(Path.sound('Confirm'), .7);
+		FlxG.sound.play(Path.audio('Confirm'), .7);
 		if (curSelected == 3)
 		{
 			Settings.data.flashingLights = checkboxes[0].checked;
@@ -68,47 +100,11 @@ class AccessibilityState extends MusicMenuState
 				FlxTween.tween(optionsCam, {zoom: 2}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
 			}
 
-			FlxTimer.wait(.75, () -> MusicState.switchState(new TitleState(), true));
+			FlxFlicker.flicker(menuOptions[menuOptions.length - 1], .75, 0.06, true, true, flicker -> MusicState.switchState(new TitleState(), true));
 		}
 		else
 			checkboxes[curSelected].checked = !checkboxes[curSelected].checked;
 	}
 
 	public override function returnState():Void {}
-
-	private inline function createOptions():Void
-		for (i in 0...options.length)
-		{
-			var option = new Alphabet(300 + (50 * i), 500 + (200 * i), options[i], true, LEFT);
-			option.cameras = [optionsCam];
-			option.alpha = .6;
-			add(option);
-			menuOptions.push(option);
-			if (i == options.length - 1)
-				continue;
-			var checkbox:Checkbox = new Checkbox(0, 0, options[i] == 'Flashing Lights');
-			checkbox.targetSpr = option;
-			checkbox.offsetX = -checkbox.width - 25;
-			checkbox.offsetY = checkbox.height * .5;
-			checkbox.copyAlpha = true;
-			checkbox.cameras = [optionsCam];
-			checkbox.alpha = .6;
-			add(checkbox);
-			checkboxes.push(checkbox);
-		}
-
-	private inline function createUI():Void
-	{
-		var bg = Util.createBackdrop(FlxGridOverlay.create(128, 128, 256, 256, true, 0x85252525, 0x85505050).graphic);
-		bg.velocity.set(50, 30);
-		bg.cameras = [menuCam];
-		add(bg);
-		var descriptionBG = Util.makeSprite(0, FlxG.height - 50, FlxG.width, 50, 0xCC000000);
-		descriptionBG.cameras = [otherCam];
-		add(descriptionBG);
-		description = Util.createText(0, FlxG.height - 45, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, CENTER).setBorderStyle(OUTLINE, 0xFF000000, 2);
-		description.screenCenter(X);
-		description.cameras = [otherCam];
-		add(description);
-	}
 }

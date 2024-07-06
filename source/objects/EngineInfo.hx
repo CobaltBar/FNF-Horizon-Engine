@@ -53,10 +53,10 @@ class EngineInfo extends TextField
 
 	public dynamic function updateText():Void
 	{ // so people can override it in hscript
-		text = 'Horizon Engine Stats:\nFPS: ${curFPS}' + '\nMemory: ${FlxStringUtil.formatBytes(System.totalMemory)}';
+		text = 'FPS: ${curFPS}\nMemory: ${FlxStringUtil.formatBytes(System.totalMemory)}';
 
 		if (curFPS < FlxG.drawFramerate * .75)
-			textColor = FlxColor.interpolate(0xFF2E0000, 0xFF004CFF, curFPS / (60 * .75));
+			textColor = FlxColor.interpolate(0xFF2E0000, 0xFF004CFF, curFPS / (FlxG.drawFramerate * .75));
 		else
 			textColor = 0xFF004CFF;
 	}

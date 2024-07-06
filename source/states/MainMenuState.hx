@@ -1,14 +1,12 @@
 package states;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.effects.FlxFlicker;
 import lime.app.Application;
 
 class MainMenuState extends MusicMenuState
 {
 	var bgFlash:FlxBackdrop;
-
-	var allModsCount:Int = 0;
+	var allModsCount:Int = -1;
 
 	static var prevCurSelected:Int = 0;
 
@@ -16,15 +14,53 @@ class MainMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.change('In The Menus', 'The Main Menu');
 		persistentUpdate = true;
-		createMenuBG();
+
+		add(bg = Create.backdrop(Path.image('menuBG'), 1.7));
+		bg.cameras = [menuCam];
+
+		add(bgFlash = Create.backdrop(Path.image('menuBGMagenta'), 1.7));
+		bgFlash.cameras = [menuCam];
+		bgFlash.visible = false;
+
 		for (val in Mods.all)
 			allModsCount++;
-		createMenuOptions(['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options']);
-		createVersionTexts();
 
+		for (name in ['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options'])
+		{
+			if (name == 'mods' && allModsCount == 0)
+				continue;
+			var option = Create.sparrow(0, 0, Path.sparrow(name), 1.4);
+			option.animation.addByPrefix('selected', name + ' white', 24, true);
+			option.animation.addByPrefix('idle', name + ' basic', 24, true);
+			option.animation.play('idle');
+			option.cameras = [optionsCam];
+			option.visible = false;
+			option.updateHitbox();
+			option.centerOffsets();
+			add(option);
+			menuOptions.push(option);
+		}
+
+		for (i in 0...menuOptions.length)
+		{
+			menuOptions[i].x = 200 + (200 * i);
+			menuOptions[i].y = 100 + (230 * i);
+		}
+
+		curSelected = prevCurSelected;
 		changeSelection(0);
+
+		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine v' + Application.current.meta.get('version'), 28, Path.font('vcr'),
+			0xFFFFFFFF, LEFT)
+			.setBorderStyle(OUTLINE, 0xFF000000, 2);
+		horizonEngineText.cameras = [otherCam];
+		add(horizonEngineText);
+
+		var fnfVersion = Create.text(5, FlxG.height - 35, 'Friday Night Funkin\' 0.2.8, 0.4.1', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
+			.setBorderStyle(OUTLINE, 0xFF000000, 2);
+		fnfVersion.cameras = [otherCam];
+		add(fnfVersion);
 
 		for (i in 0...menuOptions.length)
 		{
@@ -34,19 +70,9 @@ class MainMenuState extends MusicMenuState
 				type: ONESHOT,
 				ease: FlxEase.expoOut
 			});
-			if (!Settings.data.reducedMotion)
-			{
-				var oldY = menuOptions[i].y;
-				menuOptions[i].y -= 2000;
-				FlxTween.tween(menuOptions[i], {y: oldY}, 1, {
-					type: ONESHOT,
-					ease: FlxEase.cubeOut
-				});
-			}
 			menuOptions[i].visible = true;
 		}
 
-		curSelected = prevCurSelected;
 		Path.clearUnusedMemory();
 	}
 
@@ -63,24 +89,23 @@ class MainMenuState extends MusicMenuState
 		menuOptions[curSelected].animation.play('selected');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
 
-		var offset:Float = 0;
+		optionsFollow.setPosition(FlxG.width * .35 + (200 * curSelected), (225 * curSelected) + FlxG.height * .25);
+
 		for (i in 0...menuOptions.length)
 		{
 			menuOptions[i].centerOffsets();
-			menuOptions[i].y = 100 + offset;
-			offset += menuOptions[i].height + 45;
+			menuOptions[i].y = 100 + (230 * i);
 		}
 
-		optionsFollow.y = menuOptions[curSelected].y * .5 + 450;
 		menuFollow.y = menuOptions[curSelected].y * .125 + 450;
 	}
 
-	public override function exitState()
+	public override function exitState():Void
 	{
 		super.exitState();
 		transitioningOut = false;
 		if (curSelected == (5 - (allModsCount == 0 ? 1 : 0)))
-			Util.browserLoad('https://ninja-muffin24.itch.io/funkin');
+			Misc.openURL('https://ninja-muffin24.itch.io/funkin');
 		else
 		{
 			if (Settings.data.flashingLights)
@@ -119,59 +144,7 @@ class MainMenuState extends MusicMenuState
 		MusicState.switchState(new TitleState());
 	}
 
-	function createVersionTexts():Void
-	{
-		var horizonEngineText = Util.createText(5, FlxG.height - 65, 'Horizon Engine v' + Application.current.meta.get('version'), 28, Path.font('vcr'),
-			0xFFFFFFFF, LEFT)
-			.setBorderStyle(OUTLINE, 0xFF000000, 2);
-		horizonEngineText.cameras = [otherCam];
-		add(horizonEngineText);
-
-		var fnfVersion = Util.createText(5, FlxG.height - 35, 'Friday Night Funkin\' v0.2.8', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
-			.setBorderStyle(OUTLINE, 0xFF000000, 2);
-		fnfVersion.cameras = [otherCam];
-		add(fnfVersion);
-	}
-
-	function createMenuOptions(options:Array<String>):Void
-	{
-		for (name in options)
-		{
-			if (allModsCount == 0 && name == 'mods')
-				continue;
-			var option = Util.createSparrowSprite(0, 0, name, 1.4);
-			option.animation.addByPrefix('selected', name + ' white', 24, true);
-			option.animation.addByPrefix('idle', name + ' basic', 24, true);
-			option.animation.play('idle');
-			option.cameras = [optionsCam];
-			option.visible = false;
-			option.updateHitbox();
-			option.centerOffsets();
-			add(option);
-			menuOptions.push(option);
-		}
-		var offset:Float = 0;
-		for (i in 0...menuOptions.length)
-		{
-			menuOptions[i].x = (FlxG.width - menuOptions[i].width) * .5;
-			menuOptions[i].y = 100 + offset;
-			offset += menuOptions[i].height + 45;
-		}
-	}
-
-	inline function createMenuBG():Void
-	{
-		bg = Util.createBackdrop(Path.image('menuBG'), 1.7);
-		bg.cameras = [menuCam];
-		add(bg);
-
-		bgFlash = Util.createBackdrop(Path.image('menuBGMagenta'), 1.7);
-		bgFlash.cameras = [menuCam];
-		bgFlash.visible = false;
-		add(bgFlash);
-	}
-
-	inline function out():Void
+	function out():Void
 		if (allModsCount == 0)
 			switch (curSelected)
 			{

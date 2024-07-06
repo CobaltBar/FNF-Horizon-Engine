@@ -5,7 +5,6 @@ import flixel.group.FlxContainer.FlxTypedContainer;
 import flixel.math.FlxRect;
 import haxe.io.Path as HaxePath;
 
-// tbh this could be a lot better, but idrc anymore lmfao
 class StoryMenuState extends MusicMenuState
 {
 	var difficulty:FlxSprite;
@@ -25,10 +24,74 @@ class StoryMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
-		DiscordRPC.change('In The Menus', 'Story Mode Menu');
-		shouldBop = false;
-		createMenuBG();
-		createMenuOptions();
+		bop = false;
+
+		bg = Create.graphic(0, 100, FlxG.width, 400, 0xFFF9CF51);
+		bg.cameras = [menuCam];
+		add(bg);
+
+		weekInfo = Create.text(FlxG.width * .5, 25, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
+		weekInfo.cameras = [menuCam];
+		add(weekInfo);
+
+		tracks = Create.sprite(0, 750, Path.image('tracks'), 1.5);
+		tracks.screenCenter(X);
+		tracks.x -= FlxG.width * .35;
+		tracks.cameras = [menuCam];
+		add(tracks);
+
+		songsText = Create.text(0, 830, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
+		songsText.screenCenter(X);
+		songsText.x -= FlxG.width * .35;
+		songsText.cameras = [menuCam];
+		add(songsText);
+
+		difficulty = Create.sprite(0, 750, Path.image('difficulty-easy'), 1.4)
+			.loadGraphic(Path.image('difficulty-normal'))
+			.loadGraphic(Path.image('difficulty-hard'));
+		difficulty.updateHitbox();
+		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
+		difficulty.cameras = [menuCam];
+		add(difficulty);
+
+		leftArrow = Create.sparrow(0, 0, Path.sparrow("storyModeAssets"), 1.3);
+		leftArrow.animation.addByPrefix('idle', 'arrow left', 24);
+		leftArrow.animation.addByPrefix('press', 'arrow push left', 24);
+		leftArrow.animation.play('idle');
+		leftArrow.x = difficulty.x - leftArrow.width - 20;
+		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
+		leftArrow.cameras = [menuCam];
+		add(leftArrow);
+
+		rightArrow = Create.sparrow(0, 0, Path.sparrow("storyModeAssets"), 1.3);
+		rightArrow.animation.addByPrefix('idle', 'arrow right', 24);
+		rightArrow.animation.addByPrefix('press', 'arrow push right', 24);
+		rightArrow.animation.play('idle');
+		rightArrow.x = difficulty.x + difficulty.width + 20;
+		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
+		rightArrow.cameras = [menuCam];
+		add(rightArrow);
+
+		var i:Int = 0;
+
+		for (mod in Mods.enabled)
+			for (week in mod.weeks)
+			{
+				var option = Create.sprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i),
+					Path.image('week-${week.name.toLowerCase().replace(' ', '')}', [mod]), 1.4);
+				option.alpha = .6;
+				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+				option.clipRect = option.clipRect;
+				var songs:Array<String> = [];
+				for (song in week.songs)
+					songs.push(mod.songs?.get(song)?.name);
+				optionToData.set(option, {mod: mod, week: week, songs: songs});
+				option.cameras = [optionsCam];
+				add(option);
+				menuOptions.push(option);
+				i++;
+			}
+
 		changeSelection(0);
 		Path.clearUnusedMemory();
 	}
@@ -80,27 +143,27 @@ class StoryMenuState extends MusicMenuState
 
 		songsText.screenCenter(X);
 		songsText.x -= FlxG.width * .35;
-		if (optionToData[menuOptions[curSelected]].week.menuBG == null || optionToData[menuOptions[curSelected]].week.menuBG == "blank")
+		if (optionToData[menuOptions[curSelected]].week.bg == null || optionToData[menuOptions[curSelected]].week.bg == "blank")
 		{
 			bg.scale.set(1, 1);
 			bg.makeGraphic(FlxG.width, 400, 0xFFF9CF51);
 		}
 		else
 		{
-			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.menuBG}', [optionToData[menuOptions[curSelected]].mod]));
+			bg.loadGraphic(Path.image('menu-${optionToData[menuOptions[curSelected]].week.bg}', [optionToData[menuOptions[curSelected]].mod]));
 			bg.scale.set(optionToData[menuOptions[curSelected]].week.bgScale, optionToData[menuOptions[curSelected]].week.bgScale);
 		}
 		bg.updateHitbox();
 
 		for (i in 0...menuCharNames.length)
-			if (!optionToData[menuOptions[curSelected]].week.menuChars.contains(menuCharNames[i]))
+			if (!optionToData[menuOptions[curSelected]].week.chars.contains(menuCharNames[i]))
 			{
 				menuChars[i].destroy();
 				menuChars.remove(menuChars[i]);
 				menuCharNames.remove(menuCharNames[i]);
 			}
 
-		for (char in optionToData[menuOptions[curSelected]].week.menuChars)
+		for (char in optionToData[menuOptions[curSelected]].week.chars)
 			if (!menuCharNames.contains(char))
 			{
 				var option = new MenuChar('menu-$char', optionToData[menuOptions[curSelected]].mod);
@@ -179,83 +242,11 @@ class StoryMenuState extends MusicMenuState
 		super.returnState();
 		MusicState.switchState(new MainMenuState());
 	}
-
-	inline function createMenuBG():Void
-	{
-		bg = Util.makeSprite(0, 100, FlxG.width, 400, 0xFFF9CF51);
-		bg.cameras = [menuCam];
-		add(bg);
-
-		weekInfo = Util.createText(FlxG.width * .5, 25, '000000', 64, Path.font('vcr'), 0xFFE55777, LEFT);
-		weekInfo.cameras = [menuCam];
-		add(weekInfo);
-
-		tracks = Util.createGraphicSprite(0, 750, Path.image('tracks'), 1.5);
-		tracks.screenCenter(X);
-		tracks.x -= FlxG.width * .35;
-		tracks.cameras = [menuCam];
-		add(tracks);
-
-		songsText = Util.createText(0, 830, 'Song 1\nSong 2\nSong 3', 48, Path.font('vcr'), 0xFFE55777, CENTER);
-		songsText.screenCenter(X);
-		songsText.x -= FlxG.width * .35;
-		songsText.cameras = [menuCam];
-		add(songsText);
-
-		difficulty = Util.createGraphicSprite(0, 750, Path.image('difficulty-easy'), 1.4)
-			.loadGraphic(Path.image('difficulty-normal'))
-			.loadGraphic(Path.image('difficulty-hard'));
-		difficulty.updateHitbox();
-		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
-		difficulty.cameras = [menuCam];
-		add(difficulty);
-
-		leftArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.3);
-		leftArrow.animation.addByPrefix('idle', 'arrow left', 24);
-		leftArrow.animation.addByPrefix('press', 'arrow push left', 24);
-		leftArrow.animation.play('idle');
-		leftArrow.x = difficulty.x - leftArrow.width - 20;
-		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
-		leftArrow.cameras = [menuCam];
-		add(leftArrow);
-
-		rightArrow = Util.createSparrowSprite(0, 0, "storyModeAssets", 1.3);
-		rightArrow.animation.addByPrefix('idle', 'arrow right', 24);
-		rightArrow.animation.addByPrefix('press', 'arrow push right', 24);
-		rightArrow.animation.play('idle');
-		rightArrow.x = difficulty.x + difficulty.width + 20;
-		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
-		rightArrow.cameras = [menuCam];
-		add(rightArrow);
-	}
-
-	inline function createMenuOptions():Void
-	{
-		var i:Int = 0;
-
-		for (mod in Mods.enabled)
-			for (week in mod.weeks)
-			{
-				var option = Util.createGraphicSprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i),
-					Path.image('week-${week.name.toLowerCase().replace(' ', '')}', [mod]), 1.4);
-				option.alpha = .6;
-				option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
-				option.clipRect = option.clipRect;
-				var songs:Array<String> = [];
-				for (song in week.songs)
-					songs.push(mod.songs?.get(song)?.name);
-				optionToData.set(option, {mod: mod, week: week, songs: songs});
-				option.cameras = [optionsCam];
-				add(option);
-				menuOptions.push(option);
-				i++;
-			}
-	}
 }
 
 class MenuChar extends FlxSprite
 {
-	public var json:MenuCharJson;
+	public var json:MenuCharJSON;
 
 	public function new(jsonPath:String, mod:Mod)
 	{
