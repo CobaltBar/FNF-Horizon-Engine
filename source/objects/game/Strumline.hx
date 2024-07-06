@@ -40,7 +40,6 @@ class Strumline extends FlxSpriteGroup
 	public override function update(elapsed:Float)
 	{
 		if (updateNotes)
-		{
 			if (noteUpdate != null)
 				for (i in 0...notes.length)
 					notes[i].forEachAlive(note ->
@@ -51,7 +50,6 @@ class Strumline extends FlxSpriteGroup
 			else
 				for (i in 0...notes.length)
 					notes[i].forEachAlive(note -> note.move(strums.members[note.data % 4]));
-		}
 
 		super.update(elapsed);
 	}

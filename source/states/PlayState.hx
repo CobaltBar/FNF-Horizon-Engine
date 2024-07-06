@@ -56,7 +56,7 @@ class PlayState extends MusicState
 			opponentStrum.strums.members[note.data % 4].confirm();
 			opponentStrum.addNextNote();
 		}
-		playerStrum.noteUpdate = note -> if (Conductor.time > (note.time + 500))
+		playerStrum.noteUpdate = note -> if (Conductor.time > (note.time + 1000))
 		{
 			note.kill();
 			playerStrum.addNextNote();
@@ -105,6 +105,7 @@ class PlayState extends MusicState
 			else
 				strum.uNoteData.push(note);
 		}
+
 		for (note in playerStrum.notes)
 			note.sort(FlxSort.byY, FlxSort.DESCENDING);
 		for (note in opponentStrum.notes)
