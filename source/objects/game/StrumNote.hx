@@ -82,8 +82,8 @@ class StrumNote extends NoteSprite
 			return;
 		playingAnim = true;
 		confirmAlphaTarget = confirmSpr.alpha = 1;
-		targetScaleX *= 1.05;
-		targetScaleY *= 1.05;
+		targetScaleX *= 1.075;
+		targetScaleY *= 1.075;
 		if (unconfirm)
 		{
 			scale.set(scale.x * 1.05, scale.y * 1.05);
@@ -100,8 +100,8 @@ class StrumNote extends NoteSprite
 			return;
 		playingAnim = true;
 		pressedAlphaTarget = pressedSpr.alpha = 1;
-		targetScaleX *= .95;
-		targetScaleY *= .95;
+		targetScaleX *= .925;
+		targetScaleY *= .925;
 		if (unconfirm)
 		{
 			scale.set(scale.x * .95, scale.y * .95);

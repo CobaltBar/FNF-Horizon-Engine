@@ -36,7 +36,11 @@ class PlayerInput
 							continue;
 						if (Math.abs(Conductor.time - note.time) <= (120 + safeFrames))
 						{
-							note.kill();
+							note.hit();
+							if (PlayState.instance.audios.exists('Voices'))
+								PlayState.instance.audios['Voices'].volume = 1;
+							else if (PlayState.instance.audios.exists('Voices-Player'))
+								PlayState.instance.audios['Voices-Player'].volume = 1;
 							PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
 							PlayState.instance.combo += 1;
 							judge(Math.abs(Conductor.time - note.time));

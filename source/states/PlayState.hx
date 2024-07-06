@@ -52,12 +52,19 @@ class PlayState extends MusicState
 
 		opponentStrum.noteUpdate = note -> if (Conductor.time > note.time)
 		{
-			note.kill();
+			if (audios.exists('Voices'))
+				audios['Voices'].volume = 1;
+			note.hit();
 			opponentStrum.strums.members[note.data % 4].confirm();
 			opponentStrum.addNextNote();
 		}
 		playerStrum.noteUpdate = note -> if (Conductor.time > (note.time + 1000))
 		{
+			if (audios.exists('Voices'))
+				audios['Voices'].volume = 0;
+			else if (audios.exists('Voices-Player'))
+				audios['Voices-Player'].volume = 0;
+
 			note.kill();
 			playerStrum.addNextNote();
 			miss();
@@ -125,9 +132,13 @@ class PlayState extends MusicState
 	}
 
 	inline function loadAssets():Void
+	{
 		for (item in [
 			'note', 'ready', 'set', 'go', 'combo', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'sick', 'good', 'bad',
 			'shit'
 		])
-			Path.image(item);
+			Path.image(item, mods);
+		for (item in ['Three', 'Two', 'One', 'Go'])
+			Path.audio(item, mods);
+	}
 }

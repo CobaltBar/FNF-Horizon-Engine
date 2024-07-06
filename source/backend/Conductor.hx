@@ -81,7 +81,7 @@ class Conductor extends FlxBasic
 	@:noCompletion static function set_bpm(val:Float):Float
 	{
 		beatLength = 60 / val * 1000;
-		stepTracker = beatTracker * .25;
+		stepLength = beatLength * .25;
 		return bpm = val;
 	}
 }

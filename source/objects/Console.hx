@@ -53,6 +53,12 @@ class Console extends Dialog
 		interp.variables.set("FlxTimer", FlxTimer);
 		interp.variables.set("Log", Log);
 		interp.variables.set("Create", Create);
+		interp.variables.set("Path", Path);
+		interp.variables.set("Misc", Misc);
+		interp.variables.set("TitleState", TitleState);
+		interp.variables.set("MainMenuState", MainMenuState);
+		interp.variables.set("PlayState", PlayState);
+		interp.variables.set("ModsMenuState", ModsMenuState);
 	}
 
 	function run(text:String):Void

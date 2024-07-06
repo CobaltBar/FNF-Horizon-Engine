@@ -44,6 +44,8 @@ class Main extends Sprite
 			FlxG.resizeWindow(1280, 720);
 			Application.current.window.resize(1280, 720);
 			Application.current.window.maximized = false;
+			Application.current.window.x += Std.int(Application.current.window.displayMode.width * .5);
+			Application.current.window.y += Std.int(Application.current.window.displayMode.height * .5);
 		}
 
 		// shader coords fix (stolen from PsychEngine)

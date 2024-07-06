@@ -89,18 +89,27 @@ class Path
 
 	public static function cacheBitmap(key:String, ?mods:Array<Mod>, keyAsPath:Bool = false):FlxGraphic
 	{
-		var found = keyAsPath ? {path: key} : find(key, ['png'], mods, false);
+		var found = keyAsPath ? {path: key, mod: null} : find(key, ['png'], mods, false);
+		var realKey = found.mod != null ? found.mod.folderName == 'assets' ? key : '${found.mod.folderName}-$key' : key;
 		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'),
-			false, key);
+			false, realKey);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
-		trackedImages.set(key, graphic);
-		localAssets.push(key);
+		trackedImages.set(realKey, graphic);
+		localAssets.push(realKey);
+		Log.info('Caching image $key (${found.mod != null ? found.mod.name : 'Path'})');
 		return graphic;
 	}
 
 	public static function image(key:String, ?mods:Array<Mod>):FlxGraphic
 	{
+		if (mods != null)
+			for (mod in mods)
+				if (trackedImages.exists('${mod.folderName}-$key'))
+				{
+					localAssets.push('${mod.folderName}-$key');
+					return trackedImages.get('${mod.folderName}-$key');
+				}
 		if (trackedImages.exists(key))
 		{
 			localAssets.push(key);
