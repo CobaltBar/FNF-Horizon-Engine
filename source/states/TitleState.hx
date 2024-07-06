@@ -24,6 +24,10 @@ class TitleState extends MusicState
 		super.create();
 		persistentUpdate = true;
 
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Title Screen');
+		#end
+
 		titleData = Path.json('titleData');
 		Conductor.bpm = titleData.bpm;
 		var goofyTextList = Path.txt('introTexts').split('\n');

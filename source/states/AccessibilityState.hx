@@ -21,6 +21,10 @@ class AccessibilityState extends MusicMenuState
 		Path.clearStoredMemory();
 		super.create();
 
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Accessibility Screen');
+		#end
+
 		var bg = Create.backdrop(FlxGridOverlay.create(128, 128, 256, 256, true, 0x85252525, 0x85505050).graphic);
 		bg.velocity.set(50, 30);
 		bg.cameras = [menuCam];

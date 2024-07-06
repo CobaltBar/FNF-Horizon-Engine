@@ -26,6 +26,10 @@ class StoryMenuState extends MusicMenuState
 		super.create();
 		bop = false;
 
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Story Menu');
+		#end
+
 		bg = Create.graphic(0, 100, FlxG.width, 400, 0xFFF9CF51);
 		bg.cameras = [menuCam];
 		add(bg);

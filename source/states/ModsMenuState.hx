@@ -29,6 +29,10 @@ class ModsMenuState extends MusicMenuState
 		Path.clearStoredMemory();
 		super.create();
 
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Mods Menu');
+		#end
+
 		add(bg = Create.backdrop(Path.image('menuBGDesat'), 1.7));
 		bg.cameras = [menuCam];
 

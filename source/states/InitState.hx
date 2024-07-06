@@ -23,6 +23,10 @@ class InitState extends MusicState
 		Mods.load();
 		Path.loadAssets();
 
+		#if DISCORD_ENABLED
+		DiscordRPC.init();
+		#end
+
 		if (Main._console == null)
 			Main._console = new Console();
 

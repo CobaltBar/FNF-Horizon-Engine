@@ -65,10 +65,13 @@ class PlayState extends MusicState
 
 		FlxG.camera.bgColor = 0xFF9B9B9B;
 
-		// DiscordRPC.change('In Game', 'Song: ${songs[0].name}\n');
-
 		Conductor.reset();
 		createChart();
+
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In Game:\n${songs[0].name}', 'Score: $score\nCombo: $combo');
+		#end
+
 		countdown.start();
 		PlayerInput.init();
 		Path.clearUnusedMemory();

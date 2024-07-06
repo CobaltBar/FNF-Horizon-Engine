@@ -16,6 +16,10 @@ class MainMenuState extends MusicMenuState
 		super.create();
 		persistentUpdate = true;
 
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Main Menu');
+		#end
+
 		add(bg = Create.backdrop(Path.image('menuBG'), 1.7));
 		bg.cameras = [menuCam];
 

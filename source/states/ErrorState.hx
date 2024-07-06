@@ -12,6 +12,11 @@ class ErrorState extends MusicState
 		Path.clearStoredMemory();
 		super.create();
 		bop = false;
+
+		#if DISCORD_ENABLED
+		DiscordRPC.change('In the Menus', 'Error Screen');
+		#end
+
 		var errorTitle:FlxText;
 		add(errorTitle = Create.text(0, Settings.data.reducedMotion ? 50 : -100, 'Error Caught', 32, Path.font('vcr'), 0xFFFF0000, CENTER));
 		errorTitle.screenCenter(X);
