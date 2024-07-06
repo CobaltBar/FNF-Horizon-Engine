@@ -19,8 +19,21 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Compilation Instructions
 
-### Libraries
+Install Haxe 4.3.4 (and install MSVC if on Windows)
 
-- Install the latest `lime`, `openfl`, `flixel`, `flixel-addons`, `flixel-ui`, `tjson`, and git builds of `hscript-improved`, `hxdiscord_rpc`, `haxeui-flixel`,  and `haxeui-core`
+NOTE: You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
 
-- Run `build/platform` to test quickly (you might have to `chmod +x` it first)
+```txt
+haxelib install hxpkg
+haxelib run hxpkg install
+cd .haxelib/hxcpp/git/tools/run
+haxe compile.hxml
+cd ../hxcpp
+haxe compile.hxml
+cd ../../../../..
+haxelib run lime rebuild cpp -release
+```
+
+(The above commands install `hxpkg`, install all packages for Horizon Engine, builds the git version of `hxcpp`, and rebuilds lime so you can compile)
+
+Then run the script corresponding to your OS in the util\build folder (you might have to `chmod +x` it)
