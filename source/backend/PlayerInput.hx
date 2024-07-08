@@ -68,17 +68,17 @@ class PlayerInput
 	static inline function judge(time:Float):Void
 	{
 		var name:String;
-		if (time < (25 + safeFrames))
+		if (time <= (35 + safeFrames))
 		{
 			PlayState.instance.score += 350;
 			name = 'sick';
 		}
-		else if (time < (60 + safeFrames))
+		else if (time <= (70 + safeFrames))
 		{
 			PlayState.instance.score += 200;
 			name = 'good';
 		}
-		else if (time < (90 + safeFrames))
+		else if (time <= (90 + safeFrames))
 		{
 			PlayState.instance.score += 100;
 			name = 'bad';
