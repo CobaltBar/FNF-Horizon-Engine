@@ -6,10 +6,10 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Credits
 
-- Cobalt Bar (Creator)
-- Betopia (Note sprite stuff)
+- Cobalt Bar (Main Developer)
+- Betopia (Note Sprite System)
 - crowplexus (Ordered Map/Dictionary)
-- Superpowers04 (Safer FlxGame)
+- superpowers04 (Safer FlxGame)
 
 ## Special Thanks
 
@@ -36,4 +36,4 @@ haxelib run lime rebuild cpp -release
 
 (The above commands install `hxpkg`, install all packages for Horizon Engine, builds the git version of `hxcpp`, and rebuilds lime so you can compile)
 
-Then run the script corresponding to your OS in the util\build folder (you might have to `chmod +x` it)
+Then run the script corresponding to your OS in the build folder (you might have to `chmod +x` it)
