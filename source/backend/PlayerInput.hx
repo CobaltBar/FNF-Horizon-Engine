@@ -43,6 +43,7 @@ class PlayerInput
 								PlayState.instance.audios['Voices-Player'].volume = 1;
 							PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
 							PlayState.instance.combo += 1;
+							PlayState.instance.playerStrum.addNextNote();
 							judge(Math.abs(Conductor.time - note.time));
 							return;
 						}

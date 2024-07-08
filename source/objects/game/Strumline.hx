@@ -60,8 +60,10 @@ class Strumline extends FlxSpriteGroup
 		if (data != null)
 		{
 			var n = notes[data.data % 4].recycle(Note, () -> new Note(data.data), false, false);
+			notes[data.data % 4].remove(n);
 			n.y = -20000; // get sent into outer space idiot
-			n.resetNote(data);
+			n.resetNote(data, this);
+			notes[data.data % 4].add(n);
 			n.revive();
 		}
 	}
