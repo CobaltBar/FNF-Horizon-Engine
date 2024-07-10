@@ -47,16 +47,8 @@ class MainMenuState extends MusicMenuState
 		}
 
 		for (i in 0...menuOptions.length)
-		{
-			targets[i] = Misc.quadBezier((i - 2) / (menuOptions.length - 2), FlxPoint.weak(FlxG.width * .6, 0),
-				FlxPoint.weak(FlxG.width * .35, FlxG.height * .75), FlxPoint.weak(FlxG.width * 1.4, FlxG.height));
-			var index = (i - curSelected + menuOptions.length) % menuOptions.length;
-			if (targets[index] != null)
-			{
-				menuOptions[i].x = targets[index].x - 750;
-				menuOptions[i].y = targets[index].y + 400;
-			}
-		}
+			targets[i] = Misc.quadBezier(FlxPoint.weak(-FlxG.width, -270), FlxPoint.weak(FlxG.width * .75, FlxG.height * .5),
+				FlxPoint.weak(-FlxG.width * .5, FlxG.height * 1.25), i / (menuOptions.length - 2));
 
 		curSelected = prevCurSelected;
 		changeSelection(0);
@@ -79,11 +71,11 @@ class MainMenuState extends MusicMenuState
 	{
 		for (i in 0...menuOptions.length)
 		{
-			var index = ((i + 2) - curSelected + menuOptions.length) % menuOptions.length;
+			var index = ((i + 3) - curSelected + menuOptions.length) % menuOptions.length;
 			if (targets[index] != null)
 			{
-				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, targets[index].x - 750, FlxMath.bound(elapsed * 10, 0, 1));
-				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, targets[index].y + 400, FlxMath.bound(elapsed * 10, 0, 1));
+				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, targets[index].x + 300, FlxMath.bound(elapsed * 10, 0, 1));
+				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, targets[index].y - 300, FlxMath.bound(elapsed * 10, 0, 1));
 			}
 		}
 		super.update(elapsed);
