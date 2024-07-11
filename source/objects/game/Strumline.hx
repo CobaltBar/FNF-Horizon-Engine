@@ -13,6 +13,7 @@ class Strumline extends FlxSpriteGroup
 	public var noteUpdate:Note->Void;
 
 	var updateNotes:Bool = false;
+	var unconfirm:Bool = false;
 
 	public function new(x:Float, y:Float, ?mod:Mod)
 	{
@@ -44,7 +45,7 @@ class Strumline extends FlxSpriteGroup
 				for (i in 0...notes.length)
 					notes[i].forEachAlive(note ->
 					{
-						note.move(strums.members[note.data % 4]);
+						note.move(strums.members[note.data % 4], unconfirm);
 						noteUpdate(note);
 					});
 			else

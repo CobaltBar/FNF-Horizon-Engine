@@ -1,5 +1,6 @@
 package states;
 
+import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
@@ -17,6 +18,8 @@ class PlayState extends MusicState
 	public var playerStrum:Strumline;
 	public var opponentStrum:Strumline;
 
+	public var curSection:Int = -1;
+
 	public var scrollSpeed:Float = 1;
 	public var score:Int = 0;
 	public var accuracy:Float = 0;
@@ -31,8 +34,7 @@ class PlayState extends MusicState
 		Path.clearStoredMemory();
 		super.create();
 		instance = this;
-		bop = zoom = Conductor.switchToMusic = false;
-
+		bop = zoom = false;
 		loadAssets();
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
@@ -49,14 +51,19 @@ class PlayState extends MusicState
 		add(opponentStrum = new Strumline(0, 150));
 		opponentStrum.screenCenter(X);
 		opponentStrum.x -= 500;
+		// i am too lazy to do it another way
+		@:privateAccess opponentStrum.unconfirm = true;
 
 		opponentStrum.noteUpdate = note -> if (Conductor.time > note.time)
 		{
 			if (audios.exists('Voices'))
 				audios['Voices'].volume = 1;
-			note.hit();
-			opponentStrum.strums.members[note.data % 4].confirm();
-			opponentStrum.addNextNote();
+			if (!note.isHit)
+			{
+				opponentStrum.strums.members[note.data % 4].confirm(note.length <= 0);
+				note.hit();
+				opponentStrum.addNextNote();
+			}
 		}
 		playerStrum.noteUpdate = note -> if (Conductor.time > (note.time + 1000))
 		{
@@ -71,18 +78,29 @@ class PlayState extends MusicState
 		}
 
 		Conductor.reset();
+		Conductor.switchToMusic = Conductor.enabled = false;
 		createChart();
+
+		countdown.start();
 
 		#if DISCORD_ENABLED
 		DiscordRPC.change('In Game: ${songs[0].name}', 'Score: $score - Combo: $combo');
 		#end
 
-		countdown.start();
 		PlayerInput.init();
 		Path.clearUnusedMemory();
 	}
 
-	inline function createChart():Void
+	override function onBeat()
+	{
+		if (curBeat % 4 == 0)
+			onSection();
+		super.onBeat();
+	}
+
+	function onSection() {}
+
+	function createChart():Void
 	{
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
@@ -90,6 +108,7 @@ class PlayState extends MusicState
 		for (song in songs[0].audioFiles)
 		{
 			var audio = FlxG.sound.play(song);
+			audio.looped = false;
 			audio.pause();
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}

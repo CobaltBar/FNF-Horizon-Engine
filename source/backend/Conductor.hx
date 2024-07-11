@@ -11,9 +11,10 @@ class Conductor extends FlxBasic
 	static var offset:Float = 0;
 	static var time:Float = 0;
 	static var song(default, set):FlxSound;
+	static var enabled:Bool = true;
 
 	static var curStep:Int = 0;
-	static var curBeat:Int = -1;
+	static var curBeat:Int = 0;
 	static var switchToMusic:Bool = true;
 
 	private static var stepTracker:Float = 0;
@@ -22,7 +23,7 @@ class Conductor extends FlxBasic
 	private static var stepSignal:FlxSignal;
 	private static var beatSignal:FlxSignal;
 
-	public function new()
+	function new()
 	{
 		super();
 		stepSignal = new FlxSignal();
@@ -36,19 +37,21 @@ class Conductor extends FlxBasic
 		if (song != null)
 		{
 			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
-
-			if (time > stepTracker + stepLength)
+			if (enabled)
 			{
-				stepTracker += stepLength;
-				curStep++;
-				stepSignal.dispatch();
-			}
+				if (time > beatTracker + beatLength)
+				{
+					beatTracker += beatLength;
+					curBeat++;
+					beatSignal.dispatch();
+				}
 
-			if (time > beatTracker + beatLength)
-			{
-				beatTracker += beatLength;
-				curBeat++;
-				beatSignal.dispatch();
+				if (time > stepTracker + stepLength)
+				{
+					stepTracker += stepLength;
+					curStep++;
+					stepSignal.dispatch();
+				}
 			}
 		}
 		else
@@ -63,12 +66,12 @@ class Conductor extends FlxBasic
 		super.update(elapsed);
 	}
 
-	@:noCompletion public static function reset():Void
+	@:noCompletion static function reset():Void
 	{
-		switchToMusic = true;
+		switchToMusic = enabled = true;
 		bpm = 100;
-		curBeat = -1;
-		stepTracker = beatTracker = time = curStep = 0;
+		curBeat = curStep = 0;
+		stepTracker = beatTracker = time = 0;
 	}
 
 	@:noCompletion static function set_song(val:FlxSound):FlxSound

@@ -55,10 +55,13 @@ class TitleState extends MusicState
 
 		FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleEnterTimer = num);
 
-		if (!comingBack && FlxG.sound.music == null)
-			FlxG.sound.playMusic(Path.audio('menuSong'), 0);
 		if (comingBack)
 			skipIntro();
+		else
+		{
+			if (FlxG.sound.music == null)
+				FlxG.sound.playMusic(Path.audio('menuSong'), 0);
+		}
 
 		Path.clearUnusedMemory();
 	}
@@ -95,14 +98,11 @@ class TitleState extends MusicState
 					FlxTween.tween(logo.scale, {x: 2.25, y: 2.25}, .75, {
 						type: ONESHOT,
 						ease: FlxEase.expoOut,
-						onComplete: tween ->
+						onComplete: tween -> FlxTimer.wait(.5, () ->
 						{
-							FlxTimer.wait(.5, () ->
-							{
-								comingBack = true;
-								MusicState.switchState(new MainMenuState(), false, true);
-							});
-						}
+							comingBack = true;
+							MusicState.switchState(new MainMenuState(), false, true);
+						})
 					});
 				}
 			}
@@ -120,50 +120,49 @@ class TitleState extends MusicState
 	public override function onBeat():Void
 	{
 		gf.animation.play(curBeat % 2 == 0 ? 'danceLeft' : 'danceRight');
-
 		logo.animation.play('bop', true);
 
 		if (!skippedIntro)
 			switch (curBeat)
 			{
-				case 0:
+				case 1:
 					FlxG.sound.music.fadeIn(4, 0, .7);
 					createIntroText('Horizon Engine by', -50);
-				case 2:
+				case 3:
 					tweenLastIntroText(1, 150);
 					createIntroText('Cobalt Bar', -50);
 					introTexts[1].setColorTransform(0, .5, 1, 1, 0, 0, 0, 0);
-				case 3:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 4:
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects();
+				case 5:
 					createIntroText('Not Associated with', 100);
-				case 6:
+				case 7:
 					tweenLastIntroText(1, 150);
 					createIntroText('Newgrounds', 100);
 					createIntroImage(Path.image('newgrounds_logo'), 0);
-				case 7:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 8:
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects();
+				case 9:
 					createIntroText(goofyTexts[0], 50);
-				case 10:
+				case 11:
 					tweenLastIntroText(1, 50);
 					createIntroText(goofyTexts[1], -50);
-				case 11:
-					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects(true);
 				case 12:
+					Settings.data.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects();
+				case 13:
 					bop = false;
 					targetZoom = 1.2;
 					createIntroText('Friday', -100);
-				case 13:
+				case 14:
 					targetZoom = 1.35;
 					tweenLastIntroText(1, 100);
 					createIntroText('Night', -100);
-				case 14:
+				case 15:
 					targetZoom = 1.5;
 					tweenLastIntroText(1, 100);
 					tweenLastIntroText(2, 100);
 					createIntroText('Funkin\'', -100);
-				case 15:
+				case 16:
 					skipIntro();
 			}
 
@@ -197,14 +196,14 @@ class TitleState extends MusicState
 		return img;
 	}
 
-	function tweenOutIntroObjects(destroy:Bool = false):Void
+	function tweenOutIntroObjects():Void
 	{
 		for (i in 0...introTexts.length)
 			FlxTween.tween(introTexts[i], {y: -1250 * (i % 2 == 0 ? 1 : -1)}, .5,
-				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> if (destroy) introTexts[i].destroy()});
+				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> introTexts[i].destroy()});
 		for (obj in introImages)
 			FlxTween.tween(obj, {y: -1250 * (obj.y > FlxG.height * .5 ? 1 : -1)}, .5,
-				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> if (destroy) obj.destroy()});
+				{type: ONESHOT, ease: FlxEase.expoIn, onComplete: tween -> obj.destroy()});
 	}
 
 	private function clearIntroObjects():Void
@@ -224,8 +223,6 @@ class TitleState extends MusicState
 	}
 
 	inline function tweenLastIntroText(howFarBack:Int = 1, yOff:Float):Void
-	{
 		FlxTween.tween(introTexts[introTexts.length - howFarBack], {y: introTexts[introTexts.length - howFarBack].y - yOff}, .5,
 			{type: ONESHOT, ease: FlxEase.expoOut});
-	}
 }

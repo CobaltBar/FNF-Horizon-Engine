@@ -13,14 +13,13 @@ class Countdown
 	{
 		countdownEnded = new FlxSignal();
 		@:privateAccess
-		PlayState.instance.curBeat = -4;
+		PlayState.instance.curBeat = -3;
 	}
 
 	public function start():Void
 	{
 		new FlxTimer().start(Conductor.beatLength * .001, timer ->
 		{
-			@:privateAccess PlayState.instance.curBeat++;
 			switch (timer.elapsedLoops)
 			{
 				case 1:
@@ -38,23 +37,19 @@ class Countdown
 					for (audio in PlayState.instance.audios)
 						audio.play();
 					Conductor.song = PlayState.instance.audios["Inst"];
+					Conductor.enabled = true;
 					Conductor.time = 0;
-					Conductor.song.onComplete = () ->
+					Conductor.song.onComplete = () -> if (PlayState.songs.shift() == null)
 					{
-						PlayState.songs.shift();
-						if (PlayState.songs.length == 0)
-						{
-							Conductor.reset();
-							Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
-							Conductor.song = FlxG.sound.music;
-							FlxG.sound.music.resume();
-							FlxG.sound.music.fadeIn(.75);
-							// TODO replace with StoryMenuState and FreeplayState
-							MusicState.switchState(new MainMenuState());
-						}
-						else
-							MusicState.switchState(new PlayState(), true, true);
+						Conductor.reset();
+						Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
+						Conductor.song = FlxG.sound.music;
+						FlxG.sound.music.resume();
+						FlxG.sound.music.fadeIn(.75);
+						// TODO replace with StoryMenuState and FreeplayState
+						MusicState.switchState(new MainMenuState());
 					}
+					else MusicState.switchState(new PlayState(), true, true);
 			}
 		}, 5);
 	}

@@ -17,7 +17,7 @@ class PlayerInput
 			keyToData.set(Settings.data.keybinds['notes'][i], i % 4);
 			keyTracker.set(Settings.data.keybinds['notes'][i], false);
 		}
-		safeFrames = (10 / FlxG.drawFramerate) * 1000;
+		safeFrames = (Settings.data.safeFrames / FlxG.drawFramerate) * 1000;
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onPress);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onRelease);
 		Countdown.countdownEnded.add(() -> inputEnabled = true);
@@ -37,11 +37,11 @@ class PlayerInput
 						if (Math.abs(Conductor.time - note.time) <= (120 + safeFrames))
 						{
 							note.hit();
+							PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
 							if (PlayState.instance.audios.exists('Voices'))
 								PlayState.instance.audios['Voices'].volume = 1;
 							else if (PlayState.instance.audios.exists('Voices-Player'))
 								PlayState.instance.audios['Voices-Player'].volume = 1;
-							PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].confirm(false);
 							PlayState.instance.combo += 1;
 							PlayState.instance.playerStrum.addNextNote();
 							judge(Math.abs(Conductor.time - note.time));
@@ -61,6 +61,14 @@ class PlayerInput
 			keyTracker.set(event.keyCode, false);
 			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].unPress();
 			PlayState.instance.playerStrum.strums.members[keyToData[event.keyCode]].unConfirm();
+
+			if (inputEnabled)
+				for (note in PlayState.instance.playerStrum.notes[keyToData[event.keyCode]].members)
+				{
+					if (!note.alive)
+						continue;
+					@:privateAccess note.shouldMove = note.visible = true;
+				}
 		}
 	}
 
@@ -78,7 +86,7 @@ class PlayerInput
 			PlayState.instance.score += 200;
 			name = 'good';
 		}
-		else if (time <= (90 + safeFrames))
+		else if (time <= (110 + safeFrames))
 		{
 			PlayState.instance.score += 100;
 			name = 'bad';

@@ -1,10 +1,10 @@
 {
 	"notes": [
-		{ "data": 4, "time": 9600, "length": 750 },
-		{ "data": 7, "time": 10800, "length": 750 },
-		{ "data": 4, "time": 12000, "length": 750 },
-		{ "data": 7, "time": 13200, "length": 750 },
-		{ "data": 0, "time": 14400, "length": 750 },
+		{ "data": 4, "time": 9600 },
+		{ "data": 7, "time": 10800 },
+		{ "data": 4, "time": 12000 },
+		{ "data": 7, "time": 13200 },
+		{ "data": 0, "time": 14400 },
 		{ "data": 3, "time": 15600 },
 		{ "data": 0, "time": 16800 },
 		{ "data": 3, "time": 18000 },
