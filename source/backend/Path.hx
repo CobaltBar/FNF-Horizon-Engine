@@ -90,13 +90,13 @@ class Path
 	{
 		var found = keyAsPath ? {path: key, mod: null} : find(key, ['png'], mods, false);
 		var realKey = found?.mod != null ? found?.mod?.folderName == 'assets' ? key : '${found?.mod?.folderName}-$key' : key;
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'),
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(found?.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'),
 			false, realKey);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
 		trackedImages.set(realKey, graphic);
 		localAssets.push(realKey);
-		Log.info('Caching image $key (${found.mod != null ? found.mod.name : 'Path'})');
+		Log.info('Caching image $key (${found?.mod != null ? found?.mod?.name : 'Path'})');
 		return graphic;
 	}
 
@@ -233,8 +233,6 @@ class Path
 					{
 						if (!exclude(realPath))
 							callback(realPath);
-						else
-							trace(realPath);
 					}
 					else
 						callback(realPath);

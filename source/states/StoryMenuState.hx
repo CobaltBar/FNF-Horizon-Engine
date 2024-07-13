@@ -30,7 +30,7 @@ class StoryMenuState extends MusicMenuState
 		DiscordRPC.change('In the Menus', 'Story Menu');
 		#end
 
-		bg = Create.graphic(0, 100, FlxG.width, 400, 0xFFF9CF51);
+		bg = Create.graphic(0, 100, FlxG.width, 579, 0xFFF9CF51);
 		bg.cameras = [menuCam];
 		add(bg);
 
@@ -96,6 +96,21 @@ class StoryMenuState extends MusicMenuState
 				i++;
 			}
 
+		for (week in Mods.all['assets'].weeks)
+		{
+			var option = Create.sprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i), Path.image('week-${week.name.toLowerCase().replace(' ', '')}'), 1.4);
+			option.alpha = .6;
+			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+			option.clipRect = option.clipRect;
+			var songs:Array<String> = [];
+			for (song in week.songs)
+				songs.push(Mods.all['assets'].songs?.get(song)?.name);
+			optionToData.set(option, {mod: Mods.all['assets'], week: week, songs: songs});
+			option.cameras = [optionsCam];
+			add(option);
+			menuOptions.push(option);
+		}
+
 		changeSelection(0);
 		Path.clearUnusedMemory();
 	}
@@ -150,7 +165,7 @@ class StoryMenuState extends MusicMenuState
 		if (optionToData[menuOptions[curSelected]].week.bg == null || optionToData[menuOptions[curSelected]].week.bg == "blank")
 		{
 			bg.scale.set(1, 1);
-			bg.makeGraphic(FlxG.width, 400, 0xFFF9CF51);
+			bg.makeGraphic(FlxG.width, 579, 0xFFF9CF51);
 		}
 		else
 		{
@@ -213,7 +228,12 @@ class StoryMenuState extends MusicMenuState
 		PlayState.songs = songs;
 		PlayState.difficulty = optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty];
 		PlayState.week = optionToData[menuOptions[curSelected]].week;
-		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
+		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
+		FlxTimer.wait(1, () ->
+		{
+			FlxG.sound.music.pause();
+			MusicState.switchState(new PlayState());
+		});
 		if (!Settings.data.reducedMotion)
 		{
 			menuOptions[curSelected].clipRect = null;
@@ -235,8 +255,6 @@ class StoryMenuState extends MusicMenuState
 		for (char in menuChars)
 			if (char.animation.exists('confirm'))
 				char.animation.play('confirm', true);
-
-		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
 
 		super.exitState();
 	}

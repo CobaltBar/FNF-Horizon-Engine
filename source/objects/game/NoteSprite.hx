@@ -24,7 +24,6 @@ class NoteSprite extends FlxCopySprite
 		frames = Path.sparrow('note', PlayState.mods);
 		animation.addByPrefix('idle', 'idle', 24, true);
 		animation.play('idle', true);
-		scale.set(1.1, 1.1);
 		updateHitbox();
 		antialiasing = Settings.data.antialiasing;
 		moves = false;

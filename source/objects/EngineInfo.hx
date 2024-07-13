@@ -23,7 +23,7 @@ class EngineInfo extends TextField
 		curFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat('VCR OSD Mono', 16, color);
+		defaultTextFormat = new TextFormat('VCR OSD Mono', 14, color);
 		autoSize = LEFT;
 		multiline = true;
 		alpha = .75;

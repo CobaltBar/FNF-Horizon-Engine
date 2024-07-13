@@ -47,8 +47,8 @@ class ErrorState extends MusicState
 			resetGame();
 		if (Controls.back)
 		{
+			File.saveContent('log.txt', @:privateAccess Log.log.join('\n'));
 			resetGame();
-			File.saveContent('log.txt', @:privateAccess Log.log.join(''));
 		}
 		super.update(elapsed);
 	}
@@ -72,7 +72,7 @@ class ErrorState extends MusicState
 }
 
 @:xml('
-<scrollview contentWidth="100%">
+<scrollview contentWidth="100%" height="1080">
 	<label id="output" text="" />
 </scrollview>
 ')
@@ -82,8 +82,8 @@ class ErrorDescription extends ScrollView
 	{
 		super();
 		width = output.width = FlxG.width;
-		height = output.height = FlxG.height * .7;
-		output.text = ErrorState.errs.join('\n\n');
+		height = FlxG.height * .7;
+		output.text = ErrorState.errs.join('\n');
 		output.customStyle.fontName = 'VCR OSD Mono';
 		output.fontSize = 18;
 		output.invalidateComponentStyle();

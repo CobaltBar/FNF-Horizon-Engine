@@ -36,9 +36,9 @@ class Conductor extends FlxBasic
 	{
 		if (song != null)
 		{
-			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
 			if (enabled)
 			{
+				time = song.time + offset;
 				if (time > beatTracker + beatLength)
 				{
 					beatTracker += beatLength;
@@ -68,8 +68,8 @@ class Conductor extends FlxBasic
 
 	@:noCompletion static function reset():Void
 	{
-		switchToMusic = enabled = true;
 		bpm = 100;
+		switchToMusic = enabled = true;
 		curBeat = curStep = 0;
 		stepTracker = beatTracker = time = 0;
 	}
