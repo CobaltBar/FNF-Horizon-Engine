@@ -203,7 +203,7 @@ class StoryMenuState extends MusicMenuState
 	{
 		var mods = [optionToData[menuOptions[curSelected]].mod];
 		for (mod in Mods.enabled)
-			if (mod.global)
+			if (mod.global && mod.name != optionToData[menuOptions[curSelected]].mod.name && mod.name != 'Assets')
 				mods.push(mod);
 		var songs = [];
 		for (song in optionToData[menuOptions[curSelected]].week.songs)

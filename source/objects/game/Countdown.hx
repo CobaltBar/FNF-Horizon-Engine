@@ -39,17 +39,22 @@ class Countdown
 					Conductor.song = PlayState.instance.audios["Inst"];
 					Conductor.enabled = true;
 					Conductor.time = 0;
-					Conductor.song.onComplete = () -> if (PlayState.songs.shift() == null)
+					Conductor.song.onComplete = () ->
 					{
-						Conductor.reset();
-						Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
-						Conductor.song = FlxG.sound.music;
-						FlxG.sound.music.resume();
-						FlxG.sound.music.fadeIn(.75);
-						// TODO replace with StoryMenuState and FreeplayState
-						MusicState.switchState(new MainMenuState());
+						var song = PlayState.songs.shift();
+						if (PlayState.songs.length == 0)
+						{
+							Conductor.reset();
+							Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
+							Conductor.song = FlxG.sound.music;
+							FlxG.sound.music.resume();
+							FlxG.sound.music.fadeIn(.75);
+							// TODO replace with StoryMenuState and FreeplayState
+							MusicState.switchState(new MainMenuState());
+						}
+						else
+							MusicState.switchState(new PlayState(), true, true);
 					}
-					else MusicState.switchState(new PlayState(), true, true);
 			}
 		}, 5);
 	}

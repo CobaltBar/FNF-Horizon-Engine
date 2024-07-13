@@ -4,6 +4,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxSort;
 import haxe.io.Path as HaxePath;
 import openfl.events.KeyboardEvent;
+import sys.FileSystem;
 
 class PlayState extends MusicState
 {
@@ -107,9 +108,7 @@ class PlayState extends MusicState
 		Conductor.bpm = chart.bpm;
 		for (song in songs[0].audioFiles)
 		{
-			var audio = FlxG.sound.play(song);
-			audio.looped = false;
-			audio.pause();
+			var audio = FlxG.sound.play(song).pause();
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
