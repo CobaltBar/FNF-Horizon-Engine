@@ -29,6 +29,12 @@ class Note extends NoteSprite
 		isHit = false;
 		shouldMove = true;
 
+		if (sustain != null)
+		{
+			sustain.destroy();
+			tail.destroy();
+		}
+
 		if (strum != null)
 		{
 			rgb.set(Settings.data.noteRGB.notes[data % 4].base, Settings.data.noteRGB.notes[data % 4].highlight, Settings.data.noteRGB.notes[data % 4].outline);
@@ -146,9 +152,19 @@ class Note extends NoteSprite
 	{
 		if (sustain != null)
 		{
-			sustain.destroy();
-			tail.destroy();
+			sustain.kill();
+			tail.kill();
 		}
 		super.kill();
+	}
+
+	public override function revive()
+	{
+		if (sustain != null)
+		{
+			sustain.revive();
+			tail.revive();
+		}
+		super.revive();
 	}
 }

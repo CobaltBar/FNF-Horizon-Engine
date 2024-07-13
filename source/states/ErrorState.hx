@@ -47,8 +47,8 @@ class ErrorState extends MusicState
 			resetGame();
 		if (Controls.back)
 		{
+			File.saveContent('log.txt', @:privateAccess Log.log.join('\n'));
 			resetGame();
-			File.saveContent('log.txt', @:privateAccess Log.log.join(''));
 		}
 		super.update(elapsed);
 	}

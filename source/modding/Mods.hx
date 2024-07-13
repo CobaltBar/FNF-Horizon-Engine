@@ -26,7 +26,8 @@ class Mods
 
 				var json:ModJSON = TJSON.parse(File.getContent(Path.combine(['mods', mods[i], 'mod.json'])) ?? '');
 
-				var iconPath = Path.combine(['mods', mods[i], 'mod.png']);
+				var modPath = Path.combine(['mods', mods[i]]);
+				var iconPath = Path.combine([modPath, 'mod.png']);
 				all.set(mods[i], {
 					name: json.name ?? 'Blank Mod',
 					description: json.description ?? 'This mod does not have a description in mod.json',
@@ -38,9 +39,9 @@ class Mods
 					folderName: mods[i],
 					iconPath: FileSystem.exists(iconPath) ? iconPath : Path.combine(['assets', 'images', 'unknownMod.png']),
 					enabled: Settings.data.savedMods.get(mods[i])?.enabled ?? true,
-					staticMod: isStatic(mods[i]),
-					songs: getSongs(mods[i]),
-					weeks: getWeeks(mods[i]),
+					staticMod: isStatic(modPath),
+					songs: getSongs(modPath),
+					weeks: getWeeks(modPath),
 					ID: Settings.data.savedMods.get(mods[i])?.ID ?? i
 				});
 
@@ -50,7 +51,7 @@ class Mods
 
 		all.set('assets', {
 			name: 'Assets',
-			description: 'Internal Horizon Engine Assets - You shouldn\'t see this.',
+			description: 'Internal Horizon Engine Assets',
 			version: lime.app.Application.current.meta.get('version'),
 			color: 0xFF2565FF,
 			global: true,
@@ -60,14 +61,14 @@ class Mods
 			enabled: true,
 			staticMod: false,
 			songs: getSongs('assets'),
-			weeks: null,
+			weeks: getWeeks('assets'),
 			ID: enabled.length
 		});
 	}
 
 	private static function isStatic(path:String):Bool
 	{
-		var scriptsPath = Path.combine(['mods', path, 'menuScripts']);
+		var scriptsPath = Path.combine([path, 'menuScripts']);
 		if (FileSystem.exists(scriptsPath))
 			for (script in FileSystem.readDirectory(scriptsPath))
 			{
@@ -82,7 +83,7 @@ class Mods
 	private static function getWeeks(path:String):StringDictionary<Week>
 	{
 		var weeks:StringDictionary<Week> = new StringDictionary<Week>();
-		var weeksPath = Path.combine(['mods', path, 'weeks']);
+		var weeksPath = Path.combine([path, 'weeks']);
 		if (FileSystem.exists(weeksPath))
 			for (week in FileSystem.readDirectory(weeksPath))
 			{
@@ -114,7 +115,7 @@ class Mods
 	private static function getSongs(path:String):StringDictionary<Song>
 	{
 		var songs:StringDictionary<Song> = new StringDictionary<Song>();
-		var songsPath = Path.combine(['mods', path, 'songs']);
+		var songsPath = Path.combine([path, 'songs']);
 		if (FileSystem.exists(songsPath))
 			for (song in FileSystem.readDirectory(songsPath))
 			{

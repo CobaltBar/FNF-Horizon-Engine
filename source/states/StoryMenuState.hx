@@ -96,6 +96,21 @@ class StoryMenuState extends MusicMenuState
 				i++;
 			}
 
+		for (week in Mods.all['assets'].weeks)
+		{
+			var option = Create.sprite(FlxG.width * .5 - 400 + (50 * i), 750 + (200 * i), Path.image('week-${week.name.toLowerCase().replace(' ', '')}'), 1.4);
+			option.alpha = .6;
+			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
+			option.clipRect = option.clipRect;
+			var songs:Array<String> = [];
+			for (song in week.songs)
+				songs.push(Mods.all['assets'].songs?.get(song)?.name);
+			optionToData.set(option, {mod: Mods.all['assets'], week: week, songs: songs});
+			option.cameras = [optionsCam];
+			add(option);
+			menuOptions.push(option);
+		}
+
 		changeSelection(0);
 		Path.clearUnusedMemory();
 	}

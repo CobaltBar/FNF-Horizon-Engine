@@ -100,7 +100,7 @@ class PlayState extends MusicState
 	}
 
 	function onSection() {}
-
+	
 	function createChart():Void
 	{
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
@@ -121,7 +121,7 @@ class PlayState extends MusicState
 				var n = new Note(note.data);
 				n.resetNote(note, strum);
 				n.move(strum.strums.members[note.data % 4]);
-				n.y += 100000;
+				n.y += 20000;
 				strum.notes[note.data % 4].add(n);
 				noteCount[note.data > 3 ? 0 : 1] += 1;
 			}
