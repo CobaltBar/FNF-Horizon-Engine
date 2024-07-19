@@ -5,116 +5,112 @@ import flixel.math.FlxRect;
 
 class Note extends NoteSprite
 {
-	public var data:Int = 0;
-	public var time:Float = 0;
-	public var length:Float = 0;
+	public var data:Int;
+	public var time:Float;
+	public var length:Float;
 	public var type:String;
-	public var mult:Float = 1;
+	public var mult:Float;
 
 	public var sustain:FlxTiledSprite;
 	public var tail:FlxSprite;
 
-	var shouldMove:Bool = true;
 	var sustainOffset:Float = 0;
 
-	public var isHit:Bool = false;
-
-	public function resetNote(?json:NoteJSON, ?strum:Strumline):Void
+	public function resetNote(json:NoteJSON, strum:Strumline):Void
 	{
-		data = json?.data ?? 0;
-		time = json?.time ?? 100;
-		length = json?.length ?? 0;
-		type = json?.type;
-		mult = json?.mult ?? 1;
-		isHit = false;
-		shouldMove = true;
+		data = json.data ?? 0;
+		time = json.time ?? 0;
+		length = json.length ?? 0;
+		type = json.type;
+		mult = json.mult ?? 1;
+		sustainOffset = 0;
 
-		if (sustain != null)
-		{
-			sustain.destroy();
-			tail.destroy();
-		}
+		var rgbDat = Settings.data.noteRGB.notes[data % 4];
+		rgb.set(rgbDat.base, rgbDat.highlight, rgbDat.outline);
+		angle = angleOffset = strum.strums.members[data % 4].angleOffset;
+		x = strum.strums.members[data % 4].x;
 
-		if (strum != null)
+		if (length > 0)
 		{
-			rgb.set(Settings.data.noteRGB.notes[data % 4].base, Settings.data.noteRGB.notes[data % 4].highlight, Settings.data.noteRGB.notes[data % 4].outline);
-			angle = angleOffset = strum.strums.members[data % 4].angleOffset;
-			x = ((strum.strums.members[data % 4].width * data % 4) + 5) - 20;
-		}
-
-		var flooredLength = Math.floor(length / Conductor.stepLength);
-		if (flooredLength > 0)
-		{
-			sustain = new FlxTiledSprite(null, 50, 43 * (flooredLength + 1), false).loadFrame(Path.sparrow('note', PlayState.mods).getByName('hold'));
+			sustain = new FlxTiledSprite(null, 50, 43 * (length / Conductor.stepLength + 1),
+				false).loadFrame(Path.sparrow('note', PlayState.mods).getByName('hold'));
 			sustain.animation.addByPrefix('idle', 'hold', 24, true);
 			sustain.animation.play('idle', true);
 			sustain.shader = rgb.shader;
-			sustain.offset.y = -200;
-			sustain.updateHitbox();
 			sustain.antialiasing = Settings.data.antialiasing;
 			sustain.moves = false;
 			sustain.clipRect = new FlxRect(0, 0, sustain.width, sustain.height);
 			sustain.clipRect = sustain.clipRect;
-			sustain.x = x + strum.x + sustain.width * .75;
+			sustain.offset.y = -height * .5;
+			sustain.x = x + (width - sustain.width) * .5;
 
 			tail = Create.sparrow(0, 0, Path.sparrow('note', PlayState.mods));
 			tail.animation.addByPrefix('idle', 'tail', 24, true);
 			tail.animation.play('idle', true);
 			tail.shader = rgb.shader;
-			tail.offset.y = -201;
-			tail.updateHitbox();
 			tail.antialiasing = Settings.data.antialiasing;
 			tail.moves = false;
 			tail.clipRect = new FlxRect(0, 0, tail.width, tail.height);
 			tail.clipRect = tail.clipRect;
-			tail.x = x + strum.x + tail.width * 1.25;
+			tail.offset.y = -height * .5 + 1;
+			tail.x = x + (width - sustain.width) * .5;
 		}
 	}
 
-	public function move(strumNote:StrumNote, unconfirm:Bool = false):Void
+	public function move(strum:StrumNote, autoHit:Bool = false)
 	{
-		if (shouldMove)
-			y = strumNote.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
+		y = strum.y - (0.675 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
+
+		if (sustain == null)
+		{
+			if (autoHit)
+				if (Conductor.time >= time)
+					kill();
+		}
 		else
 		{
-			sustainOffset = (strumNote.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult)) - y;
-			if (sustain != null)
+			sustain.y = y;
+			tail.y = y + sustain.height;
+
+			if (sustain.y < strum.y)
 			{
-				if (sustain.y < strumNote.y - 50)
+				sustain.clipRect.y = strum.y - sustain.y;
+				sustain.clipRect = sustain.clipRect;
+			}
+			else
+			{
+				if (sustain.clipRect.y != 0)
 				{
-					sustain.clipRect.y = strumNote.y - 50 - sustain.y;
+					sustain.clipRect.y = 0;
 					sustain.clipRect = sustain.clipRect;
 				}
-				if (tail.y < strumNote.y + strumNote.height - 50)
+			}
+
+			if (tail.y < strum.y)
+			{
+				tail.clipRect.y = strum.y - tail.y;
+				tail.clipRect = tail.clipRect;
+			}
+			else
+			{
+				if (tail.clipRect.y != 0)
 				{
-					tail.clipRect.y = (strumNote.y + strumNote.height) - 50 - (tail.y + tail.height * .6);
+					tail.clipRect.y = 0;
 					tail.clipRect = tail.clipRect;
 				}
-
-				if (Conductor.time >= time + length && !shouldMove)
-				{
-					kill();
-					if (unconfirm)
-						strumNote.unConfirm();
-				}
 			}
-		}
-		if (sustain != null)
-		{
-			sustain.y = y + sustainOffset;
-			tail.y = sustain.y + sustain.height + tail.height * 2;
-		}
-	}
 
-	public function hit():Void
-	{
-		isHit = true;
-		if (sustain == null)
-			kill();
-		else
-		{
-			shouldMove = false;
-			alpha = 0;
+			if (sustain.y < strum.y - sustain.height - 50)
+			{
+				sustain.destroy();
+				sustain = null;
+			}
+
+			if (tail.y < strum.y - tail.height - 50)
+			{
+				tail.destroy();
+				tail = null;
+			}
 		}
 	}
 
@@ -133,7 +129,9 @@ class Note extends NoteSprite
 		if (sustain != null)
 		{
 			sustain.destroy();
+			sustain = null;
 			tail.destroy();
+			tail = null;
 		}
 		super.destroy();
 	}
@@ -152,19 +150,11 @@ class Note extends NoteSprite
 	{
 		if (sustain != null)
 		{
-			sustain.kill();
-			tail.kill();
+			sustain.destroy();
+			sustain = null;
+			tail.destroy();
+			tail = null;
 		}
 		super.kill();
-	}
-
-	public override function revive()
-	{
-		if (sustain != null)
-		{
-			sustain.revive();
-			tail.revive();
-		}
-		super.revive();
 	}
 }
