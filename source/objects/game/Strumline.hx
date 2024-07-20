@@ -50,7 +50,7 @@ class Strumline extends FlxSpriteGroup
 		{
 			var data = uNoteData.shift();
 			var n = notes[data.data % 4].recycle(Note, () -> new Note(data.data), false, false);
-			n.y = -n.height;
+			n.y = -1000;
 			n.resetNote(data, this);
 			n.revive();
 		}

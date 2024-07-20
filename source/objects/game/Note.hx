@@ -15,6 +15,9 @@ class Note extends NoteSprite
 	public var tail:FlxSprite;
 
 	var sustainOffset:Float = 0;
+	var sustaining:Bool = false;
+
+	var strumline:Strumline;
 
 	public function resetNote(json:NoteJSON, strum:Strumline):Void
 	{
@@ -24,6 +27,9 @@ class Note extends NoteSprite
 		type = json.type;
 		mult = json.mult ?? 1;
 		sustainOffset = 0;
+		sustaining = false;
+		alpha = 1;
+		strumline = strum;
 
 		var rgbDat = Settings.data.noteRGB.notes[data % 4];
 		rgb.set(rgbDat.base, rgbDat.highlight, rgbDat.outline);
@@ -32,7 +38,7 @@ class Note extends NoteSprite
 
 		if (length > 0)
 		{
-			sustain = new FlxTiledSprite(null, 50, 43 * (length / Conductor.stepLength + 1),
+			sustain = new FlxTiledSprite(null, 50, 44 * (Math.floor(length / Conductor.stepLength) + 1),
 				false).loadFrame(Path.sparrow('note', PlayState.mods).getByName('hold'));
 			sustain.animation.addByPrefix('idle', 'hold', 24, true);
 			sustain.animation.play('idle', true);
@@ -57,20 +63,35 @@ class Note extends NoteSprite
 		}
 	}
 
-	public function move(strum:StrumNote, autoHit:Bool = false)
+	public function hit():Void
 	{
-		y = strum.y - (0.675 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
-
-		if (sustain == null)
+		if (sustain != null && sustain.exists)
 		{
-			if (autoHit)
-				if (Conductor.time >= time)
-					kill();
+			sustaining = true;
+			alpha = 0;
 		}
 		else
 		{
-			sustain.y = y;
-			tail.y = y + sustain.height;
+			kill();
+			strumline.addNextNote();
+		}
+	}
+
+	public function move(strum:StrumNote, autoHit:Bool = false):Void
+	{
+		if (sustaining)
+			sustainOffset = 0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult;
+		else
+			y = strum.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
+
+		if (autoHit)
+			if (Conductor.time >= time)
+				hit();
+
+		if (sustain != null)
+		{
+			sustain.y = y - sustainOffset;
+			tail.y = y + sustain.height - sustainOffset;
 
 			if (sustain.y < strum.y)
 			{
@@ -100,16 +121,13 @@ class Note extends NoteSprite
 				}
 			}
 
-			if (sustain.y < strum.y - sustain.height - 50)
+			if (tail.y < strum.y - tail.height - 50)
 			{
 				sustain.destroy();
 				sustain = null;
-			}
-
-			if (tail.y < strum.y - tail.height - 50)
-			{
 				tail.destroy();
 				tail = null;
+				sustaining = false;
 			}
 		}
 	}

@@ -49,10 +49,8 @@ class PlayState extends MusicState
 		add(playerStrum = new Strumline(FlxG.width * .275, 150));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 150));
 
-		FlxG.camera.zoom = .5;
-
 		Conductor.reset();
-		Conductor.switchToMusic = Conductor.enabled = false;
+		Conductor.switchToMusic = false;
 
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed ?? 1;
@@ -60,25 +58,23 @@ class PlayState extends MusicState
 		for (note in chart.notes)
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
 
-		for (i in 0...4)
+		for (i in 0...50)
 		{
-			playerStrum.uNoteData.unshift({
-				time: 50 * i,
-				data: i % 4,
-				length: 750,
-				mult: 1,
-				type: null
-			});
+			opponentStrum.addNextNote();
 			playerStrum.addNextNote();
 		}
-	}
 
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		if (FlxG.keys.anyPressed([Y]))
-			Conductor.time += elapsed * 1000;
-		if (FlxG.keys.anyPressed([H]))
-			Conductor.time -= elapsed * 1000;
+		for (song in songs[0].audioFiles)
+		{
+			var audio = FlxG.sound.play(song).pause();
+			audio.time = 0;
+			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
+		}
+
+		Conductor.song = audios["Inst"];
+		Conductor.time = 0;
+
+		for (song in audios)
+			song.resume();
 	}
 }
