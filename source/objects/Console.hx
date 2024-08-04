@@ -59,6 +59,7 @@ class Console extends Dialog
 		interp.variables.set("MainMenuState", MainMenuState);
 		interp.variables.set("PlayState", PlayState);
 		interp.variables.set("ModsMenuState", ModsMenuState);
+		interp.variables.set("Conductor", Conductor);
 	}
 
 	function run(text:String):Void

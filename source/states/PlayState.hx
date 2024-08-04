@@ -1,5 +1,6 @@
 package states;
 
+import flixel.graphics.FlxGraphic;
 import haxe.io.Path as HaxePath;
 
 class PlayState extends MusicState
@@ -48,12 +49,14 @@ class PlayState extends MusicState
 
 		add(playerStrum = new Strumline(FlxG.width * .275, 150));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 150));
+		opponentStrum.autoHit = true;
+		playerStrum.autoHit = true;
 
 		Conductor.reset();
 		Conductor.switchToMusic = false;
 
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
-		scrollSpeed = chart.scrollSpeed ?? 1;
+		scrollSpeed = chart.scrollSpeed * 1.1 ?? 1.1;
 		Conductor.bpm = chart.bpm;
 		for (note in chart.notes)
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);

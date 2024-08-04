@@ -1,6 +1,7 @@
 package objects.game;
 
 import flixel.addons.display.FlxTiledSprite;
+import flixel.graphics.FlxGraphic;
 import flixel.math.FlxRect;
 
 class Note extends NoteSprite
@@ -11,15 +12,17 @@ class Note extends NoteSprite
 	public var type:String;
 	public var mult:Float;
 
-	public var sustain:FlxTiledSprite;
-	public var tail:FlxSprite;
+	public var sustain:SustainSprite;
+
+	static var sustainGroup:FlxTypedSpriteGroup<SustainSprite> = new FlxTypedSpriteGroup<SustainSprite>();
 
 	var sustainOffset:Float = 0;
 	var sustaining:Bool = false;
 
 	var strumline:Strumline;
+	var strum:StrumNote;
 
-	public function resetNote(json:NoteJSON, strum:Strumline):Void
+	public function resetNote(json:NoteJSON, line:Strumline):Void
 	{
 		data = json.data ?? 0;
 		time = json.time ?? 0;
@@ -29,150 +32,122 @@ class Note extends NoteSprite
 		sustainOffset = 0;
 		sustaining = false;
 		alpha = 1;
-		strumline = strum;
+		strumline = line;
+		strum = strumline.strums.members[data % 4];
 
 		var rgbDat = Settings.data.noteRGB.notes[data % 4];
 		rgb.set(rgbDat.base, rgbDat.highlight, rgbDat.outline);
-		angle = angleOffset = strum.strums.members[data % 4].angleOffset;
-		x = strum.strums.members[data % 4].x;
+		angle = angleOffset = strum.angleOffset;
+		x = strum.x;
 
 		if (length > 0)
 		{
-			sustain = new FlxTiledSprite(null, 50, 44 * (Math.floor(length / Conductor.stepLength) + 1),
-				false).loadFrame(Path.sparrow('note', PlayState.mods).getByName('hold'));
-			sustain.animation.addByPrefix('idle', 'hold', 24, true);
-			sustain.animation.play('idle', true);
-			sustain.shader = rgb.shader;
-			sustain.antialiasing = Settings.data.antialiasing;
-			sustain.moves = false;
-			sustain.clipRect = new FlxRect(0, 0, sustain.width, sustain.height);
-			sustain.clipRect = sustain.clipRect;
-			sustain.offset.y = -height * .5;
-			sustain.x = x + (width - sustain.width) * .5;
-
-			tail = Create.sparrow(0, 0, Path.sparrow('note', PlayState.mods));
-			tail.animation.addByPrefix('idle', 'tail', 24, true);
-			tail.animation.play('idle', true);
-			tail.shader = rgb.shader;
-			tail.antialiasing = Settings.data.antialiasing;
-			tail.moves = false;
-			tail.clipRect = new FlxRect(0, 0, tail.width, tail.height);
-			tail.clipRect = tail.clipRect;
-			tail.offset.y = -height * .5 + 1;
-			tail.x = x + (width - sustain.width) * .5;
-		}
-	}
-
-	public function hit():Void
-	{
-		if (sustain != null && sustain.exists)
-		{
-			sustaining = true;
-			alpha = 0;
-		}
-		else
-		{
-			kill();
-			strumline.addNextNote();
-		}
-	}
-
-	public function move(strum:StrumNote, autoHit:Bool = false):Void
-	{
-		if (sustaining)
-			sustainOffset = 0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult;
-		else
-			y = strum.y - (0.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
-
-		if (autoHit)
-			if (Conductor.time >= time)
-				hit();
-
-		if (sustain != null)
-		{
-			sustain.y = y - sustainOffset;
-			tail.y = y + sustain.height - sustainOffset;
-
-			if (sustain.y < strum.y)
+			trace(length);
+			sustain = sustainGroup.recycle(SustainSprite, () ->
 			{
-				sustain.clipRect.y = strum.y - sustain.y;
-				sustain.clipRect = sustain.clipRect;
-			}
-			else
-			{
-				if (sustain.clipRect.y != 0)
-				{
-					sustain.clipRect.y = 0;
-					sustain.clipRect = sustain.clipRect;
-				}
-			}
-
-			if (tail.y < strum.y)
-			{
-				tail.clipRect.y = strum.y - tail.y;
-				tail.clipRect = tail.clipRect;
-			}
-			else
-			{
-				if (tail.clipRect.y != 0)
-				{
-					tail.clipRect.y = 0;
-					tail.clipRect = tail.clipRect;
-				}
-			}
-
-			if (tail.y < strum.y - tail.height - 50)
-			{
-				sustain.destroy();
-				sustain = null;
-				tail.destroy();
-				tail = null;
-				sustaining = false;
-			}
+				var s = new SustainSprite(FlxGraphic.fromFrame(Path.sparrow("note", PlayState.mods).getByName("hold")));
+				s.antialiasing = Settings.data.antialiasing;
+				s.tail.frames = Path.sparrow("note", PlayState.mods);
+				s.tail.animation.addByPrefix('idle', "tail");
+				s.tail.animation.play('idle');
+				s.updateHitbox();
+				return s;
+			});
+			sustain.tiles = Math.ffloor(length / Conductor.stepLength);
+			sustain.updateHitbox();
+			// sustain.clipRect = new FlxRect(0, 0, sustain.body.frameWidth * sustain.scale.x, sustain.body.frameHeight + sustain.tail.frameHeight);
+			// sustain.clipRect = sustain.clipRect;
+			sustain.x = strum.x + sustain.width * .5;
 		}
 	}
 
 	public override function draw()
 	{
-		if (sustain != null)
-		{
-			sustain.draw();
-			tail.draw();
-		}
 		super.draw();
+		if (sustain != null && sustain.alive)
+			sustain.draw();
 	}
 
 	public override function destroy()
 	{
 		if (sustain != null)
-		{
 			sustain.destroy();
-			sustain = null;
-			tail.destroy();
-			tail = null;
-		}
+
 		super.destroy();
 	}
 
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (sustain != null)
+
+		if (sustaining)
+			sustainOffset = .45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult;
+		else
+			y = strum.y - (.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult) - sustainOffset;
+
+		if (strumline.autoHit)
+			if (length > 0)
+			{
+				if (Conductor.time >= time && !sustaining)
+				{
+					strum.confirm(false);
+					sustaining = true;
+					// alpha = 0;
+				}
+
+				if (Conductor.time >= time + length)
+				{
+					strum.unConfirm();
+					sustaining = false;
+					kill();
+					strumline.addNextNote();
+				}
+			}
+			else
+			{
+				if (Conductor.time >= time)
+				{
+					strum.confirm();
+					kill();
+					strumline.addNextNote();
+				}
+			}
+
+		if (sustain != null && sustain.alive)
 		{
 			sustain.update(elapsed);
-			tail.update(elapsed);
+
+			if (Conductor.time >= time + length)
+			{
+				sustain.kill();
+				sustaining = false;
+				strum.unConfirm();
+				return;
+			}
+
+			sustain.y = y;
+
+			/*if (sustain.y < strum.y)
+				{
+					sustain.clipRect.y = strum.y - sustain.y;
+					sustain.clipRect = sustain.clipRect;
+				}
+				else
+				{
+					if (sustain.clipRect.y != 0)
+					{
+						sustain.clipRect.y = 0;
+						sustain.clipRect = sustain.clipRect;
+					}
+			}*/
 		}
 	}
 
 	public override function kill()
 	{
 		if (sustain != null)
-		{
-			sustain.destroy();
-			sustain = null;
-			tail.destroy();
-			tail = null;
-		}
+			sustain.kill();
+
 		super.kill();
 	}
 }
