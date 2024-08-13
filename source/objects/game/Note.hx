@@ -34,11 +34,22 @@ class Note extends NoteSprite
 		y = strum.y - (.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult);
 
 		if (strumline.autoHit)
+		{
 			if (Conductor.time >= time)
 			{
 				strumline.addNextNote();
 				strum.confirm();
 				kill();
 			}
+		}
+		else
+		{
+			if (Conductor.time >= time + 1500)
+			{
+				strumline.addNextNote();
+				// insert miss code here
+				kill();
+			}
+		}
 	}
 }
