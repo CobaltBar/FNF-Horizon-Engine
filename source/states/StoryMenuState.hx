@@ -229,11 +229,8 @@ class StoryMenuState extends MusicMenuState
 		PlayState.difficulty = optionToData[menuOptions[curSelected]].week.difficulties[curDifficulty];
 		PlayState.week = optionToData[menuOptions[curSelected]].week;
 		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
-		FlxTimer.wait(1, () ->
-		{
-			FlxG.sound.music.pause();
-			MusicState.switchState(new PlayState());
-		});
+		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
+
 		if (!Settings.data.reducedMotion)
 		{
 			menuOptions[curSelected].clipRect = null;

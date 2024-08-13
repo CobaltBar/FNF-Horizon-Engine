@@ -59,8 +59,11 @@ class ErrorState extends MusicState
 		@:privateAccess TitleState.comingBack = false;
 		@:privateAccess TitleState.titleData = null;
 		Conductor.reset();
-		FlxG.sound.music.destroy();
-		FlxG.sound.music = null;
+		if (FlxG.sound.music != null)
+		{
+			FlxG.sound.music.destroy();
+			FlxG.sound.music = null;
+		}
 		Path.clearStoredMemory();
 		Path.clearUnusedMemory();
 		FlxG.plugins.removeAllByType(Conductor);

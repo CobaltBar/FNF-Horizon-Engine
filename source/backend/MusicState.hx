@@ -14,6 +14,7 @@ class MusicState extends FlxTransitionableState
 
 	var curStep(get, set):Int;
 	var curBeat(get, set):Int;
+	var curMeasure(get, set):Int;
 
 	private function onStep():Void {}
 
@@ -73,9 +74,15 @@ class MusicState extends FlxTransitionableState
 	@:noCompletion @:keep inline function get_curBeat():Int
 		return Conductor.curBeat;
 
+	@:noCompletion @:keep inline function get_curMeasure():Int
+		return Conductor.curMeasure;
+
 	@:noCompletion @:keep inline function set_curStep(val:Int):Int
-		return Conductor.curStep = curStep;
+		return Conductor.curStep = val;
 
 	@:noCompletion @:keep inline function set_curBeat(val:Int):Int
-		return Conductor.curBeat = curStep;
+		return Conductor.curBeat = val;
+
+	@:noCompletion @:keep inline function set_curMeasure(val:Int):Int
+		return Conductor.curMeasure = val;
 }

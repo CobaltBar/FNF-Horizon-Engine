@@ -3,43 +3,36 @@ package states;
 import flixel.graphics.FlxGraphic;
 import haxe.io.Path as HaxePath;
 
+@:publicFields
 class PlayState extends MusicState
 {
-	public static var mods:Array<Mod> = [];
-	public static var songs:Array<Song> = [];
-	public static var difficulty:String = '';
-	public static var week:Week;
-	public static var instance:PlayState;
+	static var mods:Array<Mod> = [];
+	static var songs:Array<Song> = [];
+	static var difficulty:String = '';
+	static var week:Week;
+	static var instance:PlayState;
 
-	public var audios:Map<String, FlxSound> = [];
-	public var comboGroup:Map<String, FlxSpriteGroup> = [];
+	var audios:Map<String, FlxSound> = [];
+	var comboGroup:Map<String, FlxSpriteGroup> = [];
 
-	public var playerStrum:Strumline;
-	public var opponentStrum:Strumline;
+	var playerStrum:Strumline;
+	var opponentStrum:Strumline;
 
-	public var scrollSpeed:Float = 1;
-	public var score:Int = 0;
-	public var accuracy:Float = 0;
-	public var misses:Int = 0;
-	public var combo:Int = 0;
-	public var scores:Map<String, Int> = ["sick" => 0, "good" => 0, "bad" => 0, "shit" => 0];
+	var scrollSpeed:Float = 1;
+	var score:Int = 0;
+	var accuracy:Float = 0;
+	var misses:Int = 0;
+	var combo:Int = 0;
+	var scores:Map<String, Int> = ["sick" => 0, "good" => 0, "bad" => 0, "shit" => 0];
 
-	public var curSection:Int = -1;
-
-	public override function create():Void
+	override function create():Void
 	{
 		Path.clearStoredMemory();
 		super.create();
 		instance = this;
+		loadAssets();
 		bop = zoom = false;
-
-		for (item in [
-			'note', 'ready', 'set', 'go', 'combo', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'sick', 'good', 'bad',
-			'shit'
-		])
-			Path.image(item, mods);
-		for (item in ['Three', 'Two', 'One', 'Go'])
-			Path.audio(item, mods);
+		FlxG.sound.music.pause();
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
 		{
@@ -50,7 +43,6 @@ class PlayState extends MusicState
 		add(playerStrum = new Strumline(FlxG.width * .275, 150));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 150));
 		opponentStrum.autoHit = true;
-		playerStrum.autoHit = true;
 
 		Conductor.reset();
 		Conductor.switchToMusic = false;
@@ -74,10 +66,17 @@ class PlayState extends MusicState
 			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
 		}
 
-		Conductor.song = audios["Inst"];
-		Conductor.time = 0;
+		add(new Countdown());
+	}
 
-		for (song in audios)
-			song.resume();
+	private function loadAssets():Void
+	{
+		for (item in [
+			'note', 'ready', 'set', 'go', 'combo', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'sick', 'good', 'bad',
+			'shit'
+		].concat(Countdown.countdownNameArr))
+			Path.image(item, mods);
+		for (item in ['Three', 'Two', 'One', 'Go'].concat(Countdown.countdownSoundArr))
+			Path.audio(item, mods);
 	}
 }
