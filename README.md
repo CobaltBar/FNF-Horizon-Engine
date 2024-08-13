@@ -19,7 +19,7 @@ FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made
 
 ## Compilation Instructions
 
-Install Haxe 4.3.4 (and install MSVC if on Windows)
+Install Haxe 4.3.6 (and install MSVC if on Windows)
 
 NOTE: You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
 

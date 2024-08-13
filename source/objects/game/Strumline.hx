@@ -16,7 +16,7 @@ class Strumline extends FlxSpriteGroup
 		super(0, y);
 
 		add(strums = new FlxTypedSpriteGroup<StrumNote>(-5, 0));
-		add(notes = new FlxTypedSpriteGroup<Note>(-5, 0));
+		add(notes = new FlxTypedSpriteGroup<Note>(-5, 0, 1000));
 
 		for (i in 0...4)
 		{
@@ -42,6 +42,5 @@ class Strumline extends FlxSpriteGroup
 			});
 			n.y = FlxG.height * 10;
 			n.resetNote(data, this);
-			n.visible = true;
 		}
 }

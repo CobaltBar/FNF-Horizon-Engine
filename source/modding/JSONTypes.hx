@@ -63,8 +63,8 @@ typedef NoteJSON =
 	var data:Int;
 	var time:Float;
 	var length:Float;
-	var type:String;
-	var mult:Float;
+	@:optional var type:String;
+	@:optional var mult:Float;
 }
 
 typedef EventJSON =
