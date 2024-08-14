@@ -50,12 +50,16 @@ class Note extends NoteSprite
 			if (Conductor.time >= time + 200 && !killing)
 			{
 				killing = true;
-				FlxTween.num(mult, mult * 5, 1, {
+				rgb.r.saturation = .2;
+				rgb.g.saturation = .2;
+				rgb.b.saturation = .2;
+				rgb.set(rgb.r, rgb.g, rgb.b);
+				PlayState.instance.miss();
+				FlxTween.num(mult, mult * 5, .5, {
 					type: ONESHOT,
 					onComplete: tween ->
 					{
 						strumline.addNextNote();
-						PlayState.instance.miss();
 						kill();
 					}
 				}, num -> mult = num);
