@@ -53,8 +53,7 @@ class MainMenuState extends MusicMenuState
 		curSelected = prevCurSelected;
 		changeSelection(0);
 
-		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine v' + Application.current.meta.get('version'), 28, Path.font('vcr'),
-			0xFFFFFFFF, LEFT)
+		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine build ${Main.horizonVer}', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		horizonEngineText.cameras = [otherCam];
 		add(horizonEngineText);
@@ -146,11 +145,11 @@ class MainMenuState extends MusicMenuState
 				case 0:
 					MusicState.switchState(new StoryMenuState());
 				case 1:
-				// MusicState.switchState(new FreeplayState());
+					// MusicState.switchState(new FreeplayState());
 				case 2:
-				// MusicState.switchState(new AwardsState());
+					// MusicState.switchState(new AwardsState());
 				case 3:
-				// MusicState.switchState(new CreditsState());
+					// MusicState.switchState(new CreditsState());
 				case 5:
 					// MusicState.switchState(new OptionsState());
 			}
@@ -160,13 +159,13 @@ class MainMenuState extends MusicMenuState
 				case 0:
 					MusicState.switchState(new StoryMenuState());
 				case 1:
-				// MusicState.switchState(new FreeplayState());
+					// MusicState.switchState(new FreeplayState());
 				case 2:
 					MusicState.switchState(new ModsMenuState());
 				case 3:
-				// MusicState.switchState(new AwardsState());
+					// MusicState.switchState(new AwardsState());
 				case 4:
-				// MusicState.switchState(new CreditsState());
+					// MusicState.switchState(new CreditsState());
 				case 6:
 					// MusicState.switchState(new OptionsState());
 			}

@@ -53,6 +53,8 @@
 	<haxedef name="hscriptPos" />
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_ENABLED" />
 
+	<haxeflag name="--macro" value="util.VersionMacro.run()" />
+
 	<haxedef name="FLX_NO_HEALTH" />
 	<haxedef name="FLX_NO_MOUSE" if="mobile" />
 	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />

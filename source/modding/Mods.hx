@@ -52,7 +52,7 @@ class Mods
 		all.set('assets', {
 			name: 'Assets',
 			description: 'Internal Horizon Engine Assets',
-			version: lime.app.Application.current.meta.get('version'),
+			version: '${Main.horizonVer}',
 			color: 0xFF2565FF,
 			global: true,
 			modSysVer: Main.modSysVer,
