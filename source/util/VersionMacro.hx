@@ -8,7 +8,7 @@ class VersionMacro
 	public static function run():Void
 	{
 		// ok wtf lime
-		#if !display_details
+		#if (!display_details && !display)
 		if (sys.FileSystem.exists('.build'))
 			sys.io.File.saveContent('.build', '${Std.parseInt(sys.io.File.getContent('.build')) + 1}');
 		else
