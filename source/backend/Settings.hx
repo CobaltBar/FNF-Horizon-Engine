@@ -35,7 +35,7 @@ class SaveVars
 	var middleScroll:Bool = false;
 	var ghostTapping:Bool = true;
 	var safeFrames:Int = 10;
-	var hitWindows:Array<Float> = [30, 80, 125, 140];
+	var hitWindows:Array<Float> = [30, 60, 90, 120];
 	var autoPause:Bool = true;
 
 	var opponentStrums:Bool = true;

@@ -39,14 +39,14 @@ class PlayerInput
 					{
 						if (!note.alive || note.data != keyToData[event.keyCode])
 							continue;
-						if (Math.abs(Conductor.time - note.time) <= 120 + safeFrames)
+						if (Math.abs(Conductor.time - note.time) <= Settings.data.hitWindows[3] + safeFrames)
 						{
 							PlayState.instance.playerStrum.addNextNote();
 							strum.confirm(false);
-							if (PlayState.instance.audios.exists('Voices'))
-								PlayState.instance.audios['Voices'].volume = 1;
-							else if (PlayState.instance.audios.exists('Voices-Player'))
-								PlayState.instance.audios['Voices-Player'].volume = 1;
+							if (PlayState.instance.audios.exists('voices'))
+								PlayState.instance.audios['voices'].volume = 1;
+							else if (PlayState.instance.audios.exists('voices-player'))
+								PlayState.instance.audios['voices-player'].volume = 1;
 							PlayState.instance.combo += 1;
 							judge(Math.abs(Conductor.time - note.time));
 							note.kill();
@@ -71,17 +71,17 @@ class PlayerInput
 	static function judge(time:Float):Void
 	{
 		var name:String;
-		if (time <= 30 + safeFrames)
+		if (time <= Settings.data.hitWindows[0] + safeFrames)
 		{
 			name = 'sick';
 			PlayState.instance.score += 350;
 		}
-		else if (time <= 60 + safeFrames)
+		else if (time <= Settings.data.hitWindows[1] + safeFrames)
 		{
 			name = 'good';
 			PlayState.instance.score += 200;
 		}
-		else if (time <= 90 + safeFrames)
+		else if (time <= Settings.data.hitWindows[2] + safeFrames)
 		{
 			name = 'bad';
 			PlayState.instance.score += 100;

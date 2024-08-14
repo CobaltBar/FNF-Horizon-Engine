@@ -109,10 +109,10 @@ class PlayState extends MusicState
 
 	function miss()
 	{
-		if (PlayState.instance.audios.exists('Voices'))
-			PlayState.instance.audios['Voices'].volume = 0;
-		else if (PlayState.instance.audios.exists('Voices-Player'))
-			PlayState.instance.audios['Voices-Player'].volume = 0;
+		if (PlayState.instance.audios.exists('voices'))
+			PlayState.instance.audios['voices'].volume = 0;
+		else if (PlayState.instance.audios.exists('voices-player'))
+			PlayState.instance.audios['voices-player'].volume = 0;
 		misses += 1;
 		combo = 0;
 	}

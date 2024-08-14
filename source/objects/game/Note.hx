@@ -8,6 +8,8 @@ class Note extends NoteSprite
 	public var type:String;
 	public var mult:Float;
 
+	var killing:Bool = false;
+
 	var strumline:Strumline;
 	var strum:StrumNote;
 
@@ -20,6 +22,7 @@ class Note extends NoteSprite
 		mult = json.mult ?? 1;
 		strumline = line;
 		strum = strumline.strums.members[data % 4];
+		killing = false;
 
 		x = strum.x;
 		var rgbDat = Settings.data.noteRGB.notes[data % 4];
@@ -44,11 +47,10 @@ class Note extends NoteSprite
 		}
 		else
 		{
-			if (Conductor.time >= time + 200)
+			if (Conductor.time >= time + 200 && !killing)
 			{
-				// Prevent it from tweening itself a bajillion times :3
-				time += 150000;
-				FlxTween.num(mult, mult * 5, .5, {
+				killing = true;
+				FlxTween.num(mult, mult * 5, 1, {
 					type: ONESHOT,
 					onComplete: tween ->
 					{
