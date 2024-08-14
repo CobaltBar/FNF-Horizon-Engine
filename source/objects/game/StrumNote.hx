@@ -46,7 +46,7 @@ class StrumNote extends NoteSprite
 		pressedSpr.targetSpr = this;
 		pressedSpr.copyScale = true;
 		pressedSpr.shader = pressedRGB.shader;
-		pressedSpr.alpha = 0;
+		pressedSpr.alpha = 0.0001;
 	}
 
 	public override function update(elapsed:Float)
@@ -84,14 +84,12 @@ class StrumNote extends NoteSprite
 			return;
 		playingAnim = true;
 		confirmAlphaTarget = confirmSpr.alpha = 1;
-		targetScaleX *= 1.085;
-		targetScaleY *= 1.085;
+		targetScaleX *= 1.05;
+		targetScaleY *= 1.05;
 		lerpMultiplier = 25;
+		scale.set(scale.x * 1.15, scale.y * 1.15);
 		if (unconfirm)
-		{
-			scale.set(scale.x * 1.05, scale.y * 1.05);
 			FlxTimer.wait(.15, () -> unConfirm());
-		}
 	}
 
 	public function press(unconfirm:Bool = true):Void
@@ -100,14 +98,12 @@ class StrumNote extends NoteSprite
 			return;
 		playingAnim = true;
 		pressedAlphaTarget = pressedSpr.alpha = 1;
-		targetScaleX *= .925;
-		targetScaleY *= .925;
-		lerpMultiplier = 25;
+		targetScaleX *= .95;
+		targetScaleY *= .95;
+		lerpMultiplier = 20;
+		scale.set(scale.x * .85, scale.y * .85);
 		if (unconfirm)
-		{
-			scale.set(scale.x * .95, scale.y * .95);
 			FlxTimer.wait(.15, () -> unPress());
-		}
 	}
 
 	public function unConfirm():Void

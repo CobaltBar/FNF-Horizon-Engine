@@ -1,7 +1,9 @@
 package states;
 
 import flixel.graphics.FlxGraphic;
+import haxe.ds.ArraySort;
 import haxe.io.Path as HaxePath;
+import openfl.events.KeyboardEvent;
 
 @:publicFields
 class PlayState extends MusicState
@@ -25,10 +27,20 @@ class PlayState extends MusicState
 	var combo:Int = 0;
 	var scores:Map<String, Int> = ["sick" => 0, "good" => 0, "bad" => 0, "shit" => 0];
 
+	var camOther:FlxCamera;
+	var camHUD:FlxCamera;
+	var camFunk:FlxCamera;
+
 	override function create():Void
 	{
 		Path.clearStoredMemory();
+
+		camFunk = Create.camera();
+		camHUD = Create.camera();
+		camOther = Create.camera();
+
 		super.create();
+
 		instance = this;
 		loadAssets();
 		bop = zoom = false;
@@ -38,10 +50,14 @@ class PlayState extends MusicState
 		{
 			comboGroup.set(thing, new FlxSpriteGroup());
 			add(comboGroup[thing]);
+			comboGroup[thing].cameras = [camHUD];
 		}
 
 		add(playerStrum = new Strumline(FlxG.width * .275, 150));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 150));
+
+		playerStrum.cameras = [camHUD];
+		opponentStrum.cameras = [camHUD];
 		opponentStrum.autoHit = true;
 
 		Conductor.reset();
@@ -53,6 +69,9 @@ class PlayState extends MusicState
 		for (note in chart.notes)
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
 
+		ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
+		ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
+
 		for (i in 0...50)
 		{
 			opponentStrum.addNextNote();
@@ -63,10 +82,39 @@ class PlayState extends MusicState
 		{
 			var audio = FlxG.sound.play(song).pause();
 			audio.time = 0;
-			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)), audio);
+			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)).toLowerCase(), audio);
 		}
 
 		add(new Countdown());
+
+		new FlxTimer().start(1, timer ->
+		{
+			for (key => val in audios)
+				if (key != 'inst')
+					if (Math.abs(audios['inst'].time - val.time) >= 10)
+						val.time = audios['inst'].time;
+		}, 0);
+
+		PlayerInput.init();
+		Path.clearUnusedMemory();
+	}
+
+	override function destroy():Void
+	{
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayerInput.onPress);
+		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayerInput.onRelease);
+		instance = null;
+		super.destroy();
+	}
+
+	function miss()
+	{
+		if (PlayState.instance.audios.exists('Voices'))
+			PlayState.instance.audios['Voices'].volume = 0;
+		else if (PlayState.instance.audios.exists('Voices-Player'))
+			PlayState.instance.audios['Voices-Player'].volume = 0;
+		misses += 1;
+		combo = 0;
 	}
 
 	private function loadAssets():Void

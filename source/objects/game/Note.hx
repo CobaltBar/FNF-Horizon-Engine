@@ -44,11 +44,19 @@ class Note extends NoteSprite
 		}
 		else
 		{
-			if (Conductor.time >= time + 1500)
+			if (Conductor.time >= time + 200)
 			{
-				strumline.addNextNote();
-				// insert miss code here
-				kill();
+				// Prevent it from tweening itself a bajillion times :3
+				time += 150000;
+				FlxTween.num(mult, mult * 5, .5, {
+					type: ONESHOT,
+					onComplete: tween ->
+					{
+						strumline.addNextNote();
+						PlayState.instance.miss();
+						kill();
+					}
+				}, num -> mult = num);
 			}
 		}
 	}

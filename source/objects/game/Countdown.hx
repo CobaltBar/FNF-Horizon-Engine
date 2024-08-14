@@ -3,7 +3,7 @@ package objects.game;
 import flixel.util.FlxSignal;
 
 @:publicFields
-class Countdown extends FlxBasic
+class Countdown extends FlxSpriteGroup
 {
 	static var countdownNameArr = ['ready', 'set', 'go'];
 	static var countdownSoundArr = ['Three', 'Two', 'One', 'Go'];
@@ -16,6 +16,7 @@ class Countdown extends FlxBasic
 		Conductor.beatSignal.add(countdown);
 		@:privateAccess Conductor.time = Conductor.beatTracker = -Conductor.beatLength * 3;
 		Conductor.curBeat = -4;
+		cameras = [PlayState.instance.camHUD];
 	}
 
 	override function update(elapsed:Float):Void
@@ -33,10 +34,10 @@ class Countdown extends FlxBasic
 			{
 				var countdownItem = Create.sprite(0, 0, Path.image(countdownNameArr[Conductor.curBeat + 2]));
 				countdownItem.screenCenter();
-				PlayState.instance.add(countdownItem);
-				FlxTween.tween(countdownItem.scale, {x: 1.4, y: 1.4}, Conductor.beatLength * .001,
+				add(countdownItem);
+				FlxTween.tween(countdownItem.scale, {x: 1.4, y: 1.4}, Conductor.beatLength * .0025,
 					{type: ONESHOT, ease: FlxEase.expoOut, onComplete: tween -> countdownItem.destroy()});
-				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .001, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .0025, {type: ONESHOT, ease: FlxEase.expoOut});
 			}
 
 			FlxG.sound.play(Path.audio(countdownSoundArr[Conductor.curBeat + 3]));
@@ -51,7 +52,7 @@ class Countdown extends FlxBasic
 			for (val in PlayState.instance.audios)
 				val.play(true);
 
-			Conductor.song = PlayState.instance.audios['Inst'];
+			Conductor.song = PlayState.instance.audios['inst'];
 			Conductor.song.onComplete = () -> if (PlayState.songs.length > 0)
 			{
 				var song = PlayState.songs.shift();

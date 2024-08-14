@@ -2,7 +2,7 @@ package objects;
 
 import flixel.system.FlxAssets.FlxShader;
 
-// Stolen fron Psych with slight modifications by Betopia (set and copy functions) and I (@:noCompletion)
+// Stolen fron Psych with slight modifications by Betopia
 class RGBPalette
 {
 	public var shader(default, null):RGBPaletteShader = new RGBPaletteShader();

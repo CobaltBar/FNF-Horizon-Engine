@@ -1,22 +1,25 @@
 package objects.game;
 
+import flixel.util.FlxSort;
+
+@:publicFields
 class Strumline extends FlxSpriteGroup
 {
-	static final angles = [270, 180, 0, 90];
+	private static final angles = [270, 180, 0, 90];
 
-	public var strums:FlxTypedSpriteGroup<StrumNote>;
+	var strums:FlxTypedSpriteGroup<StrumNote>;
+	var notes:FlxTypedSpriteGroup<Note>;
 
-	public var notes:FlxTypedSpriteGroup<Note>;
-	public var uNoteData:Array<NoteJSON> = [];
+	var uNoteData:Array<NoteJSON> = [];
 
-	public var autoHit:Bool = false;
+	var autoHit:Bool = false;
 
-	public function new(x:Float, y:Float)
+	function new(x:Float, y:Float)
 	{
 		super(0, y);
 
 		add(strums = new FlxTypedSpriteGroup<StrumNote>(-5, 0));
-		add(notes = new FlxTypedSpriteGroup<Note>(-5, 0, 1000));
+		add(notes = new FlxTypedSpriteGroup<Note>(-5, 0));
 
 		for (i in 0...4)
 		{
@@ -30,17 +33,19 @@ class Strumline extends FlxSpriteGroup
 		this.x += x;
 	}
 
-	public function addNextNote()
+	function addNextNote()
 		if (uNoteData.length > 0)
 		{
 			var data = uNoteData.shift();
 			var n = notes.recycle(Note, () ->
 			{
 				var n = new Note(data.data);
+				n.cameras = cameras;
 				n.visible = false;
 				return n;
 			});
 			n.y = FlxG.height * 10;
 			n.resetNote(data, this);
+			notes.sort((Order:Int, Obj1:Note, Obj2:Note) -> FlxSort.byValues(Order, Obj1.time, Obj2.time));
 		}
 }
