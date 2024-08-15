@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="menu-gf.png" width="342" height="5923">
+	<SubTexture name="M GF Idle0000" x="1" y="1888" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0001" x="1" y="2199" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0002" x="1" y="949" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0003" x="1" y="949" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0004" x="1" y="949" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0005" x="1" y="1262" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0006" x="1" y="1262" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0007" x="1" y="1262" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0008" x="1" y="1575" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0009" x="1" y="1575" width="340" height="310" frameX="-0" frameY="-3" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0010" x="1" y="5615" width="338" height="307" frameX="-1" frameY="-6" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0011" x="1" y="4687" width="340" height="307" frameX="-0" frameY="-6" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0012" x="1" y="4997" width="340" height="306" frameX="-0" frameY="-7" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0013" x="1" y="5306" width="340" height="306" frameX="-0" frameY="-7" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0014" x="1" y="2510" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0015" x="1" y="2821" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0016" x="1" y="3132" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0017" x="1" y="1" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0018" x="1" y="1" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0019" x="1" y="1" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0020" x="1" y="317" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0021" x="1" y="317" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0022" x="1" y="317" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0023" x="1" y="633" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0024" x="1" y="633" width="340" height="313" frameX="-0" frameY="-0" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0025" x="1" y="3443" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0026" x="1" y="3443" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0027" x="1" y="3754" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0028" x="1" y="4065" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+	<SubTexture name="M GF Idle0029" x="1" y="4376" width="340" height="308" frameX="-0" frameY="-5" frameWidth="340" frameHeight="313"/>
+</TextureAtlas>

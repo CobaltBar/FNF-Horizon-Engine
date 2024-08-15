@@ -79,21 +79,14 @@ class PlayState extends MusicState
 		}
 
 		for (song in songs[0].audioFiles)
-		{
-			var audio = FlxG.sound.play(song).pause();
-			audio.time = 0;
-			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)).toLowerCase(), audio);
-		}
+			audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
 
 		add(new Countdown());
 
-		new FlxTimer().start(1, timer ->
-		{
-			for (key => val in audios)
-				if (key != 'inst')
-					if (Math.abs(audios['inst'].time - val.time) >= 10)
-						val.time = audios['inst'].time;
-		}, 0);
+		new FlxTimer().start(1, timer -> for (key => val in audios)
+			if (key != 'inst')
+				if (Math.abs(audios['inst'].time - val.time) >= 10)
+					val.time = audios['inst'].time, 0);
 
 		PlayerInput.init();
 		Path.clearUnusedMemory();

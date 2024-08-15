@@ -31,7 +31,7 @@ class MainMenuState extends MusicMenuState
 		for (val in Mods.all)
 			allModsCount++;
 
-		for (name in ['story_mode', 'freeplay', 'mods', 'awards', 'credits', 'donate', 'options'])
+		for (name in ['story_mode', 'freeplay', 'mods', 'credits', 'merch', 'options'])
 		{
 			if (name == 'mods' && allModsCount == 0)
 				continue;

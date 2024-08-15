@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="num.png" width="93" height="1139">
+	<SubTexture name="num0" x="1" y="1" width="91" height="111" frameX="-1" frameY="-2" frameWidth="94" frameHeight="119"/>
+	<SubTexture name="num1" x="1" y="115" width="91" height="111" frameX="-3" frameY="-1" frameWidth="98" frameHeight="120"/>
+	<SubTexture name="num2" x="1" y="229" width="91" height="111" frameX="-7" frameY="-8" frameWidth="105" frameHeight="129"/>
+	<SubTexture name="num3" x="1" y="343" width="91" height="111" frameX="-5" frameY="-8" frameWidth="102" frameHeight="134"/>
+	<SubTexture name="num4" x="1" y="457" width="91" height="111" frameX="-3" frameY="-11" frameWidth="98" frameHeight="130"/>
+	<SubTexture name="num5" x="1" y="571" width="91" height="111" frameX="-13" frameY="-14" frameWidth="111" frameHeight="135"/>
+	<SubTexture name="num6" x="1" y="685" width="91" height="111" frameX="-12" frameY="-10" frameWidth="108" frameHeight="134"/>
+	<SubTexture name="num7" x="1" y="799" width="91" height="111" frameX="-0" frameY="-0" frameWidth="91" frameHeight="111"/>
+	<SubTexture name="num8" x="1" y="1027" width="90" height="111" frameX="-0" frameY="-0" frameWidth="90" frameHeight="115"/>
+	<SubTexture name="num9" x="1" y="913" width="91" height="111" frameX="-0" frameY="-1" frameWidth="91" frameHeight="124"/>
+</TextureAtlas>
