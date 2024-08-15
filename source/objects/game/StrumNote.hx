@@ -40,7 +40,8 @@ class StrumNote extends NoteSprite
 
 		confirmSpr.setFrames(FlxFilterFrames.fromFrames(confirmSpr.frames, 64, 64, [new BlurFilter(72, 72)]));
 		confirmSpr.updateHitbox();
-		confirmSpr.centerOffsets();
+		confirmSpr.offset.x = (confirmSpr.width - width) * .5;
+		confirmSpr.offset.y = (confirmSpr.height - height) * .5;
 
 		var pressRGB = Settings.data.noteRGB.press[noteData];
 		pressedRGB.set(pressRGB.base, pressRGB.highlight, pressRGB.outline);
