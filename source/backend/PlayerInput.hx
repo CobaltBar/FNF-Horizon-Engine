@@ -116,12 +116,15 @@ class PlayerInput
 		{
 			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () ->
 			{
-				var spr = Create.sprite(0, 0, Path.image('num$num'));
+				var spr = Create.sparrow(0, 0, Path.sparrow('num', PlayState.mods));
+				spr.animation.addByNames('idle', ['num$num'], 24);
+				spr.animation.play('idle');
 				spr.cameras = [PlayState.instance.camHUD];
 				return spr;
 			});
 			comboNum.alpha = 1;
-			comboNum.loadGraphic(Path.image('num$num'));
+			comboNum.animation.addByNames('idle', ['num$num'], 24);
+			comboNum.animation.play('idle');
 			comboNum.scale.set(.8, .8);
 			comboNum.updateHitbox();
 			comboNum.screenCenter();

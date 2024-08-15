@@ -112,10 +112,7 @@ class PlayState extends MusicState
 
 	private function loadAssets():Void
 	{
-		for (item in [
-			'note', 'ready', 'set', 'go', 'combo', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6', 'num7', 'num8', 'num9', 'sick', 'good', 'bad',
-			'shit'
-		].concat(Countdown.countdownNameArr))
+		for (item in ['note', 'ready', 'set', 'go', 'combo', 'num', 'sick', 'good', 'bad', 'shit'].concat(Countdown.countdownNameArr))
 			Path.image(item, mods);
 		for (item in ['Three', 'Two', 'One', 'Go'].concat(Countdown.countdownSoundArr))
 			Path.audio(item, mods);

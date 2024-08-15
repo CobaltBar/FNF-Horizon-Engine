@@ -58,18 +58,18 @@ class StoryMenuState extends MusicMenuState
 		difficulty.cameras = [menuCam];
 		add(difficulty);
 
-		leftArrow = Create.sparrow(0, 0, Path.sparrow("storyModeAssets"), 1.3);
-		leftArrow.animation.addByPrefix('idle', 'arrow left', 24);
-		leftArrow.animation.addByPrefix('press', 'arrow push left', 24);
+		leftArrow = Create.sparrow(0, 0, Path.sparrow("arrows"), 1.3);
+		leftArrow.animation.addByPrefix('idle', 'leftIdle', 24);
+		leftArrow.animation.addByPrefix('press', 'leftConfirm', 24);
 		leftArrow.animation.play('idle');
 		leftArrow.x = difficulty.x - leftArrow.width - 20;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 		leftArrow.cameras = [menuCam];
 		add(leftArrow);
 
-		rightArrow = Create.sparrow(0, 0, Path.sparrow("storyModeAssets"), 1.3);
-		rightArrow.animation.addByPrefix('idle', 'arrow right', 24);
-		rightArrow.animation.addByPrefix('press', 'arrow push right', 24);
+		rightArrow = Create.sparrow(0, 0, Path.sparrow("arrows"), 1.3);
+		rightArrow.animation.addByPrefix('idle', 'rightIdle', 24);
+		rightArrow.animation.addByPrefix('press', 'rightConfirm', 24);
 		rightArrow.animation.play('idle');
 		rightArrow.x = difficulty.x + difficulty.width + 20;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
@@ -120,10 +120,30 @@ class StoryMenuState extends MusicMenuState
 		if (!transitioningOut)
 		{
 			if (Controls.ui_left)
+			{
+				leftArrow.animation.play('press');
 				changeDifficulty(-1);
+			}
 
 			if (Controls.ui_right)
+			{
+				rightArrow.animation.play('press');
 				changeDifficulty(1);
+			}
+
+			if (Controls.ui_left_released)
+			{
+				leftArrow.animation.play('idle');
+				leftArrow.x = difficulty.x - leftArrow.width - 20;
+				leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
+			}
+
+			if (Controls.ui_right_released)
+			{
+				rightArrow.animation.play('idle');
+				rightArrow.x = difficulty.x + difficulty.width + 20;
+				rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
+			}
 
 			for (i in 0...menuOptions.length)
 			{
@@ -208,6 +228,7 @@ class StoryMenuState extends MusicMenuState
 			[optionToData[menuOptions[curSelected]].mod]));
 		difficulty.updateHitbox();
 		difficulty.x = FlxG.width - 350 - difficulty.width * .5;
+
 		leftArrow.x = difficulty.x - leftArrow.width - 20;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 		rightArrow.x = difficulty.x + difficulty.width + 20;

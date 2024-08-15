@@ -16,38 +16,41 @@ class Mods
 		all = [];
 		enabled = [];
 
-		var mods = FileSystem.readDirectory('mods');
-		ArraySort.sort(mods, (a, b) -> (a < b ? -1 : (a > b ? 1 : 0)));
-		for (i in 0...mods.length)
-			if (FileSystem.isDirectory(Path.combine(['mods', mods[i]])))
-			{
-				if (mods[i] == 'Mod Template')
-					continue;
+		if (FileSystem.exists('mods'))
+		{
+			var mods = FileSystem.readDirectory('mods');
+			ArraySort.sort(mods, (a, b) -> (a < b ? -1 : (a > b ? 1 : 0)));
+			for (i in 0...mods.length)
+				if (FileSystem.isDirectory(Path.combine(['mods', mods[i]])))
+				{
+					if (mods[i] == 'Mod Template')
+						continue;
 
-				var json:ModJSON = TJSON.parse(File.getContent(Path.combine(['mods', mods[i], 'mod.json'])) ?? '');
+					var json:ModJSON = TJSON.parse(File.getContent(Path.combine(['mods', mods[i], 'mod.json'])) ?? '');
 
-				var modPath = Path.combine(['mods', mods[i]]);
-				var iconPath = Path.combine([modPath, 'mod.png']);
-				all.set(mods[i], {
-					name: json.name ?? 'Blank Mod',
-					description: json.description ?? 'This mod does not have a description in mod.json',
-					version: json.version ?? '1.0.0',
-					color: FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255, json.color[2] ?? 255),
-					global: json.global ?? true,
-					modSysVer: json.modSysVer ?? Main.modSysVer,
+					var modPath = Path.combine(['mods', mods[i]]);
+					var iconPath = Path.combine([modPath, 'mod.png']);
+					all.set(mods[i], {
+						name: json.name ?? 'Blank Mod',
+						description: json.description ?? 'This mod does not have a description in mod.json',
+						version: json.version ?? '1.0.0',
+						color: FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255, json.color[2] ?? 255),
+						global: json.global ?? true,
+						modSysVer: json.modSysVer ?? Main.modSysVer,
 
-					folderName: mods[i],
-					iconPath: FileSystem.exists(iconPath) ? iconPath : Path.combine(['assets', 'images', 'unknownMod.png']),
-					enabled: Settings.data.savedMods.get(mods[i])?.enabled ?? true,
-					staticMod: isStatic(modPath),
-					songs: getSongs(modPath),
-					weeks: getWeeks(modPath),
-					ID: Settings.data.savedMods.get(mods[i])?.ID ?? i
-				});
+						folderName: mods[i],
+						iconPath: FileSystem.exists(iconPath) ? iconPath : Path.combine(['assets', 'images', 'unknownMod.png']),
+						enabled: Settings.data.savedMods.get(mods[i])?.enabled ?? true,
+						staticMod: isStatic(modPath),
+						songs: getSongs(modPath),
+						weeks: getWeeks(modPath),
+						ID: Settings.data.savedMods.get(mods[i])?.ID ?? i
+					});
 
-				if (all[mods[i]].enabled)
-					enabled.push(all[mods[i]]);
-			}
+					if (all[mods[i]].enabled)
+						enabled.push(all[mods[i]]);
+				}
+		}
 
 		all.set('assets', {
 			name: 'Assets',

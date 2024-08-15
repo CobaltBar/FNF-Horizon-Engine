@@ -395,7 +395,7 @@ class ModsMenuState extends MusicMenuState
 					curStatic = 0;
 				if (staticOptions[curStatic].alpha != .8)
 					staticOptions[curStatic].alpha = 1;
-				modIcon.loadGraphic(staticOptions[curStatic].option.icon);
+				modIcon.loadGraphic(staticOptions[curStatic].option.iconPath);
 				modDesc.text = staticOptions[curStatic].option.description;
 				modVer.text = staticOptions[curStatic].option.version;
 				targetColor = staticOptions[curStatic].option.color;
@@ -406,7 +406,7 @@ class ModsMenuState extends MusicMenuState
 					menuOptions[curSelected].alpha = .6;
 				super.changeSelection(change);
 				menuOptions[curSelected].alpha = 1;
-				modIcon.loadGraphic(cast(menuOptions[curSelected], Alphabet).option.icon);
+				modIcon.loadGraphic(cast(menuOptions[curSelected], Alphabet).option.iconPath);
 				modDesc.text = cast(menuOptions[curSelected], Alphabet).option.description;
 				modVer.text = cast(menuOptions[curSelected], Alphabet).option.version;
 				targetColor = cast(menuOptions[curSelected], Alphabet).option.color;
@@ -423,7 +423,7 @@ class ModsMenuState extends MusicMenuState
 				if (curEnabled >= enabledOptions.length)
 					curEnabled = 0;
 				enabledOptions[curEnabled].alpha = 1;
-				modIcon.loadGraphic(enabledOptions[curEnabled].option.icon);
+				modIcon.loadGraphic(enabledOptions[curEnabled].option.iconPath);
 				modDesc.text = enabledOptions[curEnabled].option.description;
 				modVer.text = enabledOptions[curEnabled].option.version;
 				targetColor = enabledOptions[curEnabled].option.color;

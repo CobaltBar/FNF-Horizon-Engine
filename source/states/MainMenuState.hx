@@ -31,13 +31,13 @@ class MainMenuState extends MusicMenuState
 		for (val in Mods.all)
 			allModsCount++;
 
-		for (name in ['story_mode', 'freeplay', 'mods', 'credits', 'merch', 'options'])
+		for (name in ['storymode', 'freeplay', 'mods', 'credits', 'merch', 'options'])
 		{
 			if (name == 'mods' && allModsCount == 0)
 				continue;
 			var option = Create.sparrow(0, 0, Path.sparrow(name), 1.4);
-			option.animation.addByPrefix('selected', name + ' white', 24, true);
-			option.animation.addByPrefix('idle', name + ' basic', 24, true);
+			option.animation.addByPrefix('selected', name + ' selected', 24, true);
+			option.animation.addByPrefix('idle', name + ' idle', 24, true);
 			option.animation.play('idle');
 			option.cameras = [optionsCam];
 			option.updateHitbox();
@@ -48,17 +48,17 @@ class MainMenuState extends MusicMenuState
 
 		for (i in 0...menuOptions.length)
 			targets[i] = Misc.quadBezier(FlxPoint.weak(-FlxG.width, -270), FlxPoint.weak(FlxG.width * .75, FlxG.height * .5),
-				FlxPoint.weak(-FlxG.width * .5, FlxG.height * 1.25), i / (menuOptions.length - 2));
+				FlxPoint.weak(-FlxG.width * .5, FlxG.height * 1.25), i / (menuOptions.length - (allModsCount == 0 ? 2 : 2.5)));
 
 		curSelected = prevCurSelected;
 		changeSelection(0);
 
-		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine build ${Main.horizonVer}', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
+		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine v${Main.horizonVer}', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		horizonEngineText.cameras = [otherCam];
 		add(horizonEngineText);
 
-		var fnfVersion = Create.text(5, FlxG.height - 35, 'Friday Night Funkin\' 0.2.8, 0.4.1', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
+		var fnfVersion = Create.text(5, FlxG.height - 35, 'Friday Night Funkin\' v0.4.1', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		fnfVersion.cameras = [otherCam];
 		add(fnfVersion);
@@ -70,7 +70,7 @@ class MainMenuState extends MusicMenuState
 	{
 		for (i in 0...menuOptions.length)
 		{
-			var index = ((i + 3) - curSelected + menuOptions.length) % menuOptions.length;
+			var index = ((i + 2) - curSelected + menuOptions.length) % menuOptions.length;
 			if (targets[index] != null)
 			{
 				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, targets[index].x + 300, FlxMath.bound(elapsed * 10, 0, 1));
@@ -98,8 +98,8 @@ class MainMenuState extends MusicMenuState
 	{
 		super.exitState();
 		transitioningOut = false;
-		if (curSelected == (5 - (allModsCount == 0 ? 1 : 0)))
-			Misc.openURL('https://ninja-muffin24.itch.io/funkin');
+		if (curSelected == (4 - (allModsCount == 0 ? 1 : 0)))
+			Misc.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
 		else
 		{
 			if (Settings.data.flashingLights)
@@ -146,8 +146,6 @@ class MainMenuState extends MusicMenuState
 					MusicState.switchState(new StoryMenuState());
 				case 1:
 					// MusicState.switchState(new FreeplayState());
-				case 2:
-					// MusicState.switchState(new AwardsState());
 				case 3:
 					// MusicState.switchState(new CreditsState());
 				case 5:
@@ -163,10 +161,8 @@ class MainMenuState extends MusicMenuState
 				case 2:
 					MusicState.switchState(new ModsMenuState());
 				case 3:
-					// MusicState.switchState(new AwardsState());
-				case 4:
 					// MusicState.switchState(new CreditsState());
-				case 6:
+				case 5:
 					// MusicState.switchState(new OptionsState());
 			}
 }
