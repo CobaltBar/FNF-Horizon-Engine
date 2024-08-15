@@ -24,15 +24,19 @@ class Alphabet extends FlxSpriteGroup
 				case ' ':
 					letterWidth += 30 * scale;
 					continue;
-				case '\'' | '“' | '”' | '*':
+				case '\'' | '“' | '”' | '*' | '^':
 					char.y -= char.height * .5;
-				case '-':
+				case '-' | '+':
 					char.y -= char.height * .25;
 				case '"':
 					name = 'quote';
 					char.y -= char.height * .5;
 				case '?':
 					name = 'question';
+				case '&':
+					name = 'ampersand';
+				case '<':
+					name = 'less';
 			}
 			if (bold)
 				name += ' bold';
