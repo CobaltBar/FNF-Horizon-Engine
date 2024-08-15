@@ -13,7 +13,7 @@ import openfl.events.UncaughtErrorEvent;
 
 class Main extends Sprite
 {
-	public static final horizonVer:Int = VersionMacro.getVersion();
+	public static final horizonVer:String = Application.current.meta.get('version');
 	public static final modSysVer:Float = 1;
 	public static var inputEnabled:Bool = true;
 
