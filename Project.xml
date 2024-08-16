@@ -45,6 +45,8 @@
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
+	<prebuild haxe="art.Version" />
+
 	<haxedef name="HXCPP_CHECK_POINTER" />
 	<haxedef name="HXCPP_STACK_LINE" />
 	<haxedef name="HXCPP_STACK_TRACE" />

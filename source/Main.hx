@@ -13,7 +13,7 @@ import openfl.events.UncaughtErrorEvent;
 
 class Main extends Sprite
 {
-	public static var horizonVer:String;
+	public static final horizonVer:String = VersionMacro.get();
 	public static final modSysVer:Float = 1;
 	public static var inputEnabled:Bool = true;
 
@@ -25,8 +25,6 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-
-		horizonVer = Application.current.meta.get('version');
 
 		if (Sys.args().contains('--verbose'))
 		{
