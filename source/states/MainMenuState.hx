@@ -53,7 +53,7 @@ class MainMenuState extends MusicMenuState
 		curSelected = prevCurSelected;
 		changeSelection(0);
 
-		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine ${Main.horizonVer}', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
+		var horizonEngineText = Create.text(5, FlxG.height - 65, 'Horizon Engine build ${Main.horizonVer}', 28, Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		horizonEngineText.cameras = [otherCam];
 		add(horizonEngineText);
