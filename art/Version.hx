@@ -11,6 +11,6 @@ class Version
 		if (!FileSystem.exists('.build'))
 			File.saveContent('.build', '0');
 		else
-			File.saveContent('.build', '' + Std.parseInt(File.getContent('.build')) + 1);
+			File.saveContent('.build', '${Std.parseInt(File.getContent('.build')) + 1}');
 	}
 }
