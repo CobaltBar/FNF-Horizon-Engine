@@ -66,6 +66,7 @@ class PlayState extends MusicState
 		var chart:Chart = Path.json('song-${HaxePath.withoutDirectory(songs[0].folderName)}-${difficulty}', mods);
 		scrollSpeed = chart.scrollSpeed * 1.1 ?? 1.1;
 		Conductor.bpm = chart.bpm;
+
 		for (note in chart.notes)
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
 

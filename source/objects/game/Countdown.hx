@@ -14,7 +14,7 @@ class Countdown extends FlxSpriteGroup
 	{
 		super();
 		Conductor.beatSignal.add(countdown);
-		@:privateAccess Conductor.time = Conductor.beatTracker = -Conductor.beatLength * 3;
+		@:privateAccess Conductor.time = Conductor.beatTracker = -Conductor.beatLength * 5;
 		Conductor.curBeat = -4;
 		cameras = [PlayState.instance.camHUD];
 	}
@@ -45,7 +45,7 @@ class Countdown extends FlxSpriteGroup
 
 		if (Conductor.curBeat > 0)
 		{
-			@:privateAccess Conductor.time = Conductor.beatTracker = Conductor.curBeat = 0;
+			@:privateAccess Conductor.time = Conductor.beatTracker = 0;
 			Conductor.beatSignal.remove(countdown);
 			countdownEnded.dispatch();
 

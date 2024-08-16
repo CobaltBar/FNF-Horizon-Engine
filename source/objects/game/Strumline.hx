@@ -46,6 +46,8 @@ class Strumline extends FlxSpriteGroup
 			});
 			n.y = FlxG.height * 10;
 			n.resetNote(data, this);
+			if (n.scale.x != 1)
+				n.scale.set(1, 1);
 			notes.sort((Order:Int, Obj1:Note, Obj2:Note) -> FlxSort.byValues(Order, Obj1.time, Obj2.time));
 		}
 }

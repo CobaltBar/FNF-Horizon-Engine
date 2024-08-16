@@ -55,7 +55,7 @@ class Note extends NoteSprite
 				rgb.b.saturation = .2;
 				rgb.set(rgb.r, rgb.g, rgb.b);
 				PlayState.instance.miss();
-				FlxTween.num(mult, mult * 5, .5, {
+				FlxTween.num(mult, mult * 3, .5, {
 					type: ONESHOT,
 					onComplete: tween ->
 					{
