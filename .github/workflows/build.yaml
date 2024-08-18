@@ -3,7 +3,7 @@ name: Build
 on: workflow_dispatch
 
 jobs:
-    windows:
+    Windows:
         runs-on: windows-latest
 
         steps:
@@ -35,7 +35,7 @@ jobs:
               with:
                   name: Windows
                   path: export/release/windows/bin
-    linux:
+    Linux:
         runs-on: ubuntu-latest
 
         steps:
