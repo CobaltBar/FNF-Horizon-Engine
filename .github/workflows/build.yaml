@@ -45,9 +45,7 @@ jobs:
                   haxe-version: 4.3.6
             - name: Setup Haxelib
               run: |
-                  sudo apt-get install libvlc-dev
-                  sudo apt-get install libvlccore-dev
-                  sudo apt-get install libasound2-dev
+                  sudo apt install libgl1-mesa-dev libglu1-mesa-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev libpulse-dev libvlc-dev libvlccore-dev
                   haxelib setup ~/haxelib
                   haxelib install hxpkg
               shell: bash
