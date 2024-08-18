@@ -49,7 +49,7 @@ jobs:
                   sudo apt-get install libvlccore-dev
                   haxelib setup ~/haxelib
                   haxelib install hxpkg
-              shell: cmd
+              shell: bash
             - name: Install packages
               run: |
                   haxelib run hxpkg install --force
@@ -58,12 +58,12 @@ jobs:
                   cd ../hxcpp
                   haxe compile.hxml
                   cd ../../../../..
-              shell: cmd
+              shell: bash
             - name: Compile
               run: |
                   haxelib run lime rebuild cpp -release
                   haxelib run lime build cpp
-              shell: cmd
+              shell: bash
             - name: Publish Artifact
               uses: actions/upload-artifact@v4
               with:
