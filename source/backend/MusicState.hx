@@ -41,12 +41,6 @@ class MusicState extends FlxTransitionableState
 				if (cam != null)
 					cam.zoom = FlxMath.lerp(cam.zoom, targetZoom, FlxMath.bound(elapsed * 3.25, 0, 1));
 
-		if (Controls.debug)
-			if (Main._console.hidden)
-				Main._console.show();
-			else
-				Main._console.hide();
-
 		super.update(elapsed);
 	}
 

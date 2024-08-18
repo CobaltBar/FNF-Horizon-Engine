@@ -17,9 +17,6 @@ class Main extends Sprite
 	public static final modSysVer:Float = 1;
 	public static var inputEnabled:Bool = true;
 
-	@:noCompletion public static var _console:Console = null;
-	@:noCompletion public static var _showConsole:Bool = false;
-
 	public static var verbose:Bool = false;
 
 	public function new()

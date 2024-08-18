@@ -27,9 +27,6 @@ class InitState extends MusicState
 		DiscordRPC.init();
 		#end
 
-		if (Main._console == null)
-			Main._console = new Console();
-
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .35, FlxPoint.weak(-1, 0));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .35, FlxPoint.weak(1, 0));
 
@@ -45,19 +42,6 @@ class InitState extends MusicState
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();
-
-		FlxG.signals.preStateSwitch.add(() ->
-		{
-			Main._showConsole = !Main._console.hidden;
-			Main._console.shouldDestroy = false;
-		});
-		FlxG.signals.postStateSwitch.add(() ->
-		{
-			Main._console.cameras = [Create.camera()];
-			if (Main._showConsole)
-				Main._console.show();
-			Main._console.shouldDestroy = false;
-		});
 
 		MusicState.switchState(Settings.data.accessibilityConfirmed ? new TitleState() : new AccessibilityState(), true);
 	}

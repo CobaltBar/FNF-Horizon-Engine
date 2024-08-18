@@ -67,8 +67,6 @@ class ErrorState extends MusicState
 		Path.clearStoredMemory();
 		Path.clearUnusedMemory();
 		FlxG.plugins.removeAllByType(Conductor);
-		Main._console.shouldDestroy = true;
-		Main._console.destroy();
 		@:privateAccess Log.log = [];
 		FlxG.resetGame();
 	}
