@@ -27,8 +27,8 @@ jobs:
               shell: cmd
             - name: Compile
               run: |
-                  haxelib run lime rebuild cpp -release
-                  haxelib run lime build cpp
+                  haxelib run lime rebuild windows -release
+                  haxelib run lime build windows
               shell: cmd
             - name: Publish Artifact
               uses: actions/upload-artifact@v4
@@ -61,8 +61,8 @@ jobs:
               shell: bash
             - name: Compile
               run: |
-                  haxelib run lime rebuild cpp -release
-                  haxelib run lime build cpp
+                  haxelib run lime rebuild linux -release
+                  haxelib run lime build linux
               shell: bash
             - name: Publish Artifact
               uses: actions/upload-artifact@v4
