@@ -41,7 +41,7 @@ class Conductor extends FlxBasic
 	override function update(elapsed:Float):Void
 	{
 		if (song != null)
-			time = song.time + offset;
+			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
 		else
 		{
 			if (FlxG.sound.music != null && switchToMusic)
