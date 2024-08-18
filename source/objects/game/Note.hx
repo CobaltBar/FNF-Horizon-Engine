@@ -47,7 +47,7 @@ class Note extends NoteSprite
 		}
 		else
 		{
-			if (Conductor.time >= time + 100 && !killing)
+			if (Conductor.time >= time + 200 && !killing)
 			{
 				killing = true;
 				rgb.r.saturation = .2;
