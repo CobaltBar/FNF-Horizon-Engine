@@ -10,7 +10,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: krdlab/setup-haxe@master
               with:
-                  haxe-version: latest
+                  haxe-version: 4.3.6
             - name: Setup Haxelib
               run: |
                   haxelib setup C:\haxelib
@@ -42,7 +42,7 @@ jobs:
             - uses: actions/checkout@v4
             - uses: krdlab/setup-haxe@master
               with:
-                  haxe-version: latest
+                  haxe-version: 4.3.6
             - name: Setup Haxelib
               run: |
                   sudo apt-get install libvlc-dev
