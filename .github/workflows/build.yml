@@ -25,15 +25,18 @@ jobs:
                   haxe compile.hxml
                   cd ../../../../..
               shell: cmd
+            - name: Build Lime
+              run: |
+                  haxelib run lime rebuild cpp -release
+              shell: cmd
             - name: Compile
               run: |
-                  haxelib run lime rebuild windows -release
-                  haxelib run lime build windows
+                  haxelib run lime build cpp
               shell: cmd
             - name: Publish Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: Windows
+                  name: HorizonEngine-Windows
                   path: export/release/windows/bin
     Linux:
         runs-on: ubuntu-latest
@@ -58,13 +61,16 @@ jobs:
                   haxe compile.hxml
                   cd ../../../../..
               shell: bash
+            - name: Build Lime
+              run: |
+                  haxelib run lime rebuild cpp -release
+              shell: bash
             - name: Compile
               run: |
-                  haxelib run lime rebuild linux -release
-                  haxelib run lime build linux
+                  haxelib run lime build cpp
               shell: bash
             - name: Publish Artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: Linux
+                  name: HorizonEngine-Linux
                   path: export/release/linux/bin
