@@ -193,10 +193,10 @@ class TiledSprite extends FlxSprite
 		if (clipRegion != null)
 			applyClipRegion(frameToDraw, tile);
 
-		translateWithTrig(offsetX, offsetY);
+		matrixTranslate(offsetX, offsetY);
 		item.addQuad(frameToDraw, mat, colorTransform);
 
-		translateWithTrig(-offsetX, -offsetY + frameToDraw.frame.height * Math.abs(scale.y));
+		matrixTranslate(-offsetX, -offsetY + frameToDraw.frame.height * Math.abs(scale.y));
 		rectCopy(frameToDraw.frame, _frameRect);
 	}
 
@@ -234,7 +234,7 @@ class TiledSprite extends FlxSprite
 		}
 
 		if (flipY)
-			translateWithTrig(0, -heightReduce * Math.abs(scale.y));
+			matrixTranslate(0, -heightReduce * Math.abs(scale.y));
 	}
 
 	///////////////
@@ -288,7 +288,7 @@ class TiledSprite extends FlxSprite
 		// the tile is not on screen but the others may, returns 1 to continue the loop
 		if (!onScreen)
 		{
-			translateWithTrig(0, tileSize);
+			matrixTranslate(0, tileSize);
 			return 1;
 		}
 
@@ -304,7 +304,7 @@ class TiledSprite extends FlxSprite
 			var output:Bool = (_matrix.ty > -tileSize && _matrix.ty < FlxG.height + (flipY ? tileSize : 0));
 
 			if (!output)
-				translateWithTrig(0, tileSize);
+				matrixTranslate(0, tileSize);
 
 			return output;
 		}
@@ -357,7 +357,7 @@ class TiledSprite extends FlxSprite
 	 * @param x Horizontal position.
 	 * @param y Vertical position.
 	 */
-	function translateWithTrig(x:Float, y:Float):Void
+	function matrixTranslate(x:Float, y:Float):Void
 	{
 		var translateX:Float = (x * _cosAngle) - (y * _sinAngle);
 		var translateY:Float = (y * _cosAngle) + (x * _sinAngle);
