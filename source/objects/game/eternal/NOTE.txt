@@ -1,0 +1,7 @@
+The files here are modified versions of
+
+https://github.com/Sword352/FnF-Eternal/blob/dev/source/funkin/objects/TiledSprite.hx
+https://github.com/Sword352/FnF-Eternal/blob/dev/source/funkin/gameplay/notes/Sustain.hx (Not a 1-1 copy but still based on it)
+
+These are from Eternal Engine and are licensed under GPLv3.
+I did not make these. Credits go to Sword352, all rights and permissions of these classes goes to them.

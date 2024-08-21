@@ -18,6 +18,7 @@ import modding.*;
 import modding.JSONTypes;
 import objects.*;
 import objects.game.*;
+import objects.game.eternal.*;
 import states.*;
 import tjson.TJSON;
 import util.*;

@@ -90,6 +90,7 @@ class PlayState extends MusicState
 					val.time = audios['inst'].time, 0);
 
 		PlayerInput.init();
+
 		Path.clearUnusedMemory();
 	}
 

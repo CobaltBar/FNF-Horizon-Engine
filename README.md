@@ -47,3 +47,4 @@ Then run the script corresponding to your OS in the build folder (you might have
 - Betopia (Note Sprite)
 - crowplexus (Ordered Map/Dictionary)
 - superpowers04 (Safer FlxGame)
+- Sword352 (Tiled Sprite and Sustains, see source/objects/game/eternal/NOTE.txt)
