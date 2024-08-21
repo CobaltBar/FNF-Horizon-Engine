@@ -41,6 +41,8 @@ class PlayState extends MusicState
 
 		super.create();
 
+		FlxG.fixedTimestep = false;
+
 		instance = this;
 		loadAssets();
 		bop = zoom = false;
@@ -99,6 +101,7 @@ class PlayState extends MusicState
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, PlayerInput.onPress);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, PlayerInput.onRelease);
 		instance = null;
+		FlxG.fixedTimestep = true;
 		super.destroy();
 	}
 
