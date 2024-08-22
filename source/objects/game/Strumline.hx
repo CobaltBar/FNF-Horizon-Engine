@@ -24,7 +24,7 @@ class Strumline extends FlxSpriteGroup
 		for (i in 0...4)
 		{
 			var strum = new StrumNote(i);
-			strum.angle = strum.angleOffset = angles[i];
+			strum.angle = angles[i];
 			strum.x = (strum.width * i) + 5;
 			strums.add(strum);
 		}

@@ -16,6 +16,7 @@ class Sustain extends TiledSprite
 		scale = note.scale;
 		updateHitbox();
 		antialiasing = note.antialiasing;
+		cameras = note.cameras;
 
 		shader = note.rgb.shader;
 	}

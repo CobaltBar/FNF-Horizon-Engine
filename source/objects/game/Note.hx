@@ -28,11 +28,12 @@ class Note extends NoteSprite
 		strumline = line;
 		strum = strumline.strums.members[data % 4];
 		killing = sustaining = false;
+		alpha = 1;
 
 		x = strum.x;
 		var rgbDat = Settings.data.noteRGB.notes[data % 4];
 		rgb.set(rgbDat.base, rgbDat.highlight, rgbDat.outline);
-		angle = angleOffset = strum.angleOffset;
+		angle = strum.angle;
 
 		if (len > 0)
 		{
@@ -50,7 +51,7 @@ class Note extends NoteSprite
 	{
 		y = strum.y - (.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult);
 
-		if (len > 0 && sustain != null)
+		if (len > 0 && sustain != null && sustain.alive)
 		{
 			sustain.update(elapsed);
 			sustain.y = y;
@@ -67,7 +68,7 @@ class Note extends NoteSprite
 				if (Conductor.time >= time && !sustaining)
 				{
 					strum.confirm(false);
-					visible = false;
+					alpha = 0;
 					sustaining = true;
 				}
 
@@ -91,7 +92,7 @@ class Note extends NoteSprite
 		}
 		else
 		{
-			if (Conductor.time >= time + len + 200 && !killing)
+			if (Conductor.time >= time + len + 250 && !killing)
 			{
 				killing = true;
 				rgb.r.saturation = .2;
@@ -99,7 +100,7 @@ class Note extends NoteSprite
 				rgb.b.saturation = .2;
 				rgb.set(rgb.r, rgb.g, rgb.b);
 				PlayState.instance.miss();
-				FlxTween.num(mult, mult * 3, .5, {
+				FlxTween.num(mult, mult * 2, .5, {
 					type: ONESHOT,
 					onComplete: tween ->
 					{
@@ -113,7 +114,7 @@ class Note extends NoteSprite
 
 	@:noCompletion override function draw()
 	{
-		if (sustain != null && len > 0)
+		if (sustain != null && len > 0 && sustain.alive)
 			sustain.draw();
 		super.draw();
 	}
@@ -127,7 +128,7 @@ class Note extends NoteSprite
 
 	@:noCompletion override function kill()
 	{
-		if (sustain != null && len > 0)
+		if (sustain != null)
 			sustain.kill();
 		super.kill();
 	}

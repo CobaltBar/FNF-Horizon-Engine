@@ -3,20 +3,6 @@ package objects.game;
 class NoteSprite extends FlxCopySprite
 {
 	public var rgb:RGBPalette = new RGBPalette();
-	public var angleOffset(default, set):Float = 0;
-	public var realAngle(default, set):Float = 0;
-
-	@:noCompletion function set_angleOffset(val:Float):Float
-	{
-		realAngle = realAngle;
-		return angleOffset = val;
-	}
-
-	@:noCompletion function set_realAngle(val:Float):Float
-	{
-		angle = realAngle + angleOffset;
-		return realAngle = val;
-	}
 
 	public function new(noteData:Int = 2)
 	{
