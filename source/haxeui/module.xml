@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module id="horizon">
+	<resources>
+		<resource path="/haxeui" prefix="root" />
+	</resources>
+	<themes>
+		<horizon parent="dark">.
+			<style resource="root/style.css" />
+			<var name="default-background-color" value="#101010" />
+			<var name="secondary-background-color" value="#151515" />
+			<var name="solid-background-color" value="#151515" />
+			<var name="tertiary-background-color" value="#202020" />
+
+			<var name="normal-background-color-start" value="#252525" />
+			<var name="normal-background-color-end" value="#252525" />
+			<var name="hover-background-color-start" value="#303030" />
+			<var name="hover-background-color-end" value="#303030" />
+			<var name="down-background-color-start" value="#050505" />
+			<var name="down-background-color-end" value="#050505" />
+		</horizon>
+	</themes>
+</module>

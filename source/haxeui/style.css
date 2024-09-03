@@ -1,0 +1,18 @@
+.button,
+.button:hover,
+.button:down,
+.button:active,
+.button:disabled,
+.scrollview,
+.scrollview-contents,
+.textfield {
+	border: none;
+}
+
+.button:hover {
+	background: $hover-background-color-start;
+}
+
+.button:down {
+	background-color: $down-background-color-start;
+}

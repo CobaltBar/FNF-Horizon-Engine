@@ -1,11 +1,15 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
-import haxe.CallStack.StackItem;
 import haxe.CallStack;
 import haxe.Exception;
-import lime.app.Application;
+import horizon.objects.EngineInfo;
+import horizon.states.InitState;
+import horizon.util.Log;
+import horizon.util.Misc;
+import horizon.util.VersionMacro;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -15,8 +19,6 @@ class Main extends Sprite
 {
 	public static final horizonVer:String = VersionMacro.get();
 	public static final modSysVer:Float = 1;
-	public static var inputEnabled:Bool = true;
-
 	public static var verbose:Bool = false;
 
 	public function new()
@@ -32,7 +34,8 @@ class Main extends Sprite
 		}
 
 		FlxTransitionableState.skipNextTransIn = true;
-		addChild(new FlxSafeGame(1920, 1080, InitState, 90, 60, true));
+
+		addChild(new FlxSafeGame(1280, 720, InitState, 120, 120, true));
 		addChild(new EngineInfo());
 
 		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile('icon.png')); #end

@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' - Horizon Engine" file="HorizonEngine" main="Main" version="0.1.0" company="Cobalt Bar" />
+	<app title="Friday Night Funkin': Horizon Engine" file="HorizonEngine" main="Main" version="0.0.1" company="CobaltBar" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -13,16 +13,12 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
-	<!-- _____________________________Horizon Engine_____________________________ -->
-
-	<define name="DISCORD_ENABLED" if="cpp" />
-	<define name="VIDEOS_ENABLED" if="cpp" />
-
 	<!-- ____________________________ Window Settings ___________________________ -->
 
-	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" />
+	<window width="1280" height="720" fps="120" background="#000000" hardware="true" vsync="false" orientation="landscape" />
+
+	<window if="desktop" fullscreen="false" resizable="true" />
+	<window if="mobile" fullscreen="true" width="0" height="0" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -30,7 +26,7 @@
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<source path="source" />
 	<assets path="assets" />
-	<assets path="mods" />
+	<assets path="default_mods" rename="mods" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -40,12 +36,10 @@
 	<haxelib name="haxeui-core" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="hscript" />
-	<haxelib name="hxdiscord_rpc" if="DISCORD_ENABLED" />
-	<haxelib name="hxcpp-debug-server" if="debug"/>
+	<haxelib name="hxdiscord_rpc" />
+	<haxelib name="hxcpp-debug-server" if="debug" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
-
-	<prebuild haxe="art.Version" />
 
 	<haxedef name="HXCPP_CHECK_POINTER" />
 	<haxedef name="HXCPP_STACK_LINE" />
@@ -53,7 +47,7 @@
 	<haxedef name="no_deprecation_warnings" />
 	<haxedef name="openflPos" />
 	<haxedef name="hscriptPos" />
-	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_ENABLED" />
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
 
 	<haxedef name="FLX_NO_HEALTH" />
 	<haxedef name="FLX_NO_MOUSE" if="mobile" />
@@ -63,6 +57,7 @@
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	<haxedef name="message.reporting" value="pretty" />
+	<postbuild haxe="source.Postbuild" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
