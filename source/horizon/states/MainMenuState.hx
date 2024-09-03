@@ -14,6 +14,7 @@ class MainMenuState extends MusicMenuState
 	{
 		Path.clearStoredMemory();
 		super.create();
+		persistentUpdate = true;
 
 		add(bg = Create.backdrop(Path.image('menuBG'), 1.1));
 		bg.cameras = [menuCam];

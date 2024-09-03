@@ -22,19 +22,23 @@ class TitleState extends MusicState
 	{
 		Path.clearStoredMemory();
 		super.create();
+		persistentUpdate = true;
 
-		var request = new Http("https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build");
-		request.onData = data ->
+		if (!comingBack)
 		{
-			onlineVer = data.trim();
-			Log.info('Update Check: Local: ${Main.horizonVer} Github: ${onlineVer}');
-			if (Std.parseFloat(onlineVer) > Std.parseFloat(Main.horizonVer))
-				Log.info('Update prompt will be displayed ($onlineVer > ${Main.horizonVer})');
-			else
-				Log.info('Update prompt will not be displayed (${Main.horizonVer} >= $onlineVer)');
+			var request = new Http("https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build");
+			request.onData = data ->
+			{
+				onlineVer = data.trim();
+				Log.info('Update Check: Local: ${Main.horizonVer} Github: ${onlineVer}');
+				if (Std.parseFloat(onlineVer) > Std.parseFloat(Main.horizonVer))
+					Log.info('Update prompt will be displayed ($onlineVer > ${Main.horizonVer})');
+				else
+					Log.info('Update prompt will not be displayed (${Main.horizonVer} >= $onlineVer)');
+			}
+			request.onError = msg -> Log.error('Update Check Error: $msg');
+			request.request();
 		}
-		request.onError = msg -> Log.error('Update Check Error: $msg');
-		request.request();
 
 		titleData = Path.json('titleData');
 		Conductor.bpm = titleData.bpm;
