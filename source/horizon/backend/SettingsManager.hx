@@ -23,10 +23,10 @@ class SettingsManager
 		FlxG.fullscreen = Settings.fullscreen;
 		FlxG.updateFramerate = FlxG.drawFramerate = Settings.framerate;
 		FlxG.sound.volumeUpKeys = Settings.keybinds['volume_increase'];
-		FlxG.sound.volumeUpKeys = Settings.keybinds['volume_decrease'];
-		FlxG.sound.volumeUpKeys = Settings.keybinds['volume_mute'];
+		FlxG.sound.volumeDownKeys = Settings.keybinds['volume_decrease'];
+		FlxG.sound.muteKeys = Settings.keybinds['volume_mute'];
 		FlxG.sound.volume = FlxG.save.data.volume ?? 1;
-		FlxG.sound.muted = FlxG.save.data.mute ?? false;
+		FlxG.sound.muted = FlxG.save.data.muted ?? false;
 
 		if (Main.verbose)
 			Log.info('Settings Loaded');
