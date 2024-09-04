@@ -6,7 +6,7 @@ class SettingsManager
 	{
 		Settings.fullscreen = FlxG.fullscreen;
 		FlxG.save.data.volume = FlxG.sound.volume;
-		FlxG.save.data.mute = FlxG.sound.muted;
+		FlxG.save.data.muted = FlxG.sound.muted;
 		for (setting in Type.getClassFields(Settings))
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(Settings, setting));
 		FlxG.save.flush();

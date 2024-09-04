@@ -47,29 +47,20 @@ class TitleState extends MusicState
 		goofyTexts.push(goofyTextList[num].split('--')[0]);
 		goofyTexts.push(goofyTextList[num].split('--')[1]);
 
-		add(gf = Create.atlas(0, 0, Path.sparrow('gfDanceTitle'), .9));
+		add(gf = Create.atlas(titleData.gfPosition[0], titleData.gfPosition[1], Path.sparrow('gfDanceTitle'), .9));
 		gf.animation.addByPrefix('left', 'left', 24);
 		gf.animation.addByPrefix('right', 'right', 24);
 		gf.visible = false;
-		gf.screenCenter();
-		gf.x += titleData.gfPosition[0];
-		gf.y += titleData.gfPosition[1];
 
-		add(logo = Create.atlas(0, 0, Path.sparrow('logoBumpin')));
+		add(logo = Create.atlas(titleData.logoPosition[0], titleData.logoPosition[1], Path.sparrow('logoBumpin')));
 		logo.animation.addByPrefix('bop', 'logo bumpin', 24, false);
 		logo.visible = false;
-		logo.screenCenter();
-		logo.x += titleData.logoPosition[0];
-		logo.y += titleData.logoPosition[1];
 
-		add(titleEnter = Create.atlas(0, 0, Path.sparrow('titleEnter')));
+		add(titleEnter = Create.atlas(titleData.startPosition[0], titleData.startPosition[1], Path.sparrow('titleEnter')));
 		titleEnter.animation.addByPrefix('Pressed', 'ENTER PRESSED', 24, true);
 		titleEnter.animation.addByPrefix('idle', 'ENTER IDLE', 24, true);
 		titleEnter.animation.play('idle');
 		titleEnter.visible = false;
-		titleEnter.screenCenter();
-		titleEnter.x += titleData.startPosition[0];
-		titleEnter.y += titleData.startPosition[1];
 
 		FlxTween.num(0, 1, 2, {type: PINGPONG, ease: FlxEase.quadInOut}, num -> titleEnterTimer = num);
 
