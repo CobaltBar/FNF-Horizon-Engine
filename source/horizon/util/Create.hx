@@ -6,7 +6,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 @:publicFields
 class Create
 {
-	static function backdrop(path:FlxGraphicAsset, scale:Float = 1):FlxBackdrop
+	static function backdrop(path:FlxGraphicAsset, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxBackdrop
 	{
 		var bg:FlxBackdrop = new FlxBackdrop(path);
 		bg.scale.set(scale, scale);
@@ -14,10 +14,12 @@ class Create
 		bg.updateHitbox();
 		bg.centerOffsets(true);
 		bg.screenCenter();
+		if (cameras != null)
+			bg.cameras = cameras;
 		return bg;
 	}
 
-	static function atlas(x:Float, y:Float, frames:FlxAtlasFrames, scale:Float = 1):FlxSprite
+	static function atlas(x:Float, y:Float, frames:FlxAtlasFrames, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.frames = frames;
@@ -25,10 +27,12 @@ class Create
 		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
+		if (cameras != null)
+			spr.cameras = cameras;
 		return spr;
 	}
 
-	static function sprite(x:Float, y:Float, path:FlxGraphicAsset, scale:Float = 1):FlxSprite
+	static function sprite(x:Float, y:Float, path:FlxGraphicAsset, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.loadGraphic(path);
@@ -36,10 +40,12 @@ class Create
 		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
+		if (cameras != null)
+			spr.cameras = cameras;
 		return spr;
 	}
 
-	static function graphic(x:Float, y:Float, width:Int, height:Int, color:FlxColor, scale:Float = 1):FlxSprite
+	static function graphic(x:Float, y:Float, width:Int, height:Int, color:FlxColor, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.makeGraphic(width, height, color);
@@ -47,6 +53,8 @@ class Create
 		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
+		if (cameras != null)
+			spr.cameras = cameras;
 		return spr;
 	}
 

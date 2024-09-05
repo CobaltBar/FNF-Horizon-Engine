@@ -199,7 +199,7 @@ class TitleState extends MusicState
 
 	function createIntroImage(path:flixel.system.FlxAssets.FlxGraphicAsset, yOff:Float):FlxSprite
 	{
-		var img:FlxSprite = Create.sprite(0, FlxG.height * 2, path, .8);
+		var img:FlxSprite = Create.sprite(0, FlxG.height * 2, path, null, .8);
 		img.screenCenter(X);
 		introImages.push(img);
 		add(img);

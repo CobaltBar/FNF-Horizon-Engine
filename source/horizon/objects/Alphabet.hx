@@ -54,7 +54,7 @@ class Alphabet extends FlxSpriteGroup
 						continue;
 				}
 
-				var char = alphabetGroup.recycle(FlxSprite, () -> return Create.atlas(0, 0, Path.sparrow('alphabet'), textScale));
+				var char = alphabetGroup.recycle(FlxSprite, () -> return Create.atlas(0, 0, Path.sparrow('alphabet'), null, textScale));
 				char.x = 0;
 				char.y = 0;
 				char.setColorTransform(1, 1, 1, 1, 0, 0, 0, 0);

@@ -15,56 +15,33 @@ class ModsMenuState extends MusicMenuState
 	var modIcon:FlxSprite;
 	var modDesc:FlxText;
 	var modVer:FlxText;
-	var targetColor:FlxColor;
+	var targetColor:FlxColor = 0xFFFFFFFF;
 
 	var curSection:Int = 1;
-	var theWidth:Int = Std.int((FlxG.width - 100) / 3);
 
 	var theStaticOption:Alphabet;
 
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
+		customInput = true;
 		super.create();
+		FlxG.camera.bgColor = 0xFFFFFFFF;
+		add(bg = Create.backdrop(Path.image('menuBGDesat'), [menuCam], 1.1));
 
-		add(bg = Create.backdrop(Path.image('menuBGDesat'), 1.1));
-		bg.cameras = [menuCam];
+		// Trigger warning
+		for (i in 0...3)
+			add(Create.graphic(i * ((FlxG.width - 20) / 3 + 5) + 5, 5, Std.int((FlxG.width - 20) / 3), Std.int(FlxG.height * 2 / 3), 0xCC000000, [menuCam]));
+
+		add(Create.graphic(5, FlxG.height * 2 / 3 + 10, Std.int((FlxG.width * 2 - 25) / 3), Std.int(FlxG.height / 3 - 15), 0xCC000000, [menuCam]));
+		add(Create.graphic((FlxG.width * 2 + 5) / 3, FlxG.height * 2 / 3 + 10, Std.int((FlxG.width - 18) / 3), Std.int(FlxG.height / 3 - 15), 0xCC000000,
+			[menuCam]));
+		// end trigger warning
+
+		bop = false;
 	}
 }
 /*
-	class ModsMenuState extends MusicMenuState
-	{
-
-	public override function create():Void
-	{
-		Path.clearStoredMemory();
-		super.create();
-
-		#if DISCORD_ENABLED
-		DiscordRPC.change('In the Menus', 'Mods Menu');
-		#end
-
-		var allModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		allModsBG.screenCenter(X);
-		allModsBG.cameras = [menuCam];
-		add(allModsBG);
-
-		var staticModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		staticModsBG.screenCenter(X);
-		staticModsBG.x -= staticModsBG.width + 25;
-		staticModsBG.cameras = [menuCam];
-		add(staticModsBG);
-
-		var enabledModsBG = Create.graphic(0, 25, Std.int(FlxG.width / 3 - 100 / 3), FlxG.height - 275, 0xCC000000);
-		enabledModsBG.screenCenter(X);
-		enabledModsBG.x += enabledModsBG.width + 25;
-		enabledModsBG.cameras = [menuCam];
-		add(enabledModsBG);
-
-		var descriptionBG = Create.graphic(25, FlxG.height - 225, Std.int(FlxG.width - 575), 200, 0xCC000000);
-		descriptionBG.cameras = [menuCam];
-		add(descriptionBG);
-
 		modIcon = Create.sprite(55, FlxG.height - 205, Path.image('unknownMod'), 1.2);
 		modIcon.cameras = [menuCam];
 		add(modIcon);
@@ -114,9 +91,6 @@ class ModsMenuState extends MusicMenuState
 		enabledTitle.alpha = .6;
 		enabledTitle.cameras = [menuCam];
 		add(enabledTitle);
-
-		targetColor = FlxColor.WHITE;
-		bop = handleInput = false;
 
 		var i:Int = 0;
 		for (mod in Mods.all)

@@ -16,11 +16,9 @@ class MainMenuState extends MusicMenuState
 		super.create();
 		persistentUpdate = true;
 
-		add(bg = Create.backdrop(Path.image('menuBG'), 1.1));
-		bg.cameras = [menuCam];
+		add(bg = Create.backdrop(Path.image('menuBG'), [menuCam], 1.1));
 
-		add(flashBG = Create.backdrop(Path.image('menuBGMagenta'), 1.1));
-		flashBG.cameras = [menuCam];
+		add(flashBG = Create.backdrop(Path.image('menuBGMagenta'), [menuCam], 1.1));
 		flashBG.visible = false;
 
 		for (val in Mods.all)
@@ -30,11 +28,10 @@ class MainMenuState extends MusicMenuState
 		{
 			if (name == 'mods' && modCount == 0)
 				continue;
-			var option = Create.atlas(0, 0, Path.sparrow(name));
+			var option = Create.atlas(0, 0, Path.sparrow(name), [optionsCam]);
 			option.animation.addByPrefix('selected', name + ' selected', 24, true);
 			option.animation.addByPrefix('idle', name + ' idle', 24, true);
 			option.animation.play('idle');
-			option.cameras = [optionsCam];
 			option.updateHitbox();
 			option.centerOffsets();
 			add(option);
