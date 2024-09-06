@@ -119,12 +119,8 @@ class ModsMenuState extends MusicMenuState
 		}
 
 		for (arr in [staticOptions, enabledOptions, cast menuOptions])
-			ArraySort.sort(arr, (a, b) ->
-			{
-				var a = optionToMod[a].ID;
-				var b = optionToMod[b].ID;
-				return (a > b ? 1 : a < b ? -1 : 0);
-			});
+			ArraySort.sort(arr, (a, b) -> return (a.ID > b.ID ? 1 : a.ID < b.ID ? -1 : 0));
+
 		// to here
 
 		bop = false;
