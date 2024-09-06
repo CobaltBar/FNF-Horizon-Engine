@@ -20,6 +20,8 @@ class ModsMenuState extends MusicMenuState
 	var curSection:Int = 1;
 
 	var theStaticOption:Alphabet;
+	var parsedMods:Array<Mod> = [];
+	var optionToMod:Map<FlxSprite, Mod> = [];
 
 	public override function create():Void
 	{
@@ -70,7 +72,71 @@ class ModsMenuState extends MusicMenuState
 		enabledTitle.x += paddedWidth + 10;
 		enabledTitle.alpha = .6;
 
-		
+		// I hate from here
+		var i = 0;
+		var enabled = [for (mod in Mods.enabled) mod.name];
+		for (mod in Mods.all)
+		{
+			if (enabled.contains(mod))
+				continue;
+			parsedMods.push(Mods.parseMod(Path.combine(['mods', mod]), mod, i));
+			i++;
+		}
+
+		for (mod in parsedMods)
+		{
+			var option = new Alphabet(0, 100 + (50 * mod.ID), mod.name, false, CENTER, .5);
+			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.screenCenter(X);
+			option.alpha = .6;
+			option.cameras = [optionsCam];
+			optionToMod.set(option, mod);
+			add(option);
+			Path.cacheBitmap(mod.iconPath, [mod], true);
+
+			if (mod.staticMod)
+			{
+				option.x -= paddedWidth + 10;
+				staticOptions.insert(mod.ID, option);
+			}
+			else
+				menuOptions.insert(mod.ID, option);
+		}
+
+		for (mod in Mods.enabled)
+		{
+			var option = new Alphabet(0, 100 + (50 * mod.ID), mod.name, false, CENTER, .5);
+			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.screenCenter(X);
+			option.alpha = .6;
+			option.cameras = [optionsCam];
+			optionToMod.set(option, mod);
+			add(option);
+			Path.cacheBitmap(mod.iconPath, [mod], true);
+
+			option.x += paddedWidth + 10;
+			enabledOptions.insert(mod.ID, option);
+		}
+
+		ArraySort.sort(staticOptions, (a, b) ->
+		{
+			var a = optionToMod[a].ID;
+			var b = optionToMod[b].ID;
+			return (a > b ? 1 : a < b ? -1 : 0);
+		});
+		ArraySort.sort(enabledOptions, (a, b) ->
+		{
+			var a = optionToMod[a].ID;
+			var b = optionToMod[b].ID;
+			return (a > b ? 1 : a < b ? -1 : 0);
+		});
+		ArraySort.sort(menuOptions, (a, b) ->
+		{
+			var a = optionToMod[a].ID;
+			var b = optionToMod[b].ID;
+			return (a > b ? 1 : a < b ? -1 : 0);
+		});
+		// to here
 
 		bop = false;
 		// changeSection(0);
@@ -85,39 +151,14 @@ class ModsMenuState extends MusicMenuState
 		super.returnState();
 		MusicState.switchState(new MainMenuState());
 	}
+
+	public override function destroy()
+	{
+		parsedMods = [];
+		super.destroy();
+	}
 }
 /*
-		var i:Int = 0;
-		for (mod in Mods.all)
-		{
-			if (mod.name == 'Assets')
-				continue;
-			var option:Alphabet = new Alphabet(0, 200 + (50 * i), mod.name, false, LEFT, .7);
-			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
-			option.clipRect = FlxRect.weak(0, -option.height, option.width + 10, option.height * 2);
-			option.clipRect = option.clipRect;
-			option.screenCenter(X);
-			option.alpha = .6;
-			option.cameras = [optionsCam];
-			option.option = mod;
-			Path.cacheBitmap(mod.iconPath, [mod], true);
-			if (mod.enabled)
-			{
-				option.x += theWidth + 25;
-				enabledOptions.insert(mod.ID, option);
-			}
-			if (mod.staticMod)
-			{
-				option.x -= theWidth + 25;
-				staticOptions.insert(mod.ID, option);
-			}
-			if (!mod.staticMod && !mod.enabled)
-				menuOptions.insert(mod.ID, option);
-			add(option);
-			i++;
-		}
-	}
-
 	public override function update(elapsed:Float):Void
 	{
 		for (i in 0...staticOptions.length)

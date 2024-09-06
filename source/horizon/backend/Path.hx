@@ -92,7 +92,7 @@ class Path
 		for (ext in exts)
 		{
 			for (mod in (mods ?? []).concat([Mods.assets]))
-				if (assets[mod].exists('$key.$ext'))
+				if (assets.exists(mod) && assets[mod].exists('$key.$ext'))
 					return {path: assets[mod].get('$key.$ext'), mod: mod};
 			Log.warn('Asset \'$key.$ext\' not found.');
 		}

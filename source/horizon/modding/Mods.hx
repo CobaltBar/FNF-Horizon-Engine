@@ -33,7 +33,7 @@ class Mods
 					if (!Settings.savedMods.exists(folders[i]))
 						continue;
 
-					enabled.push(parseMod(folders[i], modPath, i));
+					enabled.push(parseMod(modPath, folders[i], i));
 				}
 			}
 
@@ -56,14 +56,19 @@ class Mods
 			stages: parseStages('assets'),
 			weeks: parseWeeks('assets'),
 
-			path: 'assets'
+			path: 'assets',
+			iconPath: 'assets/images/unknownMod.png',
+			staticMod: false
 		};
 	}
 
-	public static function parseMod(folder:String, path:String, ID:Int):Mod
+	public static function parseMod(path:String, folder:String, ID:Int):Mod
 	{
 		var jsonPath = Path.combine([path, 'mod.json']);
 		var json:ModJSON = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : defaultJSON;
+
+		var iconPath = Path.combine([path, 'mod.png']);
+		var icon = FileSystem.exists(iconPath) ? iconPath : 'assets/images/unknownMod.png';
 
 		return {
 			name: json.name ?? defaultJSON.name,
@@ -71,6 +76,7 @@ class Mods
 			version: json.version ?? defaultJSON.version,
 			color: json.color ?? defaultJSON.color,
 			global: json.global ?? false,
+			staticMod: isStatic(path),
 			modSysVer: json.modSysVer ?? Main.modSysVer,
 			ID: Settings.savedMods[folder]?.ID ?? ID,
 
@@ -79,7 +85,8 @@ class Mods
 			stages: parseStages(path),
 			weeks: parseWeeks(path),
 
-			path: path
+			path: path,
+			iconPath: icon
 		};
 	}
 
@@ -226,6 +233,20 @@ class Mods
 		}
 
 		return weeks;
+	}
+
+	static function isStatic(path:String):Bool
+	{
+		var scriptPath = Path.combine([path, 'scripts']);
+		if (!FileSystem.exists(scriptPath))
+			return false;
+
+		for (script in FileSystem.readDirectory(scriptPath))
+			if (!FileSystem.isDirectory(Path.combine([scriptPath, script])))
+				if (HaxePath.extension(script) == 'lua' || HaxePath.extension(script) == 'hx')
+					return true;
+
+		return false;
 	}
 }
 

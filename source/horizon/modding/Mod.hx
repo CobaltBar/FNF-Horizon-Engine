@@ -8,8 +8,10 @@ package horizon.modding;
 	var version:String;
 	var color:Array<Int>;
 	var global:Bool;
+	var staticMod:Bool;
 	var modSysVer:Float;
 	var ID:Int;
+	var iconPath:String;
 
 	// var awards:Array<Award>;
 	var characters:Array<CharacterData>;
