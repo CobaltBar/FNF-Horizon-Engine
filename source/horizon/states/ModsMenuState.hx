@@ -76,6 +76,13 @@ class ModsMenuState extends MusicMenuState
 
 		Path.clearUnusedMemory();
 	}
+
+	public override function returnState()
+	{
+		SettingsManager.save();
+		super.returnState();
+		MusicState.switchState(new MainMenuState());
+	}
 }
 /*
 		var i:Int = 0;
