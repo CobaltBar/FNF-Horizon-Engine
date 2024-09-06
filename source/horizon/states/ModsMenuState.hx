@@ -26,42 +26,32 @@ class ModsMenuState extends MusicMenuState
 		Path.clearStoredMemory();
 		customInput = true;
 		super.create();
-		FlxG.camera.bgColor = 0xFFFFFFFF;
+
 		add(bg = Create.backdrop(Path.image('menuBGDesat'), [menuCam], 1.1));
 
-		// Trigger warning
-		for (i in 0...3)
-			add(Create.graphic(i * ((FlxG.width - 20) / 3 + 5) + 5, 5, Std.int((FlxG.width - 20) / 3), Std.int(FlxG.height * 2 / 3), 0xCC000000, [menuCam]));
+		var paddedWidth = Std.int((FlxG.width - 20) / 3);
+		var subHeight = Std.int((FlxG.height - 220) / 3);
+		var subY = FlxG.height - 170;
 
-		add(Create.graphic(5, FlxG.height * 2 / 3 + 10, Std.int((FlxG.width * 2 - 25) / 3), Std.int(FlxG.height / 3 - 15), 0xCC000000, [menuCam]));
-		add(Create.graphic((FlxG.width * 2 + 5) / 3, FlxG.height * 2 / 3 + 10, Std.int((FlxG.width - 18) / 3), Std.int(FlxG.height / 3 - 15), 0xCC000000,
-			[menuCam]));
-		// end trigger warning
+		for (i in 0...3)
+			add(Create.graphic(i * (paddedWidth + 5) + 5, 5, paddedWidth, FlxG.height - 180, 0xCC000000, [menuCam]));
+		add(Create.graphic(5, subY, paddedWidth * 2 + 5, subHeight, 0xCC000000, [menuCam]));
+		add(Create.graphic(paddedWidth * 2 + 15, subY, paddedWidth, subHeight, 0xCC000000, [menuCam]));
+
+		add(modIcon = Create.sprite(15, subY + 5, Path.image('unknownMod'), [menuCam]));
+		add(modDesc = Create.text(modIcon.width + 20, subY + 15, 'N/A', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
+		modDesc.fieldWidth = 610;
+		modDesc.fieldHeight = 150;
+
+		add(modVer = Create.text(paddedWidth * 2 + 5, subY + modIcon.height - 15, 'VERSION N/A', 24, Path.font('vcr'), 0xFFCCCCCC, RIGHT, [menuCam]));
+		modVer.fieldWidth = 200;
+		modVer.fieldHeight = 50;
+		modVer.x -= modVer.width;
 
 		bop = false;
 	}
 }
 /*
-		modIcon = Create.sprite(55, FlxG.height - 205, Path.image('unknownMod'), 1.2);
-		modIcon.cameras = [menuCam];
-		add(modIcon);
-
-		modDesc = Create.text(modIcon.width + 65, FlxG.height - 205, 'N/A', 36, Path.font('vcr'), 0xFFFFFFFF, LEFT);
-		modDesc.fieldWidth = 900;
-		modDesc.fieldHeight = 175;
-		modDesc.cameras = [menuCam];
-		add(modDesc);
-
-		modVer = Create.text(modIcon.width + 880, FlxG.height - 75, 'Version N/A', 32, Path.font('vcr'), 0xFFCCCCCC, RIGHT);
-		modVer.fieldWidth = 300;
-		modVer.fieldHeight = 175;
-		modVer.cameras = [menuCam];
-		add(modVer);
-
-		var controlsBG = Create.graphic(descriptionBG.width + 50, FlxG.height - 225, 500, 200, 0xCC000000);
-		controlsBG.cameras = [menuCam];
-		add(controlsBG);
-
 		var controlsText = Create.text(descriptionBG.width + 50, FlxG.height - 225,
 			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReload Mods:${Settings.data.keybinds.get('reset')[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
 			24, Path.font('vcr'), 0xFFFFFFFF, LEFT);

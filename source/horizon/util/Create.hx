@@ -24,7 +24,6 @@ class Create
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.frames = frames;
 		spr.scale.set(scale, scale);
-		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
 		if (cameras != null)
@@ -37,7 +36,6 @@ class Create
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.loadGraphic(path);
 		spr.scale.set(scale, scale);
-		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
 		if (cameras != null)
@@ -50,7 +48,6 @@ class Create
 		var spr:FlxSprite = new FlxSprite(x, y);
 		spr.makeGraphic(width, height, color);
 		spr.scale.set(scale, scale);
-		spr.antialiasing = Settings.antialiasing;
 		spr.updateHitbox();
 		spr.centerOffsets(true);
 		if (cameras != null)
@@ -66,6 +63,11 @@ class Create
 		return cam;
 	}
 
-	static function text(x:Float, y:Float, text:String, size:Int, font:String, color:FlxColor, alignment:FlxTextAlign):FlxText
-		return new FlxText(x, y, 0, text, size).setFormat(font, size, color, alignment);
+	static function text(x:Float, y:Float, text:String, size:Int, font:String, color:FlxColor, alignment:FlxTextAlign, ?cameras:Array<FlxCamera>):FlxText
+	{
+		var text = new FlxText(x, y, 0, text, size);
+		if (cameras != null)
+			text.cameras = cameras;
+		return text.setFormat(font, size, color, alignment);
+	}
 }
