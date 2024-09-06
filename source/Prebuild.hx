@@ -4,7 +4,7 @@ import sys.FileSystem;
 import sys.io.File;
 
 // This class is for increasing the .build
-class Postbuild
+class Prebuild
 {
 	static function main():Void
 	{

@@ -70,6 +70,8 @@ class ModsMenuState extends MusicMenuState
 		enabledTitle.x += paddedWidth + 10;
 		enabledTitle.alpha = .6;
 
+		
+
 		bop = false;
 		// changeSection(0);
 		changeSelection(0);

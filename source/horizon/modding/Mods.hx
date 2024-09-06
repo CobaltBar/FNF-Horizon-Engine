@@ -7,21 +7,21 @@ class Mods
 	public static var enabled:Array<Mod> = [];
 	public static var assets:Mod;
 
+	static final defaultJSON:ModJSON = {
+		name: "Untitled Mod",
+		description: "Untitled Mod with No Description",
+		version: "1.0.0",
+		color: [255, 255, 255],
+		global: false,
+		modSysVer: Main.modSysVer
+	};
+
 	public static function load():Void
 	{
 		if (FileSystem.exists('mods'))
 		{
 			var folders = FileSystem.readDirectory('mods');
 			ArraySort.sort(folders, (a, b) -> (a > b ? 1 : a < b ? -1 : 0));
-
-			var defaultJSON:ModJSON = {
-				name: "Untitled Mod",
-				description: "Untitled Mod with No Description",
-				version: "1.0.0",
-				color: [255, 255, 255],
-				global: false,
-				modSysVer: Main.modSysVer
-			};
 
 			for (i in 0...folders.length)
 			{
@@ -33,26 +33,7 @@ class Mods
 					if (!Settings.savedMods.exists(folders[i]))
 						continue;
 
-					var jsonPath = Path.combine([modPath, 'mod.json']);
-					var json:ModJSON = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : defaultJSON;
-
-					var mod:Mod = {
-						name: json.name ?? defaultJSON.name,
-						description: json.description ?? defaultJSON.description,
-						version: json.version ?? defaultJSON.version,
-						color: json.color ?? defaultJSON.color,
-						global: json.global ?? false,
-						modSysVer: json.modSysVer ?? Main.modSysVer,
-						ID: Settings.savedMods[folders[i]]?.ID ?? i,
-
-						characters: parseCharacters(modPath),
-						songs: parseSongs(modPath),
-						stages: parseStages(modPath),
-						weeks: parseWeeks(modPath),
-
-						path: modPath
-					};
-					enabled.push(mod);
+					enabled.push(parseMod(folders[i], modPath, i));
 				}
 			}
 
@@ -76,6 +57,29 @@ class Mods
 			weeks: parseWeeks('assets'),
 
 			path: 'assets'
+		};
+	}
+
+	public static function parseMod(folder:String, path:String, ID:Int):Mod
+	{
+		var jsonPath = Path.combine([path, 'mod.json']);
+		var json:ModJSON = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : defaultJSON;
+
+		return {
+			name: json.name ?? defaultJSON.name,
+			description: json.description ?? defaultJSON.description,
+			version: json.version ?? defaultJSON.version,
+			color: json.color ?? defaultJSON.color,
+			global: json.global ?? false,
+			modSysVer: json.modSysVer ?? Main.modSysVer,
+			ID: Settings.savedMods[folder]?.ID ?? ID,
+
+			characters: parseCharacters(path),
+			songs: parseSongs(path),
+			stages: parseStages(path),
+			weeks: parseWeeks(path),
+
+			path: path
 		};
 	}
 

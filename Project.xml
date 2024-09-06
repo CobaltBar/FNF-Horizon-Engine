@@ -57,7 +57,7 @@
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	<haxedef name="message.reporting" value="pretty" />
-	<postbuild haxe="source.Postbuild" />
+	<prebuild haxe="source.Prebuild" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
