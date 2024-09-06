@@ -88,6 +88,7 @@ class Alphabet extends FlxSpriteGroup
 					char.animation.remove('idle');
 				char.animation.addByPrefix('idle', name, 24);
 				char.animation.play('idle');
+				char.scale.set(textScale, textScale);
 				char.updateHitbox();
 				char.centerOffsets();
 				char.x = letterWidth;

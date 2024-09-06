@@ -43,45 +43,41 @@ class ModsMenuState extends MusicMenuState
 		modDesc.fieldWidth = 610;
 		modDesc.fieldHeight = 150;
 
-		add(modVer = Create.text(paddedWidth * 2 + 5, subY + modIcon.height - 15, 'VERSION N/A', 24, Path.font('vcr'), 0xFFCCCCCC, RIGHT, [menuCam]));
+		add(modVer = Create.text(paddedWidth * 2 + 5, subY + modIcon.height - 15, 'VERSION N/A', 18, Path.font('vcr'), 0xFFCCCCCC, RIGHT, [menuCam]));
 		modVer.fieldWidth = 200;
 		modVer.fieldHeight = 50;
 		modVer.x -= modVer.width;
 
+		var controlsText:FlxText = Create.text(paddedWidth * 2 + 20, subY + 5,
+			'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
+			16, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]);
+		add(controlsText);
+
+		add(allModsTitle = new Alphabet(0, 25, 'All Mods', true, CENTER, .7));
+		allModsTitle.cameras = [menuCam];
+		allModsTitle.screenCenter(X);
+		allModsTitle.alpha = .6;
+
+		add(staticTitle = new Alphabet(0, 25, 'Static Mods', true, CENTER, .7));
+		staticTitle.cameras = [menuCam];
+		staticTitle.screenCenter(X);
+		staticTitle.x -= paddedWidth + 10;
+		staticTitle.alpha = .6;
+
+		add(enabledTitle = new Alphabet(0, 25, 'Static Mods', true, CENTER, .7));
+		enabledTitle.cameras = [menuCam];
+		enabledTitle.screenCenter(X);
+		enabledTitle.x += paddedWidth + 10;
+		enabledTitle.alpha = .6;
+
 		bop = false;
+		// changeSection(0);
+		changeSelection(0);
+
+		Path.clearUnusedMemory();
 	}
 }
 /*
-		var controlsText = Create.text(descriptionBG.width + 50, FlxG.height - 225,
-			'Controls\nMove selection up/down: ${Settings.data.keybinds.get('ui')[6].toString()}/${Settings.data.keybinds.get('ui')[5].toString()}\nMove current option up/down: ${Settings.data.keybinds.get('ui')[2].toString()}/${Settings.data.keybinds.get('ui')[1].toString()}\nSelect Mod: ${Settings.data.keybinds.get('accept')[0].toString()}/${Settings.data.keybinds.get('accept')[1].toString()}\nReload Mods:${Settings.data.keybinds.get('reset')[0].toString()}\nReturn to Main Menu: ${Settings.data.keybinds.get('back')[0].toString()}/${Settings.data.keybinds.get('back')[1].toString()}',
-			24, Path.font('vcr'), 0xFFFFFFFF, LEFT);
-		controlsText.fieldWidth = 500;
-		controlsText.cameras = [menuCam];
-		add(controlsText);
-
-		allModsTitle = new Alphabet(0, 25, 'All Mods', true, LEFT);
-		allModsTitle.screenCenter(X);
-		allModsTitle.y += allModsTitle.height;
-		allModsTitle.alpha = .6;
-		allModsTitle.cameras = [menuCam];
-		add(allModsTitle);
-
-		staticTitle = new Alphabet(0, 25, 'Static Mods', true, LEFT);
-		staticTitle.screenCenter(X);
-		staticTitle.x -= staticModsBG.width + 25;
-		staticTitle.y += staticTitle.height;
-		staticTitle.alpha = .6;
-		staticTitle.cameras = [menuCam];
-		add(staticTitle);
-
-		enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, LEFT);
-		enabledTitle.screenCenter(X);
-		enabledTitle.x += enabledModsBG.width + 25;
-		enabledTitle.y += enabledTitle.height;
-		enabledTitle.alpha = .6;
-		enabledTitle.cameras = [menuCam];
-		add(enabledTitle);
-
 		var i:Int = 0;
 		for (mod in Mods.all)
 		{
@@ -111,11 +107,6 @@ class ModsMenuState extends MusicMenuState
 			add(option);
 			i++;
 		}
-
-		changeSection(0);
-		changeSelection(0);
-
-		Path.clearUnusedMemory();
 	}
 
 	public override function update(elapsed:Float):Void
