@@ -118,24 +118,13 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions.insert(mod.ID, option);
 		}
 
-		ArraySort.sort(staticOptions, (a, b) ->
-		{
-			var a = optionToMod[a].ID;
-			var b = optionToMod[b].ID;
-			return (a > b ? 1 : a < b ? -1 : 0);
-		});
-		ArraySort.sort(enabledOptions, (a, b) ->
-		{
-			var a = optionToMod[a].ID;
-			var b = optionToMod[b].ID;
-			return (a > b ? 1 : a < b ? -1 : 0);
-		});
-		ArraySort.sort(menuOptions, (a, b) ->
-		{
-			var a = optionToMod[a].ID;
-			var b = optionToMod[b].ID;
-			return (a > b ? 1 : a < b ? -1 : 0);
-		});
+		for (arr in [staticOptions, enabledOptions, cast menuOptions])
+			ArraySort.sort(arr, (a, b) ->
+			{
+				var a = optionToMod[a].ID;
+				var b = optionToMod[b].ID;
+				return (a > b ? 1 : a < b ? -1 : 0);
+			});
 		// to here
 
 		bop = false;
