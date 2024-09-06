@@ -44,6 +44,6 @@ class Log
 	{
 		var msg = '${ansi(69)}[${ansi(39)}${DateTools.format(Date.now(), '%H:%M:%S')} ${ansi(178)}${pos.fileName.replace('source/', '').replace('horizon/', '')}:${pos.lineNumber}${ansi(69)}]';
 		Sys.println(msg = '${msg.rpad(' ', 90)}${ansi(color)}$level: $value\033[0;0m');
-		log.push('[${DateTools.format(Date.now(), '%H:%M:%S')} ${pos.fileName.replace('source/', '').replace('horizon/', '')}:${pos.lineNumber}] $level: $value');
+		log.push('[${DateTools.format(Date.now(), '%H:%M:%S')} ${pos.fileName.replace('horizon.', '')}:${pos.lineNumber}] $level: $value');
 	}
 }
