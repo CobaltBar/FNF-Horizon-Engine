@@ -5,8 +5,8 @@ class ModsMenuState extends MusicMenuState
 	var curEnabled:Int = 0;
 	var curStatic:Int = 0;
 
-	var enabledOptions:Array<Alphabet> = [];
-	var staticOptions:Array<Alphabet> = [];
+	var enabledOptions:Array<FlxSprite> = [];
+	var staticOptions:Array<FlxSprite> = [];
 
 	var enabledTitle:FlxSprite;
 	var staticTitle:FlxSprite;
@@ -19,7 +19,7 @@ class ModsMenuState extends MusicMenuState
 
 	var curSection:Int = 1;
 
-	var theStaticOption:Alphabet;
+	var theStaticOption:FlxSprite;
 	var parsedMods:Array<Mod> = [];
 	var optionToMod:Map<FlxSprite, Mod> = [];
 
@@ -164,9 +164,6 @@ class ModsMenuState extends MusicMenuState
 
 	public function changeSection(change:Int):Void
 	{
-		if (change != 0)
-			FlxG.sound.play(Path.audio('scroll'), .7);
-
 		curSection += change;
 
 		if (curSection < 0)
@@ -178,11 +175,66 @@ class ModsMenuState extends MusicMenuState
 		{
 			case 0:
 				if (staticOptions.length == 0)
+				{
 					if (menuOptions.length == 0)
 						changeSection(2);
 					else
 						changeSection(1);
+					return;
+				}
+
+				staticTitle.alpha = 1;
+				allModsTitle.alpha = enabledTitle.alpha = .6;
+
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
+			case 1:
+				if (menuOptions.length == 0)
+				{
+					if (enabledOptions.length == 0)
+						changeSection(-1);
+					else
+						changeSection(1);
+					return;
+				}
+
+				allModsTitle.alpha = 1;
+				staticTitle.alpha = enabledTitle.alpha = .6;
+
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
+			case 2:
+				if (enabledOptions.length == 0)
+				{
+					if (menuOptions.length == 0)
+						changeSelection(-2);
+					else
+						changeSelection(-1);
+					return;
+				}
+
+				enabledTitle.alpha = 1;
+				allModsTitle.alpha = staticTitle.alpha = .6;
+
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
 		}
+
+		modIcon.loadGraphic(Path.image('unknownMod'));
+		modDesc.text = 'N/A';
+		modVer.text = 'N/A';
+		targetColor = 0xFFFFFFFF;
+
+		changeSelection(0);
+
+		if (change != 0)
+			FlxG.sound.play(Path.audio('scroll'), .7);
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -404,46 +456,6 @@ class ModsMenuState extends MusicMenuState
 				enabledOptions[newCurEnabled] = op1;
 				curEnabled -= change;
 		}
-		changeSelection(0);
-	}
-
-	public function changeSection(change:Int):Void
-	{
-		if (change != 0)
-			FlxG.sound.play(Path.audio('scroll'), .7);
-
-		curSection += change;
-
-		if (curSection < 0)
-			curSection = 2;
-		if (curSection > 2)
-			curSection = 0;
-
-		switch (curSection)
-		{
-			case 0:
-				staticTitle.alpha = 1;
-				allModsTitle.alpha = enabledTitle.alpha = .6;
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
-			case 1:
-				allModsTitle.alpha = 1;
-				staticTitle.alpha = enabledTitle.alpha = .6;
-				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = .6;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
-			case 2:
-				enabledTitle.alpha = 1;
-				allModsTitle.alpha = staticTitle.alpha = .6;
-				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = .6;
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
-		}
-		resetModInfo();
 		changeSelection(0);
 	}
  */
