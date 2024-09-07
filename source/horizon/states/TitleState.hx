@@ -1,7 +1,5 @@
 package horizon.states;
 
-import haxe.Http;
-
 class TitleState extends MusicState
 {
 	var gf:FlxSprite;
@@ -16,29 +14,12 @@ class TitleState extends MusicState
 
 	static var titleData:TitleJSON;
 	static var comingBack:Bool = false;
-	static var onlineVer:String;
 
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
 		super.create();
 		persistentUpdate = true;
-
-		if (!comingBack)
-		{
-			var request = new Http('https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build');
-			request.onData = data ->
-			{
-				onlineVer = data.trim();
-				Log.info('Update Check: Local: ${Main.horizonVer} Github: ${onlineVer}');
-				if (Std.parseFloat(onlineVer) > Std.parseFloat(Main.horizonVer))
-					Log.info('Update prompt will be displayed ($onlineVer > ${Main.horizonVer})');
-				else
-					Log.info('Update prompt will not be displayed (${Main.horizonVer} >= $onlineVer)');
-			}
-			request.onError = msg -> Log.error('Update Check Error: $msg');
-			request.request();
-		}
 
 		titleData = Path.json('titleData');
 		Conductor.bpm = titleData.bpm;
