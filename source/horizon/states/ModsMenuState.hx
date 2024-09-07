@@ -66,7 +66,7 @@ class ModsMenuState extends MusicMenuState
 		staticTitle.x -= paddedWidth + 10;
 		staticTitle.alpha = .6;
 
-		add(enabledTitle = new Alphabet(0, 25, 'Static Mods', true, CENTER, .7));
+		add(enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, CENTER, .7));
 		enabledTitle.cameras = [menuCam];
 		enabledTitle.screenCenter(X);
 		enabledTitle.x += paddedWidth + 10;
@@ -160,7 +160,43 @@ class ModsMenuState extends MusicMenuState
 		targetColor = 0xFFFFFFFF;
 	}
 
-	public function shiftSelection(change:Int):Void {}
+	public function shiftSelection(change:Int):Void
+	{
+		switch (curSection)
+		{
+			case 1:
+				if (menuOptions.length != 0)
+				{
+					var newCurSelected = curSelected - change;
+					if (newCurSelected < 0)
+						newCurSelected = menuOptions.length - 1;
+					if (newCurSelected >= menuOptions.length)
+						newCurSelected = 0;
+					var op1 = menuOptions[curSelected];
+					var op2 = menuOptions[newCurSelected];
+					op1.alpha = .6;
+					menuOptions[curSelected] = op2;
+					menuOptions[newCurSelected] = op1;
+					curSelected -= change;
+				}
+			case 2:
+				if (enabledOptions.length != 0)
+				{
+					var newCurEnabled = curEnabled - change;
+					if (newCurEnabled < 0)
+						newCurEnabled = enabledOptions.length - 1;
+					if (newCurEnabled >= enabledOptions.length)
+						newCurEnabled = 0;
+					var op1 = enabledOptions[curEnabled];
+					op1.alpha = .6;
+					var op2 = enabledOptions[newCurEnabled];
+					enabledOptions[curEnabled] = op2;
+					enabledOptions[newCurEnabled] = op1;
+					curEnabled -= change;
+				}
+		}
+		changeSelection(0);
+	}
 
 	public function changeSection(change:Int):Void
 	{
@@ -171,70 +207,85 @@ class ModsMenuState extends MusicMenuState
 		if (curSection > 2)
 			curSection = 0;
 
+		// Solution is jank as hell but it works
+		var _return = false;
+
 		switch (curSection)
 		{
 			case 0:
 				if (staticOptions.length == 0)
 				{
 					if (menuOptions.length == 0)
-						changeSection(2);
+						curSection = 2;
 					else
-						changeSection(1);
-					return;
+						curSection = 1;
+					_return = true;
 				}
 
-				staticTitle.alpha = 1;
-				allModsTitle.alpha = enabledTitle.alpha = .6;
+				if (!_return)
+				{
+					staticTitle.alpha = 1;
+					allModsTitle.alpha = enabledTitle.alpha = .6;
 
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
+					if (menuOptions[curSelected] != null)
+						menuOptions[curSelected].alpha = .6;
+					if (enabledOptions[curEnabled] != null)
+						enabledOptions[curEnabled].alpha = .6;
+				}
 			case 1:
 				if (menuOptions.length == 0)
 				{
 					if (enabledOptions.length == 0)
-						changeSection(-1);
+						curSection = 0;
 					else
-						changeSection(1);
-					return;
+						curSection = 2;
+					_return = true;
 				}
 
-				allModsTitle.alpha = 1;
-				staticTitle.alpha = enabledTitle.alpha = .6;
+				if (!_return)
+				{
+					allModsTitle.alpha = 1;
+					staticTitle.alpha = enabledTitle.alpha = .6;
 
-				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = .6;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
+					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+						staticOptions[curStatic].alpha = .6;
+					if (enabledOptions[curEnabled] != null)
+						enabledOptions[curEnabled].alpha = .6;
+				}
 			case 2:
 				if (enabledOptions.length == 0)
 				{
 					if (menuOptions.length == 0)
-						changeSelection(-2);
+						curSection = 2;
 					else
-						changeSelection(-1);
-					return;
+						curSection = 1;
+					_return = true;
 				}
 
-				enabledTitle.alpha = 1;
-				allModsTitle.alpha = staticTitle.alpha = .6;
+				if (!_return)
+				{
+					enabledTitle.alpha = 1;
+					allModsTitle.alpha = staticTitle.alpha = .6;
 
-				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = .6;
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
+					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+						staticOptions[curStatic].alpha = .6;
+					if (menuOptions[curSelected] != null)
+						menuOptions[curSelected].alpha = .6;
+				}
 		}
 
-		modIcon.loadGraphic(Path.image('unknownMod'));
-		modDesc.text = 'N/A';
-		modVer.text = 'N/A';
-		targetColor = 0xFFFFFFFF;
+		if (!_return)
+		{
+			modIcon.loadGraphic(Path.image('unknownMod'));
+			modDesc.text = 'N/A';
+			modVer.text = 'N/A';
+			targetColor = 0xFFFFFFFF;
 
-		changeSelection(0);
+			changeSelection(0);
 
-		if (change != 0)
-			FlxG.sound.play(Path.audio('scroll'), .7);
+			if (change != 0)
+				FlxG.sound.play(Path.audio('scroll'), .7);
+		}
 	}
 
 	public override function changeSelection(change:Int):Void
@@ -267,7 +318,8 @@ class ModsMenuState extends MusicMenuState
 				if (menuOptions.length <= 0)
 					return;
 
-				menuOptions[curSelected].alpha = .6;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
 				super.changeSelection(change);
 				menuOptions[curSelected].alpha = 1;
 
@@ -277,7 +329,8 @@ class ModsMenuState extends MusicMenuState
 				modVer.text = mod.version;
 				targetColor = mod.color;
 			case 2:
-				enabledOptions[curEnabled].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
 				if (change != 0)
 					FlxG.sound.play(Path.audio('scroll'), .7);
 				curEnabled += change;
@@ -425,37 +478,5 @@ class ModsMenuState extends MusicMenuState
 		Settings.save();
 		super.returnState();
 		MusicState.switchState(new MainMenuState());
-	}
-
-	public function shiftSelection(change:Int):Void
-	{
-		switch (curSection)
-		{
-			case 1:
-				var newCurSelected = curSelected - change;
-				if (newCurSelected < 0)
-					newCurSelected = menuOptions.length - 1;
-				if (newCurSelected >= menuOptions.length)
-					newCurSelected = 0;
-				var op1 = menuOptions[curSelected];
-				var op2 = menuOptions[newCurSelected];
-				op1.alpha = .6;
-				menuOptions[curSelected] = op2;
-				menuOptions[newCurSelected] = op1;
-				curSelected -= change;
-			case 2:
-				var newCurEnabled = curEnabled - change;
-				if (newCurEnabled < 0)
-					newCurEnabled = enabledOptions.length - 1;
-				if (newCurEnabled >= enabledOptions.length)
-					newCurEnabled = 0;
-				var op1 = enabledOptions[curEnabled];
-				op1.alpha = .6;
-				var op2 = enabledOptions[newCurEnabled];
-				enabledOptions[curEnabled] = op2;
-				enabledOptions[newCurEnabled] = op1;
-				curEnabled -= change;
-		}
-		changeSelection(0);
 	}
  */
