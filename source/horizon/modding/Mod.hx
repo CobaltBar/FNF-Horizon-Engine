@@ -23,6 +23,7 @@ package horizon.modding;
 	var stages:Array<StageData>;
 	var weeks:Array<Week>;
 	var path:String;
+	var folder:String;
 }
 
 typedef ModJSON =

@@ -7,7 +7,8 @@ package horizon.modding;
 	var icon:String;
 	var hide:Bool;
 	var audios:Array<String>;
-	var score:Float;
+	var folder:String;
+	var score:Int;
 	var accuracy:Float;
 }
 

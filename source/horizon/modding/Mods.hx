@@ -61,6 +61,7 @@ class Mods
 			weeks: parseWeeks('assets'),
 
 			path: 'assets',
+			folder: 'assets',
 			iconPath: 'assets/images/unknownMod.png',
 			staticMod: false
 		};
@@ -93,6 +94,7 @@ class Mods
 			weeks: parseWeeks(path),
 
 			path: path,
+			folder: folder,
 			iconPath: icon
 		};
 	}
@@ -164,6 +166,7 @@ class Mods
 					name: json?.name ?? song,
 					icon: json?.icon ?? 'blank',
 					hide: json?.hide ?? false,
+					folder: song,
 					audios: audios,
 
 					score: Settings.savedMods[folder.split('/')[1]]?.songs[song]?.score ?? 0,
@@ -231,6 +234,7 @@ class Mods
 					locked: false ?? Settings.savedMods[folder.split('/')[1]].weeks[week]?.locked,
 					unlocks: json.unlocks ?? [],
 					songs: json.songs ?? ['test'],
+					folder: HaxePath.withoutExtension(week),
 					difficulties: json.difficulties ?? ['normal'],
 
 					score: Settings.savedMods[folder.split('/')[1]]?.weeks[week]?.score ?? 0,

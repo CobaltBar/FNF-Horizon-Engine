@@ -1,5 +1,6 @@
 package horizon.states;
 
+// This state could be a lot better ngl
 class ModsMenuState extends MusicMenuState
 {
 	var curEnabled:Int = 0;
@@ -23,6 +24,8 @@ class ModsMenuState extends MusicMenuState
 	var parsedMods:Array<Mod> = [];
 	var optionToMod:Map<FlxSprite, Mod> = [];
 
+	var paddedWidth:Int;
+
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -31,7 +34,7 @@ class ModsMenuState extends MusicMenuState
 
 		add(bg = Create.backdrop(Path.image('menuBGDesat'), [menuCam], 1.1));
 
-		var paddedWidth = Std.int((FlxG.width - 20) / 3);
+		paddedWidth = Std.int((FlxG.width - 20) / 3);
 		var subHeight = Std.int((FlxG.height - 220) / 3);
 		var subY = FlxG.height - 170;
 
@@ -133,8 +136,8 @@ class ModsMenuState extends MusicMenuState
 		});
 		Controls.onPress([Settings.keybinds['ui_up'][0]], () -> if (!transitioningOut) changeSelection(-1));
 		Controls.onPress([Settings.keybinds['ui_down'][0]], () -> if (!transitioningOut) changeSelection(1));
-		Controls.onPress([Settings.keybinds['ui_up'][1]], () -> if (!transitioningOut) shiftSelection(-1));
-		Controls.onPress([Settings.keybinds['ui_down'][1]], () -> if (!transitioningOut) shiftSelection(1));
+		Controls.onPress([Settings.keybinds['ui_up'][1]], () -> if (!transitioningOut) shiftSelection(1));
+		Controls.onPress([Settings.keybinds['ui_down'][1]], () -> if (!transitioningOut) shiftSelection(-1));
 		Controls.onPress(Settings.keybinds['ui_left'], () -> if (!transitioningOut) changeSection(-1));
 		Controls.onPress(Settings.keybinds['ui_right'], () -> if (!transitioningOut) changeSection(1));
 
@@ -147,6 +150,24 @@ class ModsMenuState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
+		for (i in 0...staticOptions.length)
+		{
+			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
+
+		for (i in 0...menuOptions.length)
+		{
+			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5, FlxMath.bound(elapsed * 5, 0, 1));
+			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
+
+		for (i in 0...enabledOptions.length)
+		{
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + paddedWidth + 25,
+				FlxMath.bound(elapsed * 5, 0, 1));
+			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
+		}
+
 		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
 
 		super.update(elapsed);
@@ -158,6 +179,81 @@ class ModsMenuState extends MusicMenuState
 		modDesc.text = 'N/A';
 		modVer.text = 'N/A';
 		targetColor = 0xFFFFFFFF;
+
+		switch (curSection)
+		{
+			case 0:
+				if (staticOptions.length <= 0)
+					return;
+				if (theStaticOption != null)
+					theStaticOption.alpha = .6;
+				theStaticOption = staticOptions[curStatic];
+				theStaticOption.alpha = .8;
+			case 1:
+				if (menuOptions.length <= 0)
+					return;
+				menuOptions[curSelected].alpha = .6;
+				optionToMod[menuOptions[curSelected]].ID = enabledOptions.length - 1;
+				enabledOptions.push(menuOptions[curSelected]);
+				menuOptions.remove(menuOptions[curSelected]);
+				changeSelection(0);
+			case 2:
+				if (enabledOptions.length <= 0)
+					return;
+				enabledOptions[curEnabled].alpha = .6;
+				optionToMod[enabledOptions[curSelected]].ID = menuOptions.length - 1;
+				menuOptions.push(enabledOptions[curEnabled]);
+				enabledOptions.remove(enabledOptions[curEnabled]);
+				changeSelection(0);
+		}
+	}
+
+	public override function returnState():Void
+	{
+		Mods.enabled = [];
+
+		for (i in 0...enabledOptions.length)
+		{
+			optionToMod[enabledOptions[i]].ID = i + 1;
+			Mods.enabled.insert(i + 1, optionToMod[enabledOptions[i]]);
+		}
+
+		ArraySort.sort(Mods.enabled, (a, b) -> a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0);
+
+		if (theStaticOption != null)
+		{
+			optionToMod[theStaticOption].ID = 0;
+			Mods.enabled.insert(0, optionToMod[theStaticOption]);
+		}
+
+		for (mod in Mods.enabled)
+		{
+			var weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}> = [];
+			var songs:Map<String, {score:Int, accuracy:Float}> = [];
+
+			for (week in mod.weeks)
+				weeks.set(week.folder, {
+					score: week.score,
+					accuracy: week.accuracy,
+					locked: week.locked,
+				});
+			for (song in mod.songs)
+				songs.set(song.folder, {
+					score: song.score,
+					accuracy: song.accuracy
+				});
+			Settings.savedMods.set(mod.folder, {
+				enabled: true,
+				ID: mod.ID,
+				weeks: weeks,
+				songs: songs
+			});
+		}
+
+		Path.loadAssets();
+		SettingsManager.save();
+		super.returnState();
+		MusicState.switchState(new MainMenuState());
 	}
 
 	public function shiftSelection(change:Int):Void
@@ -166,34 +262,33 @@ class ModsMenuState extends MusicMenuState
 		{
 			case 1:
 				if (menuOptions.length != 0)
-				{
-					var newCurSelected = curSelected - change;
-					if (newCurSelected < 0)
-						newCurSelected = menuOptions.length - 1;
-					if (newCurSelected >= menuOptions.length)
-						newCurSelected = 0;
-					var op1 = menuOptions[curSelected];
-					var op2 = menuOptions[newCurSelected];
-					op1.alpha = .6;
-					menuOptions[curSelected] = op2;
-					menuOptions[newCurSelected] = op1;
-					curSelected -= change;
-				}
+					return;
+				var newCurSelected = curSelected - change;
+				if (newCurSelected < 0)
+					newCurSelected = menuOptions.length - 1;
+				if (newCurSelected >= menuOptions.length)
+					newCurSelected = 0;
+				var op1 = menuOptions[curSelected];
+				var op2 = menuOptions[newCurSelected];
+				op1.alpha = .6;
+				menuOptions[curSelected] = op2;
+				menuOptions[newCurSelected] = op1;
+				curSelected -= change;
+
 			case 2:
 				if (enabledOptions.length != 0)
-				{
-					var newCurEnabled = curEnabled - change;
-					if (newCurEnabled < 0)
-						newCurEnabled = enabledOptions.length - 1;
-					if (newCurEnabled >= enabledOptions.length)
-						newCurEnabled = 0;
-					var op1 = enabledOptions[curEnabled];
-					op1.alpha = .6;
-					var op2 = enabledOptions[newCurEnabled];
-					enabledOptions[curEnabled] = op2;
-					enabledOptions[newCurEnabled] = op1;
-					curEnabled -= change;
-				}
+					return;
+				var newCurEnabled = curEnabled - change;
+				if (newCurEnabled < 0)
+					newCurEnabled = enabledOptions.length - 1;
+				if (newCurEnabled >= enabledOptions.length)
+					newCurEnabled = 0;
+				var op1 = enabledOptions[curEnabled];
+				op1.alpha = .6;
+				var op2 = enabledOptions[newCurEnabled];
+				enabledOptions[curEnabled] = op2;
+				enabledOptions[newCurEnabled] = op1;
+				curEnabled -= change;
 		}
 		changeSelection(0);
 	}
@@ -293,6 +388,8 @@ class ModsMenuState extends MusicMenuState
 		switch (curSection)
 		{
 			case 0:
+				if (staticOptions.length != 0)
+					return;
 				if (staticOptions[curStatic].alpha != .8)
 					staticOptions[curStatic].alpha = .6;
 
@@ -314,10 +411,10 @@ class ModsMenuState extends MusicMenuState
 				modDesc.text = mod.description;
 				modVer.text = mod.version;
 				targetColor = mod.color;
-			case 1:
-				if (menuOptions.length <= 0)
-					return;
 
+			case 1:
+				if (menuOptions.length != 0)
+					return;
 				if (menuOptions[curSelected] != null)
 					menuOptions[curSelected].alpha = .6;
 				super.changeSelection(change);
@@ -328,7 +425,10 @@ class ModsMenuState extends MusicMenuState
 				modDesc.text = mod.description;
 				modVer.text = mod.version;
 				targetColor = mod.color;
+
 			case 2:
+				if (enabledOptions.length != 0)
+					return;
 				if (enabledOptions[curEnabled] != null)
 					enabledOptions[curEnabled].alpha = .6;
 				if (change != 0)
@@ -390,93 +490,5 @@ class ModsMenuState extends MusicMenuState
 		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
 
 		super.update(elapsed);
-	}
-
-	public override function exitState():Void
-	{
-		resetModInfo();
-		switch (curSection)
-		{
-			case 0:
-				if (staticOptions.length <= 0)
-					return;
-				if (theStaticOption != null)
-					theStaticOption.alpha = .6;
-				theStaticOption = staticOptions[curStatic];
-				theStaticOption.alpha = .8;
-			case 1:
-				if (menuOptions.length <= 0)
-					return;
-				menuOptions[curSelected].alpha = .6;
-				cast(menuOptions[curSelected], Alphabet).option.enabled = true;
-				cast(menuOptions[curSelected], Alphabet).option.ID = enabledOptions.length - 1;
-				enabledOptions.push(cast menuOptions[curSelected]);
-				menuOptions.remove(menuOptions[curSelected]);
-				changeSelection(0);
-			case 2:
-				if (enabledOptions.length <= 0)
-					return;
-				enabledOptions[curEnabled].alpha = .6;
-				enabledOptions[curSelected].option.enabled = false;
-				enabledOptions[curSelected].option.ID = menuOptions.length - 1;
-				menuOptions.push(enabledOptions[curEnabled]);
-				enabledOptions.remove(enabledOptions[curEnabled]);
-				changeSelection(0);
-		}
-	}
-
-	public override function returnState():Void
-	{
-		Mods.enabled = [];
-		Settings.data.savedMods.clear();
-
-		for (i in 0...menuOptions.length)
-			Mods.all[cast(menuOptions[i], Alphabet).option.path].ID = i;
-
-		for (i in 0...enabledOptions.length)
-		{
-			enabledOptions[i].option.ID = i + 1;
-			Mods.enabled.insert(i + 1, enabledOptions[i].option);
-		}
-
-		haxe.ds.ArraySort.sort(Mods.enabled, (a, b) ->
-		{
-			return a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0;
-		});
-
-		if (theStaticOption != null)
-		{
-			theStaticOption.option.ID = 0;
-			theStaticOption.option.enabled = true;
-			Mods.enabled.insert(0, theStaticOption.option);
-		}
-
-		for (mod in Mods.enabled)
-		{
-			var weeks:Map<String, {score:Int}> = [];
-			var songs:Map<String, {score:Int, accuracy:Float}> = [];
-			for (key => value in mod.weeks)
-				weeks.set(key, {
-					score: value.score
-				});
-			for (key => value in mod.songs)
-				songs.set(key, {
-					score: value.score,
-					accuracy: value.accuracy
-				});
-			Settings.data.savedMods.set(mod.folderName, {
-				enabled: mod.enabled,
-				ID: mod.ID,
-				weeks: weeks,
-				songs: songs
-			});
-		}
-
-		@:privateAccess Path.assets.clear();
-		Path.loadAssets();
-
-		Settings.save();
-		super.returnState();
-		MusicState.switchState(new MainMenuState());
 	}
  */

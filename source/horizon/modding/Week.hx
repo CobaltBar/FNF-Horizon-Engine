@@ -10,8 +10,9 @@ package horizon.modding;
 	var locked:Bool;
 	var unlocks:Array<String>;
 	var songs:Array<String>;
+	var folder:String;
 	var difficulties:Array<String>;
-	var score:Float;
+	var score:Int;
 	var accuracy:Float;
 }
 
