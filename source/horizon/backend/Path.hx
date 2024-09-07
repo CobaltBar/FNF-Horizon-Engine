@@ -19,7 +19,7 @@ class Path
 	private static var trackedImages:Map<String, FlxGraphic> = [];
 	private static var trackedSounds:Map<String, Sound> = [];
 
-	private static var exclusions:Array<String> = ["AUDIO-menuSong.ogg"];
+	private static var exclusions:Array<String> = ['AUDIO-menuSong.ogg', 'AUDIO-cancel', 'AUDIO-confirm', 'AUDIO-scroll'];
 
 	static function clearUnusedMemory():Void
 	{

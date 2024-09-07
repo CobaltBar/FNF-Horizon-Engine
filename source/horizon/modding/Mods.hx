@@ -8,9 +8,9 @@ class Mods
 	public static var assets:Mod;
 
 	static final defaultJSON:ModJSON = {
-		name: "Untitled Mod",
-		description: "An Untitled Mod",
-		version: "1.0.0",
+		name: 'Untitled Mod',
+		description: 'An Untitled Mod',
+		version: '1.0.0',
 		color: [255, 255, 255],
 		global: false,
 		modSysVer: Main.modSysVer
@@ -47,8 +47,8 @@ class Mods
 			Log.warn('Mods folder does not exist. Skipping mod loading');
 
 		assets = {
-			name: "Assets",
-			description: "Internal Assets of Horizon Engine",
+			name: 'Assets',
+			description: 'Internal Assets of Horizon Engine',
 			version: Main.horizonVer,
 			color: FlxColor.fromRGB(65, 50, 255),
 			global: true,

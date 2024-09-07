@@ -26,7 +26,7 @@ class TitleState extends MusicState
 
 		if (!comingBack)
 		{
-			var request = new Http("https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build");
+			var request = new Http('https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build');
 			request.onData = data ->
 			{
 				onlineVer = data.trim();
@@ -84,7 +84,7 @@ class TitleState extends MusicState
 					titleEnter.color = 0xFFFFFFFF;
 					titleEnter.alpha = 1;
 					titleEnter.animation.play('Pressed');
-					FlxG.sound.play(Path.audio('Confirm'), .7);
+					FlxG.sound.play(Path.audio('confirm'), .7);
 					if (!FlxG.sound.music.playing)
 					{
 						FlxG.sound.music.resume();

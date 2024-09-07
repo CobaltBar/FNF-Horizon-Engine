@@ -10,7 +10,7 @@ class VersionMacro
 	{
 		#if macro
 		if (!FileSystem.exists('.build'))
-			return macro $v{"N/A"};
+			return macro $v{'N/A'};
 		else
 			return macro $v{File.getContent('.build')};
 		#end

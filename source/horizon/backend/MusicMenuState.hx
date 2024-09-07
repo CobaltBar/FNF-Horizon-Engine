@@ -66,12 +66,12 @@ class MusicMenuState extends MusicState
 	public function exitState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.audio('Confirm'), .7);
+		FlxG.sound.play(Path.audio('confirm'), .7);
 	}
 
 	public function returnState():Void
 	{
 		transitioningOut = true;
-		FlxG.sound.play(Path.audio('Cancel'), .7);
+		FlxG.sound.play(Path.audio('cancel'), .7);
 	}
 }
