@@ -6,7 +6,7 @@ package horizon.modding;
 
 	var description:String;
 	var version:String;
-	var color:Array<Int>;
+	var color:FlxColor;
 	var global:Bool;
 	var staticMod:Bool;
 	var modSysVer:Float;

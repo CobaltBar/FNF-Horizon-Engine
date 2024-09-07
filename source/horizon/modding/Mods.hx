@@ -9,7 +9,7 @@ class Mods
 
 	static final defaultJSON:ModJSON = {
 		name: "Untitled Mod",
-		description: "Untitled Mod with No Description",
+		description: "An Untitled Mod",
 		version: "1.0.0",
 		color: [255, 255, 255],
 		global: false,
@@ -18,6 +18,10 @@ class Mods
 
 	public static function load():Void
 	{
+		all = [];
+		enabled = [];
+		assets = null;
+
 		if (FileSystem.exists('mods'))
 		{
 			var folders = FileSystem.readDirectory('mods');
@@ -46,7 +50,7 @@ class Mods
 			name: "Assets",
 			description: "Internal Assets of Horizon Engine",
 			version: Main.horizonVer,
-			color: [65, 50, 255],
+			color: FlxColor.fromRGB(65, 50, 255),
 			global: true,
 			modSysVer: Main.modSysVer,
 			ID: enabled.length,
@@ -70,11 +74,14 @@ class Mods
 		var iconPath = Path.combine([path, 'mod.png']);
 		var icon = FileSystem.exists(iconPath) ? iconPath : 'assets/images/unknownMod.png';
 
+		var color:FlxColor = json.color != null ? FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255,
+			json.color[2] ?? 255) : FlxColor.fromRGB(defaultJSON.color[0] ?? 255, defaultJSON.color[1] ?? 255, defaultJSON.color[2] ?? 255);
+
 		return {
-			name: json.name ?? defaultJSON.name,
-			description: json.description ?? defaultJSON.description,
-			version: json.version ?? defaultJSON.version,
-			color: json.color ?? defaultJSON.color,
+			name: (json.name ?? defaultJSON.name).trim(),
+			description: (json.description ?? defaultJSON.description).trim(),
+			version: (json.version ?? defaultJSON.version).trim(),
+			color: color,
 			global: json.global ?? false,
 			staticMod: isStatic(path),
 			modSysVer: json.modSysVer ?? Main.modSysVer,

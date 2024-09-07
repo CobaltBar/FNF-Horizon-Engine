@@ -51,7 +51,7 @@ class ModsMenuState extends MusicMenuState
 		modVer.x -= modVer.width;
 
 		var controlsText:FlxText = Create.text(paddedWidth * 2 + 20, subY + 5,
-			'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
+			'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
 			16, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]);
 		add(controlsText);
 
@@ -123,18 +123,124 @@ class ModsMenuState extends MusicMenuState
 
 		// to here
 
+		Controls.onPress(Settings.keybinds.get('accept'), () -> if (!transitioningOut) exitState());
+		Controls.onPress(Settings.keybinds.get('back'), () -> if (!transitioningOut) returnState());
+		Controls.onPress(Settings.keybinds.get('reset'), () -> if (!transitioningOut)
+		{
+			Log.info('Reloading Mods and Mod Assets');
+			Mods.load();
+			Path.loadAssets();
+		});
+		Controls.onPress([Settings.keybinds['ui_up'][0]], () -> if (!transitioningOut) changeSelection(-1));
+		Controls.onPress([Settings.keybinds['ui_down'][0]], () -> if (!transitioningOut) changeSelection(1));
+		Controls.onPress([Settings.keybinds['ui_up'][1]], () -> if (!transitioningOut) shiftSelection(-1));
+		Controls.onPress([Settings.keybinds['ui_down'][1]], () -> if (!transitioningOut) shiftSelection(1));
+		Controls.onPress(Settings.keybinds['ui_left'], () -> if (!transitioningOut) changeSection(-1));
+		Controls.onPress(Settings.keybinds['ui_right'], () -> if (!transitioningOut) changeSection(1));
+
 		bop = false;
-		// changeSection(0);
+		changeSection(0);
 		changeSelection(0);
 
 		Path.clearUnusedMemory();
 	}
 
-	public override function returnState()
+	public override function update(elapsed:Float):Void
 	{
-		SettingsManager.save();
-		super.returnState();
-		MusicState.switchState(new MainMenuState());
+		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
+
+		super.update(elapsed);
+	}
+
+	public override function exitState():Void
+	{
+		modIcon.loadGraphic(Path.image('unknownMod'));
+		modDesc.text = 'N/A';
+		modVer.text = 'N/A';
+		targetColor = 0xFFFFFFFF;
+	}
+
+	public function shiftSelection(change:Int):Void {}
+
+	public function changeSection(change:Int):Void
+	{
+		if (change != 0)
+			FlxG.sound.play(Path.audio('scroll'), .7);
+
+		curSection += change;
+
+		if (curSection < 0)
+			curSection = 2;
+		if (curSection > 2)
+			curSection = 0;
+
+		switch (curSection)
+		{
+			case 0:
+				if (staticOptions.length == 0)
+					if (menuOptions.length == 0)
+						changeSection(2);
+					else
+						changeSection(1);
+		}
+	}
+
+	public override function changeSelection(change:Int):Void
+	{
+		switch (curSection)
+		{
+			case 0:
+				if (staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+
+				if (change != 0)
+					FlxG.sound.play(Path.audio('scroll'), .7);
+
+				curStatic += change;
+
+				if (curStatic < 0)
+					curStatic = staticOptions.length - 1;
+				if (curStatic >= staticOptions.length)
+					curStatic = 0;
+
+				if (staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = 1;
+
+				var mod = optionToMod[staticOptions[curStatic]];
+				modIcon.loadGraphic(mod.iconPath);
+				modDesc.text = mod.description;
+				modVer.text = mod.version;
+				targetColor = mod.color;
+			case 1:
+				if (menuOptions.length <= 0)
+					return;
+
+				menuOptions[curSelected].alpha = .6;
+				super.changeSelection(change);
+				menuOptions[curSelected].alpha = 1;
+
+				var mod = optionToMod[menuOptions[curSelected]];
+				modIcon.loadGraphic(mod.iconPath);
+				modDesc.text = mod.description;
+				modVer.text = mod.version;
+				targetColor = mod.color;
+			case 2:
+				enabledOptions[curEnabled].alpha = .6;
+				if (change != 0)
+					FlxG.sound.play(Path.audio('scroll'), .7);
+				curEnabled += change;
+				if (curEnabled < 0)
+					curEnabled = enabledOptions.length - 1;
+				if (curEnabled >= enabledOptions.length)
+					curEnabled = 0;
+				enabledOptions[curEnabled].alpha = 1;
+
+				var mod = optionToMod[enabledOptions[curEnabled]];
+				modIcon.loadGraphic(mod.iconPath);
+				modDesc.text = mod.description;
+				modVer.text = mod.version;
+				targetColor = mod.color;
+		}
 	}
 
 	public override function destroy()
@@ -177,41 +283,6 @@ class ModsMenuState extends MusicMenuState
 		}
 
 		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
-
-		if (!transitioningOut)
-		{
-			if (Controls.accept)
-				exitState();
-
-			if (Controls.back)
-				returnState();
-
-			if (Controls.reset)
-			{
-				Log.info('Reloading Mods & Mod Assets');
-				Mods.load();
-				@:privateAccess Path.assets.clear();
-				Path.loadAssets();
-			}
-
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[1]]))
-				shiftSelection(-1);
-
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[2]]))
-				shiftSelection(1);
-
-			if (Controls.ui_left)
-				changeSection(-1);
-
-			if (Controls.ui_right)
-				changeSection(1);
-
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[6]]))
-				changeSelection(-1);
-
-			if (FlxG.keys.anyJustPressed([Settings.data.keybinds.get('ui')[5]]))
-				changeSelection(1);
-		}
 
 		super.update(elapsed);
 	}
@@ -339,7 +410,7 @@ class ModsMenuState extends MusicMenuState
 	public function changeSection(change:Int):Void
 	{
 		if (change != 0)
-			FlxG.sound.play(Path.audio('Scroll'), .7);
+			FlxG.sound.play(Path.audio('scroll'), .7);
 
 		curSection += change;
 
@@ -374,65 +445,5 @@ class ModsMenuState extends MusicMenuState
 		}
 		resetModInfo();
 		changeSelection(0);
-	}
-
-	public override function changeSelection(change:Int):Void
-		switch (curSection)
-		{
-			case 0:
-				if (staticOptions.length <= 0)
-					return;
-				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = .6;
-				if (change != 0)
-					FlxG.sound.play(Path.audio('Scroll'), .7);
-				curStatic += change;
-				if (curStatic < 0)
-					curStatic = staticOptions.length - 1;
-				if (curStatic >= staticOptions.length)
-					curStatic = 0;
-				if (staticOptions[curStatic].alpha != .8)
-					staticOptions[curStatic].alpha = 1;
-				modIcon.loadGraphic(staticOptions[curStatic].option.iconPath);
-				modDesc.text = staticOptions[curStatic].option.description;
-				modVer.text = staticOptions[curStatic].option.version;
-				targetColor = staticOptions[curStatic].option.color;
-			case 1:
-				if (menuOptions.length <= 0)
-					return;
-				if (menuOptions[curSelected] != null)
-					menuOptions[curSelected].alpha = .6;
-				super.changeSelection(change);
-				menuOptions[curSelected].alpha = 1;
-				modIcon.loadGraphic(cast(menuOptions[curSelected], Alphabet).option.iconPath);
-				modDesc.text = cast(menuOptions[curSelected], Alphabet).option.description;
-				modVer.text = cast(menuOptions[curSelected], Alphabet).option.version;
-				targetColor = cast(menuOptions[curSelected], Alphabet).option.color;
-			case 2:
-				if (enabledOptions.length <= 0)
-					return;
-				if (enabledOptions[curEnabled] != null)
-					enabledOptions[curEnabled].alpha = .6;
-				if (change != 0)
-					FlxG.sound.play(Path.audio('Scroll'), .7);
-				curEnabled += change;
-				if (curEnabled < 0)
-					curEnabled = enabledOptions.length - 1;
-				if (curEnabled >= enabledOptions.length)
-					curEnabled = 0;
-				enabledOptions[curEnabled].alpha = 1;
-				modIcon.loadGraphic(enabledOptions[curEnabled].option.iconPath);
-				modDesc.text = enabledOptions[curEnabled].option.description;
-				modVer.text = enabledOptions[curEnabled].option.version;
-				targetColor = enabledOptions[curEnabled].option.color;
-		}
-
-	inline function resetModInfo():Void
-	{
-		modIcon.loadGraphic(Path.image('unknownMod'));
-		modDesc.text = 'N/A';
-		modVer.text = 'N/A';
-		targetColor = 0xFFFFFFFF;
-	}
 	}
  */

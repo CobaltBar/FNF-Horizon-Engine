@@ -53,7 +53,7 @@ class MusicMenuState extends MusicState
 	public function changeSelection(change:Int):Void
 	{
 		if (change != 0)
-			FlxG.sound.play(Path.audio('Scroll'), .7);
+			FlxG.sound.play(Path.audio('scroll'), .7);
 
 		curSelected += change;
 
