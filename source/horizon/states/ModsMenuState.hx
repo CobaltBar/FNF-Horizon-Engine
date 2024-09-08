@@ -180,6 +180,8 @@ class ModsMenuState extends MusicMenuState
 		modVer.text = 'N/A';
 		targetColor = 0xFFFFFFFF;
 
+		changeSelection(0);
+
 		switch (curSection)
 		{
 			case 0:
@@ -196,7 +198,7 @@ class ModsMenuState extends MusicMenuState
 				optionToMod[menuOptions[curSelected]].ID = enabledOptions.length - 1;
 				enabledOptions.push(menuOptions[curSelected]);
 				menuOptions.remove(menuOptions[curSelected]);
-				changeSelection(0);
+
 			case 2:
 				if (enabledOptions.length <= 0)
 					return;
@@ -204,8 +206,9 @@ class ModsMenuState extends MusicMenuState
 				optionToMod[enabledOptions[curSelected]].ID = menuOptions.length - 1;
 				menuOptions.push(enabledOptions[curEnabled]);
 				enabledOptions.remove(enabledOptions[curEnabled]);
-				changeSelection(0);
 		}
+
+		changeSelection(0);
 	}
 
 	public override function returnState():Void
@@ -388,7 +391,7 @@ class ModsMenuState extends MusicMenuState
 		switch (curSection)
 		{
 			case 0:
-				if (staticOptions.length != 0)
+				if (staticOptions.length < 1)
 					return;
 				if (staticOptions[curStatic].alpha != .8)
 					staticOptions[curStatic].alpha = .6;
@@ -413,7 +416,7 @@ class ModsMenuState extends MusicMenuState
 				targetColor = mod.color;
 
 			case 1:
-				if (menuOptions.length != 0)
+				if (menuOptions.length < 1)
 					return;
 				if (menuOptions[curSelected] != null)
 					menuOptions[curSelected].alpha = .6;
@@ -427,19 +430,20 @@ class ModsMenuState extends MusicMenuState
 				targetColor = mod.color;
 
 			case 2:
-				if (enabledOptions.length != 0)
+				if (enabledOptions.length < 1)
 					return;
 				if (enabledOptions[curEnabled] != null)
 					enabledOptions[curEnabled].alpha = .6;
 				if (change != 0)
 					FlxG.sound.play(Path.audio('scroll'), .7);
+
 				curEnabled += change;
 				if (curEnabled < 0)
 					curEnabled = enabledOptions.length - 1;
 				if (curEnabled >= enabledOptions.length)
 					curEnabled = 0;
-				enabledOptions[curEnabled].alpha = 1;
 
+				enabledOptions[curEnabled].alpha = 1;
 				var mod = optionToMod[enabledOptions[curEnabled]];
 				modIcon.loadGraphic(mod.iconPath);
 				modDesc.text = mod.description;
