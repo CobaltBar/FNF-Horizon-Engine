@@ -88,7 +88,7 @@ class ModsMenuState extends MusicMenuState
 
 		for (mod in parsedMods)
 		{
-			var option = new Alphabet(0, 100 + (50 * mod.ID), mod.name, false, CENTER, .5);
+			var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.screenCenter(X);
 			option.alpha = .6;
@@ -100,15 +100,19 @@ class ModsMenuState extends MusicMenuState
 			if (mod.staticMod)
 			{
 				option.x -= paddedWidth + 10;
+				option.y = 200 + (50 * staticOptions.length);
 				staticOptions.insert(mod.ID, option);
 			}
 			else
+			{
+				option.y = 200 + (50 * menuOptions.length);
 				menuOptions.insert(mod.ID, option);
+			}
 		}
 
 		for (mod in Mods.enabled)
 		{
-			var option = new Alphabet(0, 100 + (50 * mod.ID), mod.name, false, CENTER, .5);
+			var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.screenCenter(X);
 			option.alpha = .6;
@@ -118,10 +122,12 @@ class ModsMenuState extends MusicMenuState
 			Path.cacheBitmap(mod.iconPath, [mod], true);
 
 			option.x += paddedWidth + 10;
+			option.y = 200 + (50 * enabledOptions.length);
+
 			enabledOptions.insert(mod.ID, option);
 		}
 
-		for (arr in [staticOptions, enabledOptions, cast menuOptions])
+		for (arr in [staticOptions, enabledOptions, menuOptions])
 			ArraySort.sort(arr, (a, b) -> return (a.ID > b.ID ? 1 : a.ID < b.ID ? -1 : 0));
 
 		// to here
