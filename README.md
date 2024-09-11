@@ -28,23 +28,14 @@ Then run the script corresponding to your OS in the build folder (you might have
 ## Special Thanks
 
 - FunkinCrew
-  - The Game ([link](https://github.com/FunkinCrew/Funkin))
-  - All assets that aren't listed below ([link](https://github.com/FunkinCrew/funkin.assets)) - ([See License](https://github.com/FunkinCrew/funkin.assets/blob/main/LICENSE.md))
-- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine)
-  - Alphabet image
-  - Checkbox image and code
-  - Mods image
-  - Unknown Mod image
-  - Story Menu Menu Characters
-  - Story Mode Menu Backgrounds
-  - Blue Menu Background Image (?)
-  - Note movement code
-  - 90% of Intro Texts
+  - [The Game](https://github.com/FunkinCrew/Funkin)
+  - [Assets](https://github.com/FunkinCrew/funkin.assets) - ([See License](https://github.com/FunkinCrew/funkin.assets/blob/main/LICENSE.md))
+- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine) - Assets
 
 ## Credits
 
 - [Cobalt Bar](https://cobaltbar.github.io) - Main Developer
 - [Betopia](https://betpowo.github.io/) - Note System/Sprite
-- crowplexus and nebulazorua (Alt+Enter cancel + F11 fullscreen)
-- [superpowers04](https://github.com/superpowers04) (Safer FlxGame)
-- [Sword352/FnF-Eternal](https://github.com/Sword352/FnF-Eternal) (Tiled Sprite and Sustains, see source/horizon/objects/game/eternal/NOTE.txt)
+- crowplexus and nebulazorua - Alt+Enter cancel + F11 fullscreen
+- [superpowers04](https://github.com/superpowers04) - Safer FlxGame
+- [Sword352/FnF-Eternal](https://github.com/Sword352/FnF-Eternal) - Tiled Sprite and Sustains
