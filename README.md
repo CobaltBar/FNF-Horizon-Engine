@@ -1,14 +1,19 @@
-# FNF Horizon Engine
+<p align="center">
+  <img src="art/logo.png" width="512"/>
+  <h1 align="center">Friday Night Funkin': Horizon Engine</h1>
+  <h4 align="center">A rewrite of Friday Night Funkin', built for mods and made for fun.</h4>
+</p>
 
-FNF Horizon Engine is a rewrite of Friday Night Funkin', built for mods and made for fun.
-
-(Formerly called Wonder Engine)
+---
 
 ## Compilation Instructions
 
-Install Haxe 4.3.6 (and install MSVC if on Windows)
+1. Install Haxe 4.3.6 (and install MSVC if on Windows)
 
-NOTE: You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
+> [!NOTE]
+> NOTE: You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
+
+2. Run the following commands
 
 ```bash
 haxelib install hxpkg
@@ -21,9 +26,7 @@ cd ../../../../..
 haxelib run lime rebuild cpp -release
 ```
 
-(The above commands install `hxpkg`, install all packages for Horizon Engine, builds the git version of `hxcpp`, and rebuilds lime so you can compile)
-
-Then run the script corresponding to your OS in the build folder (you might have to `chmod +x` it)
+3. Run the build script in `build` (e.g `build\windows.bat` for Windows)
 
 ## Special Thanks
 
