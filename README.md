@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="art/logo.png" width="512"/>
+  <img src="art/logo.png" width="448"/>
   <h1 align="center">Friday Night Funkin': Horizon Engine</h1>
   <h4 align="center">A rewrite of Friday Night Funkin', built for mods and made for fun.</h4>
 </p>
@@ -11,7 +11,7 @@
 1. Install Haxe 4.3.6 (and install MSVC if on Windows)
 
 > [!NOTE]
-> NOTE: You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
+> You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
 
 2. Run the following commands
 
