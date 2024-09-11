@@ -214,6 +214,7 @@ class ModsMenuState extends MusicMenuState
 				enabledOptions.remove(enabledOptions[curEnabled]);
 		}
 
+		changeSection(0);
 		changeSelection(0);
 	}
 
@@ -270,7 +271,7 @@ class ModsMenuState extends MusicMenuState
 		switch (curSection)
 		{
 			case 1:
-				if (menuOptions.length != 0)
+				if (menuOptions.length < 1)
 					return;
 				var newCurSelected = curSelected - change;
 				if (newCurSelected < 0)
@@ -285,7 +286,7 @@ class ModsMenuState extends MusicMenuState
 				curSelected -= change;
 
 			case 2:
-				if (enabledOptions.length != 0)
+				if (enabledOptions.length < 1)
 					return;
 				var newCurEnabled = curEnabled - change;
 				if (newCurEnabled < 0)
@@ -311,85 +312,58 @@ class ModsMenuState extends MusicMenuState
 		if (curSection > 2)
 			curSection = 0;
 
-		// Solution is jank as hell but it works
-		var _return = false;
-
 		switch (curSection)
 		{
 			case 0:
 				if (staticOptions.length == 0)
-				{
-					if (menuOptions.length == 0)
-						curSection = 2;
-					else
-						curSection = 1;
-					_return = true;
-				}
-
-				if (!_return)
-				{
-					staticTitle.alpha = 1;
-					allModsTitle.alpha = enabledTitle.alpha = .6;
-
-					if (menuOptions[curSelected] != null)
-						menuOptions[curSelected].alpha = .6;
-					if (enabledOptions[curEnabled] != null)
-						enabledOptions[curEnabled].alpha = .6;
-				}
+					curSection = change > 0 ? menuOptions.length > 0 ? 1 : 2 : change <= 0 ? enabledOptions.length > 0 ? 2 : 1 : curSection;
 			case 1:
 				if (menuOptions.length == 0)
-				{
-					if (enabledOptions.length == 0)
-						curSection = 0;
-					else
-						curSection = 2;
-					_return = true;
-				}
-
-				if (!_return)
-				{
-					allModsTitle.alpha = 1;
-					staticTitle.alpha = enabledTitle.alpha = .6;
-
-					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-						staticOptions[curStatic].alpha = .6;
-					if (enabledOptions[curEnabled] != null)
-						enabledOptions[curEnabled].alpha = .6;
-				}
+					curSection = change > 0 ? enabledOptions.length > 0 ? 2 : 1 : change <= 0 ? staticOptions.length > 0 ? 0 : 2 : curSection;
 			case 2:
 				if (enabledOptions.length == 0)
-				{
-					if (menuOptions.length == 0)
-						curSection = 2;
-					else
-						curSection = 1;
-					_return = true;
-				}
-
-				if (!_return)
-				{
-					enabledTitle.alpha = 1;
-					allModsTitle.alpha = staticTitle.alpha = .6;
-
-					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
-						staticOptions[curStatic].alpha = .6;
-					if (menuOptions[curSelected] != null)
-						menuOptions[curSelected].alpha = .6;
-				}
+					curSection = change > 0 ? staticOptions.length > 0 ? 0 : 1 : change <= 0 ? menuOptions.length > 0 ? 1 : 0 : curSection;
 		}
 
-		if (!_return)
+		switch (curSection)
 		{
-			modIcon.loadGraphic(Path.image('unknownMod'));
-			modDesc.text = 'N/A';
-			modVer.text = 'N/A';
-			targetColor = 0xFFFFFFFF;
+			case 0:
+				staticTitle.alpha = 1;
+				allModsTitle.alpha = enabledTitle.alpha = .6;
 
-			changeSelection(0);
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
 
-			if (change != 0)
-				FlxG.sound.play(Path.audio('scroll'), .7);
+			case 1:
+				allModsTitle.alpha = 1;
+				staticTitle.alpha = enabledTitle.alpha = .6;
+
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (enabledOptions[curEnabled] != null)
+					enabledOptions[curEnabled].alpha = .6;
+
+			case 2:
+				enabledTitle.alpha = 1;
+				allModsTitle.alpha = staticTitle.alpha = .6;
+
+				if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
+					staticOptions[curStatic].alpha = .6;
+				if (menuOptions[curSelected] != null)
+					menuOptions[curSelected].alpha = .6;
 		}
+
+		modIcon.loadGraphic(Path.image('unknownMod'));
+		modDesc.text = 'N/A';
+		modVer.text = 'N/A';
+		targetColor = 0xFFFFFFFF;
+
+		changeSelection(0);
+
+		if (change != 0)
+			FlxG.sound.play(Path.audio('scroll'), .7);
 	}
 
 	public override function changeSelection(change:Int):Void

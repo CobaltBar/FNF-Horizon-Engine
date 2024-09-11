@@ -44,7 +44,6 @@ class MusicState extends FlxTransitionableState
 		bopCams = [];
 		Conductor.stepSignal.remove(onStep);
 		Conductor.beatSignal.remove(onBeat);
-		FlxG.cameras.reset();
 
 		super.destroy();
 	}

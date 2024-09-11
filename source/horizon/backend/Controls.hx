@@ -43,9 +43,21 @@ class Controls
 				signal.destroy();
 			pressSignals.clear();
 			releaseSignals.clear();
+			pressed = [];
 		});
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, press);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, release);
+
+		// I stole this from swordcube
+		// Credits go to nebulazorua and crowplexus
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, event ->
+		{
+			if (event.altKey && event.keyCode == FlxKey.ENTER)
+				event.stopImmediatePropagation();
+			if (event.keyCode == FlxKey.F11)
+				FlxG.fullscreen = !FlxG.fullscreen;
+		}, false, 10);
+
 		if (Main.verbose)
 			Log.info('Controls Initialized');
 	}

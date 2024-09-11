@@ -26,8 +26,8 @@ class InitState extends MusicState
 		Mods.load();
 		Path.loadAssets();
 
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .25, FlxPoint.get(-1, 0));
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .25, FlxPoint.get(1, 0));
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(-1, 0));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(1, 0));
 
 		// Thanks superpowers04
 		if (Settings.framerate == 0)
