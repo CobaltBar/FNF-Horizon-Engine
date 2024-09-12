@@ -50,6 +50,13 @@ class MusicMenuState extends MusicState
 		super.update(elapsed);
 	}
 
+	public override function destroy():Void
+	{
+		menuFollow.destroy();
+		optionsFollow.destroy();
+		super.destroy();
+	}
+
 	public function changeSelection(change:Int):Void
 	{
 		if (change != 0)

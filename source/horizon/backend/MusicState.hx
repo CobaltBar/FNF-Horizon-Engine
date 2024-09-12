@@ -25,10 +25,10 @@ class MusicState extends FlxTransitionableState
 
 	public override function create():Void
 	{
-		super.create();
 		Conductor.stepSignal.add(onStep);
 		Conductor.beatSignal.add(onBeat);
 		bopCams.push(FlxG.camera);
+		super.create();
 	}
 
 	public override function update(elapsed:Float):Void

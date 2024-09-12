@@ -1,5 +1,7 @@
 package horizon.states;
 
+import flixel.math.FlxRect;
+
 // This state could be a lot better ngl
 class ModsMenuState extends MusicMenuState
 {
@@ -93,6 +95,7 @@ class ModsMenuState extends MusicMenuState
 			option.screenCenter(X);
 			option.alpha = .6;
 			option.cameras = [optionsCam];
+			option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
 			optionToMod.set(option, mod);
 			add(option);
 			Path.cacheBitmap(mod.iconPath, [mod], true);
@@ -117,6 +120,7 @@ class ModsMenuState extends MusicMenuState
 			option.screenCenter(X);
 			option.alpha = .6;
 			option.cameras = [optionsCam];
+			option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
 			optionToMod.set(option, mod);
 			add(option);
 			Path.cacheBitmap(mod.iconPath, [mod], true);
@@ -158,18 +162,30 @@ class ModsMenuState extends MusicMenuState
 	{
 		for (i in 0...staticOptions.length)
 		{
+			staticOptions[i].clipRect.y = staticOptions[i].y < 100 ? (100 - staticOptions[i].y) : 0;
+			staticOptions[i].clipRect.height = staticOptions[i].y > 495 ? staticOptions[i].height * 2 - (staticOptions[i].y - 495) : staticOptions[i].height * 2;
+			staticOptions[i].clipRect = staticOptions[i].clipRect;
+
 			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 
 		for (i in 0...menuOptions.length)
 		{
+			menuOptions[i].clipRect.y = menuOptions[i].y < 100 ? (100 - menuOptions[i].y) : 0;
+			menuOptions[i].clipRect.height = menuOptions[i].y > 495 ? menuOptions[i].height * 2 - (menuOptions[i].y - 495) : menuOptions[i].height * 2;
+			menuOptions[i].clipRect = menuOptions[i].clipRect;
+
 			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5, FlxMath.bound(elapsed * 5, 0, 1));
 			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
 
 		for (i in 0...enabledOptions.length)
 		{
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + paddedWidth + 25,
+			enabledOptions[i].clipRect.y = enabledOptions[i].y < 100 ? (100 - enabledOptions[i].y) : 0;
+			enabledOptions[i].clipRect.height = enabledOptions[i].y > 495 ? enabledOptions[i].height * 2 - (enabledOptions[i].y - 495) : enabledOptions[i].height * 2;
+			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
+
+			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + paddedWidth + 10,
 				FlxMath.bound(elapsed * 5, 0, 1));
 			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
 		}
@@ -438,41 +454,3 @@ class ModsMenuState extends MusicMenuState
 		super.destroy();
 	}
 }
-/*
-	public override function update(elapsed:Float):Void
-	{
-		for (i in 0...staticOptions.length)
-		{
-			staticOptions[i].y = FlxMath.lerp(staticOptions[i].y, 200 - (50 * (curStatic - i)), FlxMath.bound(elapsed * 5, 0, 1));
-			staticOptions[i].clipRect = FlxRect.weak(0,
-				staticOptions[i].y < 150 ? -staticOptions[i].height - (staticOptions[i].y - 150) : -staticOptions[i].height, staticOptions[i].width + 10,
-				staticOptions[i].y > 792 ? staticOptions[i].height * 2 - (staticOptions[i].y - 792) : staticOptions[i].height * 2);
-			staticOptions[i].clipRect = staticOptions[i].clipRect;
-		}
-
-		for (i in 0...menuOptions.length)
-		{
-			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, (FlxG.width - menuOptions[i].width) * .5, FlxMath.bound(elapsed * 5, 0, 1));
-			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, 200 - (50 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
-			menuOptions[i].clipRect = FlxRect.weak(0, menuOptions[i].y < 150 ? -menuOptions[i].height - (menuOptions[i].y - 150) : -menuOptions[i].height,
-				menuOptions[i].width + 10, menuOptions[i].y > 792 ? menuOptions[i].height * 2 - (menuOptions[i].y - 792) : menuOptions[i].height * 2);
-			menuOptions[i].clipRect = menuOptions[i].clipRect;
-		}
-
-		for (i in 0...enabledOptions.length)
-		{
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, (FlxG.width - enabledOptions[i].width) * .5 + theWidth + 25,
-				FlxMath.bound(elapsed * 5, 0, 1));
-			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, 200 - (50 * (curEnabled - i)), FlxMath.bound(elapsed * 5, 0, 1));
-
-			enabledOptions[i].clipRect = FlxRect.weak(0,
-				enabledOptions[i].y < 150 ? -enabledOptions[i].height - (enabledOptions[i].y - 150) : -enabledOptions[i].height, enabledOptions[i].width + 10,
-				enabledOptions[i].y > 792 ? enabledOptions[i].height * 2 - (enabledOptions[i].y - 792) : enabledOptions[i].height * 2);
-			enabledOptions[i].clipRect = enabledOptions[i].clipRect;
-		}
-
-		bg.color = FlxColor.interpolate(bg.color, targetColor, FlxMath.bound(elapsed * 5, 0, 1));
-
-		super.update(elapsed);
-	}
- */

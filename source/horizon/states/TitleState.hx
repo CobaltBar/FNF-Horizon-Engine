@@ -86,7 +86,7 @@ class TitleState extends MusicState
 						onComplete: tween -> FlxTimer.wait(.5, () ->
 						{
 							comingBack = true;
-							MusicState.switchState(new MainMenuState(), false, true);
+							MusicState.switchState(new MainMenuState());
 						})
 					});
 				}
