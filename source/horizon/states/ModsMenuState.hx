@@ -10,7 +10,7 @@ class ModsMenuState extends MusicMenuState
 	var enabledOptions:Array<FlxSprite> = [];
 
 	var enabledTitle:FlxSprite;
-	var allModsTitle:FlxSprite;
+	var disabledModsTitle:FlxSprite;
 
 	var modIcon:FlxSprite;
 	var modDesc:FlxText;
@@ -32,15 +32,24 @@ class ModsMenuState extends MusicMenuState
 
 		add(bg = Create.backdrop(Path.image('menuBGDesat'), [menuCam], 1.1));
 
-		/*paddedWidth = Std.int((FlxG.width - 20) / 3);
-			var subHeight = Std.int((FlxG.height - 220) / 3);
-			var subY = FlxG.height - 170;
+		paddedWidth = Std.int((FlxG.width - 20) / 3);
+		add(Create.graphic(0, 5, paddedWidth, FlxG.height - 10, 0xCC000000, [menuCam]).screenCenter(X));
 
-			for (i in 0...3)
-				add(Create.graphic(i * (paddedWidth + 5) + 5, 5, paddedWidth, FlxG.height - 180, 0xCC000000, [menuCam]));
-			add(Create.graphic(5, subY, paddedWidth * 2 + 5, subHeight, 0xCC000000, [menuCam]));
-			add(Create.graphic(paddedWidth * 2 + 15, subY, paddedWidth, subHeight, 0xCC000000, [menuCam]));
+		add(disabledModsTitle = new Alphabet(0, 25, 'Disabled Mods', true, CENTER, .65));
+		disabledModsTitle.cameras = [menuCam];
+		disabledModsTitle.screenCenter(X);
+		disabledModsTitle.x -= paddedWidth + 10;
+		disabledModsTitle.alpha = .6;
 
+		add(enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, CENTER, .65));
+		enabledTitle.cameras = [menuCam];
+		enabledTitle.screenCenter(X);
+		enabledTitle.x += paddedWidth + 10;
+		enabledTitle.alpha = .6;
+
+		bop = false;
+
+		/*
 			add(modIcon = Create.sprite(15, subY + 5, Path.image('unknownMod'), [menuCam]));
 			add(modDesc = Create.text(modIcon.width + 20, subY + 15, 'N/A', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
 			modDesc.fieldWidth = 610;
@@ -55,23 +64,6 @@ class ModsMenuState extends MusicMenuState
 				'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
 				16, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]);
 			add(controlsText);
-
-			add(allModsTitle = new Alphabet(0, 25, 'All Mods', true, CENTER, .7));
-			allModsTitle.cameras = [menuCam];
-			allModsTitle.screenCenter(X);
-			allModsTitle.alpha = .6;
-
-			add(staticTitle = new Alphabet(0, 25, 'Static Mods', true, CENTER, .7));
-			staticTitle.cameras = [menuCam];
-			staticTitle.screenCenter(X);
-			staticTitle.x -= paddedWidth + 10;
-			staticTitle.alpha = .6;
-
-			add(enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, CENTER, .7));
-			enabledTitle.cameras = [menuCam];
-			enabledTitle.screenCenter(X);
-			enabledTitle.x += paddedWidth + 10;
-			enabledTitle.alpha = .6;
 
 			// I hate from here
 			var i = 0;
@@ -147,7 +139,6 @@ class ModsMenuState extends MusicMenuState
 			Controls.onPress(Settings.keybinds['ui_left'], () -> if (!transitioningOut) changeSection(-1));
 			Controls.onPress(Settings.keybinds['ui_right'], () -> if (!transitioningOut) changeSection(1));
 
-			bop = false;
 			changeSection(0);
 			changeSelection(0); */
 
@@ -333,7 +324,7 @@ class ModsMenuState extends MusicMenuState
 			{
 				case 0:
 					staticTitle.alpha = 1;
-					allModsTitle.alpha = enabledTitle.alpha = .6;
+					disabledModsTitle.alpha = enabledTitle.alpha = .6;
 
 					if (menuOptions[curSelected] != null)
 						menuOptions[curSelected].alpha = .6;
@@ -341,7 +332,7 @@ class ModsMenuState extends MusicMenuState
 						enabledOptions[curEnabled].alpha = .6;
 
 				case 1:
-					allModsTitle.alpha = 1;
+					disabledModsTitle.alpha = 1;
 					staticTitle.alpha = enabledTitle.alpha = .6;
 
 					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
@@ -351,7 +342,7 @@ class ModsMenuState extends MusicMenuState
 
 				case 2:
 					enabledTitle.alpha = 1;
-					allModsTitle.alpha = staticTitle.alpha = .6;
+					disabledModsTitle.alpha = staticTitle.alpha = .6;
 
 					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
 						staticOptions[curStatic].alpha = .6;
