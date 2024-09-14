@@ -8,7 +8,6 @@ package horizon.modding;
 	var version:String;
 	var color:FlxColor;
 	var global:Bool;
-	var staticMod:Bool;
 	var modSysVer:Float;
 	var ID:Int;
 	var iconPath:String;

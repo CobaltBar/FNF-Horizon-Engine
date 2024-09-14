@@ -62,8 +62,7 @@ class Mods
 
 			path: 'assets',
 			folder: 'assets',
-			iconPath: 'assets/images/unknownMod.png',
-			staticMod: false
+			iconPath: 'assets/images/unknownMod.png'
 		};
 	}
 
@@ -84,7 +83,6 @@ class Mods
 			version: (json.version ?? defaultJSON.version).trim(),
 			color: color,
 			global: json.global ?? false,
-			staticMod: isStatic(path),
 			modSysVer: json.modSysVer ?? Main.modSysVer,
 			ID: Settings.savedMods[folder]?.ID ?? ID,
 
@@ -244,20 +242,6 @@ class Mods
 		}
 
 		return weeks;
-	}
-
-	static function isStatic(path:String):Bool
-	{
-		var scriptPath = Path.combine([path, 'scripts']);
-		if (!FileSystem.exists(scriptPath))
-			return false;
-
-		for (script in FileSystem.readDirectory(scriptPath))
-			if (!FileSystem.isDirectory(Path.combine([scriptPath, script])))
-				if (HaxePath.extension(script) == 'lua' || HaxePath.extension(script) == 'hx')
-					return true;
-
-		return false;
 	}
 }
 
