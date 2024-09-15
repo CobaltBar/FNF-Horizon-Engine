@@ -10,7 +10,7 @@ class ModsMenuState extends MusicMenuState
 	var enabledOptions:Array<FlxSprite> = [];
 
 	var enabledTitle:FlxSprite;
-	var disabledModsTitle:FlxSprite;
+	var disabledTitle:FlxSprite;
 
 	var modIcon:FlxSprite;
 	var modDesc:FlxText;
@@ -22,8 +22,6 @@ class ModsMenuState extends MusicMenuState
 	var parsedMods:Array<Mod> = [];
 	var optionToMod:Map<FlxSprite, Mod> = [];
 
-	var paddedWidth:Int;
-
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -32,29 +30,44 @@ class ModsMenuState extends MusicMenuState
 
 		add(bg = Create.backdrop(Path.image('menuBGDesat'), [menuCam], 1.1));
 
-		paddedWidth = Std.int((FlxG.width - 20) / 3);
-		add(Create.graphic(0, 5, paddedWidth, FlxG.height - 10, 0xCC000000, [menuCam]).screenCenter(X));
+		var circle = Create.sprite(0, 0, Path.image("semicircle"), [menuCam]);
+		circle.setPosition(0, FlxG.height - circle.height);
+		circle.alpha = .6;
+		add(circle);
 
-		add(disabledModsTitle = new Alphabet(0, 25, 'Disabled Mods', true, CENTER, .65));
-		disabledModsTitle.cameras = [menuCam];
-		disabledModsTitle.screenCenter(X);
-		disabledModsTitle.x -= paddedWidth + 10;
-		disabledModsTitle.alpha = .6;
+		var circle = Create.sprite(0, 0, Path.image("semicircle"), [menuCam]);
+		circle.setPosition(FlxG.width - circle.width, FlxG.height - circle.height);
+		circle.flipX = true;
+		circle.alpha = .6;
+		add(circle);
 
-		add(enabledTitle = new Alphabet(0, 25, 'Enabled Mods', true, CENTER, .65));
-		enabledTitle.cameras = [menuCam];
+		add(disabledTitle = new Alphabet(0, 50, 'Disabled', true, CENTER, .65));
+		disabledTitle.screenCenter(X);
+		disabledTitle.x -= FlxG.width * .4 - 10;
+		disabledTitle.cameras = [menuCam];
+
+		add(enabledTitle = new Alphabet(0, 50, 'Enabled', true, CENTER, .65));
 		enabledTitle.screenCenter(X);
-		enabledTitle.x += paddedWidth + 10;
-		enabledTitle.alpha = .6;
+		enabledTitle.x += FlxG.width * .4;
+		enabledTitle.cameras = [menuCam];
+
+		var box = Create.graphic(0, 0, Std.int(FlxG.width * .5), FlxG.height, 0x99000000, [menuCam]);
+		box.screenCenter(X);
+		add(box);
+
+		add(modIcon = Create.sprite(box.x + box.width - 5, FlxG.height - 5, Path.image('unknownMod'), [menuCam]));
+		modIcon.x -= modIcon.width;
+		modIcon.y -= modIcon.height;
+
+		add(modVer = Create.text(modIcon.x, modIcon.y - 5, 'Version N/A', 18, Path.font('vcr'), 0xFFCCCCCC, CENTER, [menuCam]));
+
+		add(modDesc = Create.text(box.x + 5, 5, "".rpad("A", 800), 20, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
+		modDesc.fieldWidth = FlxG.width * .5 - 10;
+		modDesc.fieldHeight = 250;
 
 		bop = false;
 
 		/*
-			add(modIcon = Create.sprite(15, subY + 5, Path.image('unknownMod'), [menuCam]));
-			add(modDesc = Create.text(modIcon.width + 20, subY + 15, 'N/A', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
-			modDesc.fieldWidth = 610;
-			modDesc.fieldHeight = 150;
-
 			add(modVer = Create.text(paddedWidth * 2 + 5, subY + modIcon.height - 15, 'VERSION N/A', 18, Path.font('vcr'), 0xFFCCCCCC, RIGHT, [menuCam]));
 			modVer.fieldWidth = 200;
 			modVer.fieldHeight = 50;
@@ -324,7 +337,7 @@ class ModsMenuState extends MusicMenuState
 			{
 				case 0:
 					staticTitle.alpha = 1;
-					disabledModsTitle.alpha = enabledTitle.alpha = .6;
+					disabledTitle.alpha = enabledTitle.alpha = .6;
 
 					if (menuOptions[curSelected] != null)
 						menuOptions[curSelected].alpha = .6;
@@ -332,7 +345,7 @@ class ModsMenuState extends MusicMenuState
 						enabledOptions[curEnabled].alpha = .6;
 
 				case 1:
-					disabledModsTitle.alpha = 1;
+					disabledTitle.alpha = 1;
 					staticTitle.alpha = enabledTitle.alpha = .6;
 
 					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
@@ -342,7 +355,7 @@ class ModsMenuState extends MusicMenuState
 
 				case 2:
 					enabledTitle.alpha = 1;
-					disabledModsTitle.alpha = staticTitle.alpha = .6;
+					disabledTitle.alpha = staticTitle.alpha = .6;
 
 					if (staticOptions[curStatic] != null && staticOptions[curStatic].alpha != .8)
 						staticOptions[curStatic].alpha = .6;

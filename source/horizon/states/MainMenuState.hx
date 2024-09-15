@@ -6,7 +6,7 @@ class MainMenuState extends MusicMenuState
 {
 	var flashBG:FlxBackdrop;
 	var modCount:Int = 0;
-	var targets:Array<FlxPoint> = [];
+	var pointProgress:Array<Float> = [];
 
 	static var prevSelected:Int = 0;
 
@@ -38,11 +38,6 @@ class MainMenuState extends MusicMenuState
 			menuOptions.push(option);
 		}
 
-		// TODO replace `target` with bezier in `update`
-		for (i in 0...menuOptions.length)
-			targets[i] = Misc.quadBezier(FlxPoint.weak(-FlxG.width * .25), FlxPoint.weak(FlxG.width * .5, FlxG.height * .5),
-				FlxPoint.weak(-FlxG.width * .25, FlxG.height), i / (menuOptions.length - (modCount == 0 ? 2 : 2.5)));
-
 		curSelected = prevSelected;
 		changeSelection(0);
 
@@ -65,12 +60,14 @@ class MainMenuState extends MusicMenuState
 	{
 		for (i in 0...menuOptions.length)
 		{
-			var index = ((i + 1) - curSelected + menuOptions.length) % menuOptions.length;
-			if (targets[index] != null)
-			{
-				menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, targets[index].x, FlxMath.bound(elapsed * 10, 0, 1));
-				menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, targets[index].y, FlxMath.bound(elapsed * 10, 0, 1));
-			}
+			pointProgress[i] = FlxMath.lerp(pointProgress[i], (i + (menuOptions.length - 1) - curSelected) / (2 * (menuOptions.length - 1)),
+				FlxMath.bound(elapsed * 10, 0, 1));
+
+			var point = Misc.quadBezier(FlxPoint.weak(-FlxG.width * .6, -FlxG.width * .6), FlxPoint.weak(FlxG.width * .8, FlxG.height * .5),
+				FlxPoint.weak(-FlxG.width * .6, FlxG.height * 1.6), pointProgress[i]);
+
+			menuOptions[i].setPosition(point.x, point.y);
+			point.putWeak();
 		}
 		super.update(elapsed);
 	}
@@ -78,14 +75,18 @@ class MainMenuState extends MusicMenuState
 	public override function changeSelection(change:Int):Void
 	{
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;
+		menuOptions[curSelected].y -= menuOptions[curSelected].height * .5;
 		menuOptions[curSelected].animation.play('idle');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
+		menuOptions[curSelected].y += menuOptions[curSelected].height * .5;
 
 		super.changeSelection(change);
 
 		menuOptions[curSelected].x -= menuOptions[curSelected].width * .5;
+		menuOptions[curSelected].y -= menuOptions[curSelected].height * .5;
 		menuOptions[curSelected].animation.play('selected');
 		menuOptions[curSelected].x += menuOptions[curSelected].width * .5;
+		menuOptions[curSelected].y += menuOptions[curSelected].height * .5;
 	}
 
 	public override function exitState():Void
