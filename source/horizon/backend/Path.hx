@@ -216,7 +216,7 @@ class Path
 		},
 			path -> path.contains('songs') && HaxePath.extension(path) == 'ogg' && HaxePath.withoutDirectory(path) != 'menuSong.ogg');
 
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('Assets Loaded');
 
 		for (mod in Mods.enabled)
@@ -258,7 +258,7 @@ class Path
 				path -> path.contains('songs') && HaxePath.extension(path) == 'ogg' && HaxePath.withoutDirectory(path) != 'menuSong.ogg');
 		}
 
-		if (Main.verbose && Mods.enabled.length > 0)
+		if (Constants.verbose && Mods.enabled.length > 0)
 			Log.info('Assets Loaded for Mods ${[for (mod in Mods.enabled) mod.name].join(', ')}');
 	}
 

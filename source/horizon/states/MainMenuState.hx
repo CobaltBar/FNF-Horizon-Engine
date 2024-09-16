@@ -41,7 +41,7 @@ class MainMenuState extends MusicMenuState
 		curSelected = prevSelected;
 		changeSelection(0);
 
-		var horizonEngineText = Create.text(5, FlxG.height - 55, 'Horizon Engine v${Application.current.meta['version']} - build ${Main.horizonVer}', 24,
+		var horizonEngineText = Create.text(5, FlxG.height - 55, 'Horizon Engine v${Application.current.meta['version']} - build ${Constants.horizonVer}', 24,
 			Path.font('vcr'), 0xFFFFFFFF, LEFT)
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		horizonEngineText.cameras = [otherCam];
@@ -63,7 +63,7 @@ class MainMenuState extends MusicMenuState
 			pointProgress[i] = FlxMath.lerp(pointProgress[i], (i + (menuOptions.length - 1) - curSelected) / (2 * (menuOptions.length - 1)),
 				FlxMath.bound(elapsed * 10, 0, 1));
 
-			var point = Misc.quadBezier(FlxPoint.weak(-FlxG.width * .6, -FlxG.width * .6), FlxPoint.weak(FlxG.width * .8, FlxG.height * .5),
+			var point = Util.quadBezier(FlxPoint.weak(-FlxG.width * .6, -FlxG.width * .6), FlxPoint.weak(FlxG.width * .8, FlxG.height * .5),
 				FlxPoint.weak(-FlxG.width * .6, FlxG.height * 1.6), pointProgress[i]);
 
 			menuOptions[i].setPosition(point.x, point.y);
@@ -94,7 +94,7 @@ class MainMenuState extends MusicMenuState
 		super.exitState();
 		transitioningOut = false;
 		if (curSelected == (4 - (modCount == 0 ? 1 : 0)))
-			Misc.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
+			Util.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
 		else
 		{
 			if (Settings.flashingLights)

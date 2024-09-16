@@ -13,7 +13,7 @@ class Mods
 		version: '1.0.0',
 		color: [255, 255, 255],
 		global: false,
-		modSysVer: Main.modSysVer
+		modSysVer: Constants.modSysVer
 	};
 
 	public static function load():Void
@@ -49,10 +49,10 @@ class Mods
 		assets = {
 			name: 'Assets',
 			description: 'Internal Assets of Horizon Engine',
-			version: Main.horizonVer,
+			version: Constants.horizonVer,
 			color: FlxColor.fromRGB(65, 50, 255),
 			global: true,
-			modSysVer: Main.modSysVer,
+			modSysVer: Constants.modSysVer,
 			ID: enabled.length,
 
 			characters: parseCharacters('assets'),
@@ -83,7 +83,7 @@ class Mods
 			version: (json.version ?? defaultJSON.version).trim(),
 			color: color,
 			global: json.global ?? false,
-			modSysVer: json.modSysVer ?? Main.modSysVer,
+			modSysVer: json.modSysVer ?? Constants.modSysVer,
 			ID: Settings.savedMods[folder]?.ID ?? ID,
 
 			characters: parseCharacters(path),

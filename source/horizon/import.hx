@@ -21,6 +21,7 @@ import flixel.util.FlxTimer;
 import haxe.ds.ArraySort;
 import haxe.io.Path as HaxePath;
 import horizon.backend.*;
+import horizon.macros.*;
 import horizon.modding.Mod;
 import horizon.modding.Mods;
 import horizon.modding.Song;

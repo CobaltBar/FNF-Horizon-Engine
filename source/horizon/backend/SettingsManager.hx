@@ -10,7 +10,7 @@ class SettingsManager
 		for (setting in Type.getClassFields(Settings))
 			Reflect.setField(FlxG.save.data, setting, Reflect.field(Settings, setting));
 		FlxG.save.flush();
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('Settings saved');
 	}
 
@@ -29,7 +29,7 @@ class SettingsManager
 		FlxG.sound.muted = FlxG.save.data.muted ?? false;
 		FlxSprite.defaultAntialiasing = Settings.antialiasing;
 
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('Settings Loaded');
 	}
 }

@@ -1,13 +1,12 @@
 package horizon.backend;
 
 import flixel.input.keyboard.FlxKey;
-import flixel.util.typeLimit.OneOfTwo;
 import openfl.events.KeyboardEvent;
 
 @:publicFields
 class Controls
 {
-	private static var keyTracker:Map<FlxKey, Bool> = [];
+	private static var keyTracker:Map<FlxKey, Bool> = [F11 => false, F3 => false];
 
 	static var pressed:Array<FlxKey> = [];
 	static var pressSignals:Map<FlxKey, FlxSignal> = [];
@@ -48,17 +47,37 @@ class Controls
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, press);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, release);
 
-		// I stole this from swordcube
-		// Credits go to nebulazorua and crowplexus
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, event ->
 		{
-			if (event.altKey && event.keyCode == FlxKey.ENTER)
-				event.stopImmediatePropagation();
 			if (event.keyCode == FlxKey.F11)
-				FlxG.fullscreen = !FlxG.fullscreen;
-		}, false, 10);
+				if (!keyTracker[F11])
+				{
+					keyTracker[F11] = true;
 
-		if (Main.verbose)
+					// I stole this from swordcube
+					// Credits go to nebulazorua and crowplexus
+					if (event.altKey && event.keyCode == FlxKey.ENTER)
+						event.stopImmediatePropagation();
+
+					FlxG.fullscreen = !FlxG.fullscreen;
+				}
+			if (event.keyCode == FlxKey.F3)
+				if (!keyTracker[F3])
+				{
+					keyTracker[F3] = true;
+					Constants.debugDisplay = !Constants.debugDisplay;
+					EngineInfo.instance.updateText();
+				}
+		}, false, 10);
+		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, event ->
+		{
+			if (event.keyCode == FlxKey.F11 && keyTracker[F11])
+				keyTracker[F11] = false;
+			if (event.keyCode == FlxKey.F3 && keyTracker[F3])
+				keyTracker[F3] = false;
+		});
+
+		if (Constants.verbose)
 			Log.info('Controls Initialized');
 	}
 

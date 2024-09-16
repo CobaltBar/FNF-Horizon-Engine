@@ -53,7 +53,7 @@ class MusicState extends FlxTransitionableState
 		FlxTransitionableState.skipNextTransIn = skipTransIn;
 		FlxTransitionableState.skipNextTransOut = skipTransOut;
 		FlxG.switchState(() -> state);
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('State Switch: \'${Type.getClassName(Type.getClass(state)).replace('horizon.', '')}\'');
 	}
 

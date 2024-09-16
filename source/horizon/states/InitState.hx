@@ -20,7 +20,7 @@ class InitState extends MusicState
 		Toolkit.init();
 		Toolkit.theme = 'horizon';
 		CursorHelper.useCustomCursors = false;
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('HaxeUI Setup Complete');
 
 		Mods.load();
@@ -37,11 +37,10 @@ class InitState extends MusicState
 		request.onData = data ->
 		{
 			onlineVer = data.trim();
-			Log.info('Update Check: Local: ${Main.horizonVer} Github: ${onlineVer}');
-			if (Std.parseFloat(onlineVer) > Std.parseFloat(Main.horizonVer))
-				Log.info('Update prompt will be displayed ($onlineVer > ${Main.horizonVer})');
+			if (Std.parseFloat(onlineVer) > Std.parseFloat(Constants.horizonVer))
+				Log.info('Update prompt will be displayed ($onlineVer > ${Constants.horizonVer})');
 			else
-				Log.info('Update prompt will not be displayed (${Main.horizonVer} >= $onlineVer)');
+				Log.info('Update prompt will not be displayed (${Constants.horizonVer} >= $onlineVer)');
 		}
 		request.onError = msg -> Log.error('Update Check Error: $msg');
 		request.request();

@@ -5,22 +5,20 @@ import flixel.FlxGame;
 import flixel.addons.transition.FlxTransitionableState;
 import haxe.CallStack;
 import haxe.Exception;
+import horizon.backend.Constants;
 import horizon.objects.EngineInfo;
 import horizon.states.InitState;
 import horizon.util.Log;
-import horizon.util.Misc;
-import horizon.util.VersionMacro;
+import horizon.util.Util;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
 
+using StringTools;
+
 class Main extends Sprite
 {
-	public static final horizonVer:String = VersionMacro.get();
-	public static final modSysVer:Float = 1;
-	public static var verbose:Bool = false;
-
 	public function new()
 	{
 		super();
@@ -28,17 +26,16 @@ class Main extends Sprite
 		if (Sys.args().contains('--verbose'))
 		{
 			#if windows Sys.print('\n'); #end
-			verbose = true;
-			if (verbose)
+			Constants.verbose = Constants.debugDisplay = true;
+			if (Constants.verbose)
 				Log.info('Verbose Logging Enabled');
 		}
 
+		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile('icon.png')); #end
 		FlxTransitionableState.skipNextTransIn = true;
 
 		addChild(new FlxSafeGame(1280, 720, InitState, 120, 120, true));
 		addChild(new EngineInfo());
-
-		#if linux Lib.current.stage.window.setIcon(lime.graphics.Image.fromFile('icon.png')); #end
 
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add((w, h) ->
@@ -70,7 +67,7 @@ class Main extends Sprite
 						err += '$file: Line: $line\n';
 					default: Log.error(item);
 				}
-			Misc.error('Uncaught Error\n$err', true);
+			Util.error('Uncaught Error\n$err', true);
 		});
 	}
 }
@@ -84,7 +81,7 @@ class FlxSafeGame extends FlxGame
 			super.create(_);
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: create', true, e);
+			Util.error('FlxGame: create', true, e);
 
 	override function onEnterFrame(_)
 		try
@@ -92,7 +89,7 @@ class FlxSafeGame extends FlxGame
 			super.onEnterFrame(_);
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: onEnterFrame', true, e);
+			Util.error('FlxGame: onEnterFrame', true, e);
 
 	override function update()
 		try
@@ -100,7 +97,7 @@ class FlxSafeGame extends FlxGame
 			super.update();
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: update', true, e);
+			Util.error('FlxGame: update', true, e);
 
 	override function draw()
 		try
@@ -108,7 +105,7 @@ class FlxSafeGame extends FlxGame
 			super.draw();
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: draw', true, e);
+			Util.error('FlxGame: draw', true, e);
 
 	override function onFocus(_)
 		try
@@ -116,7 +113,7 @@ class FlxSafeGame extends FlxGame
 			super.onFocus(_);
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: onFocus', true, e);
+			Util.error('FlxGame: onFocus', true, e);
 
 	override function onFocusLost(_)
 		try
@@ -124,5 +121,5 @@ class FlxSafeGame extends FlxGame
 			super.onFocusLost(_);
 		}
 		catch (e:Exception)
-			Misc.error('FlxGame: onFocusLost', true, e);
+			Util.error('FlxGame: onFocusLost', true, e);
 }

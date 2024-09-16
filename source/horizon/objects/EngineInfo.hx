@@ -1,63 +1,91 @@
 package horizon.objects;
 
-import flixel.util.FlxStringUtil;
-import openfl.system.System;
+import lime.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import sys.io.Process;
 
+// Based on PsychEngine's FPSCounter.hx
 class EngineInfo extends TextField
 {
+	public static var instance:EngineInfo;
+
 	public var curFPS:Int;
 	public var curMemory:Float;
 
-	var deltaTimeout:Float = 0.0;
-	@:noCompletion private var times:Array<Float>;
+	@:noCompletion var deltaTimeout:Float = 0.0;
+	@:noCompletion var times:Array<Float>;
 
-	public function new(x:Float = 10, y:Float = 10, color:Int = 0x000000)
+	static var libText:String = '\n\n';
+
+	public function new()
 	{
 		super();
 
-		this.x = x;
-		this.y = y;
+		// https://askubuntu.com/a/988612
+		var cpuProc = new Process(#if windows 'wmic cpu get name' #elseif linux 'lscpu | grep \' Model name \' | cut -f 2 -d \":\" | awk \'{$1=$1}1\'' #end);
 
-		curFPS = 0;
-		selectable = false;
-		mouseEnabled = false;
-		defaultTextFormat = new TextFormat('VCR OSD Mono', 14, color);
+		var cpu:String = 'N/A';
+
+		if (cpuProc.exitCode() == 0)
+		{
+			var arr = cpuProc.stdout.readAll().toString().trim().split('\n');
+			cpu = arr[arr.length - 1];
+		}
+
+		// Credit to CoreCat for the CPU, GPU, and OS data
+		libText += 'OS:  ${System.platformLabel} ${System.platformVersion}\n';
+		libText += 'CPU: $cpu\n';
+		libText += 'GPU: ${@:privateAccess Std.string(FlxG.stage.context3D.gl.getParameter(FlxG.stage.context3D.gl.RENDERER)).split("/")[0].trim()}\n\n';
+
+		libText += 'Haxe:          ${LibraryMacro.getLibVersion("haxe")}\n';
+		libText += 'Flixel:        ${Std.string(FlxG.VERSION).substr(11)}\n';
+		libText += 'Flixel Addons: ${LibraryMacro.getLibVersion("flixel-addons")}\n';
+		libText += 'OpenFL:        ${LibraryMacro.getLibVersion("openfl")}\n';
+		libText += 'Lime:          ${LibraryMacro.getLibVersion("lime")}\n';
+		libText += 'HaxeUI Core:   ${LibraryMacro.getLibVersion("haxeui-core")}\n';
+		libText += 'HaxeUI Flixel: ${LibraryMacro.getLibVersion("haxeui-flixel")}';
+
+		if (instance == null)
+			instance = this;
+
+		this.x = 5;
+		this.y = 5;
+
+		curFPS = FlxG.updateFramerate;
+		selectable = mouseEnabled = false;
+		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 14, 0xFFFFFF);
+		text = 'FPS: ';
+
 		autoSize = LEFT;
 		multiline = true;
 		alpha = .75;
-		text = 'FPS: ';
 
 		times = [];
 	}
 
-	private override function __enterFrame(deltaTime:Float):Void
+	override function __enterFrame(deltaTime:Float):Void
 	{
-		// prevents the overlay from updating every frame, why would you need to anyways
-		if (deltaTimeout > 1000)
-		{
-			deltaTimeout = 0.0;
-			return;
-		}
-
 		final now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
 		while (times[0] < now - 1000)
 			times.shift();
 
-		curFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+		if (deltaTimeout < 100)
+		{
+			deltaTimeout += deltaTime;
+			return;
+		}
+
 		updateText();
-		deltaTimeout += deltaTime;
+		deltaTimeout = 0;
 	}
 
 	public dynamic function updateText():Void
-	{ // so people can override it in hscript
-		text = 'FPS: ${curFPS}\nMemory: ${FlxStringUtil.formatBytes(System.totalMemory)}';
+	{
+		curFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+		curMemory = #if cpp cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE) #elseif hl hl.Gc.stats().currentMemory #else System.totalMemory #end;
 
-		if (curFPS < FlxG.drawFramerate * .75)
-			textColor = FlxColor.interpolate(0xFF2E0000, 0xFF004CFF, curFPS / (FlxG.drawFramerate * .75));
-		else
-			textColor = 0xFF004CFF;
+		text = 'FPS: ${curFPS}\nMemory: ${Util.formatBytes(cast(curMemory, UInt))} ${Constants.debugDisplay ? libText : ''}';
 	}
 }

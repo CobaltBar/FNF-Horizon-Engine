@@ -15,7 +15,7 @@ class Log
 		ogTrace = haxe.Log.trace;
 		haxe.Log.trace = hxTrace;
 
-		if (Main.verbose)
+		if (Constants.verbose)
 			info('Logger Initialized');
 	}
 

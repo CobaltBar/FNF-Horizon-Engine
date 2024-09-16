@@ -59,103 +59,132 @@ class ModsMenuState extends MusicMenuState
 		modIcon.x -= modIcon.width;
 		modIcon.y -= modIcon.height;
 
-		add(modVer = Create.text(modIcon.x, modIcon.y - 5, 'Version N/A', 18, Path.font('vcr'), 0xFFCCCCCC, CENTER, [menuCam]));
+		add(modVer = Create.text(0, modIcon.y - 10, 'Version N/A', 18, Path.font('vcr'), 0xFFDDDDDD, CENTER, [menuCam]));
+		modVer.fieldHeight = 100;
+		modVer.x = modIcon.x + (modIcon.width - modVer.width) * .5;
 
-		add(modDesc = Create.text(box.x + 5, 5, "".rpad("A", 800), 20, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
+		add(modDesc = Create.text(box.x + 5, 5, "N/A", 20, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]));
 		modDesc.fieldWidth = FlxG.width * .5 - 10;
 		modDesc.fieldHeight = 250;
 
+		var controlsText = Create.text(box.x + 5, FlxG.height - 5,
+			'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
+			16, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]);
+		controlsText.y -= controlsText.height;
+		add(controlsText);
+
+		// I hate from here
+		var i = 0;
+		var enabled = [for (mod in Mods.enabled) mod.name];
+		for (mod in Mods.all)
+		{
+			if (enabled.contains(mod))
+				continue;
+			parsedMods.push(Mods.parseMod(Path.combine(['mods', mod]), mod, i));
+			i++;
+		}
+
+		for (mod in parsedMods)
+		{
+			var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
+			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.alpha = .6;
+			option.cameras = [optionsCam];
+			option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
+			optionToMod.set(option, mod);
+			add(option);
+			Path.cacheBitmap(mod.iconPath, [mod], true);
+
+			option.x -= option.width;
+			option.y = (circle.height - option.height) * .5;
+
+			menuOptions.insert(mod.ID, option);
+		}
+
+		for (mod in Mods.enabled)
+		{
+			var option = new Alphabet(FlxG.width, 0, mod.name, false, CENTER, .5);
+			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
+			option.alpha = .6;
+			option.cameras = [optionsCam];
+			option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
+			optionToMod.set(option, mod);
+			add(option);
+			Path.cacheBitmap(mod.iconPath, [mod], true);
+
+			option.y = (circle.height - option.height) * .5;
+
+			enabledOptions.insert(mod.ID, option);
+		}
+
+		for (arr in [enabledOptions, menuOptions])
+			ArraySort.sort(arr, (a, b) -> return (a.ID > b.ID ? 1 : a.ID < b.ID ? -1 : 0));
+
+		// to here
+
+		Controls.onPress(Settings.keybinds.get('accept'), () -> if (!transitioningOut) exitState());
+		Controls.onPress(Settings.keybinds.get('back'), () -> if (!transitioningOut) returnState());
+		Controls.onPress(Settings.keybinds.get('reset'), () -> if (!transitioningOut)
+		{
+			Log.info('Reloading Mods and Mod Assets');
+			Mods.load();
+			Path.loadAssets();
+		});
+		Controls.onPress([Settings.keybinds['ui_up'][0]], () -> if (!transitioningOut) changeSelection(-1));
+		Controls.onPress([Settings.keybinds['ui_down'][0]], () -> if (!transitioningOut) changeSelection(1));
+		// Controls.onPress([Settings.keybinds['ui_up'][1]], () -> if (!transitioningOut) shiftSelection(1));
+		// Controls.onPress([Settings.keybinds['ui_down'][1]], () -> if (!transitioningOut) shiftSelection(-1));
+		// Controls.onPress(Settings.keybinds['ui_left'], () -> if (!transitioningOut) changeSection(-1));
+		// Controls.onPress(Settings.keybinds['ui_right'], () -> if (!transitioningOut) changeSection(1));
+
 		bop = false;
 
-		/*
-			add(modVer = Create.text(paddedWidth * 2 + 5, subY + modIcon.height - 15, 'VERSION N/A', 18, Path.font('vcr'), 0xFFCCCCCC, RIGHT, [menuCam]));
-			modVer.fieldWidth = 200;
-			modVer.fieldHeight = 50;
-			modVer.x -= modVer.width;
-
-			var controlsText:FlxText = Create.text(paddedWidth * 2 + 20, subY + 5,
-				'Controls:\nMove Selection up/down: ${Settings.keybinds.get('ui_up')[0].toString()}/${Settings.keybinds.get('ui_down')[0].toString()}\nMove current option up/down: ${Settings.keybinds.get('ui_up')[1].toString()}/${Settings.keybinds.get('ui_down')[1].toString()}\nSelect Mod: ${[for (key in Settings.keybinds.get('accept')) key.toString()].join('/')}\nReload Mods: ${[for (key in Settings.keybinds.get('reset')) key.toString()].join('/')}\nReturn to Main Menu: ${[for (key in Settings.keybinds.get('back')) key.toString()].join('/')}',
-				16, Path.font('vcr'), 0xFFFFFFFF, LEFT, [menuCam]);
-			add(controlsText);
-
-			// I hate from here
-			var i = 0;
-			var enabled = [for (mod in Mods.enabled) mod.name];
-			for (mod in Mods.all)
-			{
-				if (enabled.contains(mod))
-					continue;
-				parsedMods.push(Mods.parseMod(Path.combine(['mods', mod]), mod, i));
-				i++;
-			}
-
-			for (mod in parsedMods)
-			{
-				var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
-				option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
-				option.screenCenter(X);
-				option.alpha = .6;
-				option.cameras = [optionsCam];
-				option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
-				optionToMod.set(option, mod);
-				add(option);
-				Path.cacheBitmap(mod.iconPath, [mod], true);
-
-				if (mod.staticMod)
-				{
-					option.x -= paddedWidth + 10;
-					option.y = 200 + (50 * staticOptions.length);
-					staticOptions.insert(mod.ID, option);
-				}
-				else
-				{
-					option.y = 200 + (50 * menuOptions.length);
-					menuOptions.insert(mod.ID, option);
-				}
-			}
-
-			for (mod in Mods.enabled)
-			{
-				var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
-				option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
-				option.screenCenter(X);
-				option.alpha = .6;
-				option.cameras = [optionsCam];
-				option.clipRect = new FlxRect(0, 0, option.width + 10, option.height * 2);
-				optionToMod.set(option, mod);
-				add(option);
-				Path.cacheBitmap(mod.iconPath, [mod], true);
-
-				option.x += paddedWidth + 10;
-				option.y = 200 + (50 * enabledOptions.length);
-
-				enabledOptions.insert(mod.ID, option);
-			}
-
-			for (arr in [staticOptions, enabledOptions, menuOptions])
-				ArraySort.sort(arr, (a, b) -> return (a.ID > b.ID ? 1 : a.ID < b.ID ? -1 : 0));
-
-			// to here
-
-			Controls.onPress(Settings.keybinds.get('accept'), () -> if (!transitioningOut) exitState());
-			Controls.onPress(Settings.keybinds.get('back'), () -> if (!transitioningOut) returnState());
-			Controls.onPress(Settings.keybinds.get('reset'), () -> if (!transitioningOut)
-			{
-				Log.info('Reloading Mods and Mod Assets');
-				Mods.load();
-				Path.loadAssets();
-			});
-			Controls.onPress([Settings.keybinds['ui_up'][0]], () -> if (!transitioningOut) changeSelection(-1));
-			Controls.onPress([Settings.keybinds['ui_down'][0]], () -> if (!transitioningOut) changeSelection(1));
-			Controls.onPress([Settings.keybinds['ui_up'][1]], () -> if (!transitioningOut) shiftSelection(1));
-			Controls.onPress([Settings.keybinds['ui_down'][1]], () -> if (!transitioningOut) shiftSelection(-1));
-			Controls.onPress(Settings.keybinds['ui_left'], () -> if (!transitioningOut) changeSection(-1));
-			Controls.onPress(Settings.keybinds['ui_right'], () -> if (!transitioningOut) changeSection(1));
-
-			changeSection(0);
-			changeSelection(0); */
+		// changeSection(0);
+		changeSelection(0);
 
 		Path.clearUnusedMemory();
+	}
+
+	public override function returnState():Void
+	{
+		Mods.enabled = [];
+
+		for (i in 0...enabledOptions.length)
+		{
+			optionToMod[enabledOptions[i]].ID = i + 1;
+			Mods.enabled.insert(i + 1, optionToMod[enabledOptions[i]]);
+		}
+
+		ArraySort.sort(Mods.enabled, (a, b) -> a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0);
+
+		for (mod in Mods.enabled)
+		{
+			var weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}> = [];
+			var songs:Map<String, {score:Int, accuracy:Float}> = [];
+
+			for (week in mod.weeks)
+				weeks.set(week.folder, {
+					score: week.score,
+					accuracy: week.accuracy,
+					locked: week.locked,
+				});
+			for (song in mod.songs)
+				songs.set(song.folder, {
+					score: song.score,
+					accuracy: song.accuracy
+				});
+			Settings.savedMods.set(mod.folder, {
+				enabled: true,
+				ID: mod.ID,
+				weeks: weeks,
+				songs: songs
+			});
+		}
+
+		Path.loadAssets();
+		SettingsManager.save();
+		super.returnState();
+		MusicState.switchState(new MainMenuState());
 	}
 
 	/*
@@ -224,54 +253,6 @@ class ModsMenuState extends MusicMenuState
 
 			changeSection(0);
 			changeSelection(0);
-		}
-
-		public override function returnState():Void
-		{
-			Mods.enabled = [];
-
-			for (i in 0...enabledOptions.length)
-			{
-				optionToMod[enabledOptions[i]].ID = i + 1;
-				Mods.enabled.insert(i + 1, optionToMod[enabledOptions[i]]);
-			}
-
-			ArraySort.sort(Mods.enabled, (a, b) -> a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0);
-
-			if (theStaticOption != null)
-			{
-				optionToMod[theStaticOption].ID = 0;
-				Mods.enabled.insert(0, optionToMod[theStaticOption]);
-			}
-
-			for (mod in Mods.enabled)
-			{
-				var weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}> = [];
-				var songs:Map<String, {score:Int, accuracy:Float}> = [];
-
-				for (week in mod.weeks)
-					weeks.set(week.folder, {
-						score: week.score,
-						accuracy: week.accuracy,
-						locked: week.locked,
-					});
-				for (song in mod.songs)
-					songs.set(song.folder, {
-						score: song.score,
-						accuracy: song.accuracy
-					});
-				Settings.savedMods.set(mod.folder, {
-					enabled: true,
-					ID: mod.ID,
-					weeks: weeks,
-					songs: songs
-				});
-			}
-
-			Path.loadAssets();
-			SettingsManager.save();
-			super.returnState();
-			MusicState.switchState(new MainMenuState());
 		}
 
 		public function shiftSelection(change:Int):Void

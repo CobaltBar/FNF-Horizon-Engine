@@ -32,7 +32,7 @@ class Conductor extends FlxBasic
 		stepSignal = new FlxSignal();
 		beatSignal = new FlxSignal();
 		measureSignal = new FlxSignal();
-		if (Main.verbose)
+		if (Constants.verbose)
 			Log.info('Conductor Initialized');
 	}
 
@@ -44,7 +44,7 @@ class Conductor extends FlxBasic
 		{
 			if (FlxG.sound.music != null && switchToMusic)
 			{
-				if (Main.verbose)
+				if (Constants.verbose)
 					Log.info('Song is null, setting to FlxG.sound.music');
 				song = FlxG.sound.music;
 			}
