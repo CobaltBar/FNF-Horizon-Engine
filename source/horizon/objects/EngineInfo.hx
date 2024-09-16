@@ -23,7 +23,7 @@ class EngineInfo extends TextField
 		super();
 
 		// https://askubuntu.com/a/988612
-		var cpuProc = new Process(#if windows 'wmic cpu get name' #elseif linux 'lscpu | grep \' Model name \' | cut -f 2 -d \":\" | awk \'{$1=$1}1\'' #end);
+		var cpuProc = new Process(#if windows 'wmic cpu get name' #elseif linux 'lscpu | grep \'Model name\' | cut -f 2 -d \":\" | awk \'{$1=$1}1\'' #end);
 
 		var cpu:String = 'N/A';
 
