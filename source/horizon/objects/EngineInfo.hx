@@ -8,8 +8,6 @@ import sys.io.Process;
 // Based on PsychEngine's FPSCounter.hx
 class EngineInfo extends TextField
 {
-	public static var instance:EngineInfo;
-
 	public var curFPS:Int;
 	public var curMemory:Float;
 
@@ -46,15 +44,12 @@ class EngineInfo extends TextField
 		libText += 'HaxeUI Core:   ${LibraryMacro.getLibVersion("haxeui-core")}\n';
 		libText += 'HaxeUI Flixel: ${LibraryMacro.getLibVersion("haxeui-flixel")}';
 
-		if (instance == null)
-			instance = this;
-
 		this.x = 5;
 		this.y = 5;
 
 		curFPS = FlxG.updateFramerate;
 		selectable = mouseEnabled = false;
-		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 14, 0xFFFFFF);
+		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 16, 0xFFFFFF);
 		text = 'FPS: ';
 
 		autoSize = LEFT;

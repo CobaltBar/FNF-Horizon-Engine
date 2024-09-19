@@ -17,9 +17,16 @@ import openfl.events.UncaughtErrorEvent;
 
 using StringTools;
 
+#if (cpp && linux)
+@:cppInclude('./external/gamemode_client.h')
+@:cppFileCode('#define GAMEMODE_AUTO')
+#end
+@:publicFields
 class Main extends Sprite
 {
-	public function new()
+	@:noCompletion static var fps:EngineInfo;
+
+	function new()
 	{
 		super();
 
@@ -35,7 +42,7 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		addChild(new FlxSafeGame(1280, 720, InitState, 120, 120, true));
-		addChild(new EngineInfo());
+		addChild(fps = new EngineInfo());
 
 		// shader coords fix (stolen from PsychEngine)
 		FlxG.signals.gameResized.add((w, h) ->

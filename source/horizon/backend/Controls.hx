@@ -66,7 +66,7 @@ class Controls
 				{
 					keyTracker[F3] = true;
 					Constants.debugDisplay = !Constants.debugDisplay;
-					EngineInfo.instance.updateText();
+					Main.fps.updateText();
 				}
 		}, false, 10);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, event ->
