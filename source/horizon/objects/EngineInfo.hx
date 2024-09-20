@@ -14,7 +14,7 @@ class EngineInfo extends TextField
 	@:noCompletion var deltaTimeout:Float = 0.0;
 	@:noCompletion var times:Array<Float>;
 
-	static var libText:String = '\n\n';
+	static var libText:String = '\n\nHorizon Engine Build ${Constants.horizonVer}\n';
 
 	public function new()
 	{
