@@ -6,7 +6,7 @@ class MainMenuState extends MusicMenuState
 {
 	var flashBG:FlxBackdrop;
 	var modCount:Int = 0;
-	var pointProgress:Array<Float> = [];
+	var curveProgress:Array<Float> = [];
 
 	static var prevSelected:Int = 0;
 
@@ -60,11 +60,11 @@ class MainMenuState extends MusicMenuState
 	{
 		for (i in 0...menuOptions.length)
 		{
-			pointProgress[i] = FlxMath.lerp(pointProgress[i], (i + (menuOptions.length - 1) - curSelected) / (2 * (menuOptions.length - 1)),
+			curveProgress[i] = FlxMath.lerp(curveProgress[i], (i - curSelected - 1 + menuOptions.length) / (2 * (menuOptions.length) - 1),
 				FlxMath.bound(elapsed * 10, 0, 1));
 
 			var point = Util.quadBezier(FlxPoint.weak(-FlxG.width * .6, -FlxG.width * .6), FlxPoint.weak(FlxG.width * .8, FlxG.height * .5),
-				FlxPoint.weak(-FlxG.width * .6, FlxG.height * 1.6), pointProgress[i]);
+				FlxPoint.weak(-FlxG.width * .6, FlxG.height * 1.6), curveProgress[i]);
 
 			menuOptions[i].setPosition(point.x, point.y);
 			point.putWeak();

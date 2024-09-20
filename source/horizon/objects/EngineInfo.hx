@@ -40,9 +40,7 @@ class EngineInfo extends TextField
 		libText += 'Flixel:        ${Std.string(FlxG.VERSION).substr(11)}\n';
 		libText += 'Flixel Addons: ${LibraryMacro.getLibVersion("flixel-addons")}\n';
 		libText += 'OpenFL:        ${LibraryMacro.getLibVersion("openfl")}\n';
-		libText += 'Lime:          ${LibraryMacro.getLibVersion("lime")}\n';
-		libText += 'HaxeUI Core:   ${LibraryMacro.getLibVersion("haxeui-core")}\n';
-		libText += 'HaxeUI Flixel: ${LibraryMacro.getLibVersion("haxeui-flixel")}';
+		libText += 'Lime:          ${LibraryMacro.getLibVersion("lime")}';
 
 		this.x = 5;
 		this.y = 5;
