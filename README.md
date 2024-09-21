@@ -33,7 +33,7 @@ haxelib run lime rebuild cpp -release
 - FunkinCrew
   - [The Game](https://github.com/FunkinCrew/Funkin)
   - [Assets](https://github.com/FunkinCrew/funkin.assets) - ([See License](https://github.com/FunkinCrew/funkin.assets/blob/main/LICENSE.md))
-- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine) - Assets
+- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine) - Assets and Code
 
 ## Credits
 
