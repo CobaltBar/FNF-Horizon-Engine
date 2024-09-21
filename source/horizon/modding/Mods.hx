@@ -118,6 +118,7 @@ class Mods
 					scale: json.scale ?? 1,
 					antialiasing: json.antialiasing ?? Settings.antialiasing,
 					flipX: json.flipX ?? false,
+					multi: json.multi ?? [],
 
 					icon: json.icon ?? 'blank',
 					color: json.color ?? [255, 0, 0],
@@ -245,16 +246,17 @@ class Mods
 	}
 }
 
-typedef MenuCharacterData =
+typedef AnimatedChracterData =
 {
 	var position:Array<Float>;
 	var animData:Array<AnimationData>;
 	var scale:Float;
 	var antialiasing:Bool;
 	var flipX:Bool;
+	var multi:Array<String>;
 }
 
-typedef CharacterData = MenuCharacterData &
+typedef CharacterData = AnimatedChracterData &
 {
 	var icon:String;
 	var color:Array<Int>;
@@ -277,17 +279,19 @@ typedef StageData =
 	var objs:Array<StageSprite>;
 }
 
-typedef StageSprite = MenuCharacterData &
+typedef StageSprite = AnimatedChracterData &
 {
 	var imageName:String;
 }
 
 typedef AnimationData =
 {
+	var name:String;
 	var prefix:String;
 	var indices:Array<Int>;
 	var fps:Float;
-	var offsets:Array<Array<Int>>;
+	var offsets:Array<Float>;
+	var looped:Bool;
 }
 
 // JSONs

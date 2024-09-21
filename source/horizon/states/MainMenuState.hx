@@ -135,7 +135,7 @@ class MainMenuState extends MusicMenuState
 			switch (curSelected)
 			{
 				case 0:
-					// MusicState.switchState(new StoryMenuState());
+					MusicState.switchState(new StoryMenuState());
 				case 1:
 					// MusicState.switchState(new FreeplayState());
 				case 3:
@@ -147,7 +147,7 @@ class MainMenuState extends MusicMenuState
 			switch (curSelected)
 			{
 				case 0:
-					// MusicState.switchState(new StoryMenuState());
+					MusicState.switchState(new StoryMenuState());
 				case 1:
 					// MusicState.switchState(new FreeplayState());
 				case 2:
