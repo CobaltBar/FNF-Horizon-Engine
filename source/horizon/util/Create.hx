@@ -10,7 +10,6 @@ class Create
 	{
 		var bg:FlxBackdrop = new FlxBackdrop(path);
 		bg.scale.set(scale, scale);
-		bg.antialiasing = Settings.antialiasing;
 		bg.updateHitbox();
 		bg.centerOffsets(true);
 		bg.screenCenter();

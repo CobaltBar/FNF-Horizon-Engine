@@ -26,6 +26,7 @@
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<source path="source" />
 	<assets path="assets" />
+	<assets path="alsoft.ini" />
 	<assets path="default_mods" rename="mods" />
 
 	<!-- _______________________________ Libraries ______________________________ -->

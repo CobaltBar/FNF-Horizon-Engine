@@ -27,6 +27,7 @@ class SettingsManager
 		FlxG.sound.muteKeys = Settings.keybinds['volume_mute'];
 		FlxG.sound.volume = FlxG.save.data.volume ?? 1;
 		FlxG.sound.muted = FlxG.save.data.muted ?? false;
+		FlxG.fixedTimestep = false;
 		FlxSprite.defaultAntialiasing = Settings.antialiasing;
 
 		if (Constants.verbose)

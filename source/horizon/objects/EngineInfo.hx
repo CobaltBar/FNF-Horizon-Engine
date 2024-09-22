@@ -42,8 +42,7 @@ class EngineInfo extends TextField
 		libText += 'OpenFL:        ${LibraryMacro.getLibVersion("openfl")}\n';
 		libText += 'Lime:          ${LibraryMacro.getLibVersion("lime")}';
 
-		this.x = 5;
-		this.y = 5;
+		x = y = 5;
 
 		curFPS = FlxG.updateFramerate;
 		selectable = mouseEnabled = false;
@@ -76,7 +75,7 @@ class EngineInfo extends TextField
 
 	public dynamic function updateText():Void
 	{
-		curFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+		curFPS = times.length < FlxG.drawFramerate ? times.length : FlxG.drawFramerate;
 		curMemory = #if cpp cpp.vm.Gc.memInfo64(cpp.vm.Gc.MEM_INFO_USAGE) #elseif hl hl.Gc.stats().currentMemory #else System.totalMemory #end;
 
 		text = 'FPS: ${curFPS}\nMemory: ${Util.formatBytes(cast(curMemory, UInt))} ${Constants.debugDisplay ? libText : ''}';

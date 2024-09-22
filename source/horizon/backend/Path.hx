@@ -7,6 +7,7 @@ import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import openfl.system.System;
+import openfl.utils.AssetCache;
 
 // Based off of PsychEngine's Paths.hx
 
@@ -46,8 +47,8 @@ class Path
 			if (!trackedImages.exists(key))
 			{
 				Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
 				FlxG.bitmap._cache[key].destroy();
+				FlxG.bitmap._cache.remove(key);
 			}
 		}
 
@@ -58,8 +59,8 @@ class Path
 				trackedSounds.remove(key);
 			}
 		// Thanks Sword
-		for (key in cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.keys())
-			cast(openfl.utils.Assets.cache, openfl.utils.AssetCache).font.remove(key);
+		for (key in cast(Assets.cache, AssetCache).font.keys())
+			cast(Assets.cache, AssetCache).font.remove(key);
 		localAssets = [];
 	}
 
@@ -99,15 +100,16 @@ class Path
 		return null;
 	}
 
-	static function cacheBitmap(key:String, ?mods:Array<Mod>, keyAsPath:Bool = false):FlxGraphic
+	static function cacheBitmap(key:String, ?mods:Array<Mod>, path:Bool = false):FlxGraphic
 	{
-		var found:PathInfo = keyAsPath ? {path: key} : find('IMAGE-$key', ['png'], mods, false);
+		var found:PathInfo = path ? {path: key} : find('IMAGE-$key', ['png'], mods, false);
 		var realKey = found?.mod != null ? '${HaxePath.withoutDirectory(found.mod.path)}-$key' : key;
-		var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'), false, realKey);
+		var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png'), false,
+			'IMAGE-$realKey');
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
-		trackedImages.set(realKey, graphic);
-		localAssets.push(realKey);
+		trackedImages.set('IMAGE-$realKey', graphic);
+		localAssets.push('IMAGE-$realKey');
 		Log.info('Caching image \'$key\' (${found.mod != null ? found.mod.name : 'Path'})');
 		return graphic;
 	}
@@ -115,10 +117,10 @@ class Path
 	static function image(key:String, ?mods:Array<Mod>):FlxGraphic
 	{
 		for (mod in (mods ?? []).concat([Mods.assets]))
-			if (trackedImages.exists('${HaxePath.withoutDirectory(mod.path)}-$key'))
+			if (trackedImages.exists('IMAGE-${HaxePath.withoutDirectory(mod.path)}-$key'))
 			{
-				localAssets.push('${HaxePath.withoutDirectory(mod.path)}-$key');
-				return trackedImages.get('${HaxePath.withoutDirectory(mod.path)}-$key');
+				localAssets.push('IMAGE-${HaxePath.withoutDirectory(mod.path)}-$key');
+				return trackedImages.get('IMAGE-${HaxePath.withoutDirectory(mod.path)}-$key');
 			}
 
 		return cacheBitmap(key, mods);
@@ -127,10 +129,10 @@ class Path
 	static function audio(key:String, ?mods:Array<Mod>):Sound
 	{
 		for (mod in (mods ?? []).concat([Mods.assets]))
-			if (trackedSounds.exists('${HaxePath.withoutDirectory(mod.path)}-$key'))
+			if (trackedSounds.exists('AUDIO-${HaxePath.withoutDirectory(mod.path)}-$key'))
 			{
-				localAssets.push('${HaxePath.withoutDirectory(mod.path)}-$key');
-				return trackedSounds.get('${HaxePath.withoutDirectory(mod.path)}-$key');
+				localAssets.push('AUDIO-${HaxePath.withoutDirectory(mod.path)}-$key');
+				return trackedSounds.get('AUDIO-${HaxePath.withoutDirectory(mod.path)}-$key');
 			}
 
 		var found:PathInfo = find('AUDIO-$key', ['ogg'], mods);
@@ -290,7 +292,7 @@ class Path
 
 @:structInit
 @:publicFields
-class PathInfo
+private class PathInfo
 {
 	var path:String;
 	@:optional var mod:Mod;
