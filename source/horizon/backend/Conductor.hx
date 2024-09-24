@@ -5,9 +5,9 @@ class Conductor extends FlxBasic
 {
 	static var bpm(default, set):Float;
 
-	static var beatLength:Float = 0;
-	static var stepLength:Float = 0;
-	static var measureLength:Float = 0;
+	static var beatLength:Float = -1;
+	static var stepLength:Float = -1;
+	static var measureLength:Float = -1;
 
 	static var offset:Float = 0;
 	static var time:Float = 0;
@@ -32,6 +32,7 @@ class Conductor extends FlxBasic
 		stepSignal = new FlxSignal();
 		beatSignal = new FlxSignal();
 		measureSignal = new FlxSignal();
+
 		if (Constants.verbose)
 			Log.info('Conductor Initialized');
 	}
