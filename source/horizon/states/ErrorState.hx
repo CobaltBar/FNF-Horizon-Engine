@@ -44,7 +44,6 @@ class ErrorState extends MusicState
 			File.saveContent('log.txt', @:privateAccess Log.log.join('\n'));
 			resetGame();
 		});
-
 		Path.clearUnusedMemory();
 	}
 

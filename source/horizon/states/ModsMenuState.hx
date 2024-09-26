@@ -79,7 +79,7 @@ class ModsMenuState extends MusicMenuState
 		{
 			if (enabled.contains(Mods.all[i]))
 				continue;
-			parsedMods.push(Mods.parseMod(Path.combine(['mods', Mods.all[i]]), Mods.all[i], i));
+			parsedMods.push(Mods.parseMod(PathUtil.combine('mods', Mods.all[i]), Mods.all[i], i));
 		}
 
 		for (mod in parsedMods)
@@ -90,7 +90,7 @@ class ModsMenuState extends MusicMenuState
 			option.cameras = [optionsCam];
 			optionToMod.set(option, mod);
 			add(option);
-			Path.cacheBitmap(mod.iconPath, [mod], true);
+			Path.cacheImage(mod.iconPath, [mod], true);
 
 			option.x -= option.width;
 			option.y = (circle.height - option.height) * .5;
@@ -106,7 +106,7 @@ class ModsMenuState extends MusicMenuState
 			option.cameras = [optionsCam];
 			optionToMod.set(option, mod);
 			add(option);
-			Path.cacheBitmap(mod.iconPath, [mod], true);
+			Path.cacheImage(mod.iconPath, [mod], true);
 
 			option.y = (circle.height - option.height) * .5;
 
@@ -133,9 +133,8 @@ class ModsMenuState extends MusicMenuState
 
 		bop = false;
 
-		// changeSection(0);
+		changeSection(0);
 		changeSelection(0);
-
 		Path.clearUnusedMemory();
 	}
 

@@ -20,7 +20,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSignal;
 import flixel.util.FlxTimer;
 import haxe.ds.ArraySort;
-import haxe.io.Path as HaxePath;
 import horizon.backend.*;
 import horizon.macros.*;
 import horizon.modding.Mod;

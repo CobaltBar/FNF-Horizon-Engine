@@ -42,17 +42,13 @@ class MainMenuState extends MusicMenuState
 		changeSelection(0);
 
 		var horizonEngineText = Create.text(5, FlxG.height - 55, 'Horizon Engine v${Application.current.meta['version']} - build ${Constants.horizonVer}', 24,
-			Path.font('vcr'), 0xFFFFFFFF, LEFT)
+			Path.font('vcr'), 0xFFFFFFFF, LEFT, [otherCam])
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
-		horizonEngineText.cameras = [otherCam];
 		add(horizonEngineText);
 
-		var fnfVersion = Create.text(5, FlxG.height - 30, 'Friday Night Funkin\' v0.4.1', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT)
+		var fnfVersion = Create.text(5, FlxG.height - 30, 'Friday Night Funkin\' v0.4.1', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [otherCam])
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
-
-		fnfVersion.cameras = [otherCam];
 		add(fnfVersion);
-
 		Path.clearUnusedMemory();
 	}
 

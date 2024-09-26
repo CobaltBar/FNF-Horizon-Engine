@@ -1,5 +1,6 @@
 package horizon.modding;
 
+// TODO remove folder
 @:publicFields @:structInit class Mod
 {
 	var name:String;

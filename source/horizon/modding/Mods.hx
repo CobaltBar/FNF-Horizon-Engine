@@ -29,7 +29,7 @@ class Mods
 
 			for (i in 0...folders.length)
 			{
-				var modPath = Path.combine(['mods', folders[i]]);
+				var modPath = PathUtil.combine('mods', folders[i]);
 				if (FileSystem.isDirectory(modPath))
 				{
 					all.push(folders[i]);
@@ -64,14 +64,16 @@ class Mods
 			folder: 'assets',
 			iconPath: 'assets/images/unknownMod.png'
 		};
+
+		@:privateAccess Path.modSearch = enabled.concat([assets]);
 	}
 
 	public static function parseMod(path:String, folder:String, ID:Int):Mod
 	{
-		var jsonPath = Path.combine([path, 'mod.json']);
+		var jsonPath = PathUtil.combine(path, 'mod.json');
 		var json:ModJSON = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : defaultJSON;
 
-		var iconPath = Path.combine([path, 'mod.png']);
+		var iconPath = PathUtil.combine(path, 'mod.png');
 		var icon = FileSystem.exists(iconPath) ? iconPath : 'assets/images/unknownMod.png';
 
 		var color:FlxColor = json.color != null ? FlxColor.fromRGB(json.color[0] ?? 255, json.color[1] ?? 255,
@@ -100,15 +102,15 @@ class Mods
 	static function parseCharacters(folder:String):Array<CharacterData>
 	{
 		var chars:Array<CharacterData> = [];
-		var charDir = Path.combine([folder, 'characters']);
+		var charDir = PathUtil.combine(folder, 'characters');
 
 		if (!FileSystem.exists(charDir))
 			return chars;
 
 		for (char in FileSystem.readDirectory(charDir))
 		{
-			var charPath = Path.combine([charDir, char]);
-			if (!FileSystem.isDirectory(charPath) && HaxePath.extension(char) == 'json')
+			var charPath = PathUtil.combine(charDir, char);
+			if (!FileSystem.isDirectory(charPath) && PathUtil.extension(char) == 'json')
 			{
 				var json:CharacterData = TJSON.parse(File.getContent(charPath));
 
@@ -134,28 +136,28 @@ class Mods
 	static function parseSongs(folder:String):Array<Song>
 	{
 		var songs:Array<Song> = [];
-		var songDir = Path.combine([folder, 'songs']);
+		var songDir = PathUtil.combine(folder, 'songs');
 
 		if (!FileSystem.exists(songDir))
 			return songs;
 
 		for (song in FileSystem.readDirectory(songDir))
 		{
-			var songPath = Path.combine([songDir, song]);
+			var songPath = PathUtil.combine(songDir, song);
 			if (FileSystem.isDirectory(songPath))
 			{
-				var jsonPath = Path.combine([songPath, 'song.json']);
+				var jsonPath = PathUtil.combine(songPath, 'song.json');
 
 				var json:SongJSON = FileSystem.exists(jsonPath) ? TJSON.parse(File.getContent(jsonPath)) : null;
 
 				var audios:Array<String> = [];
 				for (file in FileSystem.readDirectory(songPath))
 				{
-					var filePath = Path.combine([songPath, file]);
+					var filePath = PathUtil.combine(songPath, file);
 					if (!FileSystem.isDirectory(filePath))
-						if (HaxePath.extension(filePath) == 'ogg')
+						if (PathUtil.extension(filePath) == 'ogg')
 						{
-							file = HaxePath.withoutExtension(file.trim().toLowerCase());
+							file = PathUtil.withoutExtension(file.trim().toLowerCase());
 							if ((file == 'voices' || file == 'voices-player' || file == 'voices-opponent') && audios.indexOf(file) == -1)
 								audios.push(file);
 						}
@@ -180,15 +182,15 @@ class Mods
 	static function parseStages(folder:String):Array<StageData>
 	{
 		var stages:Array<StageData> = [];
-		var stageDir = Path.combine([folder, 'stages']);
+		var stageDir = PathUtil.combine(folder, 'stages');
 
 		if (!FileSystem.exists(stageDir))
 			return stages;
 
 		for (stage in FileSystem.readDirectory(stageDir))
 		{
-			var stagePath = Path.combine([stageDir, stage]);
-			if (!FileSystem.isDirectory(stagePath) && HaxePath.extension(stage) == 'json')
+			var stagePath = PathUtil.combine(stageDir, stage);
+			if (!FileSystem.isDirectory(stagePath) && PathUtil.extension(stage) == 'json')
 			{
 				var json:StageData = TJSON.parse(File.getContent(stagePath));
 
@@ -213,15 +215,15 @@ class Mods
 	static function parseWeeks(folder:String):Array<Week>
 	{
 		var weeks:Array<Week> = [];
-		var weekDir = Path.combine([folder, 'weeks']);
+		var weekDir = PathUtil.combine(folder, 'weeks');
 
 		if (!FileSystem.exists(weekDir))
 			return weeks;
 
 		for (week in FileSystem.readDirectory(weekDir))
 		{
-			var weekPath = Path.combine([weekDir, week]);
-			if (!FileSystem.isDirectory(weekPath) && HaxePath.extension(week) == 'json')
+			var weekPath = PathUtil.combine(weekDir, week);
+			if (!FileSystem.isDirectory(weekPath) && PathUtil.extension(week) == 'json')
 			{
 				var json:WeekJSON = TJSON.parse(File.getContent(weekPath));
 
@@ -233,7 +235,7 @@ class Mods
 					locked: false ?? Settings.savedMods[folder.split('/')[1]].weeks[week]?.locked,
 					unlocks: json.unlocks ?? [],
 					songs: json.songs ?? ['test'],
-					folder: HaxePath.withoutExtension(week),
+					folder: PathUtil.withoutExtension(week),
 					difficulties: json.difficulties ?? ['normal'],
 
 					score: Settings.savedMods[folder.split('/')[1]]?.weeks[week]?.score ?? 0,

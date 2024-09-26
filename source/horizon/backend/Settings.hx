@@ -7,27 +7,27 @@ class Settings
 {
 	static var noteRGB:
 		{
-			strum:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
-			notes:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
-			press:Array<{base:FlxColor, highlight:FlxColor, outline:FlxColor}>,
+			strum:Array<Array<FlxColor>>,
+			notes:Array<Array<FlxColor>>,
+			press:Array<Array<FlxColor>>,
 		} = {
 			strum: [
-				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
-				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
-				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000},
-				{base: 0xFF87A3AD, highlight: 0xFFFFFFFF, outline: 0xFF000000}
+				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
+				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
+				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
+				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000]
 			],
 			notes: [
-				{base: 0xFFC24B99, highlight: 0xFFFFFFFF, outline: 0xFF3C1F56},
-				{base: 0xFF00FFFF, highlight: 0xFFFFFFFF, outline: 0xFF1542B7},
-				{base: 0xFF12FA05, highlight: 0xFFFFFFFF, outline: 0xFF0A4447},
-				{base: 0xFFF9393F, highlight: 0xFFFFFFFF, outline: 0xFF651038}
+				[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
+				[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
+				[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
+				[0xFFF9393F, 0xFFFFFFFF, 0xFF651038]
 			],
 			press: [
-				{base: 0xFF8B78BC, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
-				{base: 0xFF6DC0C7, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
-				{base: 0xFF6DC782, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
-				{base: 0xFFBE7683, highlight: 0xFFFFFFFF, outline: 0xFF201E31},
+				[0xFF8B78BC, 0xFFFFFFFF, 0xFF201E31],
+				[0xFF6DC0C7, 0xFFFFFFFF, 0xFF201E31],
+				[0xFF6DC782, 0xFFFFFFFF, 0xFF201E31],
+				[0xFFBE7683, 0xFFFFFFFF, 0xFF201E31],
 			]
 		};
 
@@ -44,6 +44,7 @@ class Settings
 
 	static var antialiasing:Bool = true;
 	static var framerate:Int = 0;
+	static var gpuTextures:Bool = true;
 	static var shaders:Bool = true;
 
 	static var accessibilityConfirmed:Bool = false;
@@ -70,12 +71,14 @@ class Settings
 		'debug' => [LBRACKET, RBRACKET],
 	];
 
-	static var savedMods:Map<String,
-		{
-			enabled:Bool,
-			ID:Int,
-			weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}>,
-			songs:Map<String, {score:Int, accuracy:Float}>
-		}> = [];
+	static var savedMods:Map<String, SavedModData> = [];
 	static var fullscreen:Bool = false;
+}
+
+@:structInit @:publicFields private class SavedModData
+{
+	var enabled:Bool;
+	var ID:Int;
+	var weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}>;
+	var songs:Map<String, {score:Int, accuracy:Float}>;
 }

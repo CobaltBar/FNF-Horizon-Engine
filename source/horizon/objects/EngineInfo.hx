@@ -46,7 +46,7 @@ class EngineInfo extends TextField
 
 		curFPS = FlxG.updateFramerate;
 		selectable = mouseEnabled = false;
-		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 16, 0xFFFFFF);
+		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 14, 0xFFFFFF);
 		text = 'FPS: ';
 
 		autoSize = LEFT;

@@ -29,6 +29,13 @@ class MusicState extends FlxTransitionableState
 		Conductor.beatSignal.add(onBeat);
 		bopCams.push(FlxG.camera);
 		super.create();
+
+		// Reset Alphabet sprite group because the graphics are cleared
+		@:privateAccess {
+			for (member in Alphabet.alphabetGroup.members)
+				member.destroy();
+			Alphabet.alphabetGroup.clear();
+		}
 	}
 
 	public override function update(elapsed:Float):Void

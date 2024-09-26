@@ -24,10 +24,15 @@
 
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
+
 	<source path="source" />
 	<assets path="assets" />
-	<assets path="alsoft.ini" />
 	<assets path="default_mods" rename="mods" />
+
+	<section if="desktop">
+		<assets path="alsoft.ini" rename="plugins/alsoft.ini" type="text" if="windows" />
+		<assets path="alsoft.ini" rename="plugins/alsoft.conf" type="text" unless="windows" />
+	</section>
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -58,10 +63,13 @@
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	<haxedef name="message.reporting" value="pretty" />
+
 	<prebuild haxe="source.Prebuild" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxObject', '@:build(horizon.macros.FlxObjectMacro.run())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite', '@:build(horizon.macros.FlxSpriteMacro.run())', false)" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<assets path="art/icon.png" rename="icon.png" if="linux"/>
+	<assets path="art/icon.png" rename="icon.png" if="linux" />
 	<icon path="art/icon.png" />
 </project>

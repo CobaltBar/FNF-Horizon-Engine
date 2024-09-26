@@ -50,7 +50,7 @@ class TitleState extends MusicState
 		else
 		{
 			if (FlxG.sound.music == null)
-				FlxG.sound.playMusic(Path.audio('menuSong'), 0);
+				FlxG.sound.playMusic(Path.audio('gettinFreaky'), 0);
 		}
 
 		Controls.onPress(Settings.keybinds['accept'], () ->
@@ -92,7 +92,6 @@ class TitleState extends MusicState
 				}
 			}
 		});
-
 		Path.clearUnusedMemory();
 	}
 

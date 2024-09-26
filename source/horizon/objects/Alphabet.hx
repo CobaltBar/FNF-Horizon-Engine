@@ -61,7 +61,7 @@ class Alphabet extends FlxSpriteGroup
 
 				switch (name)
 				{
-					case '\'' | '“' | '”' | '*' | '^':
+					case "'" | '“' | '”' | '*' | '^':
 						char.y -= char.height * .5;
 					case '-' | '+':
 						char.y -= char.height * .25;

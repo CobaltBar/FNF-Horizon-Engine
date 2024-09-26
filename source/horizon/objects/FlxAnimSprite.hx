@@ -10,7 +10,7 @@ class FlxAnimSprite extends FlxSprite
 
 		super(json.position[0] ?? 0, json.position[1] ?? 0);
 
-		var name = HaxePath.withoutDirectory(jsonPath);
+		var name = PathUtil.withoutDirectory(jsonPath);
 		var atlas = Path.sparrow(name);
 		for (multi in json.multi)
 			atlas.addAtlas(Path.sparrow(multi));
