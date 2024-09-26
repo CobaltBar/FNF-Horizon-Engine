@@ -240,15 +240,12 @@ private class PathInfo
 				var realPath = PathUtil.combine(path, entry);
 				if (FileSystem.isDirectory(realPath))
 					recurse(realPath, callback, exclude);
-				else
+				else if (exclude != null)
 				{
-					if (exclude != null)
-					{
-						if (!exclude(realPath))
-							callback(realPath);
-					}
-					else
+					if (!exclude(realPath))
 						callback(realPath);
 				}
+				else
+					callback(realPath);
 			}
 }

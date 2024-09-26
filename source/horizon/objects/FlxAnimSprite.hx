@@ -20,12 +20,10 @@ class FlxAnimSprite extends FlxSprite
 		scale.set(json.scale, json.scale);
 
 		for (data in json.animData)
-		{
 			if (data.indices != null)
 				animation.addByIndices(data.name, data.prefix, data.indices, '', data.fps ?? 24, data.looped ?? false);
 			else
 				animation.addByPrefix(data.name, data.prefix, data.fps ?? 24, data.looped ?? false);
-		}
 
 		updateHitbox();
 	}

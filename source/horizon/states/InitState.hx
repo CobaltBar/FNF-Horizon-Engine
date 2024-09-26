@@ -47,6 +47,14 @@ class InitState extends MusicState
 		}
 		request.onError = msg -> Log.error('Update Check Error: $msg');
 		request.request();
+
+		FlxG.signals.preStateCreate.add(state -> @:privateAccess
+		{
+			for (member in Alphabet.alphabetGroup.members)
+				member.destroy();
+			Alphabet.alphabetGroup.clear();
+		});
+
 		FlxG.plugins.addPlugin(new Conductor());
 
 		super.create();

@@ -47,49 +47,46 @@ class TitleState extends MusicState
 
 		if (comingBack)
 			skipIntro();
-		else
-		{
-			if (FlxG.sound.music == null)
-				FlxG.sound.playMusic(Path.audio('gettinFreaky'), 0);
-		}
+		else if (FlxG.sound.music == null)
+			FlxG.sound.playMusic(Path.audio('gettinFreaky'), 0);
+
+		add(new FlxSprite().makeGraphic(1, FlxG.height).screenCenter());
+		add(new FlxSprite().makeGraphic(FlxG.width, 1).screenCenter());
 
 		Controls.onPress(Settings.keybinds['accept'], () ->
 		{
 			if (!skippedIntro)
 				skipIntro();
-			else
+			else if (!transitioningOut)
 			{
-				if (!transitioningOut)
+				transitioningOut = true;
+				titleEnter.color = 0xFFFFFFFF;
+				titleEnter.alpha = 1;
+				titleEnter.animation.play('Pressed');
+				FlxG.sound.play(Path.audio('confirm'), .7);
+				if (!FlxG.sound.music.playing)
 				{
-					transitioningOut = true;
-					titleEnter.color = 0xFFFFFFFF;
-					titleEnter.alpha = 1;
-					titleEnter.animation.play('Pressed');
-					FlxG.sound.play(Path.audio('confirm'), .7);
-					if (!FlxG.sound.music.playing)
-					{
-						FlxG.sound.music.resume();
-						FlxG.sound.music.fadeIn(2, 0, .7);
-					}
-					FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {type: ONESHOT, ease: FlxEase.backIn});
-					FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
-					FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
-					FlxTween.tween(logo, {y: (FlxG.height - logo.height) * .5}, .45, {
-						type: ONESHOT,
-						ease: FlxEase.expoOut,
-						onComplete: tween -> Settings.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .5,
-							{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -FlxG.height * 1.5}, .5, {type: ONESHOT, ease: FlxEase.expoIn})
-					});
-					FlxTween.tween(logo.scale, {x: 1.6, y: 1.6}, .75, {
-						type: ONESHOT,
-						ease: FlxEase.expoOut,
-						onComplete: tween -> FlxTimer.wait(.5, () ->
-						{
-							comingBack = true;
-							MusicState.switchState(new MainMenuState());
-						})
-					});
+					FlxG.sound.music.resume();
+					FlxG.sound.music.fadeIn(2, 0, .7);
 				}
+				FlxTween.tween(titleEnter, {y: FlxG.height + 300}, 1, {type: ONESHOT, ease: FlxEase.backIn});
+				FlxTween.tween(gf, {x: FlxG.width + 300}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(logo, {x: (FlxG.width - logo.width) * .5}, .75, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(logo, {y: (FlxG.height - logo.height) * .5}, .45, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+					onComplete: tween -> Settings.reducedMotion ? FlxTween.tween(logo, {alpha: 0}, .5,
+						{type: ONESHOT, ease: FlxEase.expoIn}) : FlxTween.tween(logo, {y: -FlxG.height * 1.5}, .5, {type: ONESHOT, ease: FlxEase.expoIn})
+				});
+				FlxTween.tween(logo.scale, {x: 1.6, y: 1.6}, .75, {
+					type: ONESHOT,
+					ease: FlxEase.expoOut,
+					onComplete: tween -> FlxTimer.wait(.5, () ->
+					{
+						comingBack = true;
+						MusicState.switchState(new MainMenuState());
+					})
+				});
 			}
 		});
 		Path.clearUnusedMemory();

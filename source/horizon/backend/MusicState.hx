@@ -29,13 +29,6 @@ class MusicState extends FlxTransitionableState
 		Conductor.beatSignal.add(onBeat);
 		bopCams.push(FlxG.camera);
 		super.create();
-
-		// Reset Alphabet sprite group because the graphics are cleared
-		@:privateAccess {
-			for (member in Alphabet.alphabetGroup.members)
-				member.destroy();
-			Alphabet.alphabetGroup.clear();
-		}
 	}
 
 	public override function update(elapsed:Float):Void
@@ -61,7 +54,7 @@ class MusicState extends FlxTransitionableState
 		FlxTransitionableState.skipNextTransOut = skipTransOut;
 		FlxG.switchState(() -> state);
 		if (Constants.verbose)
-			Log.info('State Switch: \'${Type.getClassName(Type.getClass(state)).replace('horizon.', '')}\'');
+			Log.info("State Switch: '${Type.getClassName(Type.getClass(state)).replace('horizon.', '')}'");
 	}
 
 	@:noCompletion @:keep inline function get_curStep():Int

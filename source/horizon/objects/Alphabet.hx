@@ -9,8 +9,11 @@ class Alphabet extends FlxSpriteGroup
 	var textScale:Float;
 
 	private var widths:Array<Float> = [];
+	private var lines:Array<Array<FlxSprite>> = [];
 	private var maxWidth:Float = 0;
-	private var groups:Array<FlxSpriteGroup> = [];
+
+	// TODO autodetect?
+	private var seperateHeight:Float = 86;
 
 	private static var alphabetGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	private static final letterRegex = ~/^[a-zA-Z]+$/;
@@ -21,25 +24,24 @@ class Alphabet extends FlxSpriteGroup
 
 		this.bold = bold;
 		textScale = scale;
+		@:bypassAccessor this.align = align;
 
 		this.text = text;
 	}
 
 	function updateText(val:String):Void
 	{
-		for (group in groups)
-			group.kill();
-		groups = [];
+		for (line in lines)
+			for (char in line)
+				char.kill();
+
+		lines = [];
 		widths = [];
 		maxWidth = 0;
-
-		var i = 0;
-		for (text in val.split('\n'))
+		for (i => text in val.split('\n'))
 		{
-			var group:FlxSpriteGroup;
-			add(group = new FlxSpriteGroup(0, 0));
-			groups.push(group);
 			var letterWidth:Float = 0;
+			lines[i] = [];
 
 			for (ch in text.split(''))
 			{
@@ -54,10 +56,16 @@ class Alphabet extends FlxSpriteGroup
 						continue;
 				}
 
-				var char = alphabetGroup.recycle(FlxSprite, () -> return Create.atlas(0, 0, Path.sparrow('alphabet'), null, textScale));
-				char.x = 0;
-				char.y = 0;
+				var char = alphabetGroup.recycle(FlxSprite, () -> Create.atlas(0, 0, Path.sparrow('alphabet')));
+				char.x = char.angle = 0;
+				char.y = char.height;
+				char.alpha = 1;
+				char.clipRect = null;
+				char.color = 0xFFFFFFFF;
+				char.flipX = char.flipY = false;
 				char.setColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
+				if (char.animation.exists('idle'))
+					char.animation.remove('idle');
 
 				switch (name)
 				{
@@ -79,13 +87,15 @@ class Alphabet extends FlxSpriteGroup
 				if (bold)
 					name += ' bold';
 				else if (letterRegex.match(ch))
+				{
+					if (name == 'y')
+						char.y += char.height * .15;
 					name += name.toLowerCase() != name ? ' uppercase' : ' lowercase';
+				}
 				else
 					name += ' normal';
 				name = name.toLowerCase();
 
-				if (char.animation.exists('idle'))
-					char.animation.remove('idle');
 				char.animation.addByPrefix('idle', name, 24);
 				char.animation.play('idle');
 				char.scale.set(textScale, textScale);
@@ -93,15 +103,15 @@ class Alphabet extends FlxSpriteGroup
 				char.centerOffsets();
 				char.x = letterWidth;
 				char.y -= char.height;
-				letterWidth += char.width;
-				group.add(char);
+				char.y += seperateHeight * i * textScale;
+				letterWidth += char.width + (2 * textScale);
+				add(char);
+				lines[i].push(char);
 			}
 
 			widths.push(letterWidth);
 			if (letterWidth > maxWidth)
 				maxWidth = letterWidth;
-			group.y += group.height * (i + 1);
-			i++;
 		}
 
 		this.align = align;
@@ -115,36 +125,40 @@ class Alphabet extends FlxSpriteGroup
 
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
 	{
-		switch (val)
-		{
-			case LEFT:
-				for (group in groups)
-					group.x = 0;
-			case CENTER:
-				for (i => group in groups)
-					group.x = (maxWidth - widths[i]) * .5;
-			case RIGHT:
-				for (i => group in groups)
-					group.x = maxWidth - widths[i];
-			case JUSTIFY:
-		}
+		if (val == CENTER)
+			for (i => line in lines)
+				for (char in line)
+					char.x -= (maxWidth - widths[i]) * .5;
+		else if (val == RIGHT)
+			for (i => line in lines)
+				for (char in line)
+					char.x -= maxWidth - widths[i];
+
+		if (val == CENTER)
+			for (i => line in lines)
+				for (char in line)
+					char.x += (maxWidth - widths[i]) * .5;
+		else if (val == RIGHT)
+			for (i => line in lines)
+				for (char in line)
+					char.x += maxWidth - widths[i];
 		return align = val;
 	}
 
-	@:noCompletion override function destroy():Void
+	override function destroy():Void
 	{
-		for (group in groups)
-		{
-			group.kill();
-			remove(group, true);
-			groups = [];
-		}
+		for (line in lines)
+			for (char in line)
+			{
+				char.kill();
+				remove(char, true);
+			}
+		lines = [];
 		super.destroy();
 	}
 
-	public override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0,
+	override function setColorTransform(redMultiplier = 1.0, greenMultiplier = 1.0, blueMultiplier = 1.0, alphaMultiplier = 1.0, redOffset = 0.0,
 			greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
-		for (group in groups)
-			for (member in group)
-				member.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
+		for (member in members)
+			member.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 }

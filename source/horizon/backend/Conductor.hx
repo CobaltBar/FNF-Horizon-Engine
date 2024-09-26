@@ -41,14 +41,11 @@ class Conductor extends FlxBasic
 	{
 		if (song != null)
 			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
-		else
+		else if (FlxG.sound.music != null && switchToMusic)
 		{
-			if (FlxG.sound.music != null && switchToMusic)
-			{
-				if (Constants.verbose)
-					Log.info('Song is null, setting to FlxG.sound.music');
-				song = FlxG.sound.music;
-			}
+			if (Constants.verbose)
+				Log.info('Song is null, setting to FlxG.sound.music');
+			song = FlxG.sound.music;
 		}
 
 		if (time > measureTracker + measureLength)
