@@ -1,5 +1,11 @@
 package horizon.backend;
 
+@:structInit @:publicFields class TimeSignature
+{
+	var beatsPerMeasure:Float;
+	var stepsPerBeat:Float;
+}
+
 @:publicFields
 class Conductor extends FlxBasic
 {
@@ -10,8 +16,10 @@ class Conductor extends FlxBasic
 	static var measureLength:Float = -1;
 
 	static var offset:Float = 0;
-	static var time:Float = 0;
+	static var time(get, null):Float = 0;
+	static var lerpedTime:Float = 0;
 	static var song(default, set):FlxSound;
+	static var timeSignature(default, set):TimeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
 
 	static var curStep:Int = 0;
 	static var curBeat:Int = 0;
@@ -40,7 +48,7 @@ class Conductor extends FlxBasic
 	override function update(elapsed:Float):Void
 	{
 		if (song != null)
-			time = FlxMath.lerp(time, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
+			lerpedTime = FlxMath.lerp(lerpedTime, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
 		else if (FlxG.sound.music != null && switchToMusic)
 		{
 			if (Constants.verbose)
@@ -74,12 +82,16 @@ class Conductor extends FlxBasic
 
 	@:noCompletion static function reset():Void
 	{
+		timeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
 		bpm = 100;
 		switchToMusic = true;
 		stepTracker = beatTracker = measureTracker = time = 0;
 		curMeasure = curBeat = curStep = 0;
 		song = null;
 	}
+
+	@:noCompletion static function get_time():Float
+		return song.time + offset;
 
 	@:noCompletion static function set_song(val:FlxSound):FlxSound
 	{
@@ -91,9 +103,21 @@ class Conductor extends FlxBasic
 
 	@:noCompletion static function set_bpm(val:Float):Float
 	{
-		beatLength = 60 / val * 1000;
-		stepLength = beatLength * .25;
-		measureLength = beatLength * 4;
+		recalculateLengths(val);
 		return bpm = val;
+	}
+
+	@:noCompletion static function set_timeSignature(val:TimeSignature):TimeSignature
+	{
+		timeSignature = val;
+		recalculateLengths(bpm);
+		return val;
+	}
+
+	@:noCompletion static inline function recalculateLengths(val:Float):Void
+	{
+		beatLength = 60 / val * 1000;
+		stepLength = beatLength / timeSignature.stepsPerBeat;
+		measureLength = beatLength * timeSignature.beatsPerMeasure;
 	}
 }
