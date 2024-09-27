@@ -4,6 +4,15 @@ package horizon.backend;
 {
 	var beatsPerMeasure:Float;
 	var stepsPerBeat:Float;
+
+	static function fromString(sig:String):TimeSignature
+	{
+		if (!sig.contains('/'))
+			return {beatsPerMeasure: 4, stepsPerBeat: 4}
+
+		var split = sig.trim().split('/');
+		return {beatsPerMeasure: Std.parseFloat(split[0].trim()), stepsPerBeat: Std.parseFloat(split[1].trim())}
+	}
 }
 
 @:publicFields
