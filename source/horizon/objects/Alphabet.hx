@@ -11,9 +11,7 @@ class Alphabet extends FlxSpriteGroup
 	private var widths:Array<Float> = [];
 	private var lines:Array<Array<FlxSprite>> = [];
 	private var maxWidth:Float = 0;
-
-	// TODO autodetect?
-	private var seperateHeight:Float = 86;
+	private var maxHeight:Float = 0;
 
 	private static var alphabetGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	private static final letterRegex = ~/^[a-zA-Z]+$/;
@@ -24,9 +22,9 @@ class Alphabet extends FlxSpriteGroup
 
 		this.bold = bold;
 		textScale = scale;
-		@:bypassAccessor this.align = align;
 
 		this.text = text;
+		this.align = align;
 	}
 
 	function updateText(val:String):Void
@@ -37,82 +35,89 @@ class Alphabet extends FlxSpriteGroup
 
 		lines = [];
 		widths = [];
-		maxWidth = 0;
-		for (i => text in val.split('\n'))
+		maxWidth = maxHeight = 0;
+
+		for (i => text in val.replace('\r', '').split('\n'))
 		{
-			var letterWidth:Float = 0;
+			var letterTracker:Float = 0;
 			lines[i] = [];
 
 			for (ch in text.split(''))
 			{
-				var name = ch;
-
-				switch (name)
+				if (ch == ' ')
 				{
-					case '\r':
-						continue;
-					case ' ':
-						letterWidth += 30 * textScale;
-						continue;
+					letterTracker += 30 * textScale;
+					continue;
 				}
 
-				var char = alphabetGroup.recycle(FlxSprite, () -> Create.atlas(0, 0, Path.sparrow('alphabet')));
-				char.x = char.angle = 0;
-				char.y = char.height;
-				char.alpha = 1;
-				char.clipRect = null;
-				char.color = 0xFFFFFFFF;
-				char.flipX = char.flipY = false;
-				char.setColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
-				if (char.animation.exists('idle'))
-					char.animation.remove('idle');
-
-				switch (name)
+				var animName = switch (ch)
 				{
-					case "'" | '“' | '”' | '*' | '^':
-						char.y -= char.height * .5;
-					case '-' | '+':
-						char.y -= char.height * .25;
-					case '"':
-						name = 'quote';
-						char.y -= char.height * .5;
 					case '?':
-						name = 'question';
+						'question';
 					case '&':
-						name = 'ampersand';
+						'ampersand';
 					case '<':
-						name = 'less';
+						'less';
+					case '"':
+						'quote';
+					default:
+						ch;
 				}
 
 				if (bold)
-					name += ' bold';
+					animName += ' bold';
 				else if (letterRegex.match(ch))
-				{
-					if (name == 'y')
-						char.y += char.height * .15;
-					name += name.toLowerCase() != name ? ' uppercase' : ' lowercase';
-				}
+					animName += animName.toLowerCase() != animName ? ' uppercase' : ' lowercase';
 				else
-					name += ' normal';
-				name = name.toLowerCase();
+					animName += ' normal';
+				animName = animName.toLowerCase();
 
-				char.animation.addByPrefix('idle', name, 24);
+				var char = alphabetGroup.recycle(FlxSprite, () -> Create.atlas(0, 0, Path.sparrow('alphabet')));
+				if (char.animation.exists('idle'))
+					char.animation.remove('idle');
+				char.animation.addByPrefix('idle', animName, 24);
 				char.animation.play('idle');
 				char.scale.set(textScale, textScale);
 				char.updateHitbox();
-				char.centerOffsets();
-				char.x = letterWidth;
+
+				char.x = char.y = char.angle = 0;
+				char.angle = 1;
+				char.clipRect = null;
+				char.color = 0xFFFFFFFF;
+				char.flipX = char.flipY = false;
+				char.setColorTransform();
+
+				if (char.height > maxHeight)
+					maxHeight = char.height;
+
+				switch (ch)
+				{
+					case "'" | '“' | '”' | '*' | '^' | '"':
+						char.y -= char.height;
+					case '+':
+						char.y -= char.height * .25;
+					case '-':
+						char.y -= char.height;
+					case 'y':
+						if (!bold)
+							char.y -= char.height * .15;
+				}
+
+				char.x = letterTracker;
 				char.y -= char.height;
-				char.y += seperateHeight * i * textScale;
-				letterWidth += char.width + (2 * textScale);
+				letterTracker += char.width + (2 * textScale);
 				add(char);
 				lines[i].push(char);
 			}
 
-			widths.push(letterWidth);
-			if (letterWidth > maxWidth)
-				maxWidth = letterWidth;
+			widths.push(letterTracker);
+			if (letterTracker > maxWidth)
+				maxWidth = letterTracker;
 		}
+
+		for (i => line in lines)
+			for (char in line)
+				char.y += maxHeight * (i + 1);
 
 		this.align = align;
 	}
@@ -125,11 +130,11 @@ class Alphabet extends FlxSpriteGroup
 
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
 	{
-		if (val == CENTER)
+		if (align == CENTER)
 			for (i => line in lines)
 				for (char in line)
 					char.x -= (maxWidth - widths[i]) * .5;
-		else if (val == RIGHT)
+		else if (align == RIGHT)
 			for (i => line in lines)
 				for (char in line)
 					char.x -= maxWidth - widths[i];

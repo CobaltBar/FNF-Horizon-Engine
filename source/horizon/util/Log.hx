@@ -40,7 +40,7 @@ class Log
 	public static function info(value:Dynamic, ?pos:PosInfos):Void
 		print(value, 'INFO', 111, pos);
 
-	static inline function print(value:Dynamic, level:String, color:Int, ?pos:PosInfos):Void
+	@:noCompletion public static inline function print(value:Dynamic, level:String, color:Int, ?pos:PosInfos):Void
 	{
 		var msg = '${ansi(69)}[${ansi(39)}${DateTools.format(Date.now(), '%H:%M:%S')} ${ansi(178)}${pos.fileName.replace('source/', '').replace('horizon/', '')}:${pos.lineNumber}${ansi(69)}]';
 		Sys.println(msg = '${msg.rpad(' ', 90)}${ansi(color)}$level: $value\033[0;0m');

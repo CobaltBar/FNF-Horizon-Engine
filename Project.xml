@@ -65,8 +65,11 @@
 	<haxedef name="message.reporting" value="pretty" />
 
 	<prebuild haxe="source.Prebuild" />
-	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxObject', '@:build(horizon.macros.FlxObjectMacro.run())', false)" />
-	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite', '@:build(horizon.macros.FlxSpriteMacro.run())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxObject', '@:build(horizon.macros.ModificationMacros.FlxObject())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite', '@:build(horizon.macros.ModificationMacros.FlxSprite())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite.IFlxSprite', '@:build(horizon.macros.ModificationMacros.IFlxSprite())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('haxe.ui.locale.LocaleManager', '@:build(horizon.macros.ModificationMacros.LocaleManager())', false)" />
+	<haxeflag name="--macro" value="addGlobalMetadata('flixel.system.frontEnds.LogFrontEnd', '@:build(horizon.macros.ModificationMacros.LogFrontEnd())', false)" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
