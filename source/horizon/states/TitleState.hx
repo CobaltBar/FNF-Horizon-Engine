@@ -50,9 +50,6 @@ class TitleState extends MusicState
 		else if (FlxG.sound.music == null)
 			FlxG.sound.playMusic(Path.audio('gettinFreaky'), 0);
 
-		add(new FlxSprite().makeGraphic(1, FlxG.height).screenCenter());
-		add(new FlxSprite().makeGraphic(FlxG.width, 1).screenCenter());
-
 		Controls.onPress(Settings.keybinds['accept'], () ->
 		{
 			if (!skippedIntro)
