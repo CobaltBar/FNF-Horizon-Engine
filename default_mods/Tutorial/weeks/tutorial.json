@@ -1,0 +1,6 @@
+{
+    "name": "Tutorial",
+    "menuChars": ["bf", "gf"],
+    "bg": "stage",
+    "songs": ["tutorial"]
+}

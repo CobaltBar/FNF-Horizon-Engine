@@ -158,7 +158,7 @@ class Mods
 						if (PathUtil.extension(filePath) == 'ogg')
 						{
 							file = PathUtil.withoutExtension(file.trim().toLowerCase());
-							if ((file == 'voices' || file == 'voices-player' || file == 'voices-opponent') && audios.indexOf(file) == -1)
+							if (file == 'voices' || file == 'voices-player' || file == 'voices-opponent' || file == 'inst')
 								audios.push(file);
 						}
 				}
@@ -230,8 +230,8 @@ class Mods
 				weeks.push({
 					name: json.name ?? week,
 					menuChars: json.menuChars ?? ['bf'],
-					bg: json.bg,
-					bgScale: json.bgScale,
+					bg: json.bg ?? 'blank',
+					bgScale: json.bgScale ?? 1,
 					locked: false ?? Settings.savedMods[folder.split('/')[1]].weeks[week]?.locked,
 					unlocks: json.unlocks ?? [],
 					songs: json.songs ?? ['test'],
@@ -252,48 +252,48 @@ typedef AnimatedChracterData =
 {
 	var position:Array<Float>;
 	var animData:Array<AnimationData>;
-	var scale:Float;
-	var antialiasing:Bool;
-	var flipX:Bool;
+	var scale:Null<Float>;
+	var antialiasing:Null<Bool>;
+	var flipX:Null<Bool>;
 	var multi:Array<String>;
 }
 
 typedef CharacterData = AnimatedChracterData &
 {
-	var icon:String;
+	var icon:Null<String>;
 	var color:Array<Int>;
 	var cameraPos:Array<Int>;
-	var singDuration:Int;
+	var singDuration:Null<Int>;
 }
 
 typedef StageData =
 {
-	var defaultZoom:Float;
+	var defaultZoom:Null<Float>;
 	var playerPos:Array<Float>;
 	var gfPos:Array<Float>;
 	var opponentPos:Array<Float>;
-	var hideGF:Bool;
+	var hideGF:Null<Bool>;
 	var playerCam:Array<Float>;
 	var gfCam:Array<Float>;
 	var opponentCam:Array<Float>;
-	var camSpeed:Float;
+	var camSpeed:Null<Float>;
 
 	var objs:Array<StageSprite>;
 }
 
 typedef StageSprite = AnimatedChracterData &
 {
-	var imageName:String;
+	var imageName:Null<String>;
 }
 
 typedef AnimationData =
 {
-	var name:String;
-	var prefix:String;
+	var name:Null<String>;
+	var prefix:Null<String>;
 	var indices:Array<Int>;
-	var fps:Float;
+	var fps:Null<Float>;
 	var offsets:Array<Float>;
-	var looped:Bool;
+	var looped:Null<Bool>;
 }
 
 // JSONs

@@ -1,6 +1,7 @@
 {
     "bpm": 102,
-    "gfPosition": [512, 50],
+    "timeSignature": "4/4",
+    "gfPosition": [532, 50],
     "logoPosition": [-130, -100],
     "startPosition": [150, 576]
 }

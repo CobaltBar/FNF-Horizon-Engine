@@ -80,6 +80,8 @@ private class PathInfo
 
 	static function find(key:String, exts:Array<String>, ?mods:Array<Mod>, mustFind:Bool = false):PathInfo
 	{
+		if (mods != null)
+			mods.push(Mods.assets);
 		for (ext in exts)
 		{
 			for (mod in (mods == null ? modSearch : mods))
@@ -93,9 +95,8 @@ private class PathInfo
 	static function cacheImage(key:String, ?mods:Array<Mod>, path:Bool = false):FlxGraphic
 	{
 		var found = path ? {path: key, mod: Mods.assets} : find(key, ['png'], mods);
-		var cacheKey = 'IMAGE-${PathUtil.withoutDirectory(found.mod.path)}-$key';
-
-		var bitmap = BitmapData.fromFile(found.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png');
+		var bitmap = BitmapData.fromFile(found?.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png');
+		var cacheKey = 'IMAGE-${(found?.mod ?? Mods.assets).folder}-$key';
 
 		if (Settings.gpuTextures)
 			@:privateAccess {
@@ -116,16 +117,19 @@ private class PathInfo
 
 		trackedImages.set(cacheKey, graphic);
 		localAssets.push(cacheKey);
-		Log.info('Caching image \'$key\' (${path ? 'Path' : found.mod.name})');
+		if (found != null)
+			Log.info('Caching image \'$key\' (${path ? 'Path' : found?.mod?.name ?? 'Unknown'})');
 
 		return graphic;
 	}
 
 	static function image(key:String, ?mods:Array<Mod>):FlxGraphic
 	{
+		if (mods != null)
+			mods.push(Mods.assets);
 		for (mod in (mods == null ? modSearch : mods))
 		{
-			var cacheKey = 'IMAGE-${PathUtil.withoutDirectory(mod.path)}-$key';
+			var cacheKey = 'IMAGE-${mod.folder}-$key';
 			if (trackedImages.exists(cacheKey))
 			{
 				localAssets.push(cacheKey);
@@ -138,9 +142,11 @@ private class PathInfo
 
 	static function audio(key:String, ?mods:Array<Mod>):Sound
 	{
+		if (mods != null)
+			mods.push(Mods.assets);
 		for (mod in (mods == null ? modSearch : mods))
 		{
-			var cacheKey = 'AUDIO-${PathUtil.withoutDirectory(mod.path)}-$key';
+			var cacheKey = 'AUDIO-${mod.folder}-$key';
 			if (trackedAudio.exists(cacheKey))
 			{
 				localAssets.push(cacheKey);

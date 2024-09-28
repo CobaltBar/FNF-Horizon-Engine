@@ -1,0 +1,13 @@
+{
+	"position": [-15, -85],
+	"animData": [
+		{
+			"name": "idle",
+			"prefix": "M BF Idle"
+		},
+		{
+			"name": "confirm",
+			"prefix": "M bf HEY"
+		}
+	]
+}

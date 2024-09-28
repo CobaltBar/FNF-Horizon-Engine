@@ -21,6 +21,7 @@ import flixel.util.FlxSignal;
 import flixel.util.FlxTimer;
 import haxe.ds.ArraySort;
 import horizon.backend.*;
+import horizon.backend.Conductor;
 import horizon.macros.*;
 import horizon.modding.Mod;
 import horizon.modding.Mods;

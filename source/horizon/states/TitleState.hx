@@ -22,7 +22,8 @@ class TitleState extends MusicState
 		persistentUpdate = true;
 
 		titleData = Path.json('titleData');
-		Conductor.bpm = titleData.bpm;
+		Conductor.timeSignature = TimeSignature.fromString(titleData.timeSignature ?? '4/4');
+		Conductor.bpm = titleData.bpm ?? 100;
 		var goofyTextList = Path.txt('introTexts').split('\n');
 		var num = FlxG.random.int(0, goofyTextList.length - 1);
 		goofyTexts.push(goofyTextList[num].split('--')[0]);
@@ -214,7 +215,8 @@ class TitleState extends MusicState
 
 typedef TitleJSON =
 {
-	bpm:Float,
+	bpm:Null<Float>,
+	timeSignature:Null<String>,
 	gfPosition:Array<Int>,
 	logoPosition:Array<Int>,
 	startPosition:Array<Int>

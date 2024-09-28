@@ -89,6 +89,7 @@ class MainMenuState extends MusicMenuState
 	{
 		super.exitState();
 		transitioningOut = false;
+		prevSelected = curSelected;
 		if (curSelected == (4 - (modCount == 0 ? 1 : 0)))
 			Util.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
 		else
@@ -123,6 +124,7 @@ class MainMenuState extends MusicMenuState
 	public override function returnState():Void
 	{
 		super.returnState();
+		prevSelected = curSelected;
 		MusicState.switchState(new TitleState());
 	}
 

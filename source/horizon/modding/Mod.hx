@@ -1,6 +1,5 @@
 package horizon.modding;
 
-// TODO remove folder
 @:publicFields @:structInit class Mod
 {
 	var name:String;
@@ -28,10 +27,10 @@ package horizon.modding;
 
 typedef ModJSON =
 {
-	var name:String;
-	var description:String;
-	var version:String;
+	var name:Null<String>;
+	var description:Null<String>;
+	var version:Null<String>;
 	var color:Array<Int>;
-	var global:Bool;
-	var modSysVer:Float;
+	var global:Null<Bool>;
+	var modSysVer:Null<Float>;
 }

@@ -14,7 +14,7 @@ package horizon.modding;
 
 typedef SongJSON =
 {
-	var name:String;
-	var icon:String;
-	var hide:Bool;
+	var name:Null<String>;
+	var icon:Null<String>;
+	var hide:Null<Bool>;
 }

@@ -2,21 +2,21 @@ package horizon.objects;
 
 class MenuCharacter extends FlxAnimSprite
 {
-	var bop:Bool;
+	var leftAndRight:Bool;
 
-	public function new(jsonPath:String)
+	public function new(jsonPath:String, ?mods:Array<Mod>)
 	{
-		super(jsonPath);
+		super(jsonPath, mods);
 
-		bop = animation.exists('danceLeft') && animation.exists('danceRight');
+		leftAndRight = animation.exists('danceLeft') && animation.exists('danceRight');
 	}
 
-	public function dance():Void
-		if (bop)
+	public function bop():Void
+		if (leftAndRight)
 			if (Conductor.curBeat % 2 == 0)
-				playAnim('danceLeft');
+				playAnim('danceLeft', true);
 			else
-				playAnim('danceRight');
+				playAnim('danceRight', true);
 		else
-			playAnim('idle');
+			playAnim('idle', true);
 }

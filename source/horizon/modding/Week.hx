@@ -18,11 +18,11 @@ package horizon.modding;
 
 typedef WeekJSON =
 {
-	var name:String;
+	var name:Null<String>;
 	var menuChars:Array<String>;
-	var bg:String;
-	var bgScale:Float;
-	var locked:Bool;
+	var bg:Null<String>;
+	var bgScale:Null<Float>;
+	var locked:Null<Bool>;
 	var unlocks:Array<String>;
 	var songs:Array<String>;
 	var difficulties:Array<String>;
