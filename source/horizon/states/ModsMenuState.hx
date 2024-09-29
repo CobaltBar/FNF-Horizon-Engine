@@ -244,7 +244,7 @@ class ModsMenuState extends MusicMenuState
 			menuOptions[curSelected].alpha = 1;
 
 			var mod = optionToMod[menuOptions[curSelected]];
-			modIcon.loadGraphic(mod.iconPath);
+			modIcon.loadGraphic(Path.image(mod.iconPath, [mod]));
 			modDesc.text = mod.description;
 			modVer.text = mod.version;
 			targetColor = mod.color;
@@ -266,7 +266,7 @@ class ModsMenuState extends MusicMenuState
 
 			enabledOptions[curEnabled].alpha = 1;
 			var mod = optionToMod[enabledOptions[curEnabled]];
-			modIcon.loadGraphic(mod.iconPath.trim());
+			modIcon.loadGraphic(Path.image(mod.iconPath, [mod]));
 			modDesc.text = mod.description;
 			modVer.text = mod.version;
 			targetColor = mod.color;
