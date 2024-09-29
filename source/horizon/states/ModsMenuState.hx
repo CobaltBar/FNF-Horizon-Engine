@@ -16,7 +16,7 @@ class ModsMenuState extends MusicMenuState
 
 	var curSection:Int = 1;
 
-	var parsedMods:Array<Mod> = [];
+	var parsedMods:Array<Mod>;
 	var optionToMod:Map<FlxSprite, Mod> = [];
 
 	var menuCurveProgress:Array<Float> = [];
@@ -75,16 +75,18 @@ class ModsMenuState extends MusicMenuState
 		add(controlsText);
 
 		var enabled = [for (mod in Mods.enabled) mod.name];
-		for (i in 0...Mods.all.length)
-		{
-			if (enabled.contains(Mods.all[i]))
-				continue;
-			parsedMods.push(Mods.parseMod(PathUtil.combine('mods', Mods.all[i]), Mods.all[i], i));
-		}
 
-		for (mod in parsedMods)
+		parsedMods = [
+			for (i => mod in Mods.all.filter(f -> !enabled.contains(f)))
+				Mods.parseMod(PathUtil.combine('mods', mod), mod, i)
+		];
+
+		for (i => mod in parsedMods)
 		{
-			var option = new Alphabet(0, 0, mod.name, false, CENTER, .5);
+			var point = Util.quadBezier(FlxPoint.weak(0, 140), FlxPoint.weak(500, 420), FlxPoint.weak(0, FlxG.height - 20),
+				(i + parsedMods.length * .5) / parsedMods.length);
+
+			var option = new Alphabet(point.x, point.y, mod.name, false, CENTER, .5);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.alpha = .6;
 			option.cameras = [optionsCam];
@@ -93,14 +95,17 @@ class ModsMenuState extends MusicMenuState
 			Path.cacheImage(mod.iconPath, [mod], true);
 
 			option.x -= option.width;
-			option.y = (circle.height - option.height) * .5;
 
+			point.putWeak();
 			menuOptions.insert(mod.ID, option);
 		}
 
-		for (mod in Mods.enabled)
+		for (i => mod in Mods.enabled)
 		{
-			var option = new Alphabet(FlxG.width, 0, mod.name, false, CENTER, .5);
+			var point = Util.quadBezier(FlxPoint.weak(FlxG.width, 140), FlxPoint.weak(FlxG.width - 500, 420), FlxPoint.weak(FlxG.width, FlxG.height - 20),
+				(i + (Mods.enabled.length * .5)) / Mods.enabled.length);
+
+			var option = new Alphabet(FlxG.width, point.y, mod.name, false, CENTER, .5);
 			option.setColorTransform(1, 1, 1, 1, 255, 255, 255, 0);
 			option.alpha = .6;
 			option.cameras = [optionsCam];
@@ -108,8 +113,7 @@ class ModsMenuState extends MusicMenuState
 			add(option);
 			Path.cacheImage(mod.iconPath, [mod], true);
 
-			option.y = (circle.height - option.height) * .5;
-
+			point.putWeak();
 			enabledOptions.insert(mod.ID, option);
 		}
 
