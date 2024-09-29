@@ -140,27 +140,27 @@ class ModsMenuState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
-		for (i in 0...menuOptions.length)
+		for (i => option in menuOptions)
 		{
 			menuCurveProgress[i] = FlxMath.lerp(menuCurveProgress[i], (i - curSelected + (menuOptions.length * .5)) / menuOptions.length,
 				FlxMath.bound(elapsed * 10, 0, 1));
 
 			var point = Util.quadBezier(FlxPoint.weak(0, 140), FlxPoint.weak(500, 420), FlxPoint.weak(0, FlxG.height - 20), menuCurveProgress[i]);
-			menuOptions[i].x = FlxMath.lerp(menuOptions[i].x, point.x - menuOptions[i].width, FlxMath.bound(elapsed * 10, 0, 1));
-			menuOptions[i].y = FlxMath.lerp(menuOptions[i].y, point.y, FlxMath.bound(elapsed * 10, 0, 1));
+			option.x = FlxMath.lerp(option.x, point.x - option.width, FlxMath.bound(elapsed * 10, 0, 1));
+			option.y = FlxMath.lerp(option.y, point.y, FlxMath.bound(elapsed * 10, 0, 1));
 
 			point.putWeak();
 		}
 
-		for (i in 0...enabledOptions.length)
+		for (i => option in enabledOptions)
 		{
 			enabledCurveProgress[i] = FlxMath.lerp(enabledCurveProgress[i], (i - curEnabled + (enabledOptions.length * .5)) / enabledOptions.length,
 				FlxMath.bound(elapsed * 10, 0, 1));
 
 			var point = Util.quadBezier(FlxPoint.weak(FlxG.width, 140), FlxPoint.weak(FlxG.width - 500, 420), FlxPoint.weak(FlxG.width, FlxG.height - 20),
 				enabledCurveProgress[i]);
-			enabledOptions[i].x = FlxMath.lerp(enabledOptions[i].x, point.x, FlxMath.bound(elapsed * 10, 0, 1));
-			enabledOptions[i].y = FlxMath.lerp(enabledOptions[i].y, point.y, FlxMath.bound(elapsed * 10, 0, 1));
+			option.x = FlxMath.lerp(option.x, point.x, FlxMath.bound(elapsed * 10, 0, 1));
+			option.y = FlxMath.lerp(option.y, point.y, FlxMath.bound(elapsed * 10, 0, 1));
 
 			point.putWeak();
 		}
@@ -266,7 +266,7 @@ class ModsMenuState extends MusicMenuState
 
 			enabledOptions[curEnabled].alpha = 1;
 			var mod = optionToMod[enabledOptions[curEnabled]];
-			modIcon.loadGraphic(mod.iconPath);
+			modIcon.loadGraphic(mod.iconPath.trim());
 			modDesc.text = mod.description;
 			modVer.text = mod.version;
 			targetColor = mod.color;
@@ -306,10 +306,10 @@ class ModsMenuState extends MusicMenuState
 	{
 		Mods.enabled = [];
 
-		for (i in 0...enabledOptions.length)
+		for (i => option in enabledOptions)
 		{
-			optionToMod[enabledOptions[i]].ID = i + 1;
-			Mods.enabled.insert(i + 1, optionToMod[enabledOptions[i]]);
+			optionToMod[option].ID = i + 1;
+			Mods.enabled.insert(i + 1, optionToMod[option]);
 		}
 
 		ArraySort.sort(Mods.enabled, (a, b) -> a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0);

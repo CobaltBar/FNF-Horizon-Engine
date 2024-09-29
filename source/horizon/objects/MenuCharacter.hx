@@ -12,11 +12,12 @@ class MenuCharacter extends FlxAnimSprite
 	}
 
 	public function bop():Void
-		if (leftAndRight)
-			if (Conductor.curBeat % 2 == 0)
-				playAnim('danceLeft', true);
+		if (animation.curAnim?.name != 'confirm')
+			if (leftAndRight)
+				if (Conductor.curBeat % 2 == 0)
+					playAnim('danceLeft', true);
+				else
+					playAnim('danceRight', true);
 			else
-				playAnim('danceRight', true);
-		else
-			playAnim('idle', true);
+				playAnim('idle', true);
 }

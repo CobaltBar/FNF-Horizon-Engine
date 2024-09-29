@@ -1,5 +1,7 @@
 package horizon.states;
 
+import flixel.math.FlxRect;
+
 class StoryMenuState extends MusicMenuState
 {
 	var difficulty:FlxSprite;
@@ -11,7 +13,7 @@ class StoryMenuState extends MusicMenuState
 	var curDifficulty:Int = 0;
 	var tracks:FlxSprite;
 
-	var menuChars:Map<String, MenuCharacter> = [];
+	var menuChars:Map<Mod, Map<String, MenuCharacter>> = [];
 	var optionToData:Array<StoryMenuData> = [];
 
 	public override function create():Void
@@ -25,14 +27,28 @@ class StoryMenuState extends MusicMenuState
 		for (diff in ['easy', 'normal', 'hard', 'erect', 'nightmare'])
 			Path.image('difficulty-$diff');
 
+		// I don't like this but it works
 		for (mod in [Mods.assets].concat(Mods.enabled))
+		{
+			menuChars.set(mod, []);
 			for (week in mod.weeks)
 			{
 				if (week.bg != 'blank')
 					Path.image('menu-${week.bg}', [mod]);
 				for (char in week.menuChars)
-					Path.sparrow('char-$char', [mod]);
+					if (!menuChars[mod].exists(char))
+					{
+						var character = new MenuCharacter('char-$char', [mod]);
+						character.cameras = [optionsCam];
+						character.screenCenter();
+						character.x += character.positions[0];
+						character.y += character.positions[1];
+						character.visible = false;
+						add(character);
+						menuChars[mod].set(char, character);
+					}
 			}
+		}
 
 		add(bg = Create.graphic(0, 60, FlxG.width, 386, 0xFFF9CF51, [menuCam]));
 
@@ -55,25 +71,27 @@ class StoryMenuState extends MusicMenuState
 		leftArrow.animation.addByPrefix('idle', 'leftIdle', 24);
 		leftArrow.animation.addByPrefix('press', 'leftConfirm', 24);
 		leftArrow.animation.play('idle');
-		leftArrow.x = difficulty.x - leftArrow.width - 10;
+		leftArrow.x = difficulty.x - leftArrow.width - 15;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 
 		add(rightArrow = Create.atlas(0, 0, Path.sparrow('arrows'), [menuCam]));
 		rightArrow.animation.addByPrefix('idle', 'rightIdle', 24);
 		rightArrow.animation.addByPrefix('press', 'rightConfirm', 24);
 		rightArrow.animation.play('idle');
-		rightArrow.x = difficulty.x + difficulty.width + 5;
+		rightArrow.x = difficulty.x + difficulty.width + 10;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 
 		for (mod in [Mods.assets].concat(Mods.enabled))
 		{
 			var songNames = [for (song in mod.songs) song.folder.toLowerCase() => song.name];
 
-			for (week in mod.weeks)
+			for (i => week in mod.weeks)
 			{
-				var option = Create.sprite(0, FlxG.height - 100, Path.image('week-${week.name.toLowerCase().replace(' ', '')}'), [optionsCam]);
-				option.alpha = .6;
+				var option = Create.sprite(0, FlxG.height - 250 - (100 * i), Path.image('week-${week.name.toLowerCase().replace(' ', '')}'), [optionsCam]);
+				option.clipRect = new FlxRect(0, 0, option.frameWidth, option.frameHeight);
 				option.screenCenter(X);
+				option.x -= 75;
+				option.alpha = .6;
 				optionToData.push({mod: mod, week: week, songs: [for (song in week.songs) songNames[song]]});
 				add(option);
 				menuOptions.push(option);
@@ -85,21 +103,24 @@ class StoryMenuState extends MusicMenuState
 			leftArrow.animation.play('press');
 			changeDifficulty(-1);
 		});
+
 		Controls.onPress(Settings.keybinds.get('ui_right'), () -> if (!transitioningOut)
 		{
 			rightArrow.animation.play('press');
 			changeDifficulty(1);
 		});
+
 		Controls.onRelease(Settings.keybinds.get('ui_left'), () -> if (!transitioningOut)
 		{
 			leftArrow.animation.play('idle');
-			leftArrow.x = difficulty.x - leftArrow.width - 10;
+			leftArrow.x = difficulty.x - leftArrow.width - 15;
 			leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 		});
+
 		Controls.onRelease(Settings.keybinds.get('ui_right'), () -> if (!transitioningOut)
 		{
 			rightArrow.animation.play('idle');
-			rightArrow.x = difficulty.x + difficulty.width + 5;
+			rightArrow.x = difficulty.x + difficulty.width + 10;
 			rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 		});
 
@@ -109,11 +130,22 @@ class StoryMenuState extends MusicMenuState
 
 	public override function update(elapsed:Float):Void
 	{
+		if (!transitioningOut)
+			for (i => option in menuOptions)
+			{
+				option.y = FlxMath.lerp(option.y, FlxG.height - 250 - (100 * (curSelected - i)), FlxMath.bound(elapsed * 5, 0, 1));
+				option.clipRect.y = option.y < FlxG.height - 274 ? (FlxG.height - 274) - option.y : 0;
+				option.clipRect = option.clipRect;
+			}
+
 		super.update(elapsed);
 	}
 
 	public override function changeSelection(change:Int)
 	{
+		for (char in menuChars[optionToData[curSelected].mod])
+			char.visible = false;
+
 		menuOptions[curSelected].alpha = .6;
 		super.changeSelection(change);
 		menuOptions[curSelected].alpha = 1;
@@ -137,26 +169,8 @@ class StoryMenuState extends MusicMenuState
 		}
 		bg.updateHitbox();
 
-		for (key => value in menuChars)
-			if (!key.startsWith(optionToData[curSelected].mod.folder))
-				value.visible = false;
-
-		for (char in optionToData[curSelected].week.menuChars)
-		{
-			var key = '${optionToData[curSelected].mod.folder}-$char';
-			if (!menuChars.exists(key))
-			{
-				var character = new MenuCharacter('char-$char', [optionToData[curSelected].mod]);
-				character.cameras = [optionsCam];
-				character.screenCenter();
-				character.x += character.positions[0];
-				character.y += character.positions[1];
-				add(character);
-				menuChars.set(key, character);
-			}
-			else
-				menuChars[key].visible = true;
-		}
+		for (char in menuChars[optionToData[curSelected].mod])
+			char.visible = true;
 
 		curDifficulty = Math.floor(optionToData[curSelected].week.difficulties.length * .5);
 		changeDifficulty(0);
@@ -178,23 +192,67 @@ class StoryMenuState extends MusicMenuState
 		difficulty.screenCenter(X);
 		difficulty.x += FlxG.width * .3;
 
-		leftArrow.x = difficulty.x - leftArrow.width - 10;
+		leftArrow.x = difficulty.x - leftArrow.width - 15;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
-		rightArrow.x = difficulty.x + difficulty.width + 5;
+		rightArrow.x = difficulty.x + difficulty.width + 10;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 	}
 
 	public override function onBeat()
 	{
 		super.onBeat();
-		for (char in menuChars)
-			char.bop();
+		for (mod in menuChars.keys())
+			for (char in menuChars[mod])
+				char.bop();
+	}
+
+	public override function exitState():Void
+	{
+		var mods = Mods.enabled.filter(f -> f != optionToData[curSelected].mod && f.global);
+		mods.unshift(optionToData[curSelected].mod);
+
+		var folderToSong = [
+			for (song in optionToData[curSelected].mod.songs)
+				song.folder.toLowerCase() => song
+		];
+
+		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
+
+		/* FlxTimer.wait(1, () -> MusicState.switchState(new PlayState({
+			mods: mods,
+			songs: [for (song in optionToData[curSelected].week.songs) folderToSong[song]],
+			difficulty: optionToData[curSelected].week.difficulties[curDifficulty].toLowerCase(),
+			week: optionToData[curSelected].week
+		})));*/
+
+		if (!Settings.reducedMotion)
+		{
+			menuOptions[curSelected].clipRect = null;
+			if (Settings.flashingLights)
+				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
+			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.5, y: 1.5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			for (i => option in menuOptions)
+				if (i != curSelected)
+					FlxTween.tween(option, {alpha: 0}, .5);
+
+			for (spr in [difficulty, leftArrow, rightArrow, weekInfo, songsText, tracks, bg])
+				FlxTween.tween(spr, {alpha: .25}, .5);
+			for (char in menuChars[optionToData[curSelected].mod])
+				if (!char.animation.exists('confirm'))
+					FlxTween.tween(char, {alpha: .45}, .5);
+		}
+
+		for (char in menuChars[optionToData[curSelected].mod])
+			if (char.animation.exists('confirm'))
+				char.playAnim('confirm', true);
+
+		super.exitState();
 	}
 
 	public override function returnState():Void
 	{
-		super.returnState();
 		MusicState.switchState(new MainMenuState());
+		super.returnState();
 	}
 }
 

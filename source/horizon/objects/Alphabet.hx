@@ -5,7 +5,7 @@ class Alphabet extends FlxSpriteGroup
 {
 	var align(default, set):FlxTextAlign;
 	var text(default, set):String;
-	var bold:Bool;
+	var bold(default, set):Bool;
 	var textScale:Float;
 
 	private var widths:Array<Float> = [];
@@ -20,11 +20,11 @@ class Alphabet extends FlxSpriteGroup
 	{
 		super(x, y);
 
-		this.bold = bold;
+		@:bypassAccessor this.bold = bold;
+		@:bypassAccessor this.align = align;
 		textScale = scale;
 
 		this.text = text;
-		this.align = align;
 	}
 
 	function updateText(val:String):Void
@@ -126,6 +126,13 @@ class Alphabet extends FlxSpriteGroup
 	{
 		updateText(val);
 		return text = val;
+	}
+
+	@:noCompletion function set_bold(val:Bool):Bool
+	{
+		bold = val;
+		updateText(text);
+		return val;
 	}
 
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign

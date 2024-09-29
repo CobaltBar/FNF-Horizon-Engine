@@ -59,8 +59,6 @@ private class PathInfo
 				trackedAudio.remove(key);
 			}
 
-		for (key in cast(Assets.cache, AssetCache).font.keys())
-			cast(Assets.cache, AssetCache).font.remove(key);
 		localAssets = [];
 	}
 
@@ -137,7 +135,7 @@ private class PathInfo
 			}
 		}
 
-		return cacheImage(key);
+		return cacheImage(key, mods);
 	}
 
 	static function audio(key:String, ?mods:Array<Mod>):Sound
