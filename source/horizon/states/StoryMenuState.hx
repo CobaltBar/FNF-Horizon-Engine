@@ -81,7 +81,12 @@ class StoryMenuState extends MusicMenuState
 		rightArrow.x = difficulty.x + difficulty.width + 10;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 
-		for (mod in [Mods.assets].concat(Mods.enabled))
+		var mods = Mods.enabled;
+
+		if (Mods.enabled.length == 0)
+			mods.unshift(Mods.assets);
+
+		for (mod in mods)
 		{
 			var songNames = [for (song in mod.songs) song.folder.toLowerCase() => song.name];
 
