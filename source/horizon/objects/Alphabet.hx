@@ -5,7 +5,7 @@ class Alphabet extends FlxSpriteGroup
 {
 	var align(default, set):FlxTextAlign;
 	var text(default, set):String;
-	var bold(default, set):Bool;
+	var bold:Bool;
 	var textScale:Float;
 
 	private var widths:Array<Float> = [];
@@ -20,19 +20,22 @@ class Alphabet extends FlxSpriteGroup
 	{
 		super(x, y);
 
-		@:bypassAccessor this.bold = bold;
 		@:bypassAccessor this.align = align;
+		this.bold = bold;
 		textScale = scale;
 
 		this.text = text;
 	}
 
-	function updateText(val:String):Void
+	function updateText(?val:String):Void
 	{
+		if (val == null)
+			val = text;
 		for (line in lines)
 			for (char in line)
 				char.kill();
 
+		var oldWidths = widths;
 		lines = [];
 		widths = [];
 		maxWidth = maxHeight = 0;
@@ -81,7 +84,7 @@ class Alphabet extends FlxSpriteGroup
 				char.updateHitbox();
 
 				char.x = char.y = char.angle = 0;
-				char.angle = 1;
+				char.alpha = 1;
 				char.clipRect = null;
 				char.color = 0xFFFFFFFF;
 				char.flipX = char.flipY = false;
@@ -92,12 +95,10 @@ class Alphabet extends FlxSpriteGroup
 
 				switch (ch)
 				{
-					case "'" | '“' | '”' | '*' | '^' | '"':
+					case "'" | '“' | '”' | '*' | '^' | '"' | '-':
 						char.y -= char.height;
 					case '+':
 						char.y -= char.height * .25;
-					case '-':
-						char.y -= char.height;
 					case 'y':
 						if (!bold)
 							char.y -= char.height * .15;
@@ -111,6 +112,15 @@ class Alphabet extends FlxSpriteGroup
 			}
 
 			widths.push(letterTracker);
+
+			if (oldWidths != null && oldWidths[i] != 0)
+				if (align == CENTER)
+					for (char in lines[i])
+						char.x -= (widths[i] - oldWidths[i]) * .5;
+				else if (align == RIGHT)
+					for (char in lines[i])
+						char.x -= (widths[i] - oldWidths[i]);
+
 			if (letterTracker > maxWidth)
 				maxWidth = letterTracker;
 		}
@@ -119,6 +129,8 @@ class Alphabet extends FlxSpriteGroup
 			for (char in line)
 				char.y += maxHeight * (i + 1);
 
+		width = maxWidth;
+
 		this.align = align;
 	}
 
@@ -126,13 +138,6 @@ class Alphabet extends FlxSpriteGroup
 	{
 		updateText(val);
 		return text = val;
-	}
-
-	@:noCompletion function set_bold(val:Bool):Bool
-	{
-		bold = val;
-		updateText(text);
-		return val;
 	}
 
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
