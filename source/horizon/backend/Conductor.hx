@@ -57,33 +57,35 @@ class Conductor extends FlxBasic
 	override function update(elapsed:Float):Void
 	{
 		if (song != null)
+		{
 			lerpedTime = FlxMath.lerp(lerpedTime, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
+
+			if (time > measureTracker + measureLength)
+			{
+				measureTracker += measureLength;
+				curMeasure++;
+				measureSignal.dispatch();
+			}
+
+			if (time > beatTracker + beatLength)
+			{
+				beatTracker += beatLength;
+				curBeat++;
+				beatSignal.dispatch();
+			}
+
+			if (time > stepTracker + stepLength)
+			{
+				stepTracker += stepLength;
+				curStep++;
+				stepSignal.dispatch();
+			}
+		}
 		else if (FlxG.sound.music != null && switchToMusic)
 		{
 			if (Constants.verbose)
 				Log.info('Song is null, setting to FlxG.sound.music');
 			song = FlxG.sound.music;
-		}
-
-		if (time > measureTracker + measureLength)
-		{
-			measureTracker += measureLength;
-			curMeasure++;
-			measureSignal.dispatch();
-		}
-
-		if (time > beatTracker + beatLength)
-		{
-			beatTracker += beatLength;
-			curBeat++;
-			beatSignal.dispatch();
-		}
-
-		if (time > stepTracker + stepLength)
-		{
-			stepTracker += stepLength;
-			curStep++;
-			stepSignal.dispatch();
 		}
 
 		super.update(elapsed);

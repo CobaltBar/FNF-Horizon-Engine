@@ -6,7 +6,7 @@ package horizon.util;
 	#if desktop
 	static function __init__():Void
 	{
-		var configPath:String = PathUtil.directory(PathUtil.withoutExtension(Sys.programPath()));
+		var configPath:String = PathUtil.directory(PathUtil.withoutExtension(#if hl Sys.getCwd() #else Sys.programPath() #end));
 
 		#if windows
 		configPath += "/plugins/alsoft.ini";

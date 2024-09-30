@@ -5,6 +5,7 @@ import flixel.addons.transition.TransitionData;
 import haxe.Http;
 import haxe.ui.Toolkit;
 import haxe.ui.backend.flixel.CursorHelper;
+import horizon.util.ALConfig;
 import lime.app.Application;
 
 class InitState extends MusicState

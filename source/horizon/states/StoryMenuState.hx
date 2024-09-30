@@ -213,6 +213,7 @@ class StoryMenuState extends MusicMenuState
 
 	public override function exitState():Void
 	{
+		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
 		var mods = Mods.enabled.filter(f -> f != optionToData[curSelected].mod && f.global);
 		mods.unshift(optionToData[curSelected].mod);
 
@@ -221,21 +222,19 @@ class StoryMenuState extends MusicMenuState
 				song.folder.toLowerCase() => song
 		];
 
-		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
+		PlayState.mods = mods;
+		PlayState.songs = [for (song in optionToData[curSelected].week.songs) folderToSong[song]];
+		PlayState.difficulty = optionToData[curSelected].week.difficulties[curDifficulty].toLowerCase();
+		PlayState.week = optionToData[curSelected].week;
 
-		/* FlxTimer.wait(1, () -> MusicState.switchState(new PlayState({
-			mods: mods,
-			songs: [for (song in optionToData[curSelected].week.songs) folderToSong[song]],
-			difficulty: optionToData[curSelected].week.difficulties[curDifficulty].toLowerCase(),
-			week: optionToData[curSelected].week
-		})));*/
+		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
 
 		if (!Settings.reducedMotion)
 		{
 			menuOptions[curSelected].clipRect = null;
 			if (Settings.flashingLights)
 				FlxFlicker.flicker(menuOptions[curSelected], 1.3, 0.06, false, false);
-			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.5, y: 1.5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			FlxTween.tween(menuOptions[curSelected].scale, {x: 1.1, y: 1.1}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			for (i => option in menuOptions)
 				if (i != curSelected)
 					FlxTween.tween(option, {alpha: 0}, .5);
