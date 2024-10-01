@@ -112,7 +112,7 @@ class Alphabet extends FlxSpriteGroup
 
 			widths.push(letterTracker);
 
-			if (oldWidths != null && oldWidths[i] != 0 && align == CENTER || align == RIGHT)
+			if (oldWidths != null && oldWidths[i] != 0 && (align == CENTER || align == RIGHT))
 				for (char in lines[i]) char.x -= (widths[i] - oldWidths[i]) * (align == CENTER ? .5 : 1);
 
 			if (letterTracker > maxWidth)
