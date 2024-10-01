@@ -62,7 +62,12 @@ class MusicMenuState extends MusicState
 		if (change != 0)
 			FlxG.sound.play(Path.audio('scroll'), .7);
 
-		curSelected = FlxMath.wrap(curSelected + change, 0, menuOptions.length - 1);
+		curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = menuOptions.length - 1;
+		if (curSelected >= menuOptions.length)
+			curSelected = 0;
 	}
 
 	public function exitState():Void
