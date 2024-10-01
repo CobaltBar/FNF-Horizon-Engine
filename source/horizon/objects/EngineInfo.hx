@@ -34,19 +34,22 @@ class EngineInfo extends TextField
 		// Credit to CoreCat for the CPU, GPU, and OS data
 		libText += 'OS:  ${System.platformLabel} ${System.platformVersion}\n';
 		libText += 'CPU: $cpu\n';
-		libText += 'GPU: ${@:privateAccess Std.string(FlxG.stage.context3D.gl.getParameter(FlxG.stage.context3D.gl.RENDERER)).split("/")[0].trim()}\n\n';
+		libText += 'GPU: ${@:privateAccess Std.string(FlxG.stage.context3D.gl.getParameter(FlxG.stage.context3D.gl.RENDERER)).split('/')[0].trim()}\n\n';
 
-		libText += 'Haxe:          ${LibraryMacro.getLibVersion("haxe")}\n';
-		libText += 'Flixel:        ${Std.string(FlxG.VERSION).substr(11)}\n';
-		libText += 'Flixel Addons: ${LibraryMacro.getLibVersion("flixel-addons")}\n';
-		libText += 'OpenFL:        ${LibraryMacro.getLibVersion("openfl")}\n';
-		libText += 'Lime:          ${LibraryMacro.getLibVersion("lime")}';
+		libText += 'Haxe:          ${LibraryMacro.getLibVersion('haxe')}\n';
+		libText += 'Flixel:        ${LibraryMacro.getLibVersion('flixel')}\n';
+		libText += 'Flixel Addons: ${LibraryMacro.getLibVersion('flixel-addons')}\n';
+		libText += 'OpenFL:        ${LibraryMacro.getLibVersion('openfl')}\n';
+		libText += 'Lime:          ${LibraryMacro.getLibVersion('lime')}\n';
+		libText += 'HaxeUI-Core:   ${LibraryMacro.getLibVersion('haxeui-core')}\n';
+		libText += 'HaxeUI-Flixel: ${LibraryMacro.getLibVersion('haxeui-flixel')}\n';
+		libText += 'hxdiscord_rpc: ${LibraryMacro.getLibVersion('hxdiscord_rpc')}\n';
 
 		x = y = 5;
 
 		curFPS = FlxG.updateFramerate;
 		selectable = mouseEnabled = false;
-		defaultTextFormat = new TextFormat(Path.font("JetBrainsMonoNL-SemiBold"), 14, 0xFFFFFF);
+		defaultTextFormat = new TextFormat(Path.font('JetBrainsMonoNL-SemiBold'), 14, 0xFFFFFF);
 		text = 'FPS: ';
 
 		autoSize = LEFT;

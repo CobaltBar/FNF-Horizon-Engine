@@ -29,8 +29,6 @@ class Alphabet extends FlxSpriteGroup
 
 	function updateText(?val:String):Void
 	{
-		if (val == null)
-			val = text;
 		for (line in lines)
 			for (char in line)
 				char.kill();
@@ -39,6 +37,7 @@ class Alphabet extends FlxSpriteGroup
 		lines = [];
 		widths = [];
 		maxWidth = maxHeight = 0;
+		val ??= text;
 
 		for (i => text in val.replace('\r', '').split('\n'))
 		{
@@ -130,7 +129,6 @@ class Alphabet extends FlxSpriteGroup
 				char.y += maxHeight * (i + 1);
 
 		width = maxWidth;
-
 		this.align = align;
 	}
 
@@ -159,6 +157,7 @@ class Alphabet extends FlxSpriteGroup
 			for (i => line in lines)
 				for (char in line)
 					char.x += maxWidth - widths[i];
+
 		return align = val;
 	}
 

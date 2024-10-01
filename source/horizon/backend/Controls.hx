@@ -6,7 +6,7 @@ import openfl.events.KeyboardEvent;
 @:publicFields
 class Controls
 {
-	private static var keyTracker:Map<FlxKey, Bool> = [F11 => false, F2 => false];
+	private static var keyTracker:Map<FlxKey, Bool> = [F11 => false, F3 => false];
 
 	static var pressed:Array<FlxKey> = [];
 	static var pressSignals:Map<FlxKey, FlxSignal> = [];
@@ -61,10 +61,10 @@ class Controls
 
 					FlxG.fullscreen = !FlxG.fullscreen;
 				}
-			if (event.keyCode == FlxKey.F2)
-				if (!keyTracker[F2])
+			if (event.keyCode == FlxKey.F3)
+				if (!keyTracker[F3])
 				{
-					keyTracker[F2] = true;
+					keyTracker[F3] = true;
 					Constants.debugDisplay = !Constants.debugDisplay;
 					Main.fps.updateText();
 				}
@@ -73,8 +73,8 @@ class Controls
 		{
 			if (event.keyCode == FlxKey.F11 && keyTracker[F11])
 				keyTracker[F11] = false;
-			if (event.keyCode == FlxKey.F2 && keyTracker[F2])
-				keyTracker[F2] = false;
+			if (event.keyCode == FlxKey.F3 && keyTracker[F3])
+				keyTracker[F3] = false;
 		});
 
 		if (Constants.verbose)
