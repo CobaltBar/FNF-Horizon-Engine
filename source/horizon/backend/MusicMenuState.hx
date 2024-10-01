@@ -34,12 +34,12 @@ class MusicMenuState extends MusicState
 
 		super.create();
 
-		if (!customInput)
+		if (!customInput && !transitioningOut)
 		{
-			Controls.onPress(Settings.keybinds['ui_down'], () -> if (!transitioningOut) changeSelection(1));
-			Controls.onPress(Settings.keybinds['ui_up'], () -> if (!transitioningOut) changeSelection(-1));
-			Controls.onPress(Settings.keybinds['accept'], () -> if (!transitioningOut) exitState());
-			Controls.onPress(Settings.keybinds['back'], () -> if (!transitioningOut) returnState());
+			Controls.onPress(Settings.keybinds['ui_down'], () -> changeSelection(1));
+			Controls.onPress(Settings.keybinds['ui_up'], () -> changeSelection(-1));
+			Controls.onPress(Settings.keybinds['accept'], () -> exitState());
+			Controls.onPress(Settings.keybinds['back'], () -> returnState());
 		}
 	}
 
@@ -62,12 +62,7 @@ class MusicMenuState extends MusicState
 		if (change != 0)
 			FlxG.sound.play(Path.audio('scroll'), .7);
 
-		curSelected += change;
-
-		if (curSelected < 0)
-			curSelected = menuOptions.length - 1;
-		if (curSelected >= menuOptions.length)
-			curSelected = 0;
+		curSelected = FlxMath.wrap(curSelected + change, 0, menuOptions.length - 1);
 	}
 
 	public function exitState():Void

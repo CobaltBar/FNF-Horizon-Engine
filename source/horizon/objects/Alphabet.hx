@@ -10,13 +10,13 @@ class Alphabet extends FlxSpriteGroup
 
 	private var widths:Array<Float> = [];
 	private var lines:Array<Array<FlxSprite>> = [];
-	private var maxWidth:Float = 0;
-	private var maxHeight:Float = 0;
+	private var maxWidth = 0.;
+	private var maxHeight = 0.;
 
-	private static var alphabetGroup:FlxSpriteGroup = new FlxSpriteGroup();
+	private static var alphabetGroup = new FlxSpriteGroup();
 	private static final letterRegex = ~/^[a-zA-Z]+$/;
 
-	function new(x:Float, y:Float, text:String, bold:Bool, align:FlxTextAlign, scale:Float = 1)
+	function new(x = 0., y = 0., text:String, bold:Bool, align:FlxTextAlign, scale = 1.)
 	{
 		super(x, y);
 
@@ -36,12 +36,11 @@ class Alphabet extends FlxSpriteGroup
 		var oldWidths = widths;
 		lines = [];
 		widths = [];
-		maxWidth = maxHeight = 0;
 		val ??= text;
 
 		for (i => text in val.replace('\r', '').split('\n'))
 		{
-			var letterTracker:Float = 0;
+			var letterTracker = 0.;
 			lines[i] = [];
 
 			for (ch in text.split(''))
@@ -112,13 +111,8 @@ class Alphabet extends FlxSpriteGroup
 
 			widths.push(letterTracker);
 
-			if (oldWidths != null && oldWidths[i] != 0)
-				if (align == CENTER)
-					for (char in lines[i])
-						char.x -= (widths[i] - oldWidths[i]) * .5;
-				else if (align == RIGHT)
-					for (char in lines[i])
-						char.x -= (widths[i] - oldWidths[i]);
+			if (oldWidths != null && oldWidths[i] != 0 && align == CENTER || align == RIGHT)
+				for (char in lines[i]) char.x -= (widths[i] - oldWidths[i]) * (align == CENTER ? .5 : 1);
 
 			if (letterTracker > maxWidth)
 				maxWidth = letterTracker;
@@ -140,23 +134,11 @@ class Alphabet extends FlxSpriteGroup
 
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
 	{
-		if (align == CENTER)
-			for (i => line in lines)
-				for (char in line)
-					char.x -= (maxWidth - widths[i]) * .5;
-		else if (align == RIGHT)
-			for (i => line in lines)
-				for (char in line)
-					char.x -= maxWidth - widths[i];
-
-		if (val == CENTER)
-			for (i => line in lines)
-				for (char in line)
-					char.x += (maxWidth - widths[i]) * .5;
-		else if (val == RIGHT)
-			for (i => line in lines)
-				for (char in line)
-					char.x += maxWidth - widths[i];
+		if (align == CENTER || align == RIGHT)
+			for (i => line in lines) for (char in line) char.x -= (maxWidth - widths[i]) * (align == CENTER ? .5 : 1);
+	
+		if (val == CENTER || val == RIGHT)
+			for (i => line in lines) for (char in line) char.x += (maxWidth - widths[i]) * (val == CENTER ? .5 : 1);
 
 		return align = val;
 	}
