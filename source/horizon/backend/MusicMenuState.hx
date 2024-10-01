@@ -34,12 +34,12 @@ class MusicMenuState extends MusicState
 
 		super.create();
 
-		if (!customInput && !transitioningOut)
+		if (!customInput)
 		{
-			Controls.onPress(Settings.keybinds['ui_down'], () -> changeSelection(1));
-			Controls.onPress(Settings.keybinds['ui_up'], () -> changeSelection(-1));
-			Controls.onPress(Settings.keybinds['accept'], () -> exitState());
-			Controls.onPress(Settings.keybinds['back'], () -> returnState());
+			Controls.onPress(Settings.keybinds['ui_down'], () -> if (!transitioningOut) changeSelection(1));
+			Controls.onPress(Settings.keybinds['ui_up'], () -> if (!transitioningOut) changeSelection(-1));
+			Controls.onPress(Settings.keybinds['accept'], () -> if (!transitioningOut) exitState());
+			Controls.onPress(Settings.keybinds['back'], () -> if (!transitioningOut) returnState());
 		}
 	}
 

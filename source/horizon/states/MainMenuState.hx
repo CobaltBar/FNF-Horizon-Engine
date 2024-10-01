@@ -10,8 +10,6 @@ class MainMenuState extends MusicMenuState
 
 	static var prevSelected:Int = 0;
 
-	var options:Array<{name:String, ?state:Class<FlxState>}> = [{name: 'storymode', state: StoryMenuState}, {name: 'freeplay'}, {name: 'credits'}, {name: 'merch'}, {name: 'options'}];
-
 	public override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -26,13 +24,13 @@ class MainMenuState extends MusicMenuState
 		for (val in Mods.all)
 			modCount++;
 
-		if (modCount != 0) options.insert(3, {name: 'mods', state: ModsMenuState});
-
-		for (name in options)
+		for (name in ['storymode', 'freeplay', 'mods', 'credits', 'merch', 'options'])
 		{
-			var option = Create.atlas(0, 0, Path.sparrow(name.name), [optionsCam]);
-			option.animation.addByPrefix('selected', name.name + ' selected', 24, true);
-			option.animation.addByPrefix('idle', name.name + ' idle', 24, true);
+			if (name == 'mods' && modCount == 0)
+				continue;
+			var option = Create.atlas(0, 0, Path.sparrow(name), [optionsCam]);
+			option.animation.addByPrefix('selected', name + ' selected', 24, true);
+			option.animation.addByPrefix('idle', name + ' idle', 24, true);
 			option.animation.play('idle');
 			option.updateHitbox();
 			option.centerOffsets();
@@ -43,12 +41,12 @@ class MainMenuState extends MusicMenuState
 		curSelected = prevSelected;
 		changeSelection(0);
 
-		final horizonEngineText = Create.text(5, FlxG.height - 55, 'Horizon Engine v${Application.current.meta['version']} - build ${Constants.horizonVer}', 24,
+		var horizonEngineText = Create.text(5, FlxG.height - 55, 'Horizon Engine v${Application.current.meta['version']} - build ${Constants.horizonVer}', 24,
 			Path.font('vcr'), 0xFFFFFFFF, LEFT, [otherCam])
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		add(horizonEngineText);
 
-		final fnfVersion = Create.text(5, FlxG.height - 30, 'Friday Night Funkin\' v0.4.1', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [otherCam])
+		var fnfVersion = Create.text(5, FlxG.height - 30, 'Friday Night Funkin\' v0.4.1', 24, Path.font('vcr'), 0xFFFFFFFF, LEFT, [otherCam])
 			.setBorderStyle(OUTLINE, 0xFF000000, 2);
 		add(fnfVersion);
 		Path.clearUnusedMemory();
@@ -130,6 +128,31 @@ class MainMenuState extends MusicMenuState
 		MusicState.switchState(new TitleState());
 	}
 
-	inline function out():Void 
-		if (options[curSelected].state != null) MusicState.switchState(Type.createInstance(options[curSelected].state, []));
+	inline function out():Void
+		if (modCount == 0)
+			switch (curSelected)
+			{
+				case 0:
+					MusicState.switchState(new StoryMenuState());
+				case 1:
+					// MusicState.switchState(new FreeplayState());
+				case 3:
+					// MusicState.switchState(new CreditsState());
+				case 5:
+					// MusicState.switchState(new OptionsState());
+			}
+		else
+			switch (curSelected)
+			{
+				case 0:
+					MusicState.switchState(new StoryMenuState());
+				case 1:
+					// MusicState.switchState(new FreeplayState());
+				case 2:
+					MusicState.switchState(new ModsMenuState());
+				case 3:
+					// MusicState.switchState(new CreditsState());
+				case 5:
+					// MusicState.switchState(new OptionsState());
+			}
 }

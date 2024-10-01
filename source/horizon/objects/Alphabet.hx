@@ -10,13 +10,13 @@ class Alphabet extends FlxSpriteGroup
 
 	private var widths:Array<Float> = [];
 	private var lines:Array<Array<FlxSprite>> = [];
-	private var maxWidth = 0.;
-	private var maxHeight = 0.;
+	private var maxWidth:Float = 0;
+	private var maxHeight:Float = 0;
 
-	private static var alphabetGroup = new FlxSpriteGroup();
+	private static var alphabetGroup:FlxSpriteGroup = new FlxSpriteGroup();
 	private static final letterRegex = ~/^[a-zA-Z]+$/;
 
-	function new(x = 0., y = 0., text:String, bold:Bool, align:FlxTextAlign, scale = 1.)
+	function new(x:Float, y:Float, text:String, bold:Bool, align:FlxTextAlign, scale:Float = 1)
 	{
 		super(x, y);
 
@@ -36,11 +36,12 @@ class Alphabet extends FlxSpriteGroup
 		var oldWidths = widths;
 		lines = [];
 		widths = [];
+		maxWidth = maxHeight = 0;
 		val ??= text;
 
 		for (i => text in val.replace('\r', '').split('\n'))
 		{
-			var letterTracker = 0.;
+			var letterTracker:Float = 0;
 			lines[i] = [];
 
 			for (ch in text.split(''))
@@ -136,7 +137,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		if (align == CENTER || align == RIGHT)
 			for (i => line in lines) for (char in line) char.x -= (maxWidth - widths[i]) * (align == CENTER ? .5 : 1);
-	
+
 		if (val == CENTER || val == RIGHT)
 			for (i => line in lines) for (char in line) char.x += (maxWidth - widths[i]) * (val == CENTER ? .5 : 1);
 
