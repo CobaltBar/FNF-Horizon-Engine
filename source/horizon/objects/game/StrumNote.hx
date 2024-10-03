@@ -14,10 +14,11 @@ class StrumNote extends NoteSprite
 	var lerpMultiplier:Float = 25;
 	var playingAnim:Bool = false;
 
-	public function new(data:Int = 2, confirmSpr:NoteSprite, pressSpr:NoteSprite)
+	public function new(data:Int = 2, confSpr:NoteSprite, pressSpr:NoteSprite)
 	{
-		confirm = confirmSpr;
+		confirm = confSpr;
 		press = pressSpr;
+
 		super(data);
 		setRGB(Settings.noteRGB.strum[data]);
 
@@ -30,20 +31,17 @@ class StrumNote extends NoteSprite
 		press.setRGB(Settings.noteRGB.press[data]);
 		press.alpha = 0.0001;
 		updateHitbox();
-
-		confirm.offset.x = (confirm.width - width) * .5;
-		confirm.offset.y = (confirm.height - height) * .5;
 	}
 
 	public override function update(elapsed:Float):Void
 	{
 		if (confirm != null && confirm.exists && confirm.visible)
-			if (confirm.x != x || confirm.y != y)
-				confirm.setPosition(x, y);
+			if (confirm.x != x - (confirm.width - width) * .5 || confirm.y != y - (confirm.height - height) * .5)
+				confirm.setPosition(x - (confirm.width - width) * .5, y - (confirm.height - height) * .5);
+
 		if (press != null && press.exists && press.visible)
 			if (press.x != x || press.y != y)
 				press.setPosition(x, y);
-		super.update(elapsed);
 	}
 
 	@:noCompletion override function set_angle(val:Float):Float
@@ -53,5 +51,14 @@ class StrumNote extends NoteSprite
 		if (press != null)
 			press.angle = val;
 		return super.set_angle(val);
+	}
+
+	@:noCompletion override function set_cameras(val:Array<FlxCamera>):Array<FlxCamera>
+	{
+		if (confirm != null)
+			confirm.cameras = val;
+		if (press != null)
+			press.cameras = val;
+		return super.set_cameras(val);
 	}
 }

@@ -41,6 +41,9 @@ class Strumline extends FlxSpriteGroup
 			this.cameras = cameras;
 	}
 
+	public function disablePress():Void
+		remove(presses);
+
 	function addNextNote()
 		if (uNoteData.length > 0)
 		{

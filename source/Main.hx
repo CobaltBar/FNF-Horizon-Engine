@@ -18,6 +18,7 @@ import openfl.events.UncaughtErrorEvent;
 using StringTools;
 
 #if (cpp && linux)
+// I stole this from Psych
 @:cppInclude('./external/gamemode_client.h')
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end

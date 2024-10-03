@@ -14,6 +14,11 @@ class InitState extends MusicState
 
 	public override function create():Void
 	{
+		#if windows
+		OSUtil.setDPIAware();
+		OSUtil.setWindowDarkMode(true);
+		#end
+
 		Log.init();
 		SettingsManager.load();
 		Controls.init();

@@ -41,5 +41,5 @@ haxelib run lime rebuild cpp -release
 - [Betopia](https://betpowo.github.io/) - Note System/Sprite
 - crowplexus and nebulazorua - Alt+Enter cancel + F11 fullscreen
 - [superpowers04](https://github.com/superpowers04) - Safer FlxGame
-- [CoreCat](https://corecathx.github.io/) - `formatBytes`, `applyTextFieldMarkup`, OS, CPU, GPU Info grabbing
+- [CoreCat](https://corecathx.github.io/) - Utility functions, Device Info code, Windows.hx code
 - [Sword352/FnF-Eternal](https://github.com/Sword352/FnF-Eternal) - Tiled Sprite and Sustains

@@ -17,7 +17,7 @@ private class PathInfo
 	@:optional var mod:Mod;
 }
 
-// Based off of PsychEngine's Paths.hx
+// Based on PsychEngine's Paths.hx
 @:publicFields class Path
 {
 	private static var assets:Map<Mod, Map<String, String>> = [];
@@ -96,10 +96,19 @@ private class PathInfo
 		var bitmap = BitmapData.fromFile(found?.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png');
 		var cacheKey = 'IMAGE-${(found?.mod ?? Mods.assets).folder}-$key';
 
-		if (Settings.gpuTextures)
+		// I dont CARE if it duplicates vram textures or whatever its 3X LESS RAM
+		@:privateAccess if (Settings.gpuTextures)
 		{
+			if (bitmap.__texture == null)
+			{
+				bitmap.image.premultiplied = true;
+				bitmap.getTexture(FlxG.stage.context3D);
+			}
+			bitmap.getSurface();
 			bitmap.disposeImage();
-			@:privateAccess bitmap.readable = true;
+			bitmap.image.data = null;
+			bitmap.image = null;
+			bitmap.readable = true;
 		}
 
 		var graphic = FlxGraphic.fromBitmapData(bitmap, false, cacheKey);
