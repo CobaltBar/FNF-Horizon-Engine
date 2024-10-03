@@ -9,6 +9,7 @@ class Alphabet extends FlxSpriteGroup
 	var textScale:Float;
 
 	private var widths:Array<Float> = [];
+	private var charPos:Array<Array<Float>> = [];
 	private var lines:Array<Array<FlxSprite>> = [];
 	private var maxWidth:Float = 0;
 	private var maxHeight:Float = 0;
@@ -74,7 +75,7 @@ class Alphabet extends FlxSpriteGroup
 					animName += ' normal';
 				animName = animName.toLowerCase();
 
-				var char = alphabetGroup.recycle(FlxSprite, () -> Create.atlas(0, 0, Path.sparrow('alphabet')));
+				var char = alphabetGroup.recycle(FlxSprite, () -> Create.atlas(0, 0, Path.atlas('alphabet')));
 				if (char.animation.exists('idle'))
 					char.animation.remove('idle');
 				char.animation.addByPrefix('idle', animName, 24);
@@ -113,7 +114,8 @@ class Alphabet extends FlxSpriteGroup
 			widths.push(letterTracker);
 
 			if (oldWidths != null && oldWidths[i] != 0 && (align == CENTER || align == RIGHT))
-				for (char in lines[i]) char.x -= (widths[i] - oldWidths[i]) * (align == CENTER ? .5 : 1);
+				for (char in lines[i])
+					char.x -= (widths[i] - oldWidths[i]) * (align == CENTER ? .5 : 1);
 
 			if (letterTracker > maxWidth)
 				maxWidth = letterTracker;
@@ -136,12 +138,37 @@ class Alphabet extends FlxSpriteGroup
 	@:noCompletion function set_align(val:FlxTextAlign):FlxTextAlign
 	{
 		if (align == CENTER || align == RIGHT)
-			for (i => line in lines) for (char in line) char.x -= (maxWidth - widths[i]) * (align == CENTER ? .5 : 1);
+			for (i => line in lines)
+				for (char in line)
+					char.x -= (maxWidth - widths[i]) * (align == CENTER ? .5 : 1);
 
 		if (val == CENTER || val == RIGHT)
-			for (i => line in lines) for (char in line) char.x += (maxWidth - widths[i]) * (val == CENTER ? .5 : 1);
+			for (i => line in lines)
+				for (char in line)
+					char.x += (maxWidth - widths[i]) * (val == CENTER ? .5 : 1);
+
+		charPos = [];
+		for (i => char in members)
+			charPos[i] = [char.x, char.y];
 
 		return align = val;
+	}
+
+	@:noCompletion override function set_angle(val:Float):Float
+	{
+		super.set_angle(val);
+
+		for (i => member in members)
+		{
+			member.setPosition(charPos[i][0], charPos[i][1]);
+			member.updateTrig();
+			var offX = member.x - origin.x;
+			var offY = member.y - origin.y;
+			member.x = x + (offX * member._cosAngle - offY * member._sinAngle) + origin.x;
+			member.y = y + (offY * member._cosAngle + offX * member._sinAngle) + origin.y;
+		}
+
+		return val;
 	}
 
 	override function destroy():Void

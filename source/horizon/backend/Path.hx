@@ -3,11 +3,11 @@ package horizon.backend;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets;
+import flxanimate.frames.FlxAnimateFrames;
 import openfl.Assets;
 import openfl.display.BitmapData;
 import openfl.media.Sound;
 import openfl.system.System;
-import openfl.utils.AssetCache;
 
 @:structInit
 @:publicFields
@@ -97,18 +97,11 @@ private class PathInfo
 		var cacheKey = 'IMAGE-${(found?.mod ?? Mods.assets).folder}-$key';
 
 		if (Settings.gpuTextures)
-			@:privateAccess {
-			if (bitmap.__texture == null)
-			{
-				bitmap.image.premultiplied = true;
-				bitmap.getTexture(FlxG.stage.context3D);
-			}
-			bitmap.getSurface();
+		{
 			bitmap.disposeImage();
-			bitmap.image.data = null;
-			bitmap.image = null;
-			bitmap.readable = true;
+			@:privateAccess bitmap.readable = true;
 		}
+
 		var graphic = FlxGraphic.fromBitmapData(bitmap, false, cacheKey);
 		graphic.persist = true;
 		graphic.destroyOnNoUse = false;
@@ -178,8 +171,22 @@ private class PathInfo
 	@:keep static inline function txt(key:String, ?mods:Array<Mod>):String
 		return File.getContent(find(key, ['txt'], mods).path ?? '');
 
-	@:keep static inline function sparrow(key:String, ?mods:Array<Mod>):FlxAtlasFrames
-		return FlxAtlasFrames.fromSparrow(image(key, mods), xml(key, mods));
+	static function atlas(key:String, ?mods:Array<Mod>):FlxAtlasFrames
+	{
+		var xmlPath = xml(key, mods);
+		if (xmlPath != null)
+			return FlxAnimateFrames.fromSparrow(xmlPath, image(key, mods));
+
+		var txtPath = txt(key, mods);
+		if (txtPath != null)
+			return FlxAtlasFrames.fromSpriteSheetPacker(image(key, mods), txtPath);
+
+		var jsonPath = json(key, mods);
+		if (jsonPath != null)
+			return FlxAtlasFrames.fromAseprite(image(key, mods), jsonPath);
+
+		return null;
+	}
 
 	static inline function songJSON(song:String, difficulty:String, ?mods:Array<Mod>):Dynamic
 		return TJSON.parse(File.getContent(find('SONG-$song-$difficulty', ['json'], mods).path ?? ''));

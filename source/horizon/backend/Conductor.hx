@@ -25,7 +25,7 @@ class Conductor extends FlxBasic
 	static var measureLength:Float = -1;
 
 	static var offset:Float = 0;
-	static var time(get, null):Float = 0;
+	static var time:Float = 0;
 	static var lerpedTime:Float = 0;
 	static var song(default, set):FlxSound;
 	static var timeSignature(default, set):TimeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
@@ -58,34 +58,35 @@ class Conductor extends FlxBasic
 	{
 		if (song != null)
 		{
+			time = song.time + offset;
 			lerpedTime = FlxMath.lerp(lerpedTime, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
-
-			if (time > measureTracker + measureLength)
-			{
-				measureTracker += measureLength;
-				curMeasure++;
-				measureSignal.dispatch();
-			}
-
-			if (time > beatTracker + beatLength)
-			{
-				beatTracker += beatLength;
-				curBeat++;
-				beatSignal.dispatch();
-			}
-
-			if (time > stepTracker + stepLength)
-			{
-				stepTracker += stepLength;
-				curStep++;
-				stepSignal.dispatch();
-			}
 		}
 		else if (FlxG.sound.music != null && switchToMusic)
 		{
 			if (Constants.verbose)
 				Log.info('Song is null, setting to FlxG.sound.music');
 			song = FlxG.sound.music;
+		}
+
+		if (time > measureTracker + measureLength)
+		{
+			measureTracker += measureLength;
+			curMeasure++;
+			measureSignal.dispatch();
+		}
+
+		if (time > beatTracker + beatLength)
+		{
+			beatTracker += beatLength;
+			curBeat++;
+			beatSignal.dispatch();
+		}
+
+		if (time > stepTracker + stepLength)
+		{
+			stepTracker += stepLength;
+			curStep++;
+			stepSignal.dispatch();
 		}
 
 		super.update(elapsed);
@@ -100,9 +101,6 @@ class Conductor extends FlxBasic
 		curMeasure = curBeat = curStep = 0;
 		song = null;
 	}
-
-	@:noCompletion static function get_time():Float
-		return song.time + offset;
 
 	@:noCompletion static function set_song(val:FlxSound):FlxSound
 	{

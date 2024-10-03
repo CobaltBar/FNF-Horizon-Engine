@@ -28,7 +28,7 @@ class MainMenuState extends MusicMenuState
 		{
 			if (name == 'mods' && modCount == 0)
 				continue;
-			var option = Create.atlas(0, 0, Path.sparrow(name), [optionsCam]);
+			var option = Create.atlas(0, 0, Path.atlas(name), [optionsCam]);
 			option.animation.addByPrefix('selected', name + ' selected', 24, true);
 			option.animation.addByPrefix('idle', name + ' idle', 24, true);
 			option.animation.play('idle');

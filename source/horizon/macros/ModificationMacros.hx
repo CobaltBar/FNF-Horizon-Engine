@@ -7,28 +7,6 @@ import haxe.macro.Expr;
 
 class ModificationMacros
 {
-	public static function FlxObject()
-	{
-		#if macro
-		var fields = Context.getBuildFields();
-
-		var angleGetter:Function = {expr: macro return angle, ret: (macro :Float), args: []}
-		var angle:Field = [for (field in fields) if (field.name == 'angle') field][0];
-
-		angle.kind = FProp("get", "set", angleGetter.ret);
-		angle.meta.push({name: ":isVar", pos: Context.currentPos()});
-		fields.push({
-			name: "get_angle",
-			kind: FFun(angleGetter),
-			access: [APublic],
-			meta: [{name: ":noCompletion", pos: Context.currentPos()}],
-			pos: Context.currentPos()
-		});
-
-		return fields;
-		#end
-	}
-
 	public static function FlxSprite()
 	{
 		#if macro
@@ -59,24 +37,6 @@ class ModificationMacros
 		#end
 	}
 
-	public static function IFlxSprite()
-	{
-		#if macro
-		var fields = Context.getBuildFields();
-
-		var angle:Field = [for (field in fields) if (field.name == 'angle') field][0];
-
-		switch (angle.kind)
-		{
-			case FProp(get, set, t, e):
-				angle.kind = FProp("get", set, t, e);
-			default:
-		}
-
-		return fields;
-		#end
-	}
-
 	public static function LocaleManager()
 	{
 		#if macro
@@ -97,7 +57,12 @@ class ModificationMacros
 						if (!_localeSet && autoSetLocale && autoDetectedLocale != null && hasLocale(autoDetectedLocale))
 						{
 							#if debug
-							horizon.util.Log.info("System locale detected as: " + autoDetectedLocale, {methodName: 'init', lineNumber: 46, fileName: 'haxe.ui.locale.LocaleManager.hx', className: 'LocaleManager'});
+							horizon.util.Log.info("System locale detected as: " + autoDetectedLocale, {
+								methodName: 'init',
+								lineNumber: 46,
+								fileName: 'haxe.ui.locale.LocaleManager.hx',
+								className: 'LocaleManager'
+							});
 							#end
 							_language = autoDetectedLocale;
 							applyLocale(_language);
@@ -127,7 +92,12 @@ class ModificationMacros
 					ret: f.ret,
 					expr: macro
 					{
-						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {methodName: 'add', lineNumber: 22, fileName: 'FlxG.Log/LogFrontEnd.hx', className: 'LogFrontEnd'});
+						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {
+							methodName: 'add',
+							lineNumber: 22,
+							fileName: 'FlxG.Log/LogFrontEnd.hx',
+							className: 'LogFrontEnd'
+						});
 						advanced(data, LogStyle.NORMAL);
 					}
 				});
@@ -145,7 +115,12 @@ class ModificationMacros
 					expr: macro
 					{
 						horizon.states.ErrorState.errs.push('FLIXEL WARN: $data');
-						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {methodName: 'warn', lineNumber: 28, fileName: 'FlxG.Log/LogFrontEnd.hx', className: 'LogFrontEnd'});
+						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {
+							methodName: 'warn',
+							lineNumber: 28,
+							fileName: 'FlxG.Log/LogFrontEnd.hx',
+							className: 'LogFrontEnd'
+						});
 						advanced(data, LogStyle.WARNING, true);
 					}
 				});
@@ -163,7 +138,12 @@ class ModificationMacros
 					expr: macro
 					{
 						horizon.states.ErrorState.errs.push('FLIXEL ERROR: $data');
-						horizon.util.Log.print(data, 'FLIXEL ERROR', 196, {methodName: 'error', lineNumber: 33, fileName: 'FlxG.Log/LogFrontEnd.hx', className: 'LogFrontEnd'});
+						horizon.util.Log.print(data, 'FLIXEL ERROR', 196, {
+							methodName: 'error',
+							lineNumber: 33,
+							fileName: 'FlxG.Log/LogFrontEnd.hx',
+							className: 'LogFrontEnd'
+						});
 						advanced(data, LogStyle.ERROR, true);
 					}
 				});

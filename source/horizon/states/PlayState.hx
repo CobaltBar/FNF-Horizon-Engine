@@ -12,6 +12,9 @@ class PlayState extends MusicState
 	var audios:Map<String, FlxSound> = [];
 	var comboGroup:Map<String, FlxSpriteGroup> = [];
 
+	var playerStrum:Strumline;
+	var opponentStrum:Strumline;
+
 	var scrollSpeed:Float = 1;
 	var score:Int = 0;
 	var accuracy:Float = 0;
@@ -33,40 +36,30 @@ class PlayState extends MusicState
 
 		super.create();
 		instance = this;
-		// loadAssets();
 		bop = zoom = false;
-		FlxG.sound.music.pause();
+
+		for (item in ['note', 'ready', 'set', 'go', 'combo', 'num', 'sick', 'good', 'bad', 'shit'])
+			Path.image(item, mods);
+		for (item in ['three', 'two', 'one', 'go'])
+			Path.audio(item, mods);
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
 		{
-			comboGroup.set(thing, new FlxSpriteGroup());
-			add(comboGroup[thing]);
+			add(comboGroup[thing] = new FlxSpriteGroup());
 			comboGroup[thing].cameras = [camHUD];
 		}
 
-		add(new NoteSprite().screenCenter());
-		var spr:NoteSprite;
-		add(spr = new NoteSprite());
-		spr.screenCenter();
-		spr.y += 200;
-
-		/*
-			add(playerStrum = new Strumline(FlxG.width * .275, 150));
-			add(opponentStrum = new Strumline(-FlxG.width * .275, 150));
-
-			playerStrum.cameras = [camHUD];
-			opponentStrum.cameras = [camHUD];
-			opponentStrum.autoHit = true;
-		 */
+		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
+		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
+		opponentStrum.autoHit = true;
 
 		Conductor.reset();
 		Conductor.switchToMusic = false;
 
 		loadChart();
-
-		/*for (song in songs[0].audioFiles)
-				audios.set(HaxePath.withoutExtension(HaxePath.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
-
+		for (song in songs[0].audios)
+			audios.set(PathUtil.withoutExtension(PathUtil.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
+		/*
 			add(new Countdown());
 
 			new FlxTimer().start(1, timer -> for (key => val in audios)
@@ -100,8 +93,9 @@ class PlayState extends MusicState
 
 			for (i in 0...50)
 			{
+				playerStrum.addNextNote();
 				opponentStrum.addNextNote();
-				
+			}
 		 */
 	}
 }

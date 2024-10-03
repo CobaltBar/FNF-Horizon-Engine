@@ -1,0 +1,61 @@
+package horizon.objects.game;
+
+class Strumline extends FlxSpriteGroup
+{
+	public var strums:FlxTypedSpriteGroup<StrumNote>;
+	public var notes:FlxTypedSpriteGroup<Note>;
+
+	// These 2 sprite groups are for the Strum notes for optimization reasons
+	var confirms:FlxTypedSpriteGroup<NoteSprite>;
+	var presses:FlxTypedSpriteGroup<NoteSprite>;
+
+	public var autoHit:Bool = false;
+	public var uNoteData:Array<NoteJSON> = [];
+
+	public function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
+	{
+		super(0, y);
+
+		add(strums = new FlxTypedSpriteGroup<StrumNote>(-5, 0, 4));
+		add(presses = new FlxTypedSpriteGroup<NoteSprite>(-5, 0, 4));
+		add(confirms = new FlxTypedSpriteGroup<NoteSprite>(-5, 0, 4));
+
+		for (i in 0...4)
+		{
+			var press = new NoteSprite(i);
+			var confirm = new NoteSprite(i);
+			var strum = new StrumNote(i, confirm, press);
+			presses.add(press);
+			confirms.add(confirm);
+			strums.add(strum);
+
+			strum.x = (strum.width * i) + 5;
+		}
+
+		add(notes = new FlxTypedSpriteGroup<Note>(-5));
+
+		screenCenter(X);
+		this.x += x;
+
+		if (cameras != null)
+			this.cameras = cameras;
+	}
+
+	function addNextNote()
+		if (uNoteData.length > 0)
+		{
+			/*var data = uNoteData.shift();
+				var n = notes.recycle(Note, () ->
+				{
+					var n = new Note(data.data);
+					n.cameras = cameras;
+					n.visible = false;
+					return n;
+				});
+				n.y = FlxG.height * 10;
+				n.resetNote(data, this);
+				if (n.scale.x != 1)
+					n.scale.set(1, 1);
+				notes.sort((Order:Int, Obj1:Note, Obj2:Note) -> FlxSort.byValues(Order, Obj1.time, Obj2.time)); */
+		}
+}

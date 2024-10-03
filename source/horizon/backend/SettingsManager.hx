@@ -1,5 +1,7 @@
 package horizon.backend;
 
+import lime.app.Application;
+
 class SettingsManager
 {
 	public static function save():Void
@@ -21,7 +23,6 @@ class SettingsManager
 				Reflect.setField(Settings, setting, Reflect.field(FlxG.save.data, setting));
 
 		FlxG.fullscreen = Settings.fullscreen;
-		FlxG.updateFramerate = FlxG.drawFramerate = Settings.framerate;
 		FlxG.sound.volumeUpKeys = Settings.keybinds['volume_increase'];
 		FlxG.sound.volumeDownKeys = Settings.keybinds['volume_decrease'];
 		FlxG.sound.muteKeys = Settings.keybinds['volume_mute'];
@@ -29,6 +30,10 @@ class SettingsManager
 		FlxG.sound.muted = FlxG.save.data.muted ?? false;
 		FlxSprite.defaultAntialiasing = Settings.antialiasing;
 		FlxG.fixedTimestep = FlxObject.defaultMoves = false;
+
+		// Thanks superpowers04
+		if (Settings.framerate == 0)
+			FlxG.drawFramerate = FlxG.updateFramerate = (Settings.framerate == 0 ? Std.int(Application.current.window.displayMode.refreshRate > 120 ? Application.current.window.displayMode.refreshRate : Application.current.window.frameRate > 120 ? Application.current.window.frameRate : 120) : Settings.framerate);
 
 		if (Constants.verbose)
 			Log.info('Settings Loaded');

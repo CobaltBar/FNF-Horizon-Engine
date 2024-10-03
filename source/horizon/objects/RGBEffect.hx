@@ -2,8 +2,8 @@ package horizon.objects;
 
 import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 
-@:publicFields
-class RGBEffect
+// Based off of PsychEngine's RGBPalette
+@:publicFields class RGBEffect
 {
 	private static var rgbs:Map<String, RGBEffect> = [];
 

@@ -159,7 +159,7 @@ class Mods
 						{
 							file = PathUtil.withoutExtension(file.trim().toLowerCase());
 							if (file == 'voices' || file == 'voices-player' || file == 'voices-opponent' || file == 'inst')
-								audios.push(file);
+								audios.push(filePath);
 						}
 				}
 

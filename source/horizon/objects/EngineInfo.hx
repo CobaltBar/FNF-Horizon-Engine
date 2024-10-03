@@ -43,7 +43,6 @@ class EngineInfo extends TextField
 		libText += 'Lime:          ${LibraryMacro.getLibVersion('lime')}\n';
 		libText += 'HaxeUI-Core:   ${LibraryMacro.getLibVersion('haxeui-core')}\n';
 		libText += 'HaxeUI-Flixel: ${LibraryMacro.getLibVersion('haxeui-flixel')}\n';
-		libText += 'hxdiscord_rpc: ${LibraryMacro.getLibVersion('hxdiscord_rpc')}\n';
 
 		x = y = 5;
 

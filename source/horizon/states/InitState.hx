@@ -6,7 +6,6 @@ import haxe.Http;
 import haxe.ui.Toolkit;
 import haxe.ui.backend.flixel.CursorHelper;
 import horizon.util.ALConfig;
-import lime.app.Application;
 
 class InitState extends MusicState
 {
@@ -31,9 +30,7 @@ class InitState extends MusicState
 
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(-1, 0));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(1, 0));
-		// Thanks superpowers04
-		if (Settings.framerate == 0)
-			FlxG.updateFramerate = FlxG.drawFramerate = Std.int(Application.current.window.displayMode.refreshRate > 120 ? Application.current.window.displayMode.refreshRate : Application.current.window.frameRate > 120 ? Application.current.window.frameRate : 120);
+
 		var request = new Http('https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build');
 		request.onData = data ->
 		{

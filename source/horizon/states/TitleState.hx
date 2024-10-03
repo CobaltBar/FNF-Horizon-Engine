@@ -29,16 +29,16 @@ class TitleState extends MusicState
 		goofyTexts.push(goofyTextList[num].split('--')[0]);
 		goofyTexts.push(goofyTextList[num].split('--')[1]);
 
-		add(gf = Create.atlas(titleData.gfPosition[0], titleData.gfPosition[1], Path.sparrow('gfDanceTitle'), .9));
+		add(gf = Create.atlas(titleData.gfPosition[0], titleData.gfPosition[1], Path.atlas('gfDanceTitle'), .9));
 		gf.animation.addByPrefix('left', 'left', 24);
 		gf.animation.addByPrefix('right', 'right', 24);
 		gf.visible = false;
 
-		add(logo = Create.atlas(titleData.logoPosition[0], titleData.logoPosition[1], Path.sparrow('logoBumpin')));
+		add(logo = Create.atlas(titleData.logoPosition[0], titleData.logoPosition[1], Path.atlas('logoBumpin')));
 		logo.animation.addByPrefix('bop', 'logo bumpin', 24, false);
 		logo.visible = false;
 
-		add(titleEnter = Create.atlas(titleData.startPosition[0], titleData.startPosition[1], Path.sparrow('titleEnter')));
+		add(titleEnter = Create.atlas(titleData.startPosition[0], titleData.startPosition[1], Path.atlas('titleEnter')));
 		titleEnter.animation.addByPrefix('Pressed', 'ENTER PRESSED', 24, true);
 		titleEnter.animation.addByPrefix('idle', 'ENTER IDLE', 24, true);
 		titleEnter.animation.play('idle');

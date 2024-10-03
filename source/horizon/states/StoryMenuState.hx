@@ -67,14 +67,14 @@ class StoryMenuState extends MusicMenuState
 		difficulty.screenCenter(X);
 		difficulty.x += FlxG.width * .3;
 
-		add(leftArrow = Create.atlas(0, 0, Path.sparrow('arrows'), [menuCam]));
+		add(leftArrow = Create.atlas(0, 0, Path.atlas('arrows'), [menuCam]));
 		leftArrow.animation.addByPrefix('idle', 'leftIdle', 24);
 		leftArrow.animation.addByPrefix('press', 'leftConfirm', 24);
 		leftArrow.animation.play('idle');
 		leftArrow.x = difficulty.x - leftArrow.width - 15;
 		leftArrow.y = difficulty.y + (difficulty.height - leftArrow.height) * .5;
 
-		add(rightArrow = Create.atlas(0, 0, Path.sparrow('arrows'), [menuCam]));
+		add(rightArrow = Create.atlas(0, 0, Path.atlas('arrows'), [menuCam]));
 		rightArrow.animation.addByPrefix('idle', 'rightIdle', 24);
 		rightArrow.animation.addByPrefix('press', 'rightConfirm', 24);
 		rightArrow.animation.play('idle');
@@ -213,7 +213,6 @@ class StoryMenuState extends MusicMenuState
 
 	public override function exitState():Void
 	{
-		FlxG.sound.music.fadeOut(.75, 0, tween -> FlxG.sound.music.pause());
 		var mods = Mods.enabled.filter(f -> f != optionToData[curSelected].mod && f.global);
 		mods.unshift(optionToData[curSelected].mod);
 
@@ -227,7 +226,11 @@ class StoryMenuState extends MusicMenuState
 		PlayState.difficulty = optionToData[curSelected].week.difficulties[curDifficulty].toLowerCase();
 		PlayState.week = optionToData[curSelected].week;
 
-		FlxTimer.wait(1, () -> MusicState.switchState(new PlayState()));
+		FlxG.sound.music.fadeOut(1, 0, tween ->
+		{
+			FlxG.sound.music.pause();
+			MusicState.switchState(new PlayState());
+		});
 
 		if (!Settings.reducedMotion)
 		{
