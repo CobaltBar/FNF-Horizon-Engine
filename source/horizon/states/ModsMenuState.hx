@@ -8,6 +8,7 @@ class ModsMenuState extends MusicMenuState
 
 	var enabledTitle:FlxSprite;
 	var disabledTitle:FlxSprite;
+	var box:FlxSprite;
 
 	var modIcon:FlxSprite;
 	var modDesc:FlxText;
@@ -51,17 +52,18 @@ class ModsMenuState extends MusicMenuState
 		enabledTitle.x += FlxG.width * .4;
 		enabledTitle.cameras = [menuCam];
 
-		var box = Create.graphic(0, 0, Std.int(FlxG.width * .5), FlxG.height, 0x99000000, [menuCam]);
+		add(box = Create.graphic(0, 0, Std.int(FlxG.width * .5), FlxG.height, 0x99000000, [menuCam]));
 		box.screenCenter(X);
-		add(box);
 
-		add(modIcon = Create.sprite(box.x + box.width - 5, FlxG.height - 5, Path.image('unknownMod'), [menuCam]));
-		modIcon.x -= modIcon.width;
-		modIcon.y -= modIcon.height;
+		add(modIcon = Create.sprite(0, 0, Path.image('unknownMod'), [menuCam], .5));
+		modIcon.updateHitbox();
+		modIcon.x = box.x + box.width - modIcon.width - 5;
+		modIcon.y = FlxG.height - modIcon.height - 5;
 
-		add(modVer = Create.text(0, modIcon.y - 10, 'Version N/A', 18, Path.font('vcr'), 0xFFDDDDDD, CENTER, [menuCam]));
+		add(modVer = Create.text(0, 15, 'Version N/A', 24, Path.font('vcr'), 0xFFDDDDDD, CENTER, [menuCam]));
+		modVer.screenCenter(X);
+		modVer.fieldWidth = box.width;
 		modVer.fieldHeight = 100;
-		modVer.x = modIcon.x + (modIcon.width - modVer.width) * .5;
 
 		add(modDesc = Create.text(0, 0, "N/A", 24, Path.font('vcr'), 0xFFFFFFFF, CENTER, [menuCam]));
 		modDesc.fieldWidth = FlxG.width * .5 - 10;
@@ -226,8 +228,12 @@ class ModsMenuState extends MusicMenuState
 		}
 
 		modIcon.loadGraphic(Path.image('unknownMod'));
+		modIcon.updateHitbox();
+		modIcon.x = box.x + box.width - modIcon.width - 5;
+		modIcon.y = FlxG.height - modIcon.height - 5;
 		modDesc.text = 'N/A';
 		modVer.text = 'N/A';
+		modVer.screenCenter(X);
 		targetColor = 0xFFFFFFFF;
 
 		changeSelection(0);
@@ -249,8 +255,12 @@ class ModsMenuState extends MusicMenuState
 
 			var mod = optionToMod[menuOptions[curSelected]];
 			modIcon.loadGraphic(Path.image(mod.iconPath, [mod]));
+			modIcon.updateHitbox();
+			modIcon.x = box.x + box.width - modIcon.width - 5;
+			modIcon.y = FlxG.height - modIcon.height - 5;
 			modDesc.text = mod.description;
 			modVer.text = mod.version;
+			modVer.screenCenter(X);
 			targetColor = mod.color;
 		}
 		else
@@ -271,8 +281,12 @@ class ModsMenuState extends MusicMenuState
 			enabledOptions[curEnabled].alpha = 1;
 			var mod = optionToMod[enabledOptions[curEnabled]];
 			modIcon.loadGraphic(Path.image(mod.iconPath, [mod]));
+			modIcon.updateHitbox();
+			modIcon.x = box.x + box.width - modIcon.width - 5;
+			modIcon.y = FlxG.height - modIcon.height - 5;
 			modDesc.text = mod.description;
 			modVer.text = mod.version;
+			modVer.screenCenter(X);
 			targetColor = mod.color;
 		}
 	}
@@ -280,8 +294,12 @@ class ModsMenuState extends MusicMenuState
 	public override function exitState():Void
 	{
 		modIcon.loadGraphic(Path.image('unknownMod'));
+		modIcon.updateHitbox();
+		modIcon.x = box.x + box.width - modIcon.width - 5;
+		modIcon.y = FlxG.height - modIcon.height - 5;
 		modDesc.text = 'N/A';
 		modVer.text = 'N/A';
+		modVer.screenCenter(X);
 		targetColor = 0xFFFFFFFF;
 
 		if (curSection == 0)

@@ -96,7 +96,7 @@ private class PathInfo
 		var bitmap = BitmapData.fromFile(found?.path) ?? FlxAssets.getBitmapData('flixel/images/logo/default.png');
 		var cacheKey = 'IMAGE-${(found?.mod ?? Mods.assets).folder}-$key';
 
-		// I dont CARE if it duplicates vram textures or whatever its 3X LESS RAM
+		// Referenced from PsychEngine and https://github.com/Ralsin/FNF-MintEngine/blob/main/source/funkin/api/FileManager.hx#L45
 		@:privateAccess if (Settings.gpuTextures)
 		{
 			if (bitmap.__texture == null)

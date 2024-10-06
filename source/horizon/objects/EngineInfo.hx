@@ -34,6 +34,7 @@ class EngineInfo extends TextField
 		// Credit to CoreCat for the CPU, GPU, and OS data
 		libText += 'OS:  ${System.platformLabel} ${System.platformVersion}\n';
 		libText += 'CPU: $cpu\n';
+
 		libText += 'GPU: ${@:privateAccess Std.string(FlxG.stage.context3D.gl.getParameter(FlxG.stage.context3D.gl.RENDERER)).split('/')[0].trim()}\n\n';
 
 		libText += 'Haxe:          ${LibraryMacro.getLibVersion('haxe')}\n';

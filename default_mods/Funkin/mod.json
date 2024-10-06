@@ -1,0 +1,8 @@
+{
+    "name": "FNF",
+    "description": "Friday Night Funkin'",
+    "version": "0.4.1",
+    "color": [56, 65, 187],
+    "global": false,
+    "modSysVer": 1
+}

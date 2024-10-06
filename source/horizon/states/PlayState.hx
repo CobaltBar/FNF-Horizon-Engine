@@ -68,6 +68,22 @@ class PlayState extends MusicState
 						val.time = audios['inst'].time, 0);
 
 			PlayerInput.init(); */
+		/*Controls.onPress(Settings.keybinds["notes_left"], () ->
+			{
+				var note = playerStrum.strums.members[0];
+				note.animation.play('confirm');
+				note.updateHitbox();
+				note.rgb.enabled = true;
+			});
+
+			Controls.onRelease(Settings.keybinds["notes_left"], () ->
+			{
+				var note = playerStrum.strums.members[0];
+				note.animation.play('strum');
+				note.updateHitbox();
+				note.rgb.enabled = false;
+		});*/
+
 		Path.clearUnusedMemory();
 	}
 

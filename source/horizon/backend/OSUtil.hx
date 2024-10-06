@@ -55,7 +55,7 @@ private class Windows
 
 		if (window != NULL) {
 			if (DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK) {
-				return DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) == S_OK;
+				return DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode)) == S_OK;
 			}else return FALSE;
 		}else return FALSE;
 	')

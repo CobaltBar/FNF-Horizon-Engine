@@ -8,3 +8,4 @@ export/*
 !.vscode/extensions.json
 .history
 .ionide
+dump

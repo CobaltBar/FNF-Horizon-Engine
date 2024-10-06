@@ -5,31 +5,12 @@ import flixel.input.keyboard.FlxKey;
 @:publicFields
 class Settings
 {
-	static var noteRGB:
-		{
-			strum:Array<Array<FlxColor>>,
-			notes:Array<Array<FlxColor>>,
-			press:Array<Array<FlxColor>>,
-		} = {
-			strum: [
-				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
-				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
-				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000],
-				[0xFF87A3AD, 0xFFFFFFFF, 0xFF000000]
-			],
-			notes: [
-				[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
-				[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
-				[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
-				[0xFFF9393F, 0xFFFFFFFF, 0xFF651038]
-			],
-			press: [
-				[0xFF7E6AB5, 0xFFFFFFFF, 0xFF201E31],
-				[0xFF51B5BD, 0xFFFFFFFF, 0xFF201E31],
-				[0xFF57BF6F, 0xFFFFFFFF, 0xFF201E31],
-				[0xFFB86977, 0xFFFFFFFF, 0xFF201E31],
-			]
-		};
+	static var noteRGB:Array<Array<FlxColor>> = [
+		[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
+		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
+		[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
+		[0xFFF9393F, 0xFFFFFFFF, 0xFF651038]
+	];
 
 	static var downScroll:Bool = false;
 	static var middleScroll:Bool = false;

@@ -11,7 +11,6 @@ class Create
 		var bg:FlxBackdrop = new FlxBackdrop(path);
 		bg.scale.set(scale, scale);
 		bg.updateHitbox();
-		bg.centerOffsets(true);
 		bg.screenCenter();
 		if (cameras != null)
 			bg.cameras = cameras;
@@ -24,7 +23,6 @@ class Create
 		spr.frames = frames;
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
-		spr.centerOffsets(true);
 		if (cameras != null)
 			spr.cameras = cameras;
 		return spr;
@@ -36,7 +34,6 @@ class Create
 		spr.loadGraphic(path);
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
-		spr.centerOffsets(true);
 		if (cameras != null)
 			spr.cameras = cameras;
 		return spr;
@@ -48,7 +45,6 @@ class Create
 		spr.makeGraphic(width, height, color);
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
-		spr.centerOffsets(true);
 		if (cameras != null)
 			spr.cameras = cameras;
 		return spr;

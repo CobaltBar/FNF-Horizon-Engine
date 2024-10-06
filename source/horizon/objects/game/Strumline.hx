@@ -5,10 +5,6 @@ class Strumline extends FlxSpriteGroup
 	public var strums:FlxTypedSpriteGroup<StrumNote>;
 	public var notes:FlxTypedSpriteGroup<Note>;
 
-	// These 2 sprite groups are for the Strum notes for optimization reasons
-	var confirms:FlxTypedSpriteGroup<NoteSprite>;
-	var presses:FlxTypedSpriteGroup<NoteSprite>;
-
 	public var autoHit:Bool = false;
 	public var uNoteData:Array<NoteJSON> = [];
 
@@ -16,23 +12,17 @@ class Strumline extends FlxSpriteGroup
 	{
 		super(0, y);
 
-		add(strums = new FlxTypedSpriteGroup<StrumNote>(-5, 0, 4));
-		add(presses = new FlxTypedSpriteGroup<NoteSprite>(-5, 0, 4));
-		add(confirms = new FlxTypedSpriteGroup<NoteSprite>(-5, 0, 4));
+		add(strums = new FlxTypedSpriteGroup<StrumNote>(0, 0, 4));
 
 		for (i in 0...4)
 		{
-			var press = new NoteSprite(i);
-			var confirm = new NoteSprite(i);
-			var strum = new StrumNote(i, confirm, press);
-			presses.add(press);
-			confirms.add(confirm);
+			var strum = new StrumNote(i);
 			strums.add(strum);
 
-			strum.x = (strum.width * i) + 5;
+			strum.x = (strum.width + 5) * i;
 		}
 
-		add(notes = new FlxTypedSpriteGroup<Note>(-5));
+		add(notes = new FlxTypedSpriteGroup<Note>());
 
 		screenCenter(X);
 		this.x += x;
@@ -40,9 +30,6 @@ class Strumline extends FlxSpriteGroup
 		if (cameras != null)
 			this.cameras = cameras;
 	}
-
-	public function disablePress():Void
-		remove(presses);
 
 	function addNextNote()
 		if (uNoteData.length > 0)

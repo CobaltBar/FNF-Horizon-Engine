@@ -22,18 +22,20 @@ class NoteSprite extends FlxSprite
 		super();
 		angleOffset = angleOffsets[data];
 		frames = Path.atlas('note', PlayState.mods);
-		animation.addByNames('note', ['note'], 24);
-		animation.addByNames('hold', ['hold'], 24);
-		animation.addByNames('tail', ['tail'], 24);
-		animation.addByNames('confirm', ['confirm'], 24);
+		animation.addByPrefix('strum', 'strum', 24);
+		animation.addByPrefix('note', 'note', 24);
+		animation.addByPrefix('tail', 'tail', 24);
+		animation.addByPrefix('hold', 'hold', 24);
+		animation.addByPrefix('confirm', 'confirm', 24, false);
+		animation.addByPrefix('press', 'press', 24, false);
 		animation.play('note');
 		scale.set(.8, .8);
 		updateHitbox();
 	}
 
-	inline function setRGB(colors:Array<FlxColor>):Void
+	function setRGB(colors:Array<FlxColor>):Void
 	{
-		rgb = RGBEffect.get(colors);
+		rgb = RGBEffect.get(colors, 1.0);
 		shader = rgb.shader;
 	}
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
+-->
+<TextureAtlas imagePath="note_splash.png" width="2048" height="2048">
+	<SubTexture name="splash0000" x="1818" y="945" width="203" height="201" frameX="-200" frameY="-109" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0001" x="1818" y="945" width="203" height="201" frameX="-200" frameY="-109" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0002" x="1578" y="0" width="412" height="336" frameX="-123" frameY="-25" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0003" x="1430" y="1203" width="567" height="423" frameX="-74" frameY="-0" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0004" x="1430" y="1203" width="567" height="423" frameX="-74" frameY="-0" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0005" x="0" y="1327" width="695" height="494" frameX="-25" frameY="-9" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0006" x="829" y="0" width="747" height="515" frameX="-12" frameY="-31" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0007" x="829" y="0" width="747" height="515" frameX="-12" frameY="-31" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash0008" x="767" y="674" width="781" height="527" frameX="-0" frameY="-57" frameWidth="781" frameHeight="584" />
+	<SubTexture name="splash evil0000" x="1550" y="945" width="266" height="223" frameX="-285" frameY="-180" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0001" x="1550" y="945" width="266" height="223" frameX="-285" frameY="-180" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0002" x="1550" y="517" width="477" height="426" frameX="-182" frameY="-69" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0003" x="767" y="1203" width="661" height="579" frameX="-85" frameY="-10" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0004" x="0" y="674" width="765" height="651" frameX="-33" frameY="-0" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0005" x="0" y="674" width="765" height="651" frameX="-33" frameY="-0" frameWidth="827" frameHeight="692" />
+	<SubTexture name="splash evil0006" x="0" y="0" width="827" height="672" frameX="-0" frameY="-20" frameWidth="827" frameHeight="692" />
+</TextureAtlas>
