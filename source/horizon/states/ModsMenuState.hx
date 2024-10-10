@@ -76,11 +76,10 @@ class ModsMenuState extends MusicMenuState
 		controlsText.y -= controlsText.height;
 		add(controlsText);
 
-		var enabled = [for (mod in Mods.enabled) mod.name];
+		var enabled = [for (mod in Mods.enabled) mod.folder];
 
 		parsedMods = [
-			for (i => mod in Mods.all.filter(f -> !enabled.contains(f)))
-				Mods.parseMod(PathUtil.combine('mods', mod), mod, i)
+			for (i => mod in Mods.all.filter(f -> !enabled.contains(f))) Mods.parseMod(PathUtil.combine('mods', mod), mod, i)
 		];
 
 		for (i => mod in parsedMods)
