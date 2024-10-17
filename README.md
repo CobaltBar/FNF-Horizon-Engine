@@ -18,11 +18,6 @@
 ```bash
 haxelib install hxpkg
 haxelib run hxpkg install
-cd .haxelib/hxcpp/git/tools/run
-haxe compile.hxml
-cd ../hxcpp
-haxe compile.hxml
-cd ../../../../..
 haxelib run lime rebuild cpp -release
 ```
 

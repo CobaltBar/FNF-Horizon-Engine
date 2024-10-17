@@ -16,7 +16,7 @@ class InitState extends MusicState
 	{
 		#if windows
 		OSUtil.setDPIAware();
-		OSUtil.setWindowDarkMode(true);
+		OSUtil.toggleWindowDarkMode();
 		#end
 
 		Log.init();

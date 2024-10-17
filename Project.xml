@@ -51,7 +51,6 @@
 	<haxedef name="HXCPP_STACK_LINE" />
 	<haxedef name="HXCPP_STACK_TRACE" />
 	<haxedef name="no_deprecation_warnings" />
-	<haxedef name="openflPos" />
 	<haxedef name="hscriptPos" />
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
 
@@ -64,13 +63,14 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 	<haxedef name="message.reporting" value="pretty" />
 
-	<prebuild haxe="source.Prebuild" />
 	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite', '@:build(horizon.macros.ModificationMacros.FlxSprite())', false)" />
 	<haxeflag name="--macro" value="addGlobalMetadata('haxe.ui.locale.LocaleManager', '@:build(horizon.macros.ModificationMacros.LocaleManager())', false)" />
 	<haxeflag name="--macro" value="addGlobalMetadata('flixel.system.frontEnds.LogFrontEnd', '@:build(horizon.macros.ModificationMacros.LogFrontEnd())', false)" />
+	<postbuild haxe="source.Postbuild" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
-	<assets path="art/icon.png" rename="icon.png" if="linux" />
-	<icon path="art/icon.png" />
+	<assets path="art/iconOG.png" rename="icon.png" if="linux" />
+	<icon path="art/icon16.png" size="16" />
+	<icon path="art/iconOG.png" />
 </project>

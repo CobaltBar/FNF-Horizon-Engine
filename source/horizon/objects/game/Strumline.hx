@@ -1,6 +1,6 @@
 package horizon.objects.game;
 
-class Strumline extends FlxSpriteGroup
+class Strumline
 {
 	public var strums:FlxTypedSpriteGroup<StrumNote>;
 	public var notes:FlxTypedSpriteGroup<Note>;
@@ -10,9 +10,8 @@ class Strumline extends FlxSpriteGroup
 
 	public function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
 	{
-		super(0, y);
-
-		add(strums = new FlxTypedSpriteGroup<StrumNote>(0, 0, 4));
+		FlxG.state.add(strums = new FlxTypedSpriteGroup<StrumNote>(0, y, 4));
+		FlxG.state.add(notes = new FlxTypedSpriteGroup<Note>(0, y));
 
 		for (i in 0...4)
 		{
@@ -22,13 +21,13 @@ class Strumline extends FlxSpriteGroup
 			strum.x = (strum.width + 5) * i;
 		}
 
-		add(notes = new FlxTypedSpriteGroup<Note>());
-
-		screenCenter(X);
-		this.x += x;
+		strums.screenCenter(X);
+		notes.screenCenter(X);
+		strums.x += x;
+		notes.x += x;
 
 		if (cameras != null)
-			this.cameras = cameras;
+			strums.cameras = notes.cameras = cameras;
 	}
 
 	function addNextNote()

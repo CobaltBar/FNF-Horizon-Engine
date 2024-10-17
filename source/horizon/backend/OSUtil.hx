@@ -15,11 +15,11 @@ class OSUtil
 		#end
 	}
 
-	public static function setWindowDarkMode(dark:Bool):Void
+	public static function toggleWindowDarkMode():Void
 	{
 		#if cpp
-		if (!Windows.setWindowDarkMode(Application.current.window.title, dark))
-			Log.warn('Failed to set Dark Mode');
+		if (!Windows.toggleWindowDarkMode(Application.current.window.title))
+			Log.warn('Failed to toggle Dark Mode');
 		#else
 		Log.warn('setWindowDarkMode is not supported on this platform');
 		#end
@@ -47,18 +47,22 @@ private class Windows
 		return false;
 
 	@:functionCode('
-		int darkMode = enable ? 1 : 0;
-
+		int darkMode = 0;
 		HWND window = FindWindowA(NULL, windowTitle.c_str());
-		
-		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, windowTitle.c_str());
+		if (window == NULL)
+			window = FindWindowExA(GetActiveWindow(), NULL, NULL, windowTitle.c_str());
+		if (window != NULL)
+		{
+			if (DwmGetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK)
+				DwmGetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
 
-		if (window != NULL) {
-			if (DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK) {
+			darkMode = darkMode == 0 ? 1 : 0;
+			
+			if (DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK)
 				return DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode)) == S_OK;
-			}else return FALSE;
+			else return TRUE;
 		}else return FALSE;
 	')
-	static function setWindowDarkMode(windowTitle:String, enable:Bool):Bool
+	static function toggleWindowDarkMode(windowTitle:String):Bool
 		return false;
 }
