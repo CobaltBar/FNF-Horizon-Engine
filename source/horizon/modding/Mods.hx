@@ -248,14 +248,18 @@ class Mods
 	}
 }
 
-typedef AnimatedChracterData =
+typedef GenericAnimatedSprite =
 {
-	var position:Array<Float>;
 	var animData:Array<AnimationData>;
 	var scale:Null<Float>;
 	var antialiasing:Null<Bool>;
 	var flipX:Null<Bool>;
 	var multi:Array<String>;
+}
+
+typedef AnimatedChracterData = GenericAnimatedSprite &
+{
+	var position:Array<Float>;
 }
 
 typedef CharacterData = AnimatedChracterData &

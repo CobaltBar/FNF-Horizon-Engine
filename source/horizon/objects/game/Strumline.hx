@@ -11,12 +11,12 @@ class Strumline extends FlxSpriteGroup
 	public function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
 	{
 		super(0, y);
-		add(notes = new FlxTypedSpriteGroup<Note>(0, 0));
 
+		notes = new FlxTypedSpriteGroup<Note>();
 		for (i in 0...4)
 		{
 			var strum = new StrumNote(i);
-			strums.push(strum);
+			add(strum);
 
 			strum.x = (strum.width + 5) * i;
 			add(strum);

@@ -41,8 +41,8 @@ class StoryMenuState extends MusicMenuState
 						var character = new MenuCharacter('char-$char', [mod]);
 						character.cameras = [optionsCam];
 						character.screenCenter();
-						character.x += character.positions[0];
-						character.y += character.positions[1];
+						character.x += character.posX;
+						character.y += character.posY;
 						character.visible = false;
 						add(character);
 						menuChars[mod].set(char, character);

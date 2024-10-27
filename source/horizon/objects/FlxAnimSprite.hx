@@ -3,17 +3,11 @@ package horizon.objects;
 class FlxAnimSprite extends FlxSprite
 {
 	public var offsets:Map<String, Array<Float>> = [];
-	public var positions:Array<Float> = [];
 
-	public function new(jsonPath:String, ?mods:Array<Mod>)
+	public function new(x:Float, y:Float, jsonPath:String, ?mods:Array<Mod>, ?json:GenericAnimatedSprite)
 	{
-		var json:AnimatedChracterData = Path.json(jsonPath, mods);
-
-		positions.push(json.position[0] ?? 0);
-		positions.push(json.position[1] ?? 0);
-
-		super(json.position[0] ?? 0, json.position[1] ?? 0);
-
+		json ??= Path.json(jsonPath, mods);
+		super(x, y);
 		var name = PathUtil.withoutDirectory(jsonPath);
 		var atlas = Path.atlas(name, mods);
 		if (json.multi != null)
@@ -33,6 +27,7 @@ class FlxAnimSprite extends FlxSprite
 			scale.set(json.scale, json.scale);
 
 		updateHitbox();
+		centerOffsets();
 	}
 
 	public function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
@@ -41,6 +36,6 @@ class FlxAnimSprite extends FlxSprite
 		if (offsets.exists(animName))
 			offset.set(offsets[animName][0], offsets[animName][1]);
 		else
-			offset.set(0, 0);
+			centerOffsets();
 	}
 }
