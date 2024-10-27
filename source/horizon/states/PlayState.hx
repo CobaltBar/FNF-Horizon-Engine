@@ -49,8 +49,8 @@ class PlayState extends MusicState
 			comboGroup[thing].cameras = [camHUD];
 		}
 
-		playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]);
-		opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]);
+		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
+		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
 		opponentStrum.autoHit = true;
 
 		Conductor.reset();
@@ -68,21 +68,6 @@ class PlayState extends MusicState
 						val.time = audios['inst'].time, 0);
 
 			PlayerInput.init(); */
-		/*	Controls.onPress(Settings.keybinds["notes_left"], () ->
-			{
-				var note = playerStrum.strums.members[0];
-				note.animation.play('confirm');
-				note.updateHitbox();
-				note.rgb.enabled = true;
-			});
-
-			Controls.onRelease(Settings.keybinds["notes_left"], () ->
-			{
-				var note = playerStrum.strums.members[0];
-				note.animation.play('strum');
-				note.updateHitbox();
-				note.rgb.enabled = false;
-		});*/
 
 		Path.clearUnusedMemory();
 	}
