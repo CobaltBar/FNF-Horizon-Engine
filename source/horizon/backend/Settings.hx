@@ -34,10 +34,10 @@ class Settings
 	static var lowQuality:Bool = false;
 
 	static var keybinds:Map<String, Array<FlxKey>> = [
-		'notes_left' => [A, LEFT],
-		'notes_down' => [S, DOWN],
-		'notes_up' => [W, UP],
-		'notes_right' => [D, RIGHT],
+		'note_left' => [A, LEFT],
+		'note_down' => [S, DOWN],
+		'note_up' => [W, UP],
+		'note_right' => [D, RIGHT],
 		'ui_left' => [A, LEFT],
 		'ui_down' => [S, DOWN],
 		'ui_up' => [W, UP],

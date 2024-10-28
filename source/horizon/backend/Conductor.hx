@@ -104,7 +104,7 @@ class Conductor extends FlxBasic
 		timeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
 		bpm = 100;
 		switchToMusic = true;
-		stepTracker = beatTracker = measureTracker = time = 0;
+		stepTracker = beatTracker = measureTracker = time = lastTime = 0;
 		curMeasure = curBeat = curStep = 0;
 		song = null;
 	}
