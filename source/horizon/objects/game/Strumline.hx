@@ -1,14 +1,15 @@
 package horizon.objects.game;
 
+@:publicFields
 class Strumline extends FlxSpriteGroup
 {
-	public var strums:Array<StrumNote> = [];
-	public var notes:FlxTypedSpriteGroup<Note>;
+	var strums:Array<StrumNote> = [];
+	var notes:FlxTypedSpriteGroup<Note>;
 
-	public var autoHit:Bool = false;
-	public var uNoteData:Array<NoteJSON> = [];
+	var autoHit:Bool = false;
+	var uNoteData:Array<NoteJSON> = [];
 
-	public function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
+	function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
 	{
 		super(0, y);
 
@@ -16,8 +17,6 @@ class Strumline extends FlxSpriteGroup
 		for (i in 0...4)
 		{
 			var strum = new StrumNote(i);
-			add(strum);
-
 			strum.x = (strum.width + 5) * i;
 			add(strum);
 		}

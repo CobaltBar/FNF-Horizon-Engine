@@ -183,12 +183,7 @@ class StoryMenuState extends MusicMenuState
 
 	public function changeDifficulty(change:Int):Void
 	{
-		curDifficulty += change;
-
-		if (curDifficulty < 0)
-			curDifficulty = optionToData[curSelected].week.difficulties.length - 1;
-		if (curDifficulty >= optionToData[curSelected].week.difficulties.length)
-			curDifficulty = 0;
+		curDifficulty = (curDifficulty + change + optionToData[curSelected].week.difficulties.length) % optionToData[curSelected].week.difficulties.length;
 
 		difficulty.loadGraphic(Path.image('difficulty-${optionToData[curSelected].week.difficulties[curDifficulty].toLowerCase() ?? 'normal'}',
 			[optionToData[curSelected].mod]));

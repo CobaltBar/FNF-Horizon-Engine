@@ -79,7 +79,8 @@ class ModsMenuState extends MusicMenuState
 		var enabled = [for (mod in Mods.enabled) mod.folder];
 
 		parsedMods = [
-			for (i => mod in Mods.all.filter(f -> !enabled.contains(f))) Mods.parseMod(PathUtil.combine('mods', mod), mod, i)
+			for (i => mod in Mods.all.filter(f -> !enabled.contains(f)))
+				Mods.parseMod(PathUtil.combine('mods', mod), mod, i)
 		];
 
 		for (i => mod in parsedMods)
@@ -271,11 +272,7 @@ class ModsMenuState extends MusicMenuState
 			if (change != 0)
 				FlxG.sound.play(Path.audio('scroll'), .7);
 
-			curEnabled += change;
-			if (curEnabled < 0)
-				curEnabled = enabledOptions.length - 1;
-			if (curEnabled >= enabledOptions.length)
-				curEnabled = 0;
+			curEnabled = (curEnabled + change + enabledOptions.length) % enabledOptions.length;
 
 			enabledOptions[curEnabled].alpha = 1;
 			var mod = optionToMod[enabledOptions[curEnabled]];

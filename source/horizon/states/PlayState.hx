@@ -85,18 +85,16 @@ class PlayState extends MusicState
 		scrollSpeed = chart.scrollSpeed * 1.1 ?? 1.1;
 		Conductor.bpm = chart.bpm;
 
-		/*
-			for (note in chart.notes)
-				(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
+		for (note in chart.notes)
+			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
 
-			ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
-			ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
+		ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
+		ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 
-			for (i in 0...50)
-			{
-				playerStrum.addNextNote();
-				opponentStrum.addNextNote();
-			}
-		 */
+		for (i in 0...50)
+		{
+			playerStrum.addNextNote();
+			opponentStrum.addNextNote();
+		}
 	}
 }

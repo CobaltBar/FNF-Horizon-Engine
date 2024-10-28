@@ -29,7 +29,7 @@ class NoteSprite extends FlxSprite
 		animation.addByPrefix('confirm', 'confirm', 24, false);
 		animation.addByPrefix('press', 'press', 24, false);
 		animation.play('note');
-		scale.set(.8, .8);
+		scale.set(.75, .75);
 		updateHitbox();
 	}
 
