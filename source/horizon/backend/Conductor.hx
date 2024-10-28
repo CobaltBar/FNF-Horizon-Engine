@@ -42,6 +42,7 @@ class Conductor extends FlxBasic
 	private static var stepTracker:Float = 0;
 	private static var beatTracker:Float = 0;
 	private static var measureTracker:Float = 0;
+	private static var lastTime:Float = 0;
 
 	function new()
 	{
@@ -58,8 +59,14 @@ class Conductor extends FlxBasic
 	{
 		if (song != null)
 		{
-			time = song.time + offset;
-			lerpedTime = FlxMath.lerp(lerpedTime, song.time + offset, FlxMath.bound(elapsed * 20, 0, 1));
+			if (song.time == lastTime)
+				Conductor.time += elapsed;
+			else
+			{
+				time = song.time + offset;
+				lastTime = song.time;
+			}
+			lerpedTime = FlxMath.lerp(lerpedTime, time, FlxMath.bound(elapsed * 20, 0, 1));
 		}
 		else if (FlxG.sound.music != null && switchToMusic)
 		{
