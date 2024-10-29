@@ -2,16 +2,16 @@ package horizon.backend;
 
 @:structInit @:publicFields class TimeSignature
 {
-	var beatsPerMeasure:Float;
-	var stepsPerBeat:Float;
+	var numerator:Float;
+	var denominator:Float;
 
 	static function fromString(sig:String):TimeSignature
 	{
 		if (!sig.contains('/'))
-			return {beatsPerMeasure: 4, stepsPerBeat: 4}
+			return {numerator: 4, denominator: 4}
 
 		var split = sig.trim().split('/');
-		return {beatsPerMeasure: Std.parseFloat(split[0].trim()), stepsPerBeat: Std.parseFloat(split[1].trim())}
+		return {numerator: Std.parseFloat(split[0].trim()), denominator: Std.parseFloat(split[1].trim())}
 	}
 }
 
@@ -28,7 +28,7 @@ class Conductor extends FlxBasic
 	static var time:Float = 0;
 	static var lerpedTime:Float = 0;
 	static var song(default, set):FlxSound;
-	static var timeSignature(default, set):TimeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
+	static var timeSignature(default, set):TimeSignature = {numerator: 4, denominator: 4}
 
 	static var curStep:Int = 0;
 	static var curBeat:Int = 0;
@@ -101,7 +101,7 @@ class Conductor extends FlxBasic
 
 	@:noCompletion static function reset():Void
 	{
-		timeSignature = {beatsPerMeasure: 4, stepsPerBeat: 4}
+		timeSignature = {numerator: 4, denominator: 4}
 		bpm = 100;
 		switchToMusic = true;
 		stepTracker = beatTracker = measureTracker = time = 0;
@@ -132,8 +132,8 @@ class Conductor extends FlxBasic
 
 	@:noCompletion static inline function recalculateLengths(val:Float):Void
 	{
-		beatLength = 60 / val * 1000;
-		stepLength = beatLength / timeSignature.stepsPerBeat;
-		measureLength = beatLength * timeSignature.beatsPerMeasure;
+		beatLength = 60 / val * 1000 * (4 / timeSignature.denominator);
+		stepLength = beatLength / 4;
+		measureLength = beatLength * timeSignature.numerator;
 	}
 }
