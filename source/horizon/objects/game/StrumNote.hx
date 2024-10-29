@@ -17,18 +17,28 @@ class StrumNote extends NoteSprite
 		centerOffsets();
 		updateHitbox();
 		activeTimer = new FlxTimer();
+		activeTimer.loops = 1;
+		activeTimer.onComplete = timer -> unconfirm();
 	}
 
 	public function confirm(unconfirm:Bool = true):Void
 	{
-		activeTimer.reset(Conductor.stepLength * 0.00125);
+		playAnim('confirm');
+		rgb.enabled = true;
+		if (unconfirm)
+			activeTimer.reset(Conductor.beatLength * 0.00125);
+	}
+
+	public function unconfirm():Void
+	{
+		playAnim('strum');
+		rgb.enabled = false;
+		activeTimer.cancel();
 	}
 
 	public function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
 	{
 		animation.play(animName, force, reversed, frame);
-		if (animName == 'confirm')
-			offset.set(13, 13);
 		centerOrigin();
 		centerOffsets();
 	}

@@ -59,6 +59,7 @@ class PlayState extends MusicState
 		loadChart();
 		for (song in songs[0].audios)
 			audios.set(PathUtil.withoutExtension(PathUtil.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
+
 		/*
 			add(new Countdown());
 
