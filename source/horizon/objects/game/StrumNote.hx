@@ -9,7 +9,6 @@ class StrumNote extends NoteSprite
 		super(data);
 		animation.play('strum');
 		rgb = RGBEffect.get(Settings.noteRGB[data], 1);
-		shader = rgb.shader;
 		centerOffsets();
 		updateHitbox();
 		activeTimer = new FlxTimer();

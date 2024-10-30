@@ -22,7 +22,8 @@ class EngineInfo extends TextField
 
 		// https://askubuntu.com/a/988612
 		// if the mac/ios stuff doesn't work blame lily
-		var cpuProc = new Process(#if windows 'wmic cpu get name' #elseif (linux || android) 'lscpu | grep \'Model name\' | cut -f 2 -d \":\" | awk \'{$1=$1}1\'' #elseif (mac || ios) 'sysctl -a | grep brand_string | awk -F ": " \'{print $2}\'' #end);
+		var cpuProc = new Process(#if windows 'wmic cpu get name' #elseif (linux || android) 'lscpu | grep \'Model name\' | cut -f 2 -d \":\" | awk \'{$1=$1}1\'' #elseif (mac
+			|| ios) 'sysctl -a | grep brand_string | awk -F ": " \'{print $2}\'' #end);
 
 		var cpu:String = 'N/A';
 
