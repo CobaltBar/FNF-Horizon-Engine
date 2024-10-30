@@ -12,7 +12,6 @@ import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 	var g(default, set):FlxColor;
 	var b(default, set):FlxColor;
 	var mult(default, set):Float;
-	var enabled(default, set):Bool;
 
 	static function get(rgb:Array<FlxColor>, mult:Float):RGBEffect
 	{
@@ -54,12 +53,6 @@ import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 		return mult = val;
 	}
 
-	function set_enabled(val:Bool):Bool
-	{
-		shader.enabled.value = [val];
-		return enabled = val;
-	}
-
 	function new()
 	{
 		shader = new RGBShader();
@@ -67,7 +60,6 @@ import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 		g = 0xFF00FF00;
 		b = 0xFF0000FF;
 		mult = 1;
-		enabled = true;
 	}
 }
 
@@ -80,11 +72,10 @@ class RGBShader extends FlxShader
 		uniform vec4 g;
 		uniform vec4 b;
 		uniform float mult;
-		uniform bool enabled;
 
 		vec4 rgbShader(sampler2D bitmap, vec2 coord) {
 			vec4 color = flixel_texture2D(bitmap, coord);
-			if (!hasTransform || color.a == 0. || mult == 0. || !enabled)
+			if (!hasTransform || color.a == 0. || mult == 0.)
 				return color;
 
 			color.rgb = mix(color.rgb, min(r.rgb * color.r + g.rgb * color.g + b.rgb * color.b, vec3(1.)), mult);

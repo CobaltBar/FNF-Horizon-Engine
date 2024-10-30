@@ -5,9 +5,27 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 #end
 
+@:publicFields
 class ModificationMacros
 {
-	public static function FlxSprite()
+	// Based on Funkin's FlxMacro
+	static function FlxBasic()
+	{
+		#if macro
+		var fields = Context.getBuildFields();
+
+		fields.push({
+			name: "zIndex",
+			pos: Context.currentPos(),
+			access: [APublic],
+			kind: FVar(macro :Int, macro $v{0}),
+		});
+
+		return fields;
+		#end
+	}
+
+	static function FlxSprite()
 	{
 		#if macro
 		var fields = Context.getBuildFields();
@@ -37,7 +55,7 @@ class ModificationMacros
 		#end
 	}
 
-	public static function LocaleManager()
+	static function LocaleManager()
 	{
 		#if macro
 		var fields = Context.getBuildFields();
@@ -77,7 +95,8 @@ class ModificationMacros
 		#end
 	}
 
-	public static function LogFrontEnd()
+	// TODO change to $b{expr {}, f.expr}
+	static function LogFrontEnd()
 	{
 		#if macro
 		var fields = Context.getBuildFields();

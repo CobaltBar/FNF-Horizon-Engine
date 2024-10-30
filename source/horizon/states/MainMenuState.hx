@@ -129,30 +129,17 @@ class MainMenuState extends MusicMenuState
 	}
 
 	inline function out():Void
-		if (modCount == 0)
-			switch (curSelected)
-			{
-				case 0:
-					MusicState.switchState(new StoryMenuState());
-				case 1:
-					// MusicState.switchState(new FreeplayState());
-				case 3:
-					// MusicState.switchState(new CreditsState());
-				case 5:
-					// MusicState.switchState(new OptionsState());
-			}
-		else
-			switch (curSelected)
-			{
-				case 0:
-					MusicState.switchState(new StoryMenuState());
-				case 1:
-					// MusicState.switchState(new FreeplayState());
-				case 2:
-					MusicState.switchState(new ModsMenuState());
-				case 3:
-					// MusicState.switchState(new CreditsState());
-				case 5:
-					// MusicState.switchState(new OptionsState());
-			}
+		switch (curSelected)
+		{
+			case 0:
+				MusicState.switchState(new StoryMenuState());
+			case 1:
+				// MusicState.switchState(new FreeplayState());
+			case 2 if (modCount != 0):
+				MusicState.switchState(new ModsMenuState());
+			case 2:
+				// MusicState.switchState(new CreditsState());
+			case 5 | 4 if (modCount != 0):
+				// MusicState.switchState(new OptionsState());
+		}
 }

@@ -8,11 +8,7 @@ class StrumNote extends NoteSprite
 	{
 		super(data);
 		animation.play('strum');
-		rgb = new RGBEffect();
-		rgb.r = Settings.noteRGB[data][0];
-		rgb.g = Settings.noteRGB[data][1];
-		rgb.b = Settings.noteRGB[data][2];
-		rgb.enabled = false;
+		rgb = RGBEffect.get(Settings.noteRGB[data], 1);
 		shader = rgb.shader;
 		centerOffsets();
 		updateHitbox();
@@ -23,20 +19,32 @@ class StrumNote extends NoteSprite
 
 	public function confirm(unconfirm:Bool = true):Void
 	{
+		shader = rgb.shader;
 		playAnim('confirm');
-		rgb.enabled = true;
 		if (unconfirm)
 			activeTimer.reset(Conductor.beatLength * 0.00125);
 	}
 
+	public function press():Void
+	{
+		shader = rgb.shader;
+		playAnim('press');
+	}
+
+	public function unpress():Void
+	{
+		shader = null;
+		playAnim('strum');
+	}
+
 	public function unconfirm():Void
 	{
+		shader = null;
 		playAnim('strum');
-		rgb.enabled = false;
 		activeTimer.cancel();
 	}
 
-	public function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
+	public inline function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
 	{
 		animation.play(animName, force, reversed, frame);
 		centerOrigin();
