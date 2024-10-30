@@ -50,13 +50,12 @@
 	<haxedef name="HXCPP_CHECK_POINTER" />
 	<haxedef name="HXCPP_STACK_LINE" />
 	<haxedef name="HXCPP_STACK_TRACE" />
+	<haxedef name="HXCPP_CATCH_SEGV" />
 	<haxedef name="no_deprecation_warnings" />
 	<haxedef name="hscriptPos" />
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
 
 	<haxedef name="FLX_NO_HEALTH" />
-	<haxedef name="FLX_NO_MOUSE" if="mobile" />
-	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
