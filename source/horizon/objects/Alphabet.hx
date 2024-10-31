@@ -106,7 +106,7 @@ class Alphabet extends FlxSpriteGroup
 
 				char.x = letterTracker;
 				char.y -= char.height;
-				// TODO find reason i added + (2 * textScale);
+
 				letterTracker += char.width + (2 * textScale);
 				add(char);
 				lines[i].push(char);
