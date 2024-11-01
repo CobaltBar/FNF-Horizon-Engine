@@ -91,7 +91,7 @@ class MainMenuState extends MusicMenuState
 		transitioningOut = false;
 		prevSelected = curSelected;
 		if (curSelected == (4 - (modCount == 0 ? 1 : 0)))
-			Util.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
+			FlxG.openURL('https://needlejuicerecords.com/pages/friday-night-funkin');
 		else
 		{
 			if (Settings.flashingLights)
