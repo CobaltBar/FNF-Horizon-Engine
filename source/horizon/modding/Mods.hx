@@ -1,5 +1,7 @@
 package horizon.modding;
 
+import haxe.ds.ArraySort;
+
 class Mods
 {
 	public static var all:Array<String> = [];

@@ -1,13 +1,12 @@
 \/flixel\/.*
-\/flixel-addons\.*
+\/flixel-addons\/.*
 \/flxanimate\/.*
 \/format\/.*
-\/hscript\/.*
 \/hxcpp\/.*
-\/hxcpp-debug-server\/.*
 \/hxdiscord_rpc\/.*
 \/hxp\/.*
-\/hxpkg\/.*
-\/openfl\/.*
 \/lime\/.*
+\/openfl\/.*
 \/tjson\/.*
+\/hxcpp-debug-server\/.*
+\/horizon\/.*

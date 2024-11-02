@@ -1,5 +1,7 @@
 package horizon.states;
 
+import haxe.ds.ArraySort;
+
 class ModsMenuState extends MusicMenuState
 {
 	var curEnabled:Int = 0;

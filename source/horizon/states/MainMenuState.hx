@@ -1,5 +1,7 @@
 package horizon.states;
 
+import flixel.addons.display.FlxBackdrop;
+import flixel.effects.FlxFlicker;
 import lime.app.Application;
 
 class MainMenuState extends MusicMenuState

@@ -1,5 +1,6 @@
 package horizon.util;
 
+import flixel.addons.display.FlxBackdrop;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
@@ -8,7 +9,7 @@ class Create
 {
 	static function backdrop(path:FlxGraphicAsset, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxBackdrop
 	{
-		var bg:FlxBackdrop = new FlxBackdrop(path);
+		var bg = new FlxBackdrop(path);
 		bg.scale.set(scale, scale);
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -19,7 +20,7 @@ class Create
 
 	static function atlas(x:Float, y:Float, frames:FlxAtlasFrames, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
-		var spr:FlxSprite = new FlxSprite(x, y);
+		var spr = new FlxSprite(x, y);
 		spr.frames = frames;
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
@@ -30,7 +31,7 @@ class Create
 
 	static function sprite(x:Float, y:Float, path:FlxGraphicAsset, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
-		var spr:FlxSprite = new FlxSprite(x, y);
+		var spr = new FlxSprite(x, y);
 		spr.loadGraphic(path);
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
@@ -41,7 +42,7 @@ class Create
 
 	static function graphic(x:Float, y:Float, width:Int, height:Int, color:FlxColor, ?cameras:Array<FlxCamera>, scale:Float = 1):FlxSprite
 	{
-		var spr:FlxSprite = new FlxSprite(x, y);
+		var spr = new FlxSprite(x, y);
 		spr.makeGraphic(width, height, color);
 		spr.scale.set(scale, scale);
 		spr.updateHitbox();
@@ -52,7 +53,7 @@ class Create
 
 	static function camera():FlxCamera
 	{
-		var cam:FlxCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+		var cam = new FlxCamera(0, 0, FlxG.width, FlxG.height);
 		FlxG.cameras.add(cam, false);
 		cam.bgColor = 0x00000000;
 		return cam;

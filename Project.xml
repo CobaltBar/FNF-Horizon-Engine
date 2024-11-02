@@ -42,7 +42,7 @@
 	<haxelib name="haxeui-core" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="flxanimate" />
-	<haxelib name="hxdiscord_rpc" />
+	<haxelib name="hxdiscord_rpc" unless="hl" />
 	<haxelib name="hxcpp-debug-server" if="cpp debug" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->

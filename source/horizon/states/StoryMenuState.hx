@@ -1,5 +1,6 @@
 package horizon.states;
 
+import flixel.effects.FlxFlicker;
 import flixel.math.FlxRect;
 
 class StoryMenuState extends MusicMenuState

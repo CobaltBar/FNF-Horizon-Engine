@@ -3,15 +3,21 @@ package horizon.objects.game;
 @:publicFields
 class Note extends NoteSprite
 {
-	public var data:Int;
-	public var time:Float;
-	public var length:Float;
-	public var mult:Float;
-	public var type:String;
+	var data:Int;
+	var time:Float;
+	var length:Float;
+	var mult:Float;
+	var type:String;
 
-	public function resetNote(json:NoteJSON)
+	function new(data:Int = 2)
 	{
-		data = json.data ?? 2;
+		super(data);
+		active = false;
+	}
+
+	function resetNote(json:NoteJSON)
+	{
+		data = json.data ?? 0;
 		time = json.time ?? 0;
 		length = json.length ?? 0;
 		type = json.type;

@@ -1,5 +1,7 @@
 package horizon.states;
 
+import haxe.ds.ArraySort;
+
 @:publicFields
 class PlayState extends MusicState
 {
