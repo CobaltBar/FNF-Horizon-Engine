@@ -1,5 +1,6 @@
 package horizon.util;
 
+import flixel.system.debug.log.LogStyle;
 import haxe.Constraints.Function;
 import haxe.PosInfos;
 
@@ -14,6 +15,18 @@ class Log
 	{
 		ogTrace = haxe.Log.trace;
 		haxe.Log.trace = hxTrace;
+
+		LogStyle.NORMAL.callback = (data) -> print(data, 'FLIXEL ADD', 214);
+		LogStyle.WARNING.callback = (data) ->
+		{
+			ErrorState.errs.push('FLIXEL WARN: $data');
+			print(data, 'FLIXEL WARN', 214);
+		}
+		LogStyle.ERROR.callback = (data) ->
+		{
+			ErrorState.errs.push('FLIXEL ERROR: $data');
+			print(data, 'FLIXEL ERROR', 196);
+		}
 
 		if (Constants.verbose)
 			info('Logger Initialized');

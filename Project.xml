@@ -65,7 +65,6 @@
 	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxSprite', '@:build(horizon.macros.ModificationMacros.FlxSprite())', false)" />
 	<haxeflag name="--macro" value="addGlobalMetadata('flixel.FlxBasic', '@:build(horizon.macros.ModificationMacros.FlxBasic())', false)" />
 	<haxeflag name="--macro" value="addGlobalMetadata('haxe.ui.locale.LocaleManager', '@:build(horizon.macros.ModificationMacros.LocaleManager())', false)" />
-	<haxeflag name="--macro" value="addGlobalMetadata('flixel.system.frontEnds.LogFrontEnd', '@:build(horizon.macros.ModificationMacros.LogFrontEnd())', false)" />
 	<postbuild haxe="source.Postbuild" />
 
 	<!-- _________________________________ Custom _______________________________ -->
