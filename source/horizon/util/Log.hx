@@ -16,7 +16,7 @@ class Log
 		ogTrace = haxe.Log.trace;
 		haxe.Log.trace = hxTrace;
 
-		LogStyle.NORMAL.callback = (data) -> print(data, 'FLIXEL ADD', 214);
+		LogStyle.NORMAL.callback = (data) -> print(data, 'FLIXEL', 214);
 		LogStyle.WARNING.callback = (data) ->
 		{
 			ErrorState.errs.push('FLIXEL WARN: $data');

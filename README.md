@@ -11,7 +11,7 @@
 1. Install Haxe 4.3.6 (and install MSVC if on Windows)
 
 > [!NOTE]
-> You may need to install extra packages on linux to compile lime, see [here](https://github.com/openfl/lime)
+> You may need to install extra packages on Linux to compile lime, see [here](https://github.com/openfl/lime)
 
 2. Run the following commands
 

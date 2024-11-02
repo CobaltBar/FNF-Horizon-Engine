@@ -17,6 +17,27 @@ class NoteSprite extends FlxSprite
 	public override function set_angle(val:Float):Float
 		return super.set_angle(val + angleOffset);
 
+	override function updateMotion(elapsed:Float):Void
+	{
+		var velocityDelta = 0.5 * (flixel.math.FlxVelocity.computeVelocity(angularVelocity, angularAcceleration, angularDrag, maxAngular, elapsed)
+			- angularVelocity);
+		angularVelocity += velocityDelta;
+		angle += angularVelocity * elapsed - angleOffset;
+		angularVelocity += velocityDelta;
+
+		velocityDelta = 0.5 * (flixel.math.FlxVelocity.computeVelocity(velocity.x, acceleration.x, drag.x, maxVelocity.x, elapsed) - velocity.x);
+		velocity.x += velocityDelta;
+		var delta = velocity.x * elapsed;
+		velocity.x += velocityDelta;
+		x += delta;
+
+		velocityDelta = 0.5 * (flixel.math.FlxVelocity.computeVelocity(velocity.y, acceleration.y, drag.y, maxVelocity.y, elapsed) - velocity.y);
+		velocity.y += velocityDelta;
+		delta = velocity.y * elapsed;
+		velocity.y += velocityDelta;
+		y += delta;
+	}
+
 	public function new(data:Int = 2)
 	{
 		super();
