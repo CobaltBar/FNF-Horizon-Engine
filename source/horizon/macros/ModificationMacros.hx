@@ -95,13 +95,47 @@ class ModificationMacros
 		#end
 	}
 
-	// TODO change to $b{expr {}, f.expr}
 	static function LogFrontEnd()
 	{
-		#if macro
+		#if (macro && !display)
 		var fields = Context.getBuildFields();
 
+		var hzadd = macro
+			{
+				horizon.util.Log.print(data, 'FLX ADD', 214, {
+					methodName: 'add',
+					lineNumber: 22,
+					fileName: 'FlxG.Log/LogFrontEnd.hx',
+					className: 'LogFrontEnd'
+				});
+			}
+
+		var hzwarn = macro
+			{
+				horizon.states.ErrorState.errs.push('FLX WARN: $data');
+				horizon.util.Log.print(data, 'FLX WARN', 214, {
+					methodName: 'warn',
+					lineNumber: 27,
+					fileName: 'FlxG.Log/LogFrontEnd.hx',
+					className: 'LogFrontEnd'
+				});
+			}
+
+		var hzerror = macro
+			{
+				horizon.states.ErrorState.errs.push('FLX ERROR: $data');
+				horizon.util.Log.print(data, 'FLX ERROR', 196, {
+					methodName: 'error',
+					lineNumber: 32,
+					fileName: 'FlxG.Log/LogFrontEnd.hx',
+					className: 'LogFrontEnd'
+				});
+			}
+
 		var add:Field = [for (field in fields) if (field.name == 'add') field][0];
+		var warn:Field = [for (field in fields) if (field.name == 'warn') field][0];
+		var error:Field = [for (field in fields) if (field.name == 'error') field][0];
+
 		switch (add.kind)
 		{
 			case FFun(f):
@@ -109,21 +143,11 @@ class ModificationMacros
 					args: f.args,
 					params: f.params,
 					ret: f.ret,
-					expr: macro
-					{
-						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {
-							methodName: 'add',
-							lineNumber: 22,
-							fileName: 'FlxG.Log/LogFrontEnd.hx',
-							className: 'LogFrontEnd'
-						});
-						advanced(data, LogStyle.NORMAL);
-					}
+					expr: macro $b{[hzadd, f.expr]}
 				});
 			default:
 		}
 
-		var warn:Field = [for (field in fields) if (field.name == 'warn') field][0];
 		switch (warn.kind)
 		{
 			case FFun(f):
@@ -131,22 +155,11 @@ class ModificationMacros
 					args: f.args,
 					params: f.params,
 					ret: f.ret,
-					expr: macro
-					{
-						horizon.states.ErrorState.errs.push('FLIXEL WARN: $data');
-						horizon.util.Log.print(data, 'FLIXEL WARN', 214, {
-							methodName: 'warn',
-							lineNumber: 28,
-							fileName: 'FlxG.Log/LogFrontEnd.hx',
-							className: 'LogFrontEnd'
-						});
-						advanced(data, LogStyle.WARNING, true);
-					}
+					expr: macro $b{[hzwarn, f.expr]}
 				});
 			default:
 		}
 
-		var error:Field = [for (field in fields) if (field.name == 'error') field][0];
 		switch (error.kind)
 		{
 			case FFun(f):
@@ -154,17 +167,7 @@ class ModificationMacros
 					args: f.args,
 					params: f.params,
 					ret: f.ret,
-					expr: macro
-					{
-						horizon.states.ErrorState.errs.push('FLIXEL ERROR: $data');
-						horizon.util.Log.print(data, 'FLIXEL ERROR', 196, {
-							methodName: 'error',
-							lineNumber: 33,
-							fileName: 'FlxG.Log/LogFrontEnd.hx',
-							className: 'LogFrontEnd'
-						});
-						advanced(data, LogStyle.ERROR, true);
-					}
+					expr: macro $b{[hzerror, f.expr]}
 				});
 			default:
 		}
