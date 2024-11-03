@@ -40,9 +40,9 @@ class PlayState extends MusicState
 		instance = this;
 		bop = zoom = false;
 
-		for (item in ['note', 'ready', 'set', 'go', 'combo', 'num', 'sick', 'good', 'bad', 'shit'])
+		for (item in ['note', 'combo', 'num', 'sick', 'good', 'bad', 'shit'].concat(Countdown.countdownNameArr))
 			Path.image(item, mods);
-		for (item in ['three', 'two', 'one', 'go'])
+		for (item in Countdown.countdownSoundArr)
 			Path.audio(item, mods);
 
 		for (thing in ['rating', 'combo', 'comboSpr'])
@@ -62,15 +62,18 @@ class PlayState extends MusicState
 		for (song in songs[0].audios)
 			audios.set(PathUtil.withoutExtension(PathUtil.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
 
-		/*
-			add(new Countdown());
+		Conductor.song = audios['inst'];
 
-			new FlxTimer().start(1, timer -> for (key => val in audios)
-				if (key != 'inst')
-					if (Math.abs(audios['inst'].time - val.time) >= 10)
-						val.time = audios['inst'].time, 0);
+		new FlxTimer().start(1, timer -> for (key => val in audios)
+			if (key != 'inst')
+				if (Math.abs(audios['inst'].time - val.time) >= 10)
+					val.time = audios['inst'].time, 0);
 
-			PlayerInput.init(); */
+		add(new Countdown());
+
+		playerStrum.introAnim(true);
+		opponentStrum.introAnim();
+		// PlayerInput.init();
 
 		Path.clearUnusedMemory();
 	}

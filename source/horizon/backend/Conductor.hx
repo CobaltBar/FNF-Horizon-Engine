@@ -26,7 +26,6 @@ class Conductor extends FlxBasic
 
 	static var offset:Float = 0;
 	static var time:Float = 0;
-	static var lerpedTime:Float = 0;
 	static var song(default, set):FlxSound;
 	static var timeSignature(default, set):TimeSignature = {numerator: 4, denominator: 4}
 
@@ -66,7 +65,6 @@ class Conductor extends FlxBasic
 				time = song.time + offset;
 				lastTime = song.time;
 			}
-			lerpedTime = FlxMath.lerp(lerpedTime, time, FlxMath.bound(elapsed * 20, 0, 1));
 		}
 		else if (FlxG.sound.music != null && switchToMusic)
 		{

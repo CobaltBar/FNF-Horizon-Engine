@@ -31,19 +31,19 @@ import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 
 	function set_r(val:FlxColor):FlxColor
 	{
-		shader.r.value = [val.redFloat, val.greenFloat, val.blueFloat, val.alphaFloat];
+		shader.r.value = [val.redFloat, val.greenFloat, val.blueFloat];
 		return r = val;
 	}
 
 	function set_g(val:FlxColor):FlxColor
 	{
-		shader.g.value = [val.redFloat, val.greenFloat, val.blueFloat, val.alphaFloat];
+		shader.g.value = [val.redFloat, val.greenFloat, val.blueFloat];
 		return g = val;
 	}
 
 	function set_b(val:FlxColor):FlxColor
 	{
-		shader.b.value = [val.redFloat, val.greenFloat, val.blueFloat, val.alphaFloat];
+		shader.b.value = [val.redFloat, val.greenFloat, val.blueFloat];
 		return b = val;
 	}
 
@@ -68,9 +68,9 @@ class RGBShader extends FlxShader
 	@:glFragmentHeader('
 		#pragma header
 		
-		uniform vec4 r;
-		uniform vec4 g;
-		uniform vec4 b;
+		uniform vec3 r;
+		uniform vec3 g;
+		uniform vec3 b;
 		uniform float mult;
 
 		vec4 rgbShader(sampler2D bitmap, vec2 coord) {
@@ -78,8 +78,7 @@ class RGBShader extends FlxShader
 			if (!hasTransform || color.a == 0. || mult == 0.)
 				return color;
 
-			color.rgb = mix(color.rgb, min(r.rgb * color.r + g.rgb * color.g + b.rgb * color.b, vec3(1.)), mult);
-			color.a = mix(color.a, min(r.a * color.r + g.a * color.g + b.a * color.b, 1.), mult);
+			color.rgb = mix(color.rgb, min(r * color.r + g * color.g + b * color.b, vec3(1.)), mult);
 			
 			if(color.a > 0.) 
 				return color;
