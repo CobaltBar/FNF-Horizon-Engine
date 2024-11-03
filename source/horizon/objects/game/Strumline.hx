@@ -1,7 +1,6 @@
 package horizon.objects.game;
 
 import flixel.util.FlxSort;
-import haxe.CallStack;
 
 @:publicFields
 class Strumline extends FlxSpriteGroup
@@ -51,6 +50,7 @@ class Strumline extends FlxSpriteGroup
 				{
 					note.kill();
 					addNextNote();
+					PlayState.instance.miss();
 					continue;
 				}
 				note.move(strums[note.data % strums.length]);

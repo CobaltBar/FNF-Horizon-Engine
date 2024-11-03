@@ -82,9 +82,9 @@ class StoryMenuState extends MusicMenuState
 		rightArrow.x = difficulty.x + difficulty.width + 10;
 		rightArrow.y = difficulty.y + (difficulty.height - rightArrow.height) * .5;
 
-		var mods = Mods.enabled;
+		var mods = Mods.enabled.copy();
 
-		if (Mods.enabled.length == 0)
+		if (mods.length == 0)
 			mods.unshift(Mods.assets);
 
 		for (mod in mods)

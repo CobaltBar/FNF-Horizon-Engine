@@ -10,7 +10,7 @@ class NoteSprite extends FlxSprite
 	@:noCompletion public function set_angleOffset(val:Float):Float
 	{
 		angleOffset = val;
-		set_angle(angle);
+		angle = 0;
 		return val;
 	}
 

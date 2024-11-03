@@ -16,10 +16,11 @@ class Settings
 	static var middleScroll:Bool = false;
 	static var ghostTapping:Bool = true;
 	static var safeFrames:Int = 10;
-	static var hitWindows:Array<Float> = [30, 60, 90, 120];
+	static var hitWindows:Array<Float> = [45, 90, 135, 160];
 	static var autoPause:Bool = true;
 
 	static var opponentStrums:Bool = true;
+	static var comboOffsets:Array<Float> = [0, 0];
 	static var showFPS:Bool = true;
 	static var showMemory:Bool = true;
 

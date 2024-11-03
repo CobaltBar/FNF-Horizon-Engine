@@ -1,5 +1,7 @@
 package horizon.backend;
 
+import flixel.util.FlxSort;
+
 class PlayerInput
 {
 	static var safeMS:Float;
@@ -49,105 +51,93 @@ class PlayerInput
 			PlayState.instance.miss();
 	}
 
-	// TODO
 	static function judge(diff:Float):Void
 	{
-		/*var ratingName:String;
-			if (diff <= Settings.hitWindows[0] + safeMS)
-			{
-				ratingName = 'sick';
-				PlayState.instance.score += 350;
-			}
-			else if (diff <= Settings.hitWindows[1] + safeMS)
-			{
-				ratingName = 'good';
-				PlayState.instance.score += 200;
-			}
-			else if (diff <= Settings.hitWindows[2] + safeMS)
-			{
-				ratingName = 'bad';
-				PlayState.instance.score += 100;
-			}
-			else
-			{
-				ratingName = 'shit';
-				PlayState.instance.score += 50;
-		}*/
-	}
-}
-/*
-	static function judge(time:Float):Void
-	{
-		var rating = PlayState.instance.comboGroup['rating'].recycle(FlxSprite, () ->
+		// PBOT1 scoring
+		var ratingName:String = switch (diff)
 		{
-			var spr = Create.sprite(0, 0, Path.image(name));
-			spr.cameras = [PlayState.instance.camHUD];
+			case(_ <= Settings.hitWindows[0] + safeMS) => true:
+				'sick';
+			case(_ <= Settings.hitWindows[1] + safeMS) => true:
+				'good';
+			case(_ <= Settings.hitWindows[2] + safeMS) => true:
+				'bad';
+			case(_ <= Settings.hitWindows[3] + safeMS) => true:
+				'shit';
+			default: 'invalid';
+		}
+
+		PlayState.instance.score += Std.int(500 * (1.0 - (1.0 / (1.0 + Math.exp(-0.080 * (diff - 54.99))))) + 9);
+
+		var rating = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
+		{
+			var spr = Create.sprite(0, 0, Path.image(ratingName, PlayState.mods), [PlayState.instance.camHUD]);
+			spr.scale.set(.7, .7);
+			spr.moves = true;
 			return spr;
 		});
 		rating.alpha = 1;
-		rating.loadGraphic(Path.image(name));
+		rating.loadGraphic(Path.image(ratingName));
 		rating.updateHitbox();
 		rating.screenCenter();
-		rating.acceleration.y = 550;
-		rating.velocity.y = -FlxG.random.int(140, 175);
+		rating.zIndex = idTracker;
+		rating.offset.x = 35 - Settings.comboOffsets[0];
+		rating.offset.y = 25 - Settings.comboOffsets[1];
 		rating.velocity.x = -FlxG.random.int(0, 10);
+		rating.velocity.y = -FlxG.random.int(140, 175);
+		rating.acceleration.y = 550;
 		FlxTween.tween(rating, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> rating.kill(), startDelay: Conductor.beatLength * .001});
-		rating.ID = curScore;
-		PlayState.instance.comboGroup['rating'].sort((Order:Int, Obj1:FlxSprite, Obj2:FlxSprite) -> FlxSort.byValues(Order, Obj1.ID, Obj2.ID));
 
-		var count:Int = 0;
-		var arr = Std.string(PlayState.instance.combo).lpad('0', 3).split('');
-		arr.reverse();
-		for (num in arr)
+		var numArr = Std.string(PlayState.instance.combo).lpad('0', 3).split('');
+		numArr.reverse();
+		for (i => num in numArr)
 		{
-			var comboNum = PlayState.instance.comboGroup['combo'].recycle(FlxSprite, () ->
+			var comboNum = PlayState.instance.comboGroups[1].recycle(FlxSprite, () ->
 			{
-				var spr = Create.sparrow(0, 0, Path.sparrow('num', PlayState.mods));
-				spr.animation.addByNames('idle', ['num$num'], 24);
-				spr.animation.play('idle');
-				spr.cameras = [PlayState.instance.camHUD];
+				var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD]);
+				spr.scale.set(.55, .55);
+				spr.moves = true;
 				return spr;
 			});
 			comboNum.alpha = 1;
-			comboNum.animation.addByNames('idle', ['num$num'], 24);
+			comboNum.animation.addByPrefix('idle', 'num$num');
 			comboNum.animation.play('idle');
-			comboNum.scale.set(.8, .8);
 			comboNum.updateHitbox();
 			comboNum.screenCenter();
-			comboNum.offset.x = (comboNum.width + 5) * count + 50;
-			comboNum.offset.y = -(comboNum.height + 25);
-			comboNum.acceleration.y = FlxG.random.int(200, 300);
-			comboNum.velocity.y = -FlxG.random.int(140, 160);
+			comboNum.zIndex = idTracker;
+			comboNum.offset.x = (comboNum.width + 5) * i + 50 - Settings.comboOffsets[0];
+			comboNum.offset.y = -(comboNum.height + 25) - Settings.comboOffsets[1];
 			comboNum.velocity.x = FlxG.random.float(-5, 5);
+			comboNum.velocity.y = -FlxG.random.int(140, 160);
+			comboNum.acceleration.y = FlxG.random.int(200, 300);
 			FlxTween.tween(comboNum, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> comboNum.kill(), startDelay: Conductor.beatLength * .001});
-			count++;
-
-			comboNum.ID = curScore;
-			PlayState.instance.comboGroup['combo'].sort((Order:Int, Obj1:FlxSprite, Obj2:FlxSprite) -> FlxSort.byValues(Order, Obj1.ID, Obj2.ID));
 		}
 
 		if (PlayState.instance.combo >= 10)
 		{
-			var comboSpr = PlayState.instance.comboGroup['comboSpr'].recycle(FlxSprite, () ->
+			var comboSpr = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
 			{
-				var spr = Create.sprite(0, 0, Path.image('combo'));
-				spr.cameras = [PlayState.instance.camHUD];
+				var spr = Create.sprite(0, 0, Path.image('combo', PlayState.mods), [PlayState.instance.camHUD]);
+				spr.scale.set(.7, .7);
+				spr.moves = true;
 				return spr;
 			});
 			comboSpr.alpha = 1;
+			comboSpr.loadGraphic(Path.image('combo', PlayState.mods));
 			comboSpr.updateHitbox();
 			comboSpr.screenCenter();
-			comboSpr.offset.x = -comboSpr.width * .5;
-			comboSpr.offset.y = -(comboSpr.height + 25);
-			comboSpr.acceleration.y = FlxG.random.int(200, 300);
-			comboSpr.velocity.y = -FlxG.random.int(140, 160);
+			comboSpr.zIndex = idTracker;
+			comboSpr.offset.x = -comboSpr.width * .35 - Settings.comboOffsets[0];
+			comboSpr.offset.y = -comboSpr.height - Settings.comboOffsets[1];
 			comboSpr.velocity.x = FlxG.random.int(1, 10);
+			comboSpr.velocity.y = -FlxG.random.int(140, 160);
+			comboSpr.acceleration.y = FlxG.random.int(200, 300);
 			FlxTween.tween(comboSpr, {alpha: 0}, .2, {type: ONESHOT, onComplete: tween -> comboSpr.kill(), startDelay: Conductor.beatLength * .001});
-
-			comboSpr.ID = curScore;
-			PlayState.instance.comboGroup['comboSpr'].sort((Order:Int, Obj1:FlxSprite, Obj2:FlxSprite) -> FlxSort.byValues(Order, Obj1.ID, Obj2.ID));
 		}
 
-		curScore++;
+		PlayState.instance.comboGroups[0].sort((Order, Obj1, Obj2) -> FlxSort.byValues(Order, Obj1.zIndex, Obj2.zIndex));
+		PlayState.instance.comboGroups[1].sort((Order, Obj1, Obj2) -> FlxSort.byValues(Order, Obj1.zIndex, Obj2.zIndex));
+		idTracker++;
+		idTracker %= 100000;
 	}
- */
+}

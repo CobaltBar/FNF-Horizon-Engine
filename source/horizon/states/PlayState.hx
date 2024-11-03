@@ -12,7 +12,9 @@ class PlayState extends MusicState
 	static var instance:PlayState;
 
 	var audios:Map<String, FlxSound> = [];
-	var comboGroup:FlxSpriteGroup;
+
+	// 1 for the rating and combo sprite, the other for the combo numbers
+	var comboGroups:Array<FlxSpriteGroup> = [];
 
 	var playerStrum:Strumline;
 	var opponentStrum:Strumline;
@@ -45,8 +47,13 @@ class PlayState extends MusicState
 		for (item in Countdown.countdownSoundArr)
 			Path.audio(item, mods);
 
-		add(comboGroup = new FlxSpriteGroup());
-		comboGroup.cameras = [camHUD];
+		for (i in 0...2)
+		{
+			var grp = new FlxSpriteGroup();
+			grp.cameras = [camHUD];
+			add(grp);
+			comboGroups.push(grp);
+		}
 
 		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
