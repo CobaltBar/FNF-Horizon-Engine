@@ -12,7 +12,7 @@ class PlayState extends MusicState
 	static var instance:PlayState;
 
 	var audios:Map<String, FlxSound> = [];
-	var comboGroup:Map<String, FlxSpriteGroup> = [];
+	var comboGroup:FlxSpriteGroup;
 
 	var playerStrum:Strumline;
 	var opponentStrum:Strumline;
@@ -45,11 +45,8 @@ class PlayState extends MusicState
 		for (item in Countdown.countdownSoundArr)
 			Path.audio(item, mods);
 
-		for (thing in ['rating', 'combo', 'comboSpr'])
-		{
-			add(comboGroup[thing] = new FlxSpriteGroup());
-			comboGroup[thing].cameras = [camHUD];
-		}
+		add(comboGroup = new FlxSpriteGroup());
+		comboGroup.cameras = [camHUD];
 
 		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
@@ -73,14 +70,23 @@ class PlayState extends MusicState
 
 		playerStrum.introAnim(true);
 		opponentStrum.introAnim();
-		// PlayerInput.init();
+		PlayerInput.init();
 
 		Path.clearUnusedMemory();
 	}
 
+	function miss():Void
+	{
+		misses++;
+		combo = 0;
+		if (PlayState.instance.audios.exists('voices'))
+			PlayState.instance.audios['voices'].volume = 0;
+		else if (PlayState.instance.audios.exists('voices-player'))
+			PlayState.instance.audios['voices-player'].volume = 0;
+	}
+
 	override function destroy():Void
 	{
-		// PlayerInput.deinit();
 		instance = null;
 		super.destroy();
 	}

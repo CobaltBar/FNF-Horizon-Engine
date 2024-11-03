@@ -334,6 +334,9 @@ class ModsMenuState extends MusicMenuState
 
 		ArraySort.sort(Mods.enabled, (a, b) -> a.ID < b.ID ? -1 : a.ID > b.ID ? 1 : 0);
 
+		for (mod in Settings.savedMods)
+			mod.enabled = false;
+
 		for (mod in Mods.enabled)
 		{
 			var weeks:Map<String, {score:Int, accuracy:Float, locked:Bool}> = [];

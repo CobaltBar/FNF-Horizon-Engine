@@ -1,6 +1,5 @@
 # TODO/Ideas List
 
-- [ ] Custom FlxTypedSpriteGroup for Note recycling based on the note's data
 - [ ] Continue OSUtil (Sending notifications, accurate CPU/Memory usage)
 - [ ] Add Startup/Accessibility Menu
 - [ ] Make the FPS text more fancy

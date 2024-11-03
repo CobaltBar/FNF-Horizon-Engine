@@ -20,7 +20,7 @@ class StrumNote extends NoteSprite
 		updateHitbox();
 		activeTimer = new FlxTimer();
 		activeTimer.loops = 1;
-		activeTimer.onComplete = timer -> unconfirm();
+		activeTimer.onComplete = timer -> resetAnim();
 	}
 
 	public function confirm(unconfirm:Bool = true):Void
@@ -37,13 +37,7 @@ class StrumNote extends NoteSprite
 		playAnim('press');
 	}
 
-	public function unpress():Void
-	{
-		shader = null;
-		playAnim('strum');
-	}
-
-	public function unconfirm():Void
+	public function resetAnim():Void
 	{
 		shader = null;
 		playAnim('strum');

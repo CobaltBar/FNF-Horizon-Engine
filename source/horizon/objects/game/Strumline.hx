@@ -44,10 +44,15 @@ class Strumline extends FlxSpriteGroup
 				if (autoHit && Conductor.time > note.time)
 				{
 					note.hit(strums[note.data % strums.length]);
+					addNextNote();
 					continue;
 				}
 				if (Conductor.time > note.time + 350)
+				{
 					note.kill();
+					addNextNote();
+					continue;
+				}
 				note.move(strums[note.data % strums.length]);
 			}
 	}

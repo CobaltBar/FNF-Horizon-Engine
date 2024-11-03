@@ -21,6 +21,7 @@ class Note extends NoteSprite
 		rgb = RGBEffect.get(Settings.noteRGB[data % Settings.noteRGB.length], 1);
 		shader = rgb.shader;
 
+		// TODO investigate this cursed line (notes have the wrong direction after a while, but the colors are right)
 		angleOffset = NoteSprite.angleOffsets[data % NoteSprite.angleOffsets.length];
 	}
 

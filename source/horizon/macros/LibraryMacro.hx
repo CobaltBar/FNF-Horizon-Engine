@@ -11,6 +11,7 @@ class LibraryMacro
 	public static macro function getLibVersion(lib:String):ExprOf<String>
 	{
 		#if macro
+		var ret:String;
 		#if !display
 		var proc = new Process('haxelib libpath $lib');
 		if (proc.exitCode() == 0)
@@ -20,17 +21,14 @@ class LibraryMacro
 			{
 				var commitProc = new Process('git -C $ver rev-parse --short=8 HEAD');
 				if (commitProc.exitCode() == 0)
-					return macro $v{'${Context.definedValue(lib)}@${commitProc.stdout.readAll().toString().trim()}'};
-
+					ret = '${Context.definedValue(lib)}@${commitProc.stdout.readAll().toString().trim()}';
 				commitProc.close();
 			}
 		}
 		proc.close();
-
-		return macro $v{Context.definedValue(lib)};
-		#else
-		return macro $v{""};
+		ret ??= Context.definedValue(lib);
 		#end
+		return macro $v{ret ?? "N/A"};
 		#end
 	}
 }
