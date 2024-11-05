@@ -40,9 +40,9 @@ class Countdown extends FlxSpriteGroup
 				var countdownItem = Create.sprite(0, 0, Path.image(countdownNameArr[Conductor.curBeat + 2]));
 				countdownItem.screenCenter();
 				add(countdownItem);
-				FlxTween.tween(countdownItem.scale, {x: 1.1, y: 1.1}, Conductor.beatLength * .001,
+				FlxTween.tween(countdownItem.scale, {x: 1.1, y: 1.1}, Conductor.beatLength * .002,
 					{type: ONESHOT, ease: FlxEase.expoOut, onComplete: tween -> countdownItem.destroy()});
-				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .001, {type: ONESHOT, ease: FlxEase.expoOut});
+				FlxTween.tween(countdownItem, {alpha: 0}, Conductor.beatLength * .002, {type: ONESHOT, ease: FlxEase.expoOut});
 			}
 
 			FlxG.sound.play(Path.audio(countdownSoundArr[Conductor.curBeat + 3]));

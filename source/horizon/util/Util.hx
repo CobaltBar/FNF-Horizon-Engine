@@ -1,7 +1,6 @@
 package horizon.util;
 
 import haxe.Exception;
-import lime.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 

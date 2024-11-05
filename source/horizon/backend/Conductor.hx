@@ -131,7 +131,7 @@ class Conductor extends FlxBasic
 	@:noCompletion static inline function recalculateLengths(val:Float):Void
 	{
 		beatLength = 60 / val * 1000 * (4 / timeSignature.denominator);
-		stepLength = beatLength / 4;
+		stepLength = beatLength * .25;
 		measureLength = beatLength * timeSignature.numerator;
 	}
 }

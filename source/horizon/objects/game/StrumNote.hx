@@ -28,7 +28,7 @@ class StrumNote extends NoteSprite
 		shader = rgb.shader;
 		playAnim('confirm');
 		if (unconfirm)
-			activeTimer.reset(Conductor.beatLength * 0.001);
+			activeTimer.reset(Conductor.stepLength * 0.003);
 	}
 
 	public function press():Void
