@@ -40,7 +40,7 @@ class PlayerInput
 					else if (PlayState.instance.audios.exists('voices-player'))
 						PlayState.instance.audios['voices-player'].volume = 1;
 					PlayState.instance.combo++;
-					note.hit(strum, false);
+					note.hit(false);
 					judge(Math.abs(Conductor.time - note.time));
 					return;
 				}
@@ -95,13 +95,14 @@ class PlayerInput
 			var comboNum = PlayState.instance.comboGroups[1].recycle(FlxSprite, () ->
 			{
 				var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD]);
+				for (i in 0...10)
+					spr.animation.addByNames('num$i', ['num$i']);
 				spr.scale.set(.55, .55);
 				spr.moves = true;
 				return spr;
 			});
 			comboNum.alpha = 1;
-			comboNum.animation.addByPrefix('idle', 'num$num');
-			comboNum.animation.play('idle');
+			comboNum.animation.play('num$num');
 			comboNum.updateHitbox();
 			comboNum.screenCenter();
 			comboNum.zIndex = idTracker;

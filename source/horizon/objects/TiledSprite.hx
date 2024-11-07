@@ -12,6 +12,8 @@ using flixel.util.FlxColorTransformUtil;
 /*
 	Code by Sword352 for FnF Eternal
 	https://github.com/Sword352/FnF-Eternal/blob/dev/source/funkin/objects/TiledSprite.hx
+
+	Slightly modified by Cobalt for use in Horizon Engine
  */
 /**
  * A sprite object able to repeat a frame vertically.

@@ -3,16 +3,16 @@
 Created with Funkin Packer v0.1.3 https://neeeoo.github.io/funkin-packer/
 -->
 <TextureAtlas imagePath="note.png" width="593" height="457">
-	<SubTexture name="confirm0000" x="1" y="1" width="227" height="226" frameX="-3" frameY="-1" frameWidth="236" frameHeight="232"/>
-	<SubTexture name="confirm0001" x="1" y="230" width="227" height="226" frameX="-3" frameY="-1" frameWidth="236" frameHeight="232"/>
-	<SubTexture name="confirm0002" x="231" y="1" width="204" height="205" frameX="-15" frameY="-12" frameWidth="236" frameHeight="232"/>
-	<SubTexture name="confirm0003" x="231" y="1" width="204" height="205" frameX="-15" frameY="-12" frameWidth="236" frameHeight="232"/>
-	<SubTexture name="hold0000" x="391" y="209" width="44" height="50" rotated="true" frameX="-0" frameY="-0" frameWidth="50" frameHeight="44"/>
-	<SubTexture name="note0000" x="231" y="209" width="157" height="154" frameX="-0" frameY="-0" frameWidth="157" frameHeight="154"/>
-	<SubTexture name="press0000" x="391" y="314" width="144" height="141" frameX="-5" frameY="-4" frameWidth="153" frameHeight="150"/>
-	<SubTexture name="press0001" x="391" y="314" width="144" height="141" frameX="-5" frameY="-4" frameWidth="153" frameHeight="150"/>
-	<SubTexture name="press0002" x="438" y="161" width="153" height="150" frameX="-0" frameY="-0" frameWidth="153" frameHeight="150"/>
-	<SubTexture name="press0003" x="438" y="161" width="153" height="150" frameX="-0" frameY="-0" frameWidth="153" frameHeight="150"/>
-	<SubTexture name="strum0000" x="438" y="1" width="154" height="157" rotated="true" frameX="-0" frameY="-0" frameWidth="157" frameHeight="154"/>
-	<SubTexture name="tail0000" x="538" y="314" width="50" height="64" frameX="-0" frameY="-0" frameWidth="50" frameHeight="64"/>
+	<SubTexture name="confirm0000" x="1" y="1" width="227" height="226" frameX="-3" frameY="-1" frameWidth="236" frameHeight="232" />
+	<SubTexture name="confirm0001" x="1" y="230" width="227" height="226" frameX="-3" frameY="-1" frameWidth="236" frameHeight="232" />
+	<SubTexture name="confirm0002" x="231" y="1" width="204" height="205" frameX="-15" frameY="-12" frameWidth="236" frameHeight="232" />
+	<SubTexture name="confirm0003" x="231" y="1" width="204" height="205" frameX="-15" frameY="-12" frameWidth="236" frameHeight="232" />
+	<SubTexture name="hold0000" x="391" y="209" width="44" height="50" rotated="true" frameX="-0" frameY="-0" frameWidth="50" frameHeight="44" />
+	<SubTexture name="note0000" x="231" y="209" width="157" height="154" frameX="-0" frameY="-0" frameWidth="157" frameHeight="154" />
+	<SubTexture name="press0000" x="391" y="314" width="144" height="141" frameX="-5" frameY="-4" frameWidth="153" frameHeight="150" />
+	<SubTexture name="press0001" x="391" y="314" width="144" height="141" frameX="-5" frameY="-4" frameWidth="153" frameHeight="150" />
+	<SubTexture name="press0002" x="438" y="161" width="153" height="150" frameX="-0" frameY="-0" frameWidth="153" frameHeight="150" />
+	<SubTexture name="press0003" x="438" y="161" width="153" height="150" frameX="-0" frameY="-0" frameWidth="153" frameHeight="150" />
+	<SubTexture name="strum0000" x="438" y="1" width="154" height="157" rotated="true" frameX="-0" frameY="-0" frameWidth="157" frameHeight="154" />
+	<SubTexture name="tail0000" x="538" y="314" width="50" height="64" frameX="-0" frameY="-0" frameWidth="50" frameHeight="64" />
 </TextureAtlas>

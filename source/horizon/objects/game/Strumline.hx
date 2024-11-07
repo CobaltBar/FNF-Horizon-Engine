@@ -7,6 +7,7 @@ class Strumline extends FlxSpriteGroup
 {
 	var strums:Array<StrumNote> = [];
 	var notes:FlxTypedSpriteGroup<Note>;
+	var sustains:FlxTypedSpriteGroup<Sustain>;
 
 	var autoHit:Bool = false;
 	var uNoteData:Array<NoteJSON> = [];
@@ -25,6 +26,7 @@ class Strumline extends FlxSpriteGroup
 			strums.push(strum);
 		}
 
+		add(sustains = new FlxTypedSpriteGroup<Sustain>());
 		add(notes = new FlxTypedSpriteGroup<Note>());
 
 		screenCenter(X);
@@ -42,7 +44,7 @@ class Strumline extends FlxSpriteGroup
 			{
 				if (autoHit && Conductor.time > note.time)
 				{
-					note.hit(strums[note.data % strums.length]);
+					note.hit();
 					addNextNote();
 					continue;
 				}
@@ -53,7 +55,7 @@ class Strumline extends FlxSpriteGroup
 					PlayState.instance.miss();
 					continue;
 				}
-				note.move(strums[note.data % strums.length]);
+				note.move();
 			}
 	}
 
@@ -75,7 +77,7 @@ class Strumline extends FlxSpriteGroup
 				return n;
 			});
 			n.y = FlxG.height * 4;
-			n.resetNote(noteData);
+			n.setup(noteData, this);
 			notes.sort((Order:Int, Obj1:Note, Obj2:Note) -> FlxSort.byValues(Order, Obj1.time, Obj2.time));
 		}
 }
