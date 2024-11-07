@@ -12,6 +12,8 @@ class Note extends NoteSprite
 	var parent:StrumNote;
 	var sustain:Sustain;
 
+	var timeOffset:Float;
+
 	/*
 		ig i'll leave the todo here
 
@@ -19,6 +21,12 @@ class Note extends NoteSprite
 		- figure out why the tiles are disappearing
 		- hold + clipping logic
 		- input? but how?
+
+		11 hours later, an idea
+		check Controls.pressed
+		maybe add a var for if the note has been actually hit, which is applied in PlayerInput or hit()
+
+		sustains are a lie invented by the government
 	 */
 	function setup(json:NoteJSON, strumline:Strumline)
 	{
@@ -27,6 +35,7 @@ class Note extends NoteSprite
 		length = json.length ?? 0;
 		type = json.type;
 		mult = json.mult ?? 1;
+		timeOffset = 0;
 		alpha = 1;
 		visible = true;
 		rgb = RGBEffect.get(Settings.noteRGB[data % Settings.noteRGB.length], 1);
