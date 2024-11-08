@@ -6,6 +6,9 @@
 
 ---
 
+> [!NOTE]
+> Horizon Engine is very incomplete, do not use it for mods.
+
 ## Compilation Instructions
 
 1. Install Haxe 4.3.6 (and install MSVC if on Windows)

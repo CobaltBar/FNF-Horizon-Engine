@@ -15,15 +15,13 @@ class Sustain extends TiledSprite
 		setTail('tail');
 	}
 
-	// TODO account for note.parent.direction
 	public function setup(note:Note)
 	{
-		scale.set(note.scale.x, note.scale.y);
-		updateHitbox();
+		scale = note.scale;
 		shader = note.shader;
+		updateHitbox();
 		height = note.length * PlayState.instance.scrollSpeed * .45;
-		trace(width);
-		offset.set(-(note.width - width) * .5, -note.height * .5);
+		offset.y = -note.height * .5;
 	}
 
 	override function kill():Void

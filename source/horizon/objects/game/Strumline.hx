@@ -12,7 +12,7 @@ class Strumline extends FlxSpriteGroup
 	var autoHit:Bool = false;
 	var uNoteData:Array<NoteJSON> = [];
 
-	function new(x:Float, y:Float, ?cameras:Array<FlxCamera>)
+	function new(x:Float, y:Float, ?cams:Array<FlxCamera>)
 	{
 		super(0, y);
 
@@ -29,26 +29,27 @@ class Strumline extends FlxSpriteGroup
 		add(sustains = new FlxTypedSpriteGroup<Sustain>());
 		add(notes = new FlxTypedSpriteGroup<Note>());
 
+		if (cams != null) // For some reason it doesn't set the cameras for notes so i have to set them manually
+			cameras = cams;
+
 		screenCenter(X);
 		this.x += x;
-
-		if (cameras != null)
-			this.cameras = cameras;
 	}
 
+	// TODO move note move logic to update
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 		for (note in notes.members)
 			if (note != null && note.exists && note.alive)
 			{
-				if (autoHit && Conductor.time > note.time)
+				if (autoHit && Conductor.time > note.time && !note.isHit)
 				{
 					note.hit();
 					addNextNote();
 					continue;
 				}
-				if (Conductor.time > note.time + 350)
+				if (Conductor.time > note.time + note.length + 350)
 				{
 					note.kill();
 					addNextNote();
@@ -73,7 +74,7 @@ class Strumline extends FlxSpriteGroup
 			{
 				var n = new Note();
 				n.cameras = cameras;
-				n.visible = n.active = false;
+				n.visible = false;
 				return n;
 			});
 			n.y = FlxG.height * 4;

@@ -13,11 +13,11 @@ class Note extends NoteSprite
 	var sustain:Sustain;
 
 	var timeOffset:Float;
+	var isHit:Bool;
 
 	/*
 		ig i'll leave the todo here
 
-		- repack note assets again WITHOUT rotation this time
 		- figure out why the tiles are disappearing
 		- hold + clipping logic
 		- input? but how?
@@ -37,6 +37,7 @@ class Note extends NoteSprite
 		mult = json.mult ?? 1;
 		timeOffset = 0;
 		alpha = 1;
+		isHit = false;
 		visible = true;
 		rgb = RGBEffect.get(Settings.noteRGB[data % Settings.noteRGB.length], 1);
 		shader = rgb.shader;
@@ -46,7 +47,12 @@ class Note extends NoteSprite
 
 		if (length > 0)
 		{
-			sustain = strumline.sustains.recycle(Sustain, () -> new Sustain(this));
+			sustain = strumline.sustains.recycle(Sustain, () ->
+			{
+				var spr = new Sustain(this);
+				spr.cameras = cameras;
+				return spr;
+			});
 			sustain.setup(this);
 		}
 	}
@@ -60,6 +66,8 @@ class Note extends NoteSprite
 	function move():Void
 	{
 		var dist = (.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult);
+		if (sustain != null && sustain.angle != parent.direction - 90)
+			sustain.angle = parent.direction - 90;
 
 		x = parent.x - parent.cosDir * dist;
 		y = parent.y - parent.sinDir * dist;
@@ -82,7 +90,7 @@ class Note extends NoteSprite
 	@:noCompletion override function set_x(val:Float):Float
 	{
 		if (sustain != null)
-			sustain.x = val;
+			sustain.x = val + (width - sustain.width) * .5;
 		return super.set_x(val);
 	}
 
