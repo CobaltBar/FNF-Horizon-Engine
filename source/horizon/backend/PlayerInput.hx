@@ -15,7 +15,7 @@ class PlayerInput
 		safeMS = (Settings.safeFrames / 60) * 250;
 		Countdown.countdownEnded.addOnce(() -> inputEnabled = true);
 
-		for (i => bind in ['note_left', 'note_down', 'note_up', 'note_right'])
+		for (i => bind in Constants.notebindNames)
 		{
 			Controls.onPress(Settings.keybinds[bind], () -> onPress(i));
 			Controls.onRelease(Settings.keybinds[bind], () -> PlayState.instance.playerStrum.strums[i].resetAnim());
@@ -29,7 +29,7 @@ class PlayerInput
 		{
 			for (note in PlayState.instance.playerStrum.notes.members)
 			{
-				if (note == null || !note.exists || !note.alive || note.data % 4 != id)
+				if (note == null || !note.exists || !note.alive || note.data % 4 != id || !note.hittable)
 					continue;
 
 				if (Math.abs(Conductor.time - note.time) <= Settings.hitWindows[3] + safeMS)
@@ -39,8 +39,8 @@ class PlayerInput
 						PlayState.instance.audios['voices'].volume = 1;
 					else if (PlayState.instance.audios.exists('voices-player'))
 						PlayState.instance.audios['voices-player'].volume = 1;
-					PlayState.instance.combo++;
-					note.hit(false);
+					note.hit();
+
 					judge(Math.abs(Conductor.time - note.time));
 					return;
 				}
@@ -53,6 +53,7 @@ class PlayerInput
 
 	static function judge(diff:Float):Void
 	{
+		PlayState.instance.combo++;
 		// PBOT1 scoring
 		var ratingName:String = switch (diff)
 		{
@@ -77,7 +78,7 @@ class PlayerInput
 			return spr;
 		});
 		rating.alpha = 1;
-		rating.loadGraphic(Path.image(ratingName));
+		rating.loadGraphic(Path.image(ratingName, PlayState.mods));
 		rating.updateHitbox();
 		rating.screenCenter();
 		rating.zIndex = idTracker;
@@ -139,6 +140,6 @@ class PlayerInput
 		PlayState.instance.comboGroups[0].sort((Order, Obj1, Obj2) -> FlxSort.byValues(Order, Obj1.zIndex, Obj2.zIndex));
 		PlayState.instance.comboGroups[1].sort((Order, Obj1, Obj2) -> FlxSort.byValues(Order, Obj1.zIndex, Obj2.zIndex));
 		idTracker++;
-		idTracker %= 100000;
+		idTracker %= 1000000;
 	}
 }

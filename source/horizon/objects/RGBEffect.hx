@@ -13,7 +13,7 @@ import flixel.graphics.tile.FlxGraphicsShader as FlxShader;
 	var b(default, set):FlxColor;
 	var mult(default, set):Float;
 
-	static function get(rgb:Array<FlxColor>, mult:Float):RGBEffect
+	static function get(rgb:Array<FlxColor>, mult:Float = 1):RGBEffect
 	{
 		var key = '${rgb.join('')},$mult';
 		if (!rgbs.exists(key))

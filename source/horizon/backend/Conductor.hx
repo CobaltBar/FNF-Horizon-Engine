@@ -56,10 +56,10 @@ class Conductor extends FlxBasic
 
 	override function update(elapsed:Float):Void
 	{
-		if (song != null)
+		if (song != null && song.playing)
 		{
 			if (song.time == lastTime)
-				Conductor.time += elapsed;
+				time += elapsed * 1000;
 			else
 			{
 				time = song.time + offset;

@@ -1,5 +1,7 @@
 package horizon.objects.game;
 
+import flixel.math.FlxRect;
+
 @:publicFields
 class Note extends NoteSprite
 {
@@ -10,24 +12,13 @@ class Note extends NoteSprite
 	var type:String;
 
 	var parent:StrumNote;
+	var strumline:Strumline;
 	var sustain:Sustain;
 
 	var timeOffset:Float;
-	var isHit:Bool;
+	var sustaining:Bool;
+	var hittable:Bool;
 
-	/*
-		ig i'll leave the todo here
-
-		- figure out why the tiles are disappearing
-		- hold + clipping logic
-		- input? but how?
-
-		11 hours later, an idea
-		check Controls.pressed
-		maybe add a var for if the note has been actually hit, which is applied in PlayerInput or hit()
-
-		sustains are a lie invented by the government
-	 */
 	function setup(json:NoteJSON, strumline:Strumline)
 	{
 		data = json.data ?? 0;
@@ -37,13 +28,13 @@ class Note extends NoteSprite
 		mult = json.mult ?? 1;
 		timeOffset = 0;
 		alpha = 1;
-		isHit = false;
-		visible = true;
-		rgb = RGBEffect.get(Settings.noteRGB[data % Settings.noteRGB.length], 1);
-		shader = rgb.shader;
+		sustaining = false;
+		hittable = visible = true;
+		setRGB(Settings.noteRGB[data % Settings.noteRGB.length]);
 
 		angleOffset = NoteSprite.angleOffsets[data % NoteSprite.angleOffsets.length];
 		parent = strumline.strums[data % strumline.strums.length];
+		this.strumline = strumline;
 
 		if (length > 0)
 		{
@@ -53,24 +44,29 @@ class Note extends NoteSprite
 				spr.cameras = cameras;
 				return spr;
 			});
+			sustain.clipRegion = FlxRect.get(0, 0, sustain.width, sustain.height);
 			sustain.setup(this);
 		}
 	}
 
-	function hit(unconfirm:Bool = true):Void
+	function hit(unconfirm:Bool = false):Void
 	{
-		parent.confirm(unconfirm);
-		kill();
-	}
+		hittable = false;
 
-	function move():Void
-	{
-		var dist = (.45 * (Conductor.time - time) * PlayState.instance.scrollSpeed * mult);
-		if (sustain != null && sustain.angle != parent.direction - 90)
-			sustain.angle = parent.direction - 90;
-
-		x = parent.x - parent.cosDir * dist;
-		y = parent.y - parent.sinDir * dist;
+		if (length > 0)
+		{
+			parent.confirm(false);
+			if (!parent.animation.paused)
+				parent.animation.pause();
+			timeOffset = Conductor.time - time;
+			alpha = 0;
+			sustaining = true;
+		}
+		else
+		{
+			parent.confirm(unconfirm);
+			kill();
+		}
 	}
 
 	override function update(elapsed:Float)
@@ -78,6 +74,59 @@ class Note extends NoteSprite
 		super.update(elapsed);
 		if (sustain != null && sustain.exists && sustain.active)
 			sustain.update(elapsed);
+
+		if (Conductor.time >= time + length + 350)
+		{
+			kill();
+			strumline.addNextNote();
+			if (!strumline.autoHit)
+				PlayState.instance.miss();
+			return;
+		}
+
+		if (sustaining)
+		{
+			if (Conductor.time >= time + length)
+			{
+				parent.autoReset = true;
+				parent.animation.resume();
+				kill();
+				return;
+			}
+			if (!strumline.autoHit)
+				if (Lambda.foreach(Settings.keybinds[Constants.notebindNames[data % Constants.notebindNames.length]], key -> !Controls.pressed.contains(key)))
+				{
+					sustaining = false;
+					alpha = sustain.alpha = .6;
+					setRGB(NoteSprite.desatColors[data % NoteSprite.desatColors.length]);
+					sustain.shader = shader;
+				}
+		}
+
+		if (strumline.autoHit && Conductor.time >= time && !sustaining)
+		{
+			hit(true);
+			strumline.addNextNote();
+		}
+
+		if (sustain != null && sustain.angle != parent.direction - 90)
+			sustain.angle = parent.direction - 90;
+
+		var dist = (.45 * (Conductor.time - time - timeOffset) * PlayState.instance.scrollSpeed * mult);
+		var posX = parent.x - parent.cosDir * dist;
+		var posY = parent.y - parent.sinDir * dist;
+
+		if (sustaining && sustain != null && sustain.exists && sustain.visible)
+		{
+			sustain.x = posX + (width - sustain.width) * .5;
+			sustain.y = posY;
+			sustain.clipRegion.y = parent.y - posY;
+		}
+		else
+		{
+			x = posX;
+			y = posY;
+		}
 	}
 
 	override function draw()

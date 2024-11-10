@@ -29,35 +29,11 @@ class Strumline extends FlxSpriteGroup
 		add(sustains = new FlxTypedSpriteGroup<Sustain>());
 		add(notes = new FlxTypedSpriteGroup<Note>());
 
-		if (cams != null) // For some reason it doesn't set the cameras for notes so i have to set them manually
+		if (cams != null)
 			cameras = cams;
 
 		screenCenter(X);
 		this.x += x;
-	}
-
-	// TODO move note move logic to update
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		for (note in notes.members)
-			if (note != null && note.exists && note.alive)
-			{
-				if (autoHit && Conductor.time > note.time && !note.isHit)
-				{
-					note.hit();
-					addNextNote();
-					continue;
-				}
-				if (Conductor.time > note.time + note.length + 350)
-				{
-					note.kill();
-					addNextNote();
-					PlayState.instance.miss();
-					continue;
-				}
-				note.move();
-			}
 	}
 
 	function introAnim(invert:Bool = false):Void

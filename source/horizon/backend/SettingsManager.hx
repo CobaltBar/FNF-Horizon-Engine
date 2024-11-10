@@ -35,6 +35,11 @@ class SettingsManager
 		if (Settings.framerate == 0)
 			FlxG.drawFramerate = FlxG.updateFramerate = (Settings.framerate == 0 ? Std.int(Application.current.window.displayMode.refreshRate > 120 ? Application.current.window.displayMode.refreshRate : Application.current.window.frameRate > 120 ? Application.current.window.frameRate : 120) : Settings.framerate);
 
+		NoteSprite.desatColors = [for (rgb in Settings.noteRGB) [for (col in rgb) col]];
+		for (x in 0...NoteSprite.desatColors.length)
+			for (y in 0...NoteSprite.desatColors[x].length)
+				NoteSprite.desatColors[x][y].saturation = .3;
+
 		if (Constants.verbose)
 			Log.info('Settings Loaded');
 	}

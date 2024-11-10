@@ -8,6 +8,8 @@ class StrumNote extends NoteSprite
 	@:noCompletion public var sinDir(default, null):Float;
 	@:noCompletion public var cosDir(default, null):Float;
 
+	public var autoReset:Bool;
+
 	var activeTimer:FlxTimer;
 
 	public function new(data:Int = 2)
@@ -21,14 +23,15 @@ class StrumNote extends NoteSprite
 		activeTimer = new FlxTimer();
 		activeTimer.loops = 1;
 		activeTimer.onComplete = timer -> resetAnim();
+		animation.onFinish.add(name -> if (name == 'confirm' && autoReset) activeTimer.reset(Conductor.stepLength * 0.002));
 	}
 
 	public function confirm(unconfirm:Bool = true):Void
 	{
 		shader = rgb.shader;
+		activeTimer.cancel();
 		playAnim('confirm');
-		if (unconfirm)
-			activeTimer.reset(Conductor.stepLength * 0.003);
+		autoReset = unconfirm;
 	}
 
 	public function press():Void

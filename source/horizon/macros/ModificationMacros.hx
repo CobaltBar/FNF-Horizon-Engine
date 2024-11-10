@@ -18,7 +18,7 @@ class ModificationMacros
 			name: "zIndex",
 			pos: Context.currentPos(),
 			access: [APublic],
-			kind: FVar(macro :Int, macro $v{0}),
+			kind: FVar(macro :Int, macro idEnumerator),
 		});
 
 		return fields;
