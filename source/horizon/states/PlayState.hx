@@ -42,7 +42,7 @@ class PlayState extends MusicState
 		instance = this;
 		bop = zoom = false;
 
-		for (item in ['note', 'combo', 'num', 'sick', 'good', 'bad', 'shit'].concat(Countdown.countdownNameArr))
+		for (item in ['note', 'note_splash', 'combo', 'num', 'sick', 'good', 'bad', 'shit'].concat(Countdown.countdownNameArr))
 			Path.image(item, mods);
 		for (item in Countdown.countdownSoundArr)
 			Path.audio(item, mods);

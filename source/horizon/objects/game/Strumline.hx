@@ -8,6 +8,7 @@ class Strumline extends FlxSpriteGroup
 	var strums:Array<StrumNote> = [];
 	var notes:FlxTypedSpriteGroup<Note>;
 	var sustains:FlxTypedSpriteGroup<Sustain>;
+	var splashes:FlxTypedSpriteGroup<NoteSplash>;
 
 	var autoHit:Bool = false;
 	var uNoteData:Array<NoteJSON> = [];
@@ -28,6 +29,7 @@ class Strumline extends FlxSpriteGroup
 
 		add(sustains = new FlxTypedSpriteGroup<Sustain>());
 		add(notes = new FlxTypedSpriteGroup<Note>());
+		add(splashes = new FlxTypedSpriteGroup<NoteSplash>());
 
 		if (cams != null)
 			cameras = cams;

@@ -34,14 +34,13 @@ class PlayerInput
 
 				if (Math.abs(Conductor.time - note.time) <= Settings.hitWindows[3] + safeMS)
 				{
-					PlayState.instance.playerStrum.addNextNote();
 					if (PlayState.instance.audios.exists('voices'))
 						PlayState.instance.audios['voices'].volume = 1;
 					else if (PlayState.instance.audios.exists('voices-player'))
 						PlayState.instance.audios['voices-player'].volume = 1;
 					note.hit();
 
-					judge(Math.abs(Conductor.time - note.time));
+					judge(note);
 					return;
 				}
 			}
@@ -51,13 +50,27 @@ class PlayerInput
 			PlayState.instance.miss();
 	}
 
-	static function judge(diff:Float):Void
+	static function judge(note:Note):Void
 	{
+		var diff = Math.abs(Conductor.time - note.time);
 		PlayState.instance.combo++;
 		// PBOT1 scoring
 		var ratingName:String = switch (diff)
 		{
 			case(_ <= Settings.hitWindows[0] + safeMS) => true:
+				var splash = note.strumline.splashes.recycle(NoteSplash, () ->
+				{
+					var spr = new NoteSplash();
+					spr.cameras = [PlayState.instance.camHUD];
+					spr.scale.set(.5, .5);
+					return spr;
+				});
+				splash.updateHitbox();
+				splash.centerOffsets();
+				splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
+				splash.y = note.parent.y + (note.parent.height - splash.height) * .5;
+				splash.shader = note.parent.shader;
+				splash.splash();
 				'sick';
 			case(_ <= Settings.hitWindows[1] + safeMS) => true:
 				'good';
@@ -72,8 +85,7 @@ class PlayerInput
 
 		var rating = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
 		{
-			var spr = Create.sprite(0, 0, Path.image(ratingName, PlayState.mods), [PlayState.instance.camHUD]);
-			spr.scale.set(.7, .7);
+			var spr = Create.sprite(0, 0, Path.image(ratingName, PlayState.mods), [PlayState.instance.camHUD], .7);
 			spr.moves = true;
 			return spr;
 		});
@@ -95,10 +107,9 @@ class PlayerInput
 		{
 			var comboNum = PlayState.instance.comboGroups[1].recycle(FlxSprite, () ->
 			{
-				var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD]);
+				var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD], .55);
 				for (i in 0...10)
 					spr.animation.addByNames('num$i', ['num$i']);
-				spr.scale.set(.55, .55);
 				spr.moves = true;
 				return spr;
 			});
@@ -119,8 +130,7 @@ class PlayerInput
 		{
 			var comboSpr = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
 			{
-				var spr = Create.sprite(0, 0, Path.image('combo', PlayState.mods), [PlayState.instance.camHUD]);
-				spr.scale.set(.7, .7);
+				var spr = Create.sprite(0, 0, Path.image('combo', PlayState.mods), [PlayState.instance.camHUD], .7);
 				spr.moves = true;
 				return spr;
 			});
