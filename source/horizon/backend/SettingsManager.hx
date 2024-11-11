@@ -38,7 +38,7 @@ class SettingsManager
 		NoteSprite.desatColors = [for (rgb in Settings.noteRGB) [for (col in rgb) col]];
 		for (x in 0...NoteSprite.desatColors.length)
 			for (y in 0...NoteSprite.desatColors[x].length)
-				NoteSprite.desatColors[x][y].saturation = .3;
+				NoteSprite.desatColors[x][y].saturation = .2;
 
 		if (Constants.verbose)
 			Log.info('Settings Loaded');

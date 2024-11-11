@@ -24,8 +24,8 @@ class Conductor extends FlxBasic
 	static var stepLength:Float = -1;
 	static var measureLength:Float = -1;
 
-	static var offset:Float = 0;
 	static var time:Float = 0;
+	static var offset:Float = 0;
 	static var song(default, set):FlxSound;
 	static var timeSignature(default, set):TimeSignature = {numerator: 4, denominator: 4}
 
@@ -56,14 +56,17 @@ class Conductor extends FlxBasic
 
 	override function update(elapsed:Float):Void
 	{
-		if (song != null && song.playing)
+		if (song != null)
 		{
-			if (song.time == lastTime)
-				time += elapsed * 1000;
-			else
+			if (song.playing)
 			{
-				time = song.time + offset;
-				lastTime = song.time;
+				if (song.time == lastTime)
+					time += elapsed * 1000;
+				else
+				{
+					time = song.time + offset;
+					lastTime = song.time;
+				}
 			}
 		}
 		else if (FlxG.sound.music != null && switchToMusic)

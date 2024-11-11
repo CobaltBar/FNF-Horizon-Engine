@@ -7,7 +7,7 @@ class Note extends NoteSprite
 {
 	var data:Int;
 	var time:Float;
-	var length:Float;
+	var length(default, set):Float;
 	var mult:Float;
 	var type:String;
 
@@ -58,14 +58,20 @@ class Note extends NoteSprite
 			parent.confirm(false);
 			if (!parent.animation.paused)
 				parent.animation.pause();
-			timeOffset = Conductor.time - time;
+
+			length += (time - Conductor.time);
+			time = Conductor.time;
 			alpha = 0;
 			sustaining = true;
 		}
 		else
 		{
 			parent.confirm(unconfirm);
-			kill();
+
+			if (Math.abs(Conductor.time - time) > Settings.hitWindows[1] + PlayerInput.safeMS)
+				desaturate();
+			else
+				kill();
 		}
 	}
 
@@ -78,14 +84,14 @@ class Note extends NoteSprite
 		if (Conductor.time >= time + length + 350)
 		{
 			kill();
-			strumline.addNextNote();
-			if (!strumline.autoHit)
+			if (!strumline.autoHit && hittable)
 				PlayState.instance.miss();
 			return;
 		}
 
 		if (sustaining)
 		{
+			PlayState.instance.score += Std.int(250 * elapsed);
 			if (Conductor.time >= time + length)
 			{
 				parent.autoReset = true;
@@ -94,24 +100,22 @@ class Note extends NoteSprite
 				return;
 			}
 			if (!strumline.autoHit)
-				if (Lambda.foreach(Settings.keybinds[Constants.notebindNames[data % Constants.notebindNames.length]], key -> !Controls.pressed.contains(key)))
+				if (Settings.keybinds[Constants.notebindNames[data % Constants.notebindNames.length]].foreach(key -> !Controls.pressed.contains(key)))
 				{
 					sustaining = false;
-					alpha = sustain.alpha = .6;
-					setRGB(NoteSprite.desatColors[data % NoteSprite.desatColors.length]);
-					sustain.shader = shader;
+					sustain.offset.y += sustain.clipRegion.y;
+					timeOffset = Conductor.time - time;
+					desaturate();
 				}
 		}
 
 		if (strumline.autoHit && Conductor.time >= time && !sustaining)
-		{
 			hit(true);
-			strumline.addNextNote();
-		}
 
 		if (sustain != null && sustain.angle != parent.direction - 90)
 			sustain.angle = parent.direction - 90;
 
+		// TODO precalculate scrollSpeed * .45
 		var dist = (.45 * (Conductor.time - time - timeOffset) * PlayState.instance.scrollSpeed * mult);
 		var posX = parent.x - parent.cosDir * dist;
 		var posY = parent.y - parent.sinDir * dist;
@@ -126,6 +130,17 @@ class Note extends NoteSprite
 		{
 			x = posX;
 			y = posY;
+		}
+	}
+
+	function desaturate():Void
+	{
+		alpha = .6;
+		setRGB(NoteSprite.desatColors[data % NoteSprite.desatColors.length]);
+		if (sustain != null)
+		{
+			sustain.shader = shader;
+			sustain.alpha = .6;
 		}
 	}
 
@@ -150,8 +165,17 @@ class Note extends NoteSprite
 		return super.set_y(val);
 	}
 
+	// TODO the precalculated scrollSpeed * .45 here
+	@:noCompletion function set_length(val:Float):Float
+	{
+		if (sustain != null)
+			sustain.height = val * PlayState.instance.scrollSpeed * .45;
+		return length = val;
+	}
+
 	override function kill()
 	{
+		strumline.addNextNote();
 		if (sustain != null)
 		{
 			sustain.kill();

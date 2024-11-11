@@ -31,6 +31,7 @@ import horizon.util.*;
 import sys.FileSystem;
 import sys.io.File;
 import tjson.TJSON;
-#end
 
+using Lambda;
+#end
 using StringTools;

@@ -98,6 +98,7 @@ class PlayState extends MusicState
 		super.destroy();
 	}
 
+	// TODO ghost note filtering
 	function loadChart():Void
 	{
 		var chart:Chart = Path.json('SONG-${PathUtil.withoutDirectory(songs[0].folder)}-${difficulty}', mods);
@@ -110,7 +111,7 @@ class PlayState extends MusicState
 		ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 		ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 
-		for (i in 0...50)
+		for (_ in 0...50)
 		{
 			playerStrum.addNextNote();
 			opponentStrum.addNextNote();

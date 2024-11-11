@@ -30,6 +30,7 @@ class FlxAnimSprite extends FlxSprite
 		centerOffsets();
 	}
 
+	@:inheritDoc(flixel.animation.FlxAnimationController.play)
 	public function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
 	{
 		animation.play(animName, force, reversed, frame);

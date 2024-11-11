@@ -4,7 +4,7 @@ import flixel.util.FlxSort;
 
 class PlayerInput
 {
-	static var safeMS:Float;
+	public static var safeMS:Float;
 	static var idTracker:Int = 0;
 	static var inputEnabled:Bool = false;
 

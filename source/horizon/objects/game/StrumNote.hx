@@ -30,7 +30,7 @@ class StrumNote extends NoteSprite
 	{
 		shader = rgb.shader;
 		activeTimer.cancel();
-		playAnim('confirm');
+		playAnim('confirm', true);
 		autoReset = unconfirm;
 	}
 
@@ -47,6 +47,7 @@ class StrumNote extends NoteSprite
 		activeTimer.cancel();
 	}
 
+	@:inheritDoc(flixel.animation.FlxAnimationController.play)
 	public function playAnim(animName:String, ?force:Bool, ?reversed:Bool, ?frame:Int)
 	{
 		animation.play(animName, force, reversed, frame);
