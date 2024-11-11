@@ -56,7 +56,7 @@ class Countdown extends FlxSpriteGroup
 			Conductor.song.onComplete = () -> if (PlayState.songs.length > 0)
 			{
 				PlayState.songs.shift();
-				if (PlayState.songs.empty())
+				if (PlayState.songs.length == 0)
 				{
 					Conductor.reset();
 					Conductor.bpm = @:privateAccess TitleState.titleData.bpm;
