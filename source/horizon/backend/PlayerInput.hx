@@ -40,7 +40,7 @@ class PlayerInput
 						note.hit();
 
 						judge(note);
-						break;
+						return;
 					}
 				}
 			}
