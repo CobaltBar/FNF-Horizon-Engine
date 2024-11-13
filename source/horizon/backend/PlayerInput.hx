@@ -29,19 +29,19 @@ class PlayerInput
 		{
 			for (note in PlayState.instance.playerStrum.notes.members)
 			{
-				if (note == null || !note.exists || !note.alive || note.data % 4 != id || !note.hittable)
-					continue;
-
-				if (Math.abs(Conductor.time - note.time) <= Settings.hitWindows[3] + safeMS)
+				if (note != null && note.exists && note.alive && note.data % Constants.notebindNames.length == id && note.hittable)
 				{
-					if (PlayState.instance.audios.exists('voices'))
-						PlayState.instance.audios['voices'].volume = 1;
-					else if (PlayState.instance.audios.exists('voices-player'))
-						PlayState.instance.audios['voices-player'].volume = 1;
-					note.hit();
+					if (Math.abs(Conductor.time - note.time) <= Settings.hitWindows[3] + safeMS)
+					{
+						if (PlayState.instance.audios.exists('voices'))
+							PlayState.instance.audios['voices'].volume = 1;
+						else if (PlayState.instance.audios.exists('voices-player'))
+							PlayState.instance.audios['voices-player'].volume = 1;
+						note.hit();
 
-					judge(note);
-					return;
+						judge(note);
+						break;
+					}
 				}
 			}
 		}

@@ -69,7 +69,10 @@ class Note extends NoteSprite
 			parent.confirm(unconfirm);
 
 			if (Math.abs(Conductor.time - time) > Settings.hitWindows[1] + PlayerInput.safeMS)
+			{
+				PlayState.instance.miss();
 				desaturate();
+			}
 			else
 				kill();
 		}
@@ -101,12 +104,7 @@ class Note extends NoteSprite
 			}
 			if (!strumline.autoHit)
 				if (Settings.keybinds[Constants.notebindNames[data % Constants.notebindNames.length]].foreach(key -> !Controls.pressed.contains(key)))
-				{
-					sustaining = false;
-					sustain.offset.y += sustain.clipRegion.y;
-					timeOffset = Conductor.time - time;
-					desaturate();
-				}
+					kill();
 		}
 
 		if (strumline.autoHit && Conductor.time >= time && !sustaining)
@@ -146,9 +144,9 @@ class Note extends NoteSprite
 
 	override function draw()
 	{
-		super.draw();
 		if (sustain != null && sustain.exists && sustain.visible)
 			sustain.draw();
+		super.draw();
 	}
 
 	@:noCompletion override function set_x(val:Float):Float
