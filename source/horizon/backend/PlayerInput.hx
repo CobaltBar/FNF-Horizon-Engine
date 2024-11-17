@@ -71,12 +71,7 @@ class PlayerInput
 
 		PlayState.instance.score += Std.int(500 * (1.0 - (1.0 / (1.0 + Math.exp(-0.080 * (diff - 54.99))))) + 9);
 
-		var rating = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
-		{
-			var spr = Create.sprite(0, 0, Path.image(ratingName, PlayState.mods), [PlayState.instance.camHUD], .7);
-			spr.moves = true;
-			return spr;
-		});
+		var rating = PlayState.instance.comboGroups[0].recycle(FlxSprite, createRating);
 		rating.alpha = 1;
 		rating.loadGraphic(Path.image(ratingName, PlayState.mods));
 		rating.updateHitbox();
@@ -93,14 +88,7 @@ class PlayerInput
 		numArr.reverse();
 		for (i => num in numArr)
 		{
-			var comboNum = PlayState.instance.comboGroups[1].recycle(FlxSprite, () ->
-			{
-				var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD], .55);
-				for (i in 0...10)
-					spr.animation.addByNames('num$i', ['num$i']);
-				spr.moves = true;
-				return spr;
-			});
+			var comboNum = PlayState.instance.comboGroups[1].recycle(FlxSprite, createComboNum);
 			comboNum.alpha = 1;
 			comboNum.animation.play('num$num');
 			comboNum.updateHitbox();
@@ -116,12 +104,7 @@ class PlayerInput
 
 		if (PlayState.instance.combo >= 10)
 		{
-			var comboSpr = PlayState.instance.comboGroups[0].recycle(FlxSprite, () ->
-			{
-				var spr = Create.sprite(0, 0, Path.image('combo', PlayState.mods), [PlayState.instance.camHUD], .7);
-				spr.moves = true;
-				return spr;
-			});
+			var comboSpr = PlayState.instance.comboGroups[0].recycle(FlxSprite, createComboSpr);
 			comboSpr.alpha = 1;
 			comboSpr.loadGraphic(Path.image('combo', PlayState.mods));
 			comboSpr.updateHitbox();
@@ -139,5 +122,29 @@ class PlayerInput
 		PlayState.instance.comboGroups[1].sort((Order, Obj1, Obj2) -> FlxSort.byValues(Order, Obj1.zIndex, Obj2.zIndex));
 		idTracker++;
 		idTracker %= 1000000;
+	}
+
+	// TODO make classes for these sprites with .create methods
+	static function createRating()
+	{
+		var spr = Create.sprite(0, 0, Path.image('sick', PlayState.mods), [PlayState.instance.camHUD], .7);
+		spr.moves = true;
+		return spr;
+	}
+
+	static function createComboNum()
+	{
+		var spr = Create.atlas(0, 0, Path.atlas('num', PlayState.mods), [PlayState.instance.camHUD], .55);
+		for (i in 0...10)
+			spr.animation.addByNames('num$i', ['num$i']);
+		spr.moves = true;
+		return spr;
+	}
+
+	static function createComboSpr()
+	{
+		var spr = Create.sprite(0, 0, Path.image('combo', PlayState.mods), [PlayState.instance.camHUD], .7);
+		spr.moves = true;
+		return spr;
 	}
 }

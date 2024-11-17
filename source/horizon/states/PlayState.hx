@@ -102,13 +102,7 @@ class PlayState extends MusicState
 
 	function spawnSplash(note:Note):Void
 	{
-		var splash = note.strumline.splashes.recycle(NoteSplash, () ->
-		{
-			var spr = new NoteSplash();
-			spr.cameras = [camHUD];
-			spr.scale.set(.5, .5);
-			return spr;
-		});
+		var splash = note.strumline.splashes.recycle(NoteSplash, createSplash);
 		splash.updateHitbox();
 		splash.centerOffsets();
 		splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
@@ -143,6 +137,14 @@ class PlayState extends MusicState
 			playerStrum.addNextNote();
 			opponentStrum.addNextNote();
 		}
+	}
+
+	static function createSplash()
+	{
+		var spr = new NoteSplash();
+		spr.cameras = [PlayState.instance.camHUD];
+		spr.scale.set(.5, .5);
+		return spr;
 	}
 
 	override function destroy():Void

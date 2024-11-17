@@ -38,12 +38,7 @@ class Note extends NoteSprite
 
 		if (length > 0)
 		{
-			sustain = strumline.sustains.recycle(Sustain, () ->
-			{
-				var spr = new Sustain(this);
-				spr.cameras = cameras;
-				return spr;
-			});
+			sustain = strumline.sustains.recycle(Sustain, createSustain.bind(this));
 			sustain.clipRegion = FlxRect.get(0, 0, sustain.width, sustain.height);
 			sustain.setup(this);
 		}
@@ -180,5 +175,12 @@ class Note extends NoteSprite
 			sustain = null;
 		}
 		super.kill();
+	}
+
+	static function createSustain(note:Note)
+	{
+		var spr = new Sustain(note);
+		spr.cameras = note.cameras;
+		return spr;
 	}
 }

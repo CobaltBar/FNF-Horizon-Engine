@@ -48,15 +48,17 @@ class Strumline extends FlxSpriteGroup
 		if (uNoteData.length > 0)
 		{
 			var noteData = uNoteData.shift();
-			var n = notes.recycle(() ->
-			{
-				var n = new Note();
-				n.cameras = cameras;
-				n.visible = false;
-				return n;
-			});
+			var n = notes.recycle(Note, createNote);
 			n.y = FlxG.height * 4;
 			n.setup(noteData, this);
 			notes.sort((Order:Int, Obj1:Note, Obj2:Note) -> FlxSort.byValues(Order, Obj1.time, Obj2.time));
 		}
+
+	function createNote()
+	{
+		var n = new Note();
+		n.cameras = cameras;
+		n.visible = false;
+		return n;
+	}
 }
