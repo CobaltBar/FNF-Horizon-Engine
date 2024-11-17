@@ -57,7 +57,7 @@ class Settings
 	static var fullscreen:Bool = false;
 }
 
-@:structInit @:publicFields private class SavedModData
+@:publicFields typedef SavedModData =
 {
 	var enabled:Bool;
 	var ID:Int;

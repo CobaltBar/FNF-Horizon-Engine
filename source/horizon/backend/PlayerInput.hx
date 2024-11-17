@@ -58,19 +58,7 @@ class PlayerInput
 		var ratingName:String = switch (diff)
 		{
 			case(_ <= Settings.hitWindows[0] + safeMS) => true:
-				var splash = note.strumline.splashes.recycle(NoteSplash, () ->
-				{
-					var spr = new NoteSplash();
-					spr.cameras = [PlayState.instance.camHUD];
-					spr.scale.set(.5, .5);
-					return spr;
-				});
-				splash.updateHitbox();
-				splash.centerOffsets();
-				splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
-				splash.y = note.parent.y + (note.parent.height - splash.height) * .5;
-				splash.shader = note.parent.shader;
-				splash.splash();
+				PlayState.instance.spawnSplash(note);
 				'sick';
 			case(_ <= Settings.hitWindows[1] + safeMS) => true:
 				'good';

@@ -30,6 +30,8 @@ class PlayState extends MusicState
 	var camHUD:FlxCamera;
 	var camOther:FlxCamera;
 
+	var scoreText:FlxText;
+
 	override function create():Void
 	{
 		Path.clearStoredMemory();
@@ -54,6 +56,12 @@ class PlayState extends MusicState
 			add(grp);
 			comboGroups.push(grp);
 		}
+
+		add(scoreText = Create.text(0, 0, 'N/A', 20, Path.font('vcr', mods), 0xFFFFFFFF, CENTER, [camHUD]));
+		scoreText.y = FlxG.height - scoreText.height - 25;
+		scoreText.fieldWidth = FlxG.width * .5;
+		scoreText.borderSize = 1.25;
+		scoreText.screenCenter(X);
 
 		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
@@ -92,21 +100,40 @@ class PlayState extends MusicState
 			PlayState.instance.audios['voices-player'].volume = 0;
 	}
 
-	override function destroy():Void
+	function spawnSplash(note:Note):Void
 	{
-		instance = null;
-		super.destroy();
+		var splash = note.strumline.splashes.recycle(NoteSplash, () ->
+		{
+			var spr = new NoteSplash();
+			spr.cameras = [camHUD];
+			spr.scale.set(.5, .5);
+			return spr;
+		});
+		splash.updateHitbox();
+		splash.centerOffsets();
+		splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
+		splash.y = note.parent.y + (note.parent.height - splash.height) * .5;
+		splash.shader = note.parent.shader;
+		splash.splash();
 	}
 
-	// TODO ghost note filtering
 	function loadChart():Void
 	{
 		var chart:Chart = Path.json('SONG-${PathUtil.withoutDirectory(songs[0].folder)}-${difficulty}', mods);
-		scrollSpeed = chart.scrollSpeed * 1.1 ?? 1.1;
+		scrollSpeed = chart.scrollSpeed ?? 1;
 		Conductor.bpm = chart.bpm;
 
+		var map:Map<String, NoteJSON> = [];
 		for (note in chart.notes)
+		{
+			var hash = '${note.data}${note.time}';
+			if (!map.exists(hash))
+				map.set(hash, note);
+		}
+
+		for (note in [for (note in map) note])
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
+		map.clear();
 
 		ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 		ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
@@ -116,5 +143,11 @@ class PlayState extends MusicState
 			playerStrum.addNextNote();
 			opponentStrum.addNextNote();
 		}
+	}
+
+	override function destroy():Void
+	{
+		instance = null;
+		super.destroy();
 	}
 }

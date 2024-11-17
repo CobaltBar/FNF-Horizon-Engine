@@ -12,7 +12,7 @@ class MenuCharacter extends FlxAnimSprite
 		var json:AnimatedChracterData = Path.json(jsonPath, mods);
 		posX = json.position[0] ?? 0;
 		posY = json.position[1] ?? 0;
-		super(posX, posY, jsonPath, mods);
+		super(posX, posY, jsonPath, mods, json);
 
 		// TODO change to enum abstract(String)
 		leftAndRight = animation.exists('danceLeft') && animation.exists('danceRight');

@@ -253,6 +253,7 @@ private class PathInfo
 		FlxG.bitmap.remove(graphic);
 	}
 
+	// TODO add a max limit
 	private static function recurse(path:String, callback:String->Void, ?exclude:String->Bool)
 		if (FileSystem.isDirectory(path))
 			for (entry in FileSystem.readDirectory(path))

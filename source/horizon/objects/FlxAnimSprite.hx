@@ -16,10 +16,14 @@ class FlxAnimSprite extends FlxSprite
 		frames = atlas;
 
 		for (data in json.animData)
+		{
 			if (data.indices != null)
 				animation.addByIndices(data.name, data.prefix, data.indices, '', data.fps ?? 24, data.looped ?? false);
 			else
 				animation.addByPrefix(data.name, data.prefix, data.fps ?? 24, data.looped ?? false);
+
+			offsets.set(data.name, data.offsets);
+		}
 
 		antialiasing = json.antialiasing ?? Settings.antialiasing;
 		flipX = json.flipX ?? false;
