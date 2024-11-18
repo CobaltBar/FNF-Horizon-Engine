@@ -1,6 +1,7 @@
 package horizon.states;
 
 import haxe.ds.ArraySort;
+import openfl.media.Sound;
 
 @:publicFields
 class PlayState extends MusicState
@@ -70,9 +71,11 @@ class PlayState extends MusicState
 		Conductor.reset();
 		Conductor.switchToMusic = false;
 
+		// TODO
+		// Rework Path.hx (again) to allow easy song loading + audio streaming
 		loadChart();
 		for (song in songs[0].audios)
-			audios.set(PathUtil.withoutExtension(PathUtil.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(song).pause());
+			audios.set(PathUtil.withoutExtension(PathUtil.withoutDirectory(song)).toLowerCase(), FlxG.sound.play(Sound.fromFile(song)).pause());
 
 		Conductor.song = audios['inst'];
 

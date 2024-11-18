@@ -20,8 +20,9 @@ class ErrorState extends MusicState
 		add(errorTitle = Create.text(0, Settings.reducedMotion ? 50 : -100, 'Error Caught', 32, Path.font('vcr'), 0xFFFF0000, CENTER));
 		errorTitle.screenCenter(X);
 
-		var errorDescription = new ErrorDescription();
-		add(errorDescription);
+		var errorDescription:ErrorDescription;
+		add(errorDescription = new ErrorDescription());
+		errorDescription.top = (FlxG.height - errorDescription.height) * .5;
 
 		var errorControls:FlxText;
 		add(errorControls = Create.text(0, Settings.reducedMotion ? FlxG.height + 40 : FlxG.height + 100,
@@ -32,9 +33,8 @@ class ErrorState extends MusicState
 		if (!Settings.reducedMotion)
 		{
 			FlxTween.tween(errorTitle, {y: 50}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
-			var oldY = errorDescription.y;
-			errorDescription.y = FlxG.height + 100;
-			FlxTween.tween(errorDescription, {y: oldY}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			errorDescription.top = FlxG.height + 100;
+			FlxTween.tween(errorDescription, {top: (FlxG.height - errorDescription.height) * .5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(errorControls, {y: FlxG.height - 40}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 		}
 
@@ -47,6 +47,7 @@ class ErrorState extends MusicState
 		Path.clearUnusedMemory();
 	}
 
+	// TODO account for OSUtil stuff
 	public function resetGame():Void
 	{
 		Log.warn('RESETTING GAME');
@@ -67,7 +68,7 @@ class ErrorState extends MusicState
 }
 
 @:xml('
-<scrollview contentWidth="100%" height="1080">
+<scrollview contentWidth="100%" width="1280" height="512">
 	<label id="output" text="" />
 </scrollview>
 ')
@@ -76,13 +77,9 @@ class ErrorDescription extends ScrollView
 	public function new()
 	{
 		super();
-		width = output.width = FlxG.width;
-		height = FlxG.height * .7;
 		output.text = ErrorState.errs.join('\n');
 		output.customStyle.fontName = 'VCR OSD Mono';
 		output.fontSize = 18;
 		output.invalidateComponentStyle();
-
-		screenCenter();
 	}
 }

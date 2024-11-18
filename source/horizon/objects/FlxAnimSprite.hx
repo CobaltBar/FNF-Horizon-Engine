@@ -22,7 +22,8 @@ class FlxAnimSprite extends FlxSprite
 			else
 				animation.addByPrefix(data.name, data.prefix, data.fps ?? 24, data.looped ?? false);
 
-			offsets.set(data.name, data.offsets);
+			if (data.offsets != null)
+				offsets.set(data.name, data.offsets);
 		}
 
 		antialiasing = json.antialiasing ?? Settings.antialiasing;
