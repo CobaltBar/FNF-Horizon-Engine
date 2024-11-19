@@ -25,6 +25,7 @@ class PlayState extends MusicState
 	var accuracy:Float = 0;
 	var misses:Int = 0;
 	var combo:Int = 0;
+	var health:Float = 1;
 	var scores:Map<String, Int> = ["sick" => 0, "good" => 0, "bad" => 0, "shit" => 0];
 
 	var camGame:FlxCamera;

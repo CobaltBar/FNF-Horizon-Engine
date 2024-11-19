@@ -56,7 +56,7 @@ private class Windows
 			if (DwmGetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK)
 				DwmGetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
 
-			darkMode = darkMode == 0 ? 1 : 0;
+			darkMode ^= 1;
 			
 			if (DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode)) != S_OK)
 				return DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode)) == S_OK;

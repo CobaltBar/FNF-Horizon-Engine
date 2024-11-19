@@ -22,7 +22,7 @@ class ErrorState extends MusicState
 
 		var errorDescription:ErrorDescription;
 		add(errorDescription = new ErrorDescription());
-		errorDescription.top = (FlxG.height - errorDescription.height) * .5;
+		errorDescription.screenCenter();
 
 		var errorControls:FlxText;
 		add(errorControls = Create.text(0, Settings.reducedMotion ? FlxG.height + 40 : FlxG.height + 100,
@@ -33,8 +33,8 @@ class ErrorState extends MusicState
 		if (!Settings.reducedMotion)
 		{
 			FlxTween.tween(errorTitle, {y: 50}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
-			errorDescription.top = FlxG.height + 100;
-			FlxTween.tween(errorDescription, {top: (FlxG.height - errorDescription.height) * .5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
+			errorDescription.y = FlxG.height + 100;
+			FlxTween.tween(errorDescription, {y: (FlxG.height - errorDescription.height) * .5}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 			FlxTween.tween(errorControls, {y: FlxG.height - 40}, 1, {type: ONESHOT, ease: FlxEase.expoOut});
 		}
 
