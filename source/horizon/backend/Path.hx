@@ -253,20 +253,19 @@ private class PathInfo
 		FlxG.bitmap.remove(graphic);
 	}
 
-	// TODO add a max limit
-	private static function recurse(path:String, callback:String->Void, ?exclude:String->Bool)
+	private static function recurse(path:String, callback:String->Void, ?exclude:String->Bool, max:Int = 5)
+	{
+		if (max < 1)
+			return;
+
 		if (FileSystem.isDirectory(path))
 			for (entry in FileSystem.readDirectory(path))
 			{
 				var realPath = PathUtil.combine(path, entry);
 				if (FileSystem.isDirectory(realPath))
-					recurse(realPath, callback, exclude);
-				else if (exclude != null)
-				{
-					if (!exclude(realPath))
-						callback(realPath);
-				}
-				else
+					recurse(realPath, callback, exclude, max - 1);
+				else if (exclude == null || !exclude(realPath))
 					callback(realPath);
 			}
+	}
 }

@@ -76,7 +76,7 @@ class Alphabet extends FlxSpriteGroup
 					animName += ' normal';
 				animName = animName.toLowerCase();
 
-				var char = alphabetGroup.recycle(FlxSprite, createAlphabetChar);
+				var char = alphabetGroup.recycle(FlxSprite, Create.atlas.bind(0, 0, Path.atlas('alphabet')));
 				if (char.animation.exists('idle'))
 					char.animation.remove('idle');
 				char.animation.addByPrefix('idle', animName, 24);
@@ -189,7 +189,4 @@ class Alphabet extends FlxSpriteGroup
 			greenOffset = 0.0, blueOffset = 0.0, alphaOffset = 0.0):Void
 		for (member in members)
 			member.setColorTransform(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-
-	static function createAlphabetChar()
-		return Create.atlas(0, 0, Path.atlas('alphabet'));
 }

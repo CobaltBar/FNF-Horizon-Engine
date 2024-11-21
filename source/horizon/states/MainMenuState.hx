@@ -112,7 +112,7 @@ class MainMenuState extends MusicMenuState
 			if (Settings.flashingLights)
 				FlxFlicker.flicker(menuOptions[curSelected], 1.3, .06, false, false, flicker -> out());
 			else
-				FlxTimer.wait(1.3, () -> out());
+				FlxTimer.wait(1.3, out.bind());
 			for (i in 0...menuOptions.length)
 				if (i != curSelected)
 					FlxTween.tween(menuOptions[i], {alpha: 0}, .3, {
