@@ -23,7 +23,7 @@ class StrumNote extends NoteSprite
 		activeTimer = new FlxTimer();
 		activeTimer.loops = 1;
 		activeTimer.onComplete = timer -> resetAnim();
-		animation.onFinish.add(name -> if (name == 'confirm' && autoReset) activeTimer.reset(Conductor.stepLength * 0.002));
+		animation.onFinish.add(name -> if (name == 'confirm' && autoReset) activeTimer.reset(Conductor.stepLength * 0.00125));
 	}
 
 	public function confirm(unconfirm:Bool = true):Void

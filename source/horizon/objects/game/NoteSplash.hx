@@ -11,7 +11,9 @@ class NoteSplash extends FlxSprite
 		// TODO change this when fixed
 		// animation.addByPrefix('splash1', 'splash1', 24, false);
 		animation.addByPrefix('splash2', 'splash2', 24, false);
+		scale.set(.6, .6);
 		updateHitbox();
+		centerOffsets();
 		animNames = animation.getNameList();
 		animation.onFinish.add(_ -> kill());
 	}

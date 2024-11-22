@@ -107,8 +107,6 @@ class PlayState extends MusicState
 	function spawnSplash(note:Note):Void
 	{
 		var splash = note.strumline.splashes.recycle(NoteSplash, createSplash);
-		splash.updateHitbox();
-		splash.centerOffsets();
 		splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
 		splash.y = note.parent.y + (note.parent.height - splash.height) * .5;
 		splash.shader = note.parent.shader;
