@@ -113,7 +113,7 @@ class Conductor extends FlxBasic
 	@:noCompletion static function set_song(val:FlxSound):FlxSound
 	{
 		if (val != null)
-			val.onComplete = Conductor.reset.bind();
+			val.onComplete = Conductor.reset;
 
 		return song = val;
 	}

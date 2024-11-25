@@ -18,7 +18,7 @@ class PlayerInput
 		for (i => bind in Constants.notebindNames)
 		{
 			Controls.onPress(Settings.keybinds[bind], onPress.bind(i));
-			Controls.onRelease(Settings.keybinds[bind], PlayState.instance.playerStrum.strums[i].resetAnim.bind());
+			Controls.onRelease(Settings.keybinds[bind], PlayState.instance.playerStrum.strums[i].resetAnim);
 		}
 	}
 
