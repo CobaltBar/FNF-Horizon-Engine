@@ -168,13 +168,13 @@ class Note extends NoteSprite
 
 	override function kill()
 	{
-		strumline.addNextNote();
 		if (sustain != null)
 		{
 			sustain.kill();
 			sustain = null;
 		}
 		super.kill();
+		strumline.addNextNote();
 	}
 
 	static function createSustain(note:Note)
