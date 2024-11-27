@@ -120,14 +120,20 @@ class PlayState extends MusicState
 		Conductor.bpm = chart.bpm;
 
 		var map:Map<String, NoteJSON> = [];
+		var ghostCount = 0;
 		for (note in chart.notes)
 		{
 			var hash = '${note.data}${note.time}';
 			if (!map.exists(hash))
 				map.set(hash, note);
+			else
+				ghostCount++;
 		}
 
-		for (note in [for (note in map) note])
+		if (Constants.verbose)
+			Log.info('$ghostCount ghost notes cleared.');
+
+		for (note in map)
 			(note.data > 3 ? opponentStrum : playerStrum).uNoteData.push(note);
 		map.clear();
 
