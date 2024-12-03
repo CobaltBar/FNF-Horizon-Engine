@@ -37,17 +37,12 @@ class InitState extends MusicState
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(-1));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(1));
 
-		FlxG.signals.preStateCreate.add(state -> @:privateAccess
-		{
-			for (member in Alphabet.alphabetGroup.members)
-				member.destroy();
-			Alphabet.alphabetGroup.clear();
-		});
+		Alphabet.init();
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();
 
-		var request = new Http('https://raw.githubusercontent.com/CobaltBar/FNF-Horizon-Engine/main/.build');
+		var request = new Http('https://raw.githubusercontent.com/CCobaltDev/FNF-Horizon-Engine/main/.build');
 		request.onData = data ->
 		{
 			onlineVer = data.trim();

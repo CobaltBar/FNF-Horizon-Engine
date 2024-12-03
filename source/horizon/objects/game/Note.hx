@@ -12,7 +12,6 @@ class Note extends NoteSprite
 	var type:String;
 
 	var parent:StrumNote;
-	var strumline:Strumline;
 	var sustain:Sustain;
 
 	var timeOffset:Float;
@@ -34,13 +33,13 @@ class Note extends NoteSprite
 
 		angleOffset = NoteSprite.angleOffsets[data % NoteSprite.angleOffsets.length];
 		parent = strumline.strums[data % strumline.strums.length];
-		this.strumline = strumline;
 
 		if (length > 0)
 		{
 			sustain = strumline.sustains.recycle(Sustain, createSustain.bind(this));
 			sustain.clipRegion = FlxRect.get(0, 0, sustain.width, sustain.height);
 			sustain.setup(this);
+			sustain.origin.set(sustain.width * .5, 0);
 		}
 	}
 
@@ -63,7 +62,7 @@ class Note extends NoteSprite
 		{
 			parent.confirm(unconfirm);
 
-			if (Math.abs(Conductor.time - time) > Settings.hitWindows[1] + PlayerInput.safeMS)
+			if (Math.abs(Conductor.time - time) >= Settings.hitWindows[1] + PlayerInput.safeMS)
 			{
 				PlayState.instance.miss();
 				desaturate();
@@ -82,7 +81,7 @@ class Note extends NoteSprite
 		if (Conductor.time >= time + length + 350)
 		{
 			kill();
-			if (!strumline.autoHit && hittable)
+			if (!parent.strumline.autoHit && hittable)
 				PlayState.instance.miss();
 			return;
 		}
@@ -97,12 +96,12 @@ class Note extends NoteSprite
 				kill();
 				return;
 			}
-			if (!strumline.autoHit)
+			if (!parent.strumline.autoHit)
 				if (Settings.keybinds[Constants.notebindNames[data % Constants.notebindNames.length]].foreach(key -> !Controls.pressed.contains(key)))
 					kill();
 		}
 
-		if (strumline.autoHit && Conductor.time >= time && !sustaining)
+		if (parent.strumline.autoHit && Conductor.time >= time && !sustaining)
 			hit(true);
 
 		if (sustain != null && sustain.angle != parent.direction - 90)
@@ -115,7 +114,7 @@ class Note extends NoteSprite
 
 		if (sustaining && sustain != null && sustain.exists && sustain.visible)
 		{
-			sustain.x = posX + (width - sustain.width) * .5;
+			sustain.x = parent.x + (width - sustain.width) * .5;
 			sustain.y = posY;
 			sustain.clipRegion.y = parent.y - posY;
 		}
@@ -174,7 +173,7 @@ class Note extends NoteSprite
 			sustain = null;
 		}
 		super.kill();
-		strumline.addNextNote();
+		parent.strumline.addNextNote();
 	}
 
 	static function createSustain(note:Note)

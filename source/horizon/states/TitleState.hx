@@ -114,7 +114,7 @@ class TitleState extends MusicState
 					createIntroText('Horizon Engine by');
 				case 3:
 					tweenLastIntroText(1, -50);
-					createIntroText('Cobalt Bar', 50);
+					createIntroText('CCobaltDev', 50);
 					introTexts[1].setColorTransform(0, .5, 1, 1, 0, 0, 0, 0);
 				case 4:
 					Settings.reducedMotion ? clearIntroObjects() : tweenOutIntroObjects();

@@ -9,10 +9,11 @@ class StrumNote extends NoteSprite
 	@:noCompletion public var cosDir(default, null):Float;
 
 	public var autoReset:Bool;
+	public var strumline:Strumline;
 
 	var activeTimer:FlxTimer;
 
-	public function new(data:Int = 2)
+	public function new(data:Int = 2, line:Strumline)
 	{
 		super(data);
 		direction = 90;
@@ -24,6 +25,7 @@ class StrumNote extends NoteSprite
 		activeTimer.loops = 1;
 		activeTimer.onComplete = timer -> resetAnim();
 		animation.onFinish.add(name -> if (name == 'confirm' && autoReset) activeTimer.reset(Conductor.stepLength * 0.00125));
+		strumline = line;
 	}
 
 	public function confirm(unconfirm:Bool = true):Void

@@ -19,7 +19,7 @@ class Strumline extends FlxSpriteGroup
 
 		for (i in 0...4)
 		{
-			var strum = new StrumNote(i);
+			var strum = new StrumNote(i, this);
 			strum.x = (strum.width + 5) * i;
 			strum.y = -350;
 			strum.alpha = 0;

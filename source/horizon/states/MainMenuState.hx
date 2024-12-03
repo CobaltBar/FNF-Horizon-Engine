@@ -23,7 +23,7 @@ class MainMenuState extends MusicMenuState
 		add(flashBG = Create.backdrop(Path.image('menuBGMagenta'), [menuCam], 1.1));
 		flashBG.visible = false;
 
-		for (val in Mods.all)
+		for (_ in Mods.all)
 			modCount++;
 
 		for (name in ['storymode', 'freeplay', 'mods', 'credits', 'merch', 'options'])

@@ -8,8 +8,6 @@ class PlayerInput
 	static var idTracker:Int = 0;
 	static var inputEnabled:Bool = false;
 
-	static var ratingScores:Array<Int> = [350, 200, 100, 50];
-
 	public static function init():Void
 	{
 		safeMS = (Settings.safeFrames / 60) * 250;
@@ -31,15 +29,15 @@ class PlayerInput
 			{
 				if (note != null && note.exists && note.alive && note.data % Constants.notebindNames.length == id && note.hittable)
 				{
-					if (Math.abs(Conductor.time - note.time) <= Settings.hitWindows[3] + safeMS)
+					var diff = Math.abs(Conductor.time - note.time);
+					if (diff <= Settings.hitWindows[3] + safeMS)
 					{
 						if (PlayState.instance.audios.exists('voices'))
 							PlayState.instance.audios['voices'].volume = 1;
 						else if (PlayState.instance.audios.exists('voices-player'))
 							PlayState.instance.audios['voices-player'].volume = 1;
 						note.hit();
-
-						judge(note);
+						judge(diff, strum);
 						return;
 					}
 				}
@@ -50,15 +48,14 @@ class PlayerInput
 			PlayState.instance.miss();
 	}
 
-	static function judge(note:Note):Void
+	static function judge(diff:Float, strum:StrumNote):Void
 	{
-		var diff = Math.abs(Conductor.time - note.time);
 		PlayState.instance.combo++;
 		// PBOT1 scoring
 		var ratingName:String = switch (diff)
 		{
 			case(_ <= Settings.hitWindows[0] + safeMS) => true:
-				PlayState.instance.spawnSplash(note);
+				PlayState.instance.spawnSplash(strum);
 				'sick';
 			case(_ <= Settings.hitWindows[1] + safeMS) => true:
 				'good';
@@ -66,7 +63,8 @@ class PlayerInput
 				'bad';
 			case(_ <= Settings.hitWindows[3] + safeMS) => true:
 				'shit';
-			default: 'invalid';
+			default:
+				'invalid';
 		}
 
 		PlayState.instance.score += Std.int(500 * (1.0 - (1.0 / (1.0 + Math.exp(-0.080 * (diff - 54.99))))) + 9);

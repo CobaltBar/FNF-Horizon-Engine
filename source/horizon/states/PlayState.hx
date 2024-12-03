@@ -51,14 +51,6 @@ class PlayState extends MusicState
 		for (item in Countdown.countdownSoundArr)
 			Path.audio(item, mods);
 
-		for (i in 0...2)
-		{
-			var grp = new FlxSpriteGroup();
-			grp.cameras = [camHUD];
-			add(grp);
-			comboGroups.push(grp);
-		}
-
 		add(scoreText = Create.text(0, 0, 'N/A', 20, Path.font('vcr', mods), 0xFFFFFFFF, CENTER, [camHUD]));
 		scoreText.y = FlxG.height - scoreText.height - 25;
 		scoreText.fieldWidth = FlxG.width * .5;
@@ -68,6 +60,14 @@ class PlayState extends MusicState
 		add(playerStrum = new Strumline(FlxG.width * .275, 50, [camHUD]));
 		add(opponentStrum = new Strumline(-FlxG.width * .275, 50, [camHUD]));
 		opponentStrum.autoHit = true;
+
+		for (i in 0...2)
+		{
+			var grp = new FlxSpriteGroup();
+			grp.cameras = [camHUD];
+			add(grp);
+			comboGroups.push(grp);
+		}
 
 		Conductor.reset();
 		Conductor.switchToMusic = false;
@@ -104,12 +104,18 @@ class PlayState extends MusicState
 			PlayState.instance.audios['voices-player'].volume = 0;
 	}
 
-	function spawnSplash(note:Note):Void
+	function spawnSplash(strum:StrumNote):Void
 	{
-		var splash = note.strumline.splashes.recycle(NoteSplash, createSplash);
-		splash.x = note.parent.x + (note.parent.width - splash.width) * .5;
-		splash.y = note.parent.y + (note.parent.height - splash.height) * .5;
-		splash.shader = note.parent.shader;
+		var splash = strum.strumline.splashes.recycle(NoteSplash, () ->
+		{
+			var spr = new NoteSplash();
+			spr.cameras = [PlayState.instance.camHUD];
+			spr.scale.set(.5, .5);
+			return spr;
+		});
+		splash.x = strum.x + (strum.width - splash.width) * .5;
+		splash.y = strum.y + (strum.height - splash.height) * .5;
+		splash.shader = strum.shader;
 		splash.splash();
 	}
 
@@ -140,19 +146,11 @@ class PlayState extends MusicState
 		ArraySort.sort(opponentStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 		ArraySort.sort(playerStrum.uNoteData, (a, b) -> (a.time < b.time ? -1 : (a.time > b.time ? 1 : 0)));
 
-		for (_ in 0...50)
+		for (_ in 0...100)
 		{
 			playerStrum.addNextNote();
 			opponentStrum.addNextNote();
 		}
-	}
-
-	static function createSplash()
-	{
-		var spr = new NoteSplash();
-		spr.cameras = [PlayState.instance.camHUD];
-		spr.scale.set(.5, .5);
-		return spr;
 	}
 
 	override function destroy():Void
