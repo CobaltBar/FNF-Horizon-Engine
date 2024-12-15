@@ -22,7 +22,12 @@ class InitState extends MusicState
 
 		Log.init();
 		SettingsManager.load();
+		Mods.load();
+		Path.loadAssets();
 		Controls.init();
+		DiscordRPC.init();
+		Path.init();
+		Alphabet.init();
 
 		Toolkit.init();
 		Toolkit.theme = 'horizon';
@@ -30,14 +35,8 @@ class InitState extends MusicState
 		if (Constants.verbose)
 			Log.info('HaxeUI Setup Complete');
 
-		Mods.load();
-		Path.loadAssets();
-		Path.init();
-
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(-1));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, .25, new FlxPoint(1));
-
-		Alphabet.init();
 
 		FlxG.plugins.addPlugin(new Conductor());
 		super.create();

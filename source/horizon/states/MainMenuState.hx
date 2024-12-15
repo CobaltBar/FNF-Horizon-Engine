@@ -54,6 +54,7 @@ class MainMenuState extends MusicMenuState
 		Path.clearUnusedMemory();
 	}
 
+	// TODO use .put
 	public override function update(elapsed:Float):Void
 	{
 		for (i in 0...menuOptions.length)

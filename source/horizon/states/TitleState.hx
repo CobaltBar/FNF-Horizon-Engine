@@ -21,6 +21,8 @@ class TitleState extends MusicState
 		super.create();
 		persistentUpdate = true;
 
+		DiscordRPC.change('DETAILS', 'STATE');
+
 		titleData = Path.json('titleData');
 		Conductor.timeSignature = TimeSignature.fromString(titleData.timeSignature ?? '4/4');
 		Conductor.bpm = titleData.bpm ?? 100;

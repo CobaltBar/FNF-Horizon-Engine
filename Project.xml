@@ -43,6 +43,7 @@
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="flxanimate" />
 	<haxelib name="hxdiscord_rpc" unless="hl" />
+	<haxelib name="hashcord" if="hl" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

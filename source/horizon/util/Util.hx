@@ -15,8 +15,10 @@ class Util
 	}
 
 	@:keep static inline function quadBezier(a:FlxPoint, b:FlxPoint, c:FlxPoint, p:Float):FlxPoint
+	{
 		return FlxPoint.weak(FlxMath.lerp(FlxMath.lerp(a.x, b.x, p), FlxMath.lerp(b.x, c.x, p), p),
 			FlxMath.lerp(FlxMath.lerp(a.y, b.y, p), FlxMath.lerp(b.y, c.y, p), p));
+	}
 
 	// Thank you CoreCat!
 	static final byteNames = ["B", "KB", "MB", "GB", "TB", "PB"];
